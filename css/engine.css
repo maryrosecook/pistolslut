@@ -1,0 +1,53 @@
+
+body {
+	overflow: hidden;
+	margin: 0;
+}
+
+div.metrics {
+   position: absolute;
+   top: 10px;
+   width: 200px;
+   right: 10px;
+   border: 1px solid black;
+   background: white;
+   padding: 2px;
+   font: 10px Arial, Helvetica;
+	z-index: 10000;
+}
+
+div.metrics .items {
+   clear: both;
+   position: relative;
+   width: 200px;
+   background: ghostwhite;
+}
+
+div.metric-button {
+   background-color: silver;
+   width: 15px;
+   height: 15px;
+   border: 1px outset white;
+   float: left;
+   margin-right: 3px;
+}
+
+.run {
+   background: url('$<enginePath>/css/run.png') no-repeat;
+}
+
+.pause {
+   background: url('$<enginePath>/css/pause.png') no-repeat;
+}
+
+.shutdown {
+   background: url('$<enginePath>/css/shutdown.png') no-repeat;
+}
+
+.minimize {
+   background: url('$<enginePath>/css/minimize.png') no-repeat;
+}
+
+.maximize {
+   background: url('$<enginePath>/css/maximize.png') no-repeat;
+}
