@@ -53,7 +53,7 @@ var SpaceroidsPlayer = Object2D.extend({
 	field: null,
 	
 	velocity: null,
-	direction: 0,
+	direction: null,
 	gunTip: null,
 	
 	runSpeed: 3,
@@ -66,8 +66,18 @@ var SpaceroidsPlayer = Object2D.extend({
 	
 	playerSprites: null,
 
-	left: 270,
-	right: 90,
+	directionData: {
+		"left": {
+			"angle": 270,
+			"gunTip": new Point2D(15, 16.5)
+		},
+		"right": {
+			"angle": 90,
+			"gunTip": new Point2D(30, 16.5)
+		}
+	},
+	left: "left",
+	right: "right",
 
 	constructor: function() {
 		this.base("Player");
@@ -201,16 +211,11 @@ var SpaceroidsPlayer = Object2D.extend({
 	 * @param pHeight {Number} The height of the playfield in pixels
 	 */
 	setup: function(pWidth, pHeight) {
+		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
 
-		// Playfield bounding box for quick checks
-		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight);
-
-		// Randomize the position and velocity
+		// Put us on the ground in the middle
 		var c_mover = this.getComponent("move");
-		var c_draw = this.getComponent("draw");
-
-		// Put us in the middle of the playfield
-		c_mover.setPosition( this.pBox.getCenter() );
+		c_mover.setPosition(new Point2D(this.pBox.getCenter().x, this.field.groundY));
 	},
 
 	/**
@@ -322,10 +327,11 @@ var SpaceroidsPlayer = Object2D.extend({
 
 	setDirection: function(direction) {
 		this.direction = direction;
-		if(this.direction == this.left)
-			this.gunTip = Point2D.create(25, 12);
-		else if(this.direction == this.right)
-			this.gunTip = Point2D.create(3, 12);
+		this.gunTip = this.directionData[direction]["gunTip"]
+	},
+	
+	getDirectionAngle: function() {
+		return this.directionData[this.direction]["angle"];
 	},
 
 	/**

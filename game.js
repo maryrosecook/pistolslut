@@ -32,7 +32,12 @@ var Spaceroids = Game.extend({
 	collisionModel: null,
 
 	rocks: 0,
-
+	snowTimer: null,
+	windTimer: null,
+	windMultiplier: 2,
+	windVec: new Point2D(0, 0),
+	groundY: 500,
+	
 	fieldWidth: 500,
 	fieldHeight: 580,
 
@@ -79,13 +84,13 @@ var Spaceroids = Game.extend({
 		var pHeight = this.fieldHeight;
 
 		// Add some asteroids
-		for (var a = 0; a < 3; a++)
-		{
-			var rock = SpaceroidsRock.create(null, null, pWidth, pHeight);
-			this.renderContext.add(rock);
-			rock.setup();
-			rock.killTimer = Engine.worldTime + 2000;
-		}
+		// for (var a = 0; a < 3; a++)
+		// {
+		// 	var rock = SpaceroidsRock.create(null, null, pWidth, pHeight);
+		// 	this.renderContext.add(rock);
+		// 	rock.setup();
+		// 	rock.killTimer = Engine.worldTime + 2000;
+		// }
 
 		// var flash = function() {
 		// 	if (!Spaceroids.showStart)
@@ -115,14 +120,19 @@ var Spaceroids = Game.extend({
 		Spaceroids.pEngine.addParticle(SimpleParticle.create(Point2D.create(25, 25)));
 		Spaceroids.pEngine.update(this.renderContext, Engine.worldTime);
 
-		// Create a new rock every 20 seconds
-		Spaceroids.attractTimer = Interval.create("attract", 500,
+		// snow machine
+		Spaceroids.snowTimer = Interval.create("snow", 1,
 			function() {
-				// var rock = SpaceroidsRock.create(null, null, Spaceroids.fieldWidth, Spaceroids.fieldHeight);
-				// Spaceroids.renderContext.add(rock);
-				// rock.setup();
-				// rock.killTimer = Engine.worldTime + 2000;
+				Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.fieldWidth, Spaceroids.windVec));
 		});
+	},
+
+	setupWind: function() {
+		var curWindMultiplier = this.windMultiplier;
+		if(Math.random() > 0.5)
+			curWindMultiplier = -this.windMultiplier;
+		
+		this.windVec.setX(Math.random() * curWindMultiplier);
 	},
 
 	nextLevel: function() {
@@ -136,12 +146,12 @@ var Spaceroids = Game.extend({
 		var pWidth = this.fieldWidth;
 		var pHeight = this.fieldHeight;
 
-		for (var a = 0; a < Spaceroids.level + 1; a++)
-		{
-			var rock = SpaceroidsRock.create(null, null, pWidth, pHeight);
-			this.renderContext.add(rock);
-			rock.setup();
-		}
+		// for (var a = 0; a < Spaceroids.level + 1; a++)
+		// {
+		// 	var rock = SpaceroidsRock.create(null, null, pWidth, pHeight);
+		// 	this.renderContext.add(rock);
+		// 	rock.setup();
+		// }
 	},
 
 	/**
@@ -161,9 +171,11 @@ var Spaceroids = Game.extend({
 		this.renderContext.setWorldScale(this.areaScale);
 		Engine.getDefaultContext().add(this.renderContext);
 		this.renderContext.setBackgroundColor("#000000");
-
+		
 		// We'll need something to detect collisions
 		this.collisionModel = SpatialGrid.create(this.fieldWidth, this.fieldHeight, 7);
+		
+		this.setupWind(); // decide on wind
 		
 		// Load the resources		
 		this.spriteLoader = SpriteLoader.create();

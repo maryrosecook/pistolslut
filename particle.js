@@ -159,3 +159,71 @@ Engine.initObject("TrailParticle", "Particle", function() {
 
 	return TrailParticle;
 });
+
+Engine.initObject("SnowParticle", "Particle", function() {
+
+	/**
+	 * @class A simple particle
+	 *
+	 * @param pos {Point2D} The starting position of the particle.  A
+	 *				velocity vector will be derived from this position.
+	 */
+	var SnowParticle = Particle.extend(/** @scope TrailParticle.prototype */{
+
+		pos: null,
+		vec: null,
+		clr: null,
+		windVec: null,
+		
+		buffer: 2000,
+		
+		constructor: function(fieldWidth, windVec) {
+			var x = (Math.random() * (fieldWidth + this.buffer)) - (this.buffer / 2);
+			this.pos = new Point2D(Math.floor(x), 0);
+			this.windVec = windVec; // note keeps reference so updates to main wind will affect this
+			
+			var rot = 0;
+			var spread = 0;
+			var color = "#ffffff";
+			var ttl = 10000;
+			
+			this.base(ttl);
+			this.clr = color;
+			var a = rot + Math.floor((180 - (spread / 2)) + (Math.random() * (spread * 2)));
+			this.vec = Math2D.getDirectionVector(Point2D.ZERO, SnowParticle.ref, a);
+			var vel = 2 + (Math.random() * 0.5);
+			this.vec.mul(vel);
+		},
+
+		release: function() {
+			this.base();
+			this.pos = null;
+			this.vec = null;
+		},
+
+		/**
+		 * Called by the particle engine to draw the particle to the rendering
+		 * context.
+		 *
+		 * @param renderContext {RenderContext} The rendering context
+		 * @param time {Number} The engine time in milliseconds
+		 */
+		draw: function(renderContext, time) {
+			this.pos.add(this.vec);
+			this.pos.add(this.windVec);
+			renderContext.setPosition(this.pos);
+			renderContext.setFillStyle(this.clr);
+			renderContext.drawPoint(Point2D.ZERO);
+		}
+
+	}, {
+		getClassName: function() {
+			return "SnowParticle";
+		},
+
+		// A simple reference point for the "up" vector
+		ref: new Point2D(0, -1)
+	});
+
+	return SnowParticle;
+});
