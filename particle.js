@@ -173,23 +173,16 @@ Engine.initObject("SnowParticle", "Particle", function() {
 		pos: null,
 		vec: null,
 		clr: null,
-		windVec: null,
-		
-		buffer: 2000,
-		
-		constructor: function(fieldWidth, windVec) {
-			var x = (Math.random() * (fieldWidth + this.buffer)) - (this.buffer / 2);
-			this.pos = new Point2D(Math.floor(x), 0);
-			this.windVec = windVec; // note keeps reference so updates to main wind will affect this
+				
+		constructor: function(fieldWidth) {
+			this.pos = new Point2D(Math.floor(Math.random() * fieldWidth), 0);
 			
 			var rot = 0;
-			var spread = 0;
-			var color = "#ffffff";
 			var ttl = 10000;
 			
 			this.base(ttl);
-			this.clr = color;
-			var a = rot + Math.floor((180 - (spread / 2)) + (Math.random() * (spread * 2)));
+			this.clr = "#ffffff";
+			var a = rot + Math.floor((180) + (Math.random()));
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, SnowParticle.ref, a);
 			var vel = 2 + (Math.random() * 0.5);
 			this.vec.mul(vel);
@@ -210,7 +203,6 @@ Engine.initObject("SnowParticle", "Particle", function() {
 		 */
 		draw: function(renderContext, time) {
 			this.pos.add(this.vec);
-			this.pos.add(this.windVec);
 			renderContext.setPosition(this.pos);
 			renderContext.setFillStyle(this.clr);
 			renderContext.drawPoint(Point2D.ZERO);

@@ -1,10 +1,12 @@
 // Load required engine components
 Engine.include("/rendercontexts/context.canvascontext.js");
+Engine.include("/rendercontexts/context.scrollingbackground.js");
 Engine.include("/spatial/container.spatialgrid.js");
 Engine.include("/engine/engine.timers.js");
 Engine.include("/textrender/text.vector.js");
 Engine.include("/textrender/text.renderer.js");
 Engine.include("/resourceloaders/loader.sprite.js");
+Engine.include("/resourceloaders/loader.level.js");
 
 // Load game objects
 Game.load("/rock.js");
@@ -33,14 +35,13 @@ var Spaceroids = Game.extend({
 
 	rocks: 0,
 	snowTimer: null,
-	windTimer: null,
-	windMultiplier: 2,
-	windVec: new Point2D(0, 0),
+	snowFallRate: 0,
 	groundY: 500,
 	
 	fieldWidth: 500,
 	fieldHeight: 580,
-
+	level: null,
+	
 	debug: true,
 	playerObj: null,
 
@@ -48,36 +49,17 @@ var Spaceroids = Game.extend({
 
 	pEngine: null,
 
-	level: 0,
-
 	evolved: false,
 
 	spriteLoader: null,
+	levelLoader: null,
 	loadTimeout: null,
-	
-	/**
-	 * Clean up the playfield, removing any objects that are
-	 * currently within the render context.  Used to initialize the game
-	 * and to handle transitions between attract mode and play mode.
-	 */
-	cleanupPlayfield: function() {
-		// Remove any rocks still floating around
-		var objs = this.renderContext.getObjects();
-		while (objs.length > 0)
-		{
-			objs.shift().destroy();
-		}
-
-		this.rocks = 0;
-		this.level = 0;
-	},
 
 	/**
 	 * A simple mode where the title, game over message,
 	 * and start message are displayed with asteroids in the background
 	 */
 	attractMode: function() {
-		this.cleanupPlayfield();
 		Spaceroids.isAttractMode = true;
 
 		var pWidth = this.fieldWidth;
@@ -108,52 +90,31 @@ var Spaceroids = Game.extend({
 		// };
 		// 
 		// Spaceroids.intv = Timeout.create("startkey", 1000, flash);
-
-		// Start up a particle engine
-		this.pEngine = ParticleEngine.create()
-		this.renderContext.add(this.pEngine);
-
-		this.playerObj = SpaceroidsPlayer.create();
-		this.renderContext.add(this.playerObj);
-		this.playerObj.setup(pWidth, pHeight);
-
-		Spaceroids.pEngine.addParticle(SimpleParticle.create(Point2D.create(25, 25)));
-		Spaceroids.pEngine.update(this.renderContext, Engine.worldTime);
-
-		// snow machine
-		Spaceroids.snowTimer = Interval.create("snow", 1,
-			function() {
-				Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.fieldWidth, Spaceroids.windVec));
-		});
-	},
-
-	setupWind: function() {
-		var curWindMultiplier = this.windMultiplier;
-		if(Math.random() > 0.5)
-			curWindMultiplier = -this.windMultiplier;
 		
-		this.windVec.setX(Math.random() * curWindMultiplier);
+    this.level = Spaceroids.levelLoader.getLevel("level1");
+
+		this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
+		this.renderContext.setWorldScale(this.areaScale);
+		Engine.getDefaultContext().add(this.renderContext);
+		
+		// Start up a particle engine
+		//this.pEngine = ParticleEngine.create()
+		//this.renderContext.add(this.pEngine);
+
+		//this.playerObj = SpaceroidsPlayer.create();
+		//this.renderContext.add(this.playerObj);
+		//this.playerObj.setup(pWidth, pHeight);
+		
+		// snow machine
+		// Spaceroids.snowTimer = Interval.create("snow", 0,
+		// 	function() {
+		// 		if(Spaceroids.snowFallRate >= 1 || Spaceroids.snowFallRate > Math.random())
+		// 			Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.fieldWidth));
+		// 		else
+		// 			Spaceroids.snowFallRate += 0.00001;
+		// });
 	},
-
-	nextLevel: function() {
-		Spaceroids.level++;
-
-		if (Spaceroids.level > 7) {
-			Spaceroids.level = 7;
-		}
-
-		// Add some asteroids
-		var pWidth = this.fieldWidth;
-		var pHeight = this.fieldHeight;
-
-		// for (var a = 0; a < Spaceroids.level + 1; a++)
-		// {
-		// 	var rock = SpaceroidsRock.create(null, null, pWidth, pHeight);
-		// 	this.renderContext.add(rock);
-		// 	rock.setup();
-		// }
-	},
-
+	
 	/**
 	 * Called to set up the game, download any resources, and initialize
 	 * the game to its running state.
@@ -167,27 +128,26 @@ var Spaceroids = Game.extend({
 		// Create the 2D context
 		this.fieldBox = Rectangle2D.create(0, 0, this.fieldWidth, this.fieldHeight);
 		this.centerPoint = this.fieldBox.getCenter();
-		this.renderContext = CanvasContext.create("playfield", this.fieldWidth, this.fieldHeight);
-		this.renderContext.setWorldScale(this.areaScale);
-		Engine.getDefaultContext().add(this.renderContext);
-		this.renderContext.setBackgroundColor("#000000");
 		
 		// We'll need something to detect collisions
 		this.collisionModel = SpatialGrid.create(this.fieldWidth, this.fieldHeight, 7);
-		
-		this.setupWind(); // decide on wind
-		
-		// Load the resources		
+
 		this.spriteLoader = SpriteLoader.create();
+		this.levelLoader = LevelLoader.create();
+		
+		// load sprites
 		this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
 
+		// level
+		this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
+		
 		// Don't start until all of the resources are loaded
 		Spaceroids.loadTimeout = Timeout.create("wait", 250, Spaceroids.waitForResources);
 		this.waitForResources();
 	},
 
   waitForResources: function(){
-		if (Spaceroids.spriteLoader.isReady()) {
+		if (Spaceroids.spriteLoader.isReady() && Spaceroids.levelLoader.isReady("level1")) {
 			Spaceroids.loadTimeout.destroy();
 			Spaceroids.attractMode();
 			return;

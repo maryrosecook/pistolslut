@@ -69,11 +69,11 @@ var SpaceroidsPlayer = Object2D.extend({
 	directionData: {
 		"left": {
 			"angle": 270,
-			"gunTip": new Point2D(15, 16.5)
+			"gunTip": new Point2D(15, 16)
 		},
 		"right": {
 			"angle": 90,
-			"gunTip": new Point2D(30, 16.5)
+			"gunTip": new Point2D(30, 16)
 		}
 	},
 	left: "left",
@@ -309,31 +309,6 @@ var SpaceroidsPlayer = Object2D.extend({
 		return false;
 	},
 	
-	move: function() {
-		var pos = this.getPosition();
-		pos.add(this.velocity);
-		this.setPosition(pos);
-		if(this.velocity.x != 0)
-			if(this.direction == this.left)
-				this.setSprite("leftrun");
-			else
-				this.setSprite("rightrun");
-		else
-			if(this.direction == this.left)
-				this.setSprite("leftstand");
-			else
-				this.setSprite("rightstand");
-	},
-
-	setDirection: function(direction) {
-		this.direction = direction;
-		this.gunTip = this.directionData[direction]["gunTip"]
-	},
-	
-	getDirectionAngle: function() {
-		return this.directionData[this.direction]["angle"];
-	},
-
 	/**
 	 * Called by the keyboard input component to handle a key up event.
 	 *
@@ -353,6 +328,29 @@ var SpaceroidsPlayer = Object2D.extend({
 		}
 		
 		return false;
+	},
+	
+	move: function() {
+		this.setPosition(this.getPosition().add(this.velocity));
+		if(this.velocity.x != 0)
+			if(this.direction == this.left)
+				this.setSprite("leftrun");
+			else
+				this.setSprite("rightrun");
+		else
+			if(this.direction == this.left)
+				this.setSprite("leftstand");
+			else
+				this.setSprite("rightstand");
+	},
+
+	setDirection: function(direction) {
+		this.direction = direction;
+		this.gunTip = this.directionData[direction]["gunTip"]
+	},
+	
+	getDirectionAngle: function() {
+		return this.directionData[this.direction]["angle"];
 	},
 
 	}, { // Static

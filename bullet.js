@@ -77,7 +77,7 @@ var SpaceroidsBullet = Object2D.extend({
       c_draw.setPoints(SpaceroidsBullet.shape);
       c_draw.setLineStyle("white");
       c_draw.setFillStyle("white");
-			console.log(this.player.getDirectionAngle());
+
       var dir = Math2D.getDirectionVector(Point2D.ZERO, SpaceroidsBullet.tip, this.player.getDirectionAngle());
 			
 			var playerPosition = Point2D.create(p_mover.getPosition());

@@ -122,7 +122,7 @@ var ScrollingBackground = CanvasContext.extend(/** @scope ScrollingBackground.pr
       this.base(time);
 
       // Render the slice of the level image first
-      this.drawImage(this.getViewport(), this.level.getSourceImage(), this.visRect);
+      this.drawImage(null, this.getViewport(), this.level.getSourceImage(), this.visRect);
    },
 
 }, /** @scope ScrollingBackground.prototype */{
