@@ -110,7 +110,6 @@ var SpaceroidsRock = Object2D.extend({
     */
    update: function(renderContext, time) {
       var c_mover = this.getComponent("move");
-      c_mover.setPosition(Spaceroids.wrap(c_mover.getPosition(), this.getBoundingBox()));
 
       renderContext.pushTransform();
       this.base(renderContext, time);
@@ -236,15 +235,9 @@ var SpaceroidsRock = Object2D.extend({
     */
    kill: function() {
       // Make some particles
-      var pCount = Spaceroids.evolved && !Spaceroids.isAttractMode ? 30 : 4;
-
-      for (var x = 0; x < pCount; x++)
-      {
-         Spaceroids.pEngine.addParticle(SimpleParticle.create(this.getPosition()));
-      }
+      var pCount = 30;
 
       Spaceroids.rocks--;
-
 
       // Break the rock up into smaller chunks
       if (this.size - 4 > 1)

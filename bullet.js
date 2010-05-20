@@ -78,10 +78,10 @@ var SpaceroidsBullet = Object2D.extend({
       c_draw.setLineStyle("white");
       c_draw.setFillStyle("white");
 
-      var dir = Math2D.getDirectionVector(Point2D.ZERO, SpaceroidsBullet.tip, this.player.getDirectionAngle());
+      var dir = Math2D.getDirectionVector(Point2D.ZERO, SpaceroidsBullet.tip, this.player.getGunAngle());
 			
 			var playerPosition = Point2D.create(p_mover.getPosition());
-			var gunTipPosition = playerPosition.add(this.player.gunTip);
+			var gunTipPosition = playerPosition.add(this.player.getGunTip());
 			
       c_mover.setPosition(gunTipPosition.add(Point2D.create(dir).mul(10)));
       c_mover.setVelocity(dir.mul(8));
@@ -144,15 +144,8 @@ var SpaceroidsBullet = Object2D.extend({
    update: function(renderContext, time) {
       var c_mover = this.getComponent("move");
 
-      // Particle trail
-      if (Spaceroids.evolved) {
-         this.field.pEngine.addParticle(TrailParticle.create(this.getPosition(), this.rot, 45, "#aaaaff", 250));
-      }
-
       // Is this bullet in field any more?
-      var p = c_mover.getPosition();
-      var bBox = Rectangle2D.create(p.x, p.y, 2, 2);
-      if (!this.field.inField(p, bBox))
+      if (!this.field.inLevel(c_mover.getPosition()))
       {
          this.player.removeBullet(this);
          this.destroy();

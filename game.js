@@ -36,7 +36,7 @@ var Spaceroids = Game.extend({
 	rocks: 0,
 	snowTimer: null,
 	snowFallRate: 0,
-	groundY: 500,
+	groundY: 498,
 	
 	fieldWidth: 500,
 	fieldHeight: 580,
@@ -48,8 +48,6 @@ var Spaceroids = Game.extend({
 	showStart: false,
 
 	pEngine: null,
-
-	evolved: false,
 
 	spriteLoader: null,
 	levelLoader: null,
@@ -95,24 +93,25 @@ var Spaceroids = Game.extend({
 
 		this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 		this.renderContext.setWorldScale(this.areaScale);
+		this.renderContext.setBackgroundColor("#000000");
 		Engine.getDefaultContext().add(this.renderContext);
 		
-		// Start up a particle engine
-		//this.pEngine = ParticleEngine.create()
-		//this.renderContext.add(this.pEngine);
+		// Start up the particle engine
+		this.pEngine = ParticleEngine.create()
+		this.renderContext.add(this.pEngine);
 
-		//this.playerObj = SpaceroidsPlayer.create();
-		//this.renderContext.add(this.playerObj);
-		//this.playerObj.setup(pWidth, pHeight);
+		this.playerObj = SpaceroidsPlayer.create();
+		this.renderContext.add(this.playerObj);
+		this.playerObj.setup(pWidth, pHeight);
 		
-		// snow machine
-		// Spaceroids.snowTimer = Interval.create("snow", 0,
-		// 	function() {
-		// 		if(Spaceroids.snowFallRate >= 1 || Spaceroids.snowFallRate > Math.random())
-		// 			Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.fieldWidth));
-		// 		else
-		// 			Spaceroids.snowFallRate += 0.00001;
-		// });
+		//snow machine
+		Spaceroids.snowTimer = Interval.create("snow", 10,
+			function() {
+				if(Spaceroids.snowFallRate >= 1 || Spaceroids.snowFallRate > Math.random())
+					Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.level.getWidth()));
+				else
+					Spaceroids.snowFallRate += 0.0001;
+		});
 	},
 	
 	/**
@@ -147,7 +146,7 @@ var Spaceroids = Game.extend({
 	},
 
   waitForResources: function(){
-		if (Spaceroids.spriteLoader.isReady() && Spaceroids.levelLoader.isReady("level1")) {
+		if (Spaceroids.spriteLoader.isReady() && Spaceroids.levelLoader.isReady()) {
 			Spaceroids.loadTimeout.destroy();
 			Spaceroids.attractMode();
 			return;
@@ -173,9 +172,25 @@ var Spaceroids = Game.extend({
 	 * @param bBox {Rectangle2D} The bounding box of the playfield
 	 * @type Boolean
 	 */
-	inField: function(pos, bBox) {
-		var newPos = this.wrap(pos, bBox);
-		return newPos.equals(pos);
+	inLevel: function(pos) {
+		return Math2D.boxPointCollision(this.level.getFrame(), pos);
+	},
+	
+	// updates the position of the view frame
+	updateFramePosition: function(vector, centralObj) {
+		var centralObjWindowX = centralObj.getRenderPosition().x;
+		var minScroll = 0;
+		var maxScroll = this.level.getWidth() - this.fieldWidth;
+		var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;
+
+		var movingPastCentrePoint = false;
+		if(vector.x > 0 && centralObjWindowX > this.centerPoint.x)
+			movingPastCentrePoint = true;
+		else if(vector.x < 0 && centralObjWindowX < this.centerPoint.x)
+			movingPastCentrePoint = true;
+			
+		if(movingPastCentrePoint && potentialNewHorizontalScroll >= minScroll && potentialNewHorizontalScroll <= maxScroll)
+			this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
 	},
 
 	/**

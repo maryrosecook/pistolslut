@@ -34,7 +34,7 @@
 Engine.include("/engine/engine.math2d.js");
 Engine.include("/engine/engine.particles.js");
 
-Engine.initObject("SimpleParticle", "Particle", function() {
+Engine.initObject("BurnoutParticle", "Particle", function() {
 
 	/**
 	 * @class A simple particle
@@ -42,19 +42,19 @@ Engine.initObject("SimpleParticle", "Particle", function() {
 	 * @param pos {Point2D} The starting position of the particle.  A
 	 *				velocity vector will be derived from this position.
 	 */
-	var SimpleParticle = Particle.extend(/** @scope SimpleParticle.prototype */{
+	var BurnoutParticle = Particle.extend(/** @scope BurnoutParticle.prototype */{
 
 		pos: null,
 		vec: null,
 
-		constructor: function(pos, ttl) {
+		constructor: function(pos, rot, sourceVec, spread, ttl) {
 			this.base(ttl || 2000);
 			this.pos = new Point2D(pos);
 
-			var a = Math.floor(Math.random() * 360);
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, SimpleParticle.ref, a);
+			var a = (rot - (spread / 2)) + (Math.random() * spread);
+			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BurnoutParticle.ref, a);
 			var vel = 1 + (Math.random() * 2);
-			this.vec.mul(vel);
+			this.vec.mul(vel).add(sourceVec);
 		},
 
 		release: function() {
@@ -72,20 +72,18 @@ Engine.initObject("SimpleParticle", "Particle", function() {
 		 */
 		draw: function(renderContext, time) {
 			this.pos.add(this.vec);
+			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
 			renderContext.setPosition(this.pos);
-			var colr = "#fff";
-			if (Spaceroids.evolved) {
-				var s = time - this.getBirth();
-				var e = this.getTTL() - this.getBirth();
-				colr = 255 - Math.floor(255 * (s / e));
-				colr += (-10 + (Math.floor(Math.random() * 20)));
-				var fb = (Math.random() * 100);
-				if (fb > 90) {
-					colr = 255;
-				}
-
-				colr = "#" + (colr.toString(16) + colr.toString(16) + colr.toString(16));
-			}
+			
+			var colr = "#f00";
+			var s = time - this.getBirth();
+			var e = this.getTTL() - this.getBirth();
+			colr = 255 - Math.floor(255 * (s / e));
+			colr += (-10 + (Math.floor(Math.random() * 20)));
+			var fb = (Math.random() * 100);
+			if (fb > 90)
+				colr = 255;
+			colr = "#" + (colr.toString(16) + colr.toString(16) + "66");
 
 			renderContext.setFillStyle(colr);
 			renderContext.drawPoint(Point2D.ZERO);
@@ -93,71 +91,13 @@ Engine.initObject("SimpleParticle", "Particle", function() {
 
 	}, {
 		getClassName: function() {
-			return "SimpleParticle";
+			return "BurnoutParticle";
 		},
 
-		// A simple reference point for the "up" vector
-		ref: new Point2D(0, -1)
+		ref: new Point2D(0, -1) // A simple reference point for the "up" vector
 	});
 
-	return SimpleParticle;
-
-});
-
-Engine.initObject("TrailParticle", "Particle", function() {
-
-	/**
-	 * @class A simple particle
-	 *
-	 * @param pos {Point2D} The starting position of the particle.  A
-	 *				velocity vector will be derived from this position.
-	 */
-	var TrailParticle = Particle.extend(/** @scope TrailParticle.prototype */{
-
-		pos: null,
-		vec: null,
-		clr: null,
-
-		constructor: function(pos, rot, spread, color, ttl) {
-			this.base(ttl || 2000);
-			this.clr = color;
-			this.pos = new Point2D(pos);
-			var a = rot + Math.floor((180 - (spread / 2)) + (Math.random() * (spread * 2)));
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, TrailParticle.ref, a);
-			var vel = 1 + (Math.random() * 2);
-			this.vec.mul(vel);
-		},
-
-		release: function() {
-			this.base();
-			this.pos = null;
-			this.vec = null;
-		},
-
-		/**
-		 * Called by the particle engine to draw the particle to the rendering
-		 * context.
-		 *
-		 * @param renderContext {RenderContext} The rendering context
-		 * @param time {Number} The engine time in milliseconds
-		 */
-		draw: function(renderContext, time) {
-			this.pos.add(this.vec);
-			renderContext.setPosition(this.pos);
-			renderContext.setFillStyle(this.clr);
-			renderContext.drawPoint(Point2D.ZERO);
-		}
-
-	}, {
-		getClassName: function() {
-			return "TrailParticle";
-		},
-
-		// A simple reference point for the "up" vector
-		ref: new Point2D(0, -1)
-	});
-
-	return TrailParticle;
+	return BurnoutParticle;
 });
 
 Engine.initObject("SnowParticle", "Particle", function() {
@@ -174,15 +114,14 @@ Engine.initObject("SnowParticle", "Particle", function() {
 		vec: null,
 		clr: null,
 				
-		constructor: function(fieldWidth) {
-			this.pos = new Point2D(Math.floor(Math.random() * fieldWidth), 0);
-			
-			var rot = 0;
-			var ttl = 10000;
-			
+		constructor: function(levelWidth) {
+			this.pos = new Point2D(Math.floor(Math.random() * levelWidth), 0);
+						
+			var ttl = 8000;
 			this.base(ttl);
 			this.clr = "#ffffff";
-			var a = rot + Math.floor((180) + (Math.random()));
+			
+			var a = Math.floor((180) + (Math.random()));
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, SnowParticle.ref, a);
 			var vel = 2 + (Math.random() * 0.5);
 			this.vec.mul(vel);
@@ -203,6 +142,7 @@ Engine.initObject("SnowParticle", "Particle", function() {
 		 */
 		draw: function(renderContext, time) {
 			this.pos.add(this.vec);
+			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
 			renderContext.setPosition(this.pos);
 			renderContext.setFillStyle(this.clr);
 			renderContext.drawPoint(Point2D.ZERO);
@@ -212,9 +152,8 @@ Engine.initObject("SnowParticle", "Particle", function() {
 		getClassName: function() {
 			return "SnowParticle";
 		},
-
-		// A simple reference point for the "up" vector
-		ref: new Point2D(0, -1)
+		
+		ref: new Point2D(0, -1) // A simple reference point for the "up" vector
 	});
 
 	return SnowParticle;

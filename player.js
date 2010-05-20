@@ -54,7 +54,6 @@ var SpaceroidsPlayer = Object2D.extend({
 	
 	velocity: null,
 	direction: null,
-	gunTip: null,
 	
 	runSpeed: 3,
 	
@@ -97,7 +96,7 @@ var SpaceroidsPlayer = Object2D.extend({
 		this.playerSprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
 		this.setSprite("rightstand");
 		
-		this.setDirection(this.right)
+		this.direction = this.right;
 		this.players--;
 		this.velocity = Vector2D.create(0, 0);
 
@@ -115,7 +114,6 @@ var SpaceroidsPlayer = Object2D.extend({
 		this.base();
 		this.size = 4;
 		this.bullets = 0;
-		this.gunTip = null;
 		this.players = 3;
 		this.alive = false;
 	},
@@ -131,7 +129,6 @@ var SpaceroidsPlayer = Object2D.extend({
 	 */
 	update: function(renderContext, time) {
 		var c_mover = this.getComponent("move");
-		c_mover.setPosition(this.field.wrap(c_mover.getPosition(), this.getBoundingBox()));
 
 		renderContext.pushTransform();
 		this.base(renderContext, time);
@@ -222,10 +219,17 @@ var SpaceroidsPlayer = Object2D.extend({
 	 * Called when the player shoots a bullet to create a bullet
 	 * in the playfield and keep track of the active number of bullets.
 	 */
+	muzzleFlashSpread: 25,
+	muzzleParticleCount: 20,
+	muzzleParticleTTL: 700,
 	shoot: function() {
-		var b = SpaceroidsBullet.create(this);
-		this.getRenderContext().add(b);
+		var bullet = SpaceroidsBullet.create(this);
+		this.getRenderContext().add(bullet);
 		this.bullets++;
+
+		var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
+		for (var x = 0; x < this.muzzleParticleCount; x++)
+			Spaceroids.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
 	},
 
 	/**
@@ -256,16 +260,7 @@ var SpaceroidsPlayer = Object2D.extend({
 
 		this.getComponent("draw").setDrawMode(RenderComponent.NO_DRAW);
 
-		var pCount = Spaceroids.evolved ? 40 : 8;
-
-		// Make some particles
-		for (var x = 0; x < pCount; x++)
-		{
-			if (Spaceroids.evolved) {
-				this.field.pEngine.addParticle(TrailParticle.create(this.getPosition(), this.getRotation(), 45, "#ffffaa", 2000));
-			}
-			this.field.pEngine.addParticle(SimpleParticle.create(this.getPosition(), 3000));
-		}
+		var pCount = 40;
 
 		this.getComponent("move").setVelocity(Point2D.ZERO);
 		this.getComponent("move").setPosition(this.getRenderContext().getBoundingBox().getCenter());
@@ -296,11 +291,11 @@ var SpaceroidsPlayer = Object2D.extend({
 		switch (event.keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 				this.velocity = Point2D.create(-this.runSpeed, 0);
-				this.setDirection(this.left);
+				this.direction = this.left;
 				break;
 			case EventEngine.KEYCODE_RIGHT_ARROW:
 				this.velocity = Point2D.create(this.runSpeed, 0);
-				this.setDirection(this.right);
+				this.direction = this.right;
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
@@ -332,6 +327,7 @@ var SpaceroidsPlayer = Object2D.extend({
 	
 	move: function() {
 		this.setPosition(this.getPosition().add(this.velocity));
+		this.field.updateFramePosition(this.velocity, this);
 		if(this.velocity.x != 0)
 			if(this.direction == this.left)
 				this.setSprite("leftrun");
@@ -343,14 +339,13 @@ var SpaceroidsPlayer = Object2D.extend({
 			else
 				this.setSprite("rightstand");
 	},
-
-	setDirection: function(direction) {
-		this.direction = direction;
-		this.gunTip = this.directionData[direction]["gunTip"]
+	
+	getGunAngle: function() {
+		return this.directionData[this.direction]["angle"];
 	},
 	
-	getDirectionAngle: function() {
-		return this.directionData[this.direction]["angle"];
+	getGunTip: function() {
+		return this.directionData[this.direction]["gunTip"];
 	},
 
 	}, { // Static
@@ -368,8 +363,6 @@ var SpaceroidsPlayer = Object2D.extend({
 		 * @private
 		 */
 		points: [ [-2,  2], [0, -3], [ 2,  2], [ 0, 1] ],
-
-		trailColors: ["red", "orange", "yellow", "white", "lime"],	
 	});
 
 	return SpaceroidsPlayer;

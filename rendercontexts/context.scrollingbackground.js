@@ -118,6 +118,7 @@ var ScrollingBackground = CanvasContext.extend(/** @scope ScrollingBackground.pr
       return this.visRect.getTopLeft().y;
    },
 
+   // framechange
    setupWorld: function(time) {
       this.base(time);
 
