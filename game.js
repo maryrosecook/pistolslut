@@ -36,6 +36,7 @@ var Spaceroids = Game.extend({
 	rocks: 0,
 	snowTimer: null,
 	snowFallRate: 0,
+	snowFallInterval: 100,
 	groundY: 498,
 	
 	fieldWidth: 500,
@@ -52,7 +53,11 @@ var Spaceroids = Game.extend({
 	spriteLoader: null,
 	levelLoader: null,
 	loadTimeout: null,
-
+	
+	gravityVector: Vector2D.create(0, 0.6),
+	gravityTimer: null,
+	gravityInterval: 100,
+	
 	/**
 	 * A simple mode where the title, game over message,
 	 * and start message are displayed with asteroids in the background
@@ -62,15 +67,6 @@ var Spaceroids = Game.extend({
 
 		var pWidth = this.fieldWidth;
 		var pHeight = this.fieldHeight;
-
-		// Add some asteroids
-		// for (var a = 0; a < 3; a++)
-		// {
-		// 	var rock = SpaceroidsRock.create(null, null, pWidth, pHeight);
-		// 	this.renderContext.add(rock);
-		// 	rock.setup();
-		// 	rock.killTimer = Engine.worldTime + 2000;
-		// }
 
 		// var flash = function() {
 		// 	if (!Spaceroids.showStart)
@@ -105,13 +101,40 @@ var Spaceroids = Game.extend({
 		this.playerObj.setup(pWidth, pHeight);
 		
 		//snow machine
-		Spaceroids.snowTimer = Interval.create("snow", 10,
+		Spaceroids.snowTimer = Interval.create("snow", this.snowFallInterval,
 			function() {
-				if(Spaceroids.snowFallRate >= 1 || Spaceroids.snowFallRate > Math.random())
+				// if(Spaceroids.snowFallRate >= 1 || Spaceroids.snowFallRate > Math.random())
 					Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.level.getWidth()));
-				else
-					Spaceroids.snowFallRate += 0.0001;
+				// else
+				// 					Spaceroids.snowFallRate += 0.0001;
 		});
+		
+		// gravity machine
+		Spaceroids.gravityTimer = Interval.create("snow", this.gravityInterval,
+			function() {
+				Spaceroids.applyGravity(Spaceroids.playerObj);
+		});
+	},
+	
+	applyGravity: function(obj) {
+		obj.velocity = obj.velocity.add(this.gravityVector);
+	},
+	
+	updatePosition: function(obj) {
+		var potentialNewPos = Point2D.create(obj.getPosition()).add(obj.velocity); // get pos COULD end up in
+		var solidGround = this.solidGround(potentialNewPos); // either false or ground pos
+		if(solidGround == false)
+			obj.setPosition(potentialNewPos);
+		else
+			obj.endFall(solidGround);
+	},
+	
+	// if not on solid ground, return false, otherwise return pos of solid ground
+	solidGround: function(pos) {
+		if(pos.y >= this.groundY)
+			return Point2D.create(pos.x, this.groundY);
+		else
+			return false;
 	},
 	
 	/**

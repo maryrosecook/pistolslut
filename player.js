@@ -55,8 +55,6 @@ var SpaceroidsPlayer = Object2D.extend({
 	velocity: null,
 	direction: null,
 	
-	runSpeed: 3,
-	
 	bullets: 0,
 
 	players: 3,
@@ -68,11 +66,11 @@ var SpaceroidsPlayer = Object2D.extend({
 	directionData: {
 		"left": {
 			"angle": 270,
-			"gunTip": new Point2D(15, 16)
+			"gunTip": new Point2D(15, 16),
 		},
 		"right": {
 			"angle": 90,
-			"gunTip": new Point2D(30, 16)
+			"gunTip": new Point2D(30, 16),
 		}
 	},
 	left: "left",
@@ -94,7 +92,6 @@ var SpaceroidsPlayer = Object2D.extend({
 		this.playerSprites["rightrun"] = this.field.spriteLoader.getSprite("girl", "rightrun");
 		this.playerSprites["leftstand"] = this.field.spriteLoader.getSprite("girl", "leftstand");
 		this.playerSprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
-		this.setSprite("rightstand");
 		
 		this.direction = this.right;
 		this.players--;
@@ -219,17 +216,60 @@ var SpaceroidsPlayer = Object2D.extend({
 	 * Called when the player shoots a bullet to create a bullet
 	 * in the playfield and keep track of the active number of bullets.
 	 */
-	muzzleFlashSpread: 25,
+	muzzleFlashSpread: 15,
 	muzzleParticleCount: 20,
 	muzzleParticleTTL: 700,
+	shootDelay: 1000,
+	lastShot: 0,
 	shoot: function() {
-		var bullet = SpaceroidsBullet.create(this);
-		this.getRenderContext().add(bullet);
-		this.bullets++;
+		if(new Date().getTime() - this.lastShot > this.shootDelay)
+		{
+			this.lastShot = new Date().getTime();
+			var bullet = SpaceroidsBullet.create(this);
+			this.getRenderContext().add(bullet);
+			this.bullets++;
 
-		var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
-		for (var x = 0; x < this.muzzleParticleCount; x++)
-			Spaceroids.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
+			var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
+			for (var x = 0; x < this.muzzleParticleCount; x++)
+				Spaceroids.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
+		}
+	},
+	
+	jumping: false,
+	jumpSpeed: -3,
+	postJumpVector: Vector2D.create(0, -1),
+	jump: function() {
+		if(!this.jumping)
+		{
+			this.jumping = true;
+			this.velocity.add(Vector2D.create(0, this.jumpSpeed));
+			this.setPosition(this.getPosition().add(this.postJumpVector));
+		}
+	},
+
+	walking: false,	
+	runSpeed: 3,
+	walk: function(direction) {
+		if(!this.walking)
+		{
+			this.walking = true;
+			this.direction = direction;
+			if(direction == this.left)
+				this.velocity.add(Vector2D.create(-this.runSpeed, 0));
+			else if(direction == this.right)
+				this.velocity.add(Vector2D.create(this.runSpeed, 0));
+		}
+	},
+
+	stopWalk: function() {
+		this.velocity.setX(0);
+		this.walking = false;
+	},
+	
+	endFall: function(solidGround) {
+		this.setPosition(solidGround);
+		this.velocity.setY(0);
+		this.jumping = false;
 	},
 
 	/**
@@ -239,14 +279,6 @@ var SpaceroidsPlayer = Object2D.extend({
 	removeBullet: function() {
 		// Clean up
 		this.bullets--;
-	},
-
-	/**
-	 * Returns the state of the player object.
-	 * @type Boolean
-	 */
-	isAlive: function() {
-		return this.alive;
 	},
 
 	/**
@@ -273,7 +305,6 @@ var SpaceroidsPlayer = Object2D.extend({
 			var pl = this;
 			OneShotTimeout.create("respawn", 3000, function() { pl.respawn(); });
 		}
-
 	},
 
 	/**
@@ -285,19 +316,22 @@ var SpaceroidsPlayer = Object2D.extend({
 		if (!this.alive)
 			return;
 		
-		if (event.ctrlKey)
-		  this.shoot();
-		
 		switch (event.keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
-				this.velocity = Point2D.create(-this.runSpeed, 0);
-				this.direction = this.left;
+				this.walk(this.left);
 				break;
 			case EventEngine.KEYCODE_RIGHT_ARROW:
-				this.velocity = Point2D.create(this.runSpeed, 0);
-				this.direction = this.right;
+				this.walk(this.right);
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
+				break;
+			case 90: // z
+				this.shoot();
+				break;
+			case 88: // x
+				this.jump();
+				break;
+			case 67: // c
 				break;
 		}
 		
@@ -316,7 +350,7 @@ var SpaceroidsPlayer = Object2D.extend({
 		switch (event.keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 			case EventEngine.KEYCODE_RIGHT_ARROW:
-				this.velocity.setX(0);
+				this.stopWalk();
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
@@ -326,18 +360,14 @@ var SpaceroidsPlayer = Object2D.extend({
 	},
 	
 	move: function() {
-		this.setPosition(this.getPosition().add(this.velocity));
+		this.field.updatePosition(this);
 		this.field.updateFramePosition(this.velocity, this);
+
+		// set sprite
 		if(this.velocity.x != 0)
-			if(this.direction == this.left)
-				this.setSprite("leftrun");
-			else
-				this.setSprite("rightrun");
+			this.setSprite(this.direction + "run");
 		else
-			if(this.direction == this.left)
-				this.setSprite("leftstand");
-			else
-				this.setSprite("rightstand");
+			this.setSprite(this.direction + "stand");
 	},
 	
 	getGunAngle: function() {

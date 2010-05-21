@@ -201,8 +201,8 @@ var SpaceroidsBullet = Object2D.extend({
    },
 
    // Why we have this, I don't know...
-   shape: [ new Point2D(-1, -1), new Point2D( 1, -1),
-            new Point2D( 1,  1), new Point2D(-1,  1)],
+   shape: [ new Point2D(-1, 0), new Point2D(0, 0),
+            new Point2D(0,  1), new Point2D(0,  1)],
 
    // The tip of the player at zero rotation (up)
    tip: new Point2D(0, -1)
