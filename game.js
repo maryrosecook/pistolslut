@@ -117,7 +117,9 @@ var Spaceroids = Game.extend({
 	},
 	
 	applyGravity: function(obj) {
-		obj.velocity = obj.velocity.add(this.gravityVector);
+		console.log(this.solidGround(obj.getPosition()))
+		if(this.solidGround(obj.getPosition()) == false)
+			obj.velocity = obj.velocity.add(this.gravityVector);
 	},
 	
 	updatePosition: function(obj) {
