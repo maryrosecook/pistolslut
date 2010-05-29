@@ -158,9 +158,14 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
             }
 
             var vz = Vector2D.create(this.velocity).mul(lag);
-            this.setPosition(this.lPos.add(vz));
+            this.setPosition(Point2D.create(this.lPos).add(vz));
             this.setRotation(rot + this.angularVelocity * (lag));
          }
+
+				 // // framechange
+				 // var render = this.host.field.collider.handle(this.host);
+				 // if(render == false)
+				 // 					 this.getHostObject().getComponent("draw").setDrawMode(RenderComponent.NO_DRAW);
          
          // Check rest state  
          if (this.getCheckRestState()) {
@@ -172,7 +177,10 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
       }
 
       this.lastTime = time;
-      this.base(renderContext, time);
+
+			// framechange
+			if(this.getHostObject() != null) // might have been killed by a collision
+      	this.base(renderContext, time);
    },
 
    /**

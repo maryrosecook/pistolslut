@@ -34,6 +34,23 @@
 Engine.include("/engine/engine.math2d.js");
 Engine.include("/engine/engine.particles.js");
 
+Engine.initObject("RicochetParticle", "BurnoutParticle", function() {
+
+	var RicochetParticle = BurnoutParticle.extend(/** @scope RicochetParticle.prototype */{
+
+		constructor: function(pos, rot, spread, ttl) {
+			this.base(pos, rot, Vector2D.create(0,0), spread, ttl)
+		},
+	}, {
+		
+		getClassName: function() {
+			return "RicochetParticle";
+		},
+	});
+
+	return RicochetParticle;
+});
+
 Engine.initObject("BurnoutParticle", "Particle", function() {
 
 	/**

@@ -85,7 +85,6 @@ var RenderComponent = BaseComponent.extend(/** @scope RenderComponent.prototype 
     * @param time {Number} The engine time in milliseconds
     */
    execute: function(renderContext, time) {
-
       // Check visibility
       if ((this.drawMode == RenderComponent.NO_DRAW) ||
           this.getHostObject().getWorldBox &&

@@ -177,29 +177,35 @@ var SpatialGrid = SpatialContainer.extend(/** @scope SpatialGrid.prototype */{
    getPCL: function(point) {
 
       // We'll build our list from the 5 node cross section
-      var x = Math.floor(point.x * this.xLocator);
-      var y = Math.floor(point.y * this.yLocator);
+      //var x = Math.floor(point.x * this.xLocator);
+      //var y = Math.floor(point.y * this.yLocator);
 
-      // if our borders cross the margin, we can drop up to two nodes
-      var nodes = [];
-      nodes.push(this.getNode(x, y));
-      if (x > 0) { nodes.push(this.getNode(x - 1, y)); }
-      if (x < this.divisions) { nodes.push(this.getNode(x + 1, y)); }
-      if (y > 0) { nodes.push(this.getNode(x, y - 1)); }
-      if (y < this.divisions) { nodes.push(this.getNode(x, y + 1)); }
-
-      var o = [];
-      if (nodes.length > 0)
-      {
-         for (var n = 0; n < nodes.length; n++)
-         {
-            if (nodes[n])
-            {
-               o = o.concat(nodes[n].getObjects());
-            }
-         }
-      }
-      return o;
+			//framechange
+			// if our borders cross the margin, we can drop up to two nodes
+      //var nodes = [];
+      // nodes.push(this.getNode(x, y));
+      // if (x > 0) { nodes.push(this.getNode(x - 1, y)); }
+      // if (x < this.divisions) { nodes.push(this.getNode(x + 1, y)); }
+      // if (y > 0) { nodes.push(this.getNode(x, y - 1)); }
+      // if (y < this.divisions) { nodes.push(this.getNode(x, y + 1)); }
+      // 
+      // var o = [];
+      // if (nodes.length > 0)
+      // {
+      //    for (var n = 0; n < nodes.length; n++)
+      //    {
+      //       if (nodes[n])
+      //       {
+      //          o = o.concat(nodes[n].getObjects());
+      //       }
+      //    }
+      // }
+      // return o;
+			var objects = [];
+			var grid = this.getRoot();
+			for(var i in grid)
+				objects = objects.concat(grid[i].getObjects());
+			return objects;
    }
 
 }, {

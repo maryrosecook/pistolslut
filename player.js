@@ -34,8 +34,8 @@
 
 Engine.include("/components/component.mover2d.js");
 Engine.include("/components/component.keyboardinput.js");
-Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
+Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.timers.js");
 Engine.include("/components/component.sprite.js");
 
@@ -66,11 +66,11 @@ var SpaceroidsPlayer = Object2D.extend({
 	directionData: {
 		"left": {
 			"angle": 270,
-			"gunTip": new Point2D(15, 16),
+			"gunTip": new Point2D(0, 9),
 		},
 		"right": {
 			"angle": 90,
-			"gunTip": new Point2D(30, 16),
+			"gunTip": new Point2D(44, 9),
 		}
 	},
 	left: "left",
@@ -85,7 +85,7 @@ var SpaceroidsPlayer = Object2D.extend({
 		this.add(KeyboardInputComponent.create("input"));
 		this.add(Mover2DComponent.create("move"));
 		this.add(SpriteComponent.create("draw"));
-		this.add(ColliderComponent.create("collider", this.field.collisionModel));
+		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
 		this.playerSprites = {};
 		this.playerSprites["rightstand"] = this.field.spriteLoader.getSprite("girl", "rightstand");
@@ -113,6 +113,43 @@ var SpaceroidsPlayer = Object2D.extend({
 		this.bullets = 0;
 		this.players = 3;
 		this.alive = false;
+		this.velocity = null;
+		this.direction = null;
+		this.playerSprites = null;
+		this.directionData = null;
+		this.left = null;
+		this.right = null;
+	},
+
+	move: function() {
+		this.setPosition(this.getPosition().add(this.velocity));
+		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
+
+		// set sprite
+		if(this.velocity.x != 0)
+			this.setSprite(this.direction + "run");
+		else
+			this.setSprite(this.direction + "stand");
+	},
+
+	onCollide: function(obj) {
+		obj.collisionWith(this);
+		this.collisionWith(obj)
+		return 0; // deal with it own self;
+	},
+
+	collisionWith: function(obj) {
+		if(obj instanceof Furniture && this.colliding(obj))
+		{
+			this.endFall(obj);
+			return 0;
+		}
+		return 0;
+	},
+	
+	// returns true if passed obj is colliding with this
+	colliding: function(obj) {
+		return this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj));
 	},
 
 	/**
@@ -125,11 +162,9 @@ var SpaceroidsPlayer = Object2D.extend({
 	 * @param time {Number} The engine time in milliseconds
 	 */
 	update: function(renderContext, time) {
-		var c_mover = this.getComponent("move");
-
 		renderContext.pushTransform();
-		this.base(renderContext, time);
 		this.move();
+		this.base(renderContext, time);
 		renderContext.popTransform();
 	},
 
@@ -209,7 +244,7 @@ var SpaceroidsPlayer = Object2D.extend({
 
 		// Put us on the ground in the middle
 		var c_mover = this.getComponent("move");
-		c_mover.setPosition(new Point2D(this.pBox.getCenter().x, this.field.groundY));
+		c_mover.setPosition(new Point2D(50, this.field.groundY));
 	},
 
 	/**
@@ -219,7 +254,7 @@ var SpaceroidsPlayer = Object2D.extend({
 	muzzleFlashSpread: 15,
 	muzzleParticleCount: 20,
 	muzzleParticleTTL: 700,
-	shootDelay: 1000,
+	shootDelay: 100,
 	lastShot: 0,
 	shoot: function() {
 		if(new Date().getTime() - this.lastShot > this.shootDelay)
@@ -236,7 +271,7 @@ var SpaceroidsPlayer = Object2D.extend({
 	},
 	
 	jumping: false,
-	jumpSpeed: -3,
+	jumpSpeed: -4.5,
 	postJumpVector: Vector2D.create(0, -1),
 	jump: function() {
 		if(!this.jumping)
@@ -266,19 +301,11 @@ var SpaceroidsPlayer = Object2D.extend({
 		this.walking = false;
 	},
 	
-	endFall: function(solidGround) {
-		this.setPosition(solidGround);
+	endFall: function(groundObj) {
+		var newPos = Point2D.create(this.getPosition().x, groundObj.getPosition().y).sub(Vector2D.create(0, this.getBoundingBox().dims.y));
+		this.setPosition(newPos);
 		this.velocity.setY(0);
 		this.jumping = false;
-	},
-
-	/**
-	 * Called when a bullet collides with another object or leaves
-	 * the playfield so the player can fire more bullets.
-	 */
-	removeBullet: function() {
-		// Clean up
-		this.bullets--;
 	},
 
 	/**
@@ -359,17 +386,6 @@ var SpaceroidsPlayer = Object2D.extend({
 		return false;
 	},
 	
-	move: function() {
-		this.field.updatePosition(this);
-		this.field.updateFramePosition(this.velocity, this);
-
-		// set sprite
-		if(this.velocity.x != 0)
-			this.setSprite(this.direction + "run");
-		else
-			this.setSprite(this.direction + "stand");
-	},
-	
 	getGunAngle: function() {
 		return this.directionData[this.direction]["angle"];
 	},
@@ -378,22 +394,17 @@ var SpaceroidsPlayer = Object2D.extend({
 		return this.directionData[this.direction]["gunTip"];
 	},
 
-	}, { // Static
+  removeBullet: function() {
+     // Clean up
+     this.bullets--;
+  },
 
-		/**
-		 * Get the class name of this object
-		 *
-		 * @type String
-		 */
+	}, { // Static
 		getClassName: function() {
 			return "SpaceroidsPlayer";
 		},
-
-		/** The player shape
-		 * @private
-		 */
-		points: [ [-2,  2], [0, -3], [ 2,  2], [ 0, 1] ],
 	});
+
 
 	return SpaceroidsPlayer;
 

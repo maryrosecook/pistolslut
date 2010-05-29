@@ -33,7 +33,6 @@
 
 Engine.include("/components/component.mover2d.js");
 Engine.include("/components/component.vector2d.js");
-Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 Engine.include("/engine/engine.timers.js");
 
@@ -251,9 +250,9 @@ var SpaceroidsRock = Object2D.extend({
             
             var r_mover = rock.getComponent("move");
             r_mover.setVelocity(r_mover.getVelocity().mul(curVel + 0.5));
-            if (Spaceroids.isAttractMode) {
-               rock.killTimer = Engine.worldTime + 2000;
-            }
+            // if (Spaceroids.isAttractMode) {
+            //    rock.killTimer = Engine.worldTime + 2000;
+            // }
          }
       }
 
@@ -283,7 +282,7 @@ var SpaceroidsRock = Object2D.extend({
          }
       }
 
-      if (Spaceroids.isAttractMode &&
+      if (//Spaceroids.isAttractMode &&
             obj.killTimer < Engine.worldTime &&
             obj instanceof SpaceroidsRock &&
             obj != this &&
