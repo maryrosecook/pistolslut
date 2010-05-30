@@ -176,11 +176,10 @@ var SpatialGrid = SpatialContainer.extend(/** @scope SpatialGrid.prototype */{
     */
    getPCL: function(point) {
 
+			//framechange
       // We'll build our list from the 5 node cross section
       //var x = Math.floor(point.x * this.xLocator);
       //var y = Math.floor(point.y * this.yLocator);
-
-			//framechange
 			// if our borders cross the margin, we can drop up to two nodes
       //var nodes = [];
       // nodes.push(this.getNode(x, y));

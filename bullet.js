@@ -3,13 +3,13 @@ Engine.include("/components/component.vector2d.js");
 Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
-Engine.initObject("SpaceroidsBullet", "Object2D", function() {
+Engine.initObject("Bullet", "Object2D", function() {
 	/**
 	 * @class The bullet object.
 	 *
-	 * @param player {Spaceroids.Player} The player object this bullet comes from,
+	 * @param player {PistolSlut.Player} The player object this bullet comes from,
 	 */
-	var SpaceroidsBullet = Object2D.extend({
+	var Bullet = Object2D.extend({
 
 		player: null,
 
@@ -22,7 +22,7 @@ Engine.initObject("SpaceroidsBullet", "Object2D", function() {
 			this.base("Bullet");
 
 			// This is a hack!
-			this.field = Spaceroids;
+			this.field = PistolSlut;
 
 			// Track the player that created us
 			this.player = player;
@@ -40,11 +40,11 @@ Engine.initObject("SpaceroidsBullet", "Object2D", function() {
 			var c_mover = this.getComponent("move");
 			var c_draw = this.getComponent("draw");
 
-			c_draw.setPoints(SpaceroidsBullet.shape);
+			c_draw.setPoints(Bullet.shape);
 			c_draw.setLineStyle("white");
 			c_draw.setFillStyle("white");
 
-			var dir = Math2D.getDirectionVector(Point2D.ZERO, SpaceroidsBullet.tip, this.player.getGunAngle());
+			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, this.player.getGunAngle());
 			
 			var playerPosition = Point2D.create(p_mover.getPosition());
 			var gunTipPosition = playerPosition.add(this.player.getGunTip());
@@ -168,7 +168,7 @@ Engine.initObject("SpaceroidsBullet", "Object2D", function() {
 		 * @type String
 		 */
 		getClassName: function() {
-			return "SpaceroidsBullet";
+			return "Bullet";
 		},
 
 		shape: [ new Point2D(-1, 0), new Point2D(0, 0),
@@ -178,5 +178,5 @@ Engine.initObject("SpaceroidsBullet", "Object2D", function() {
 		tip: new Point2D(0, -1)
 	});
 
-	return SpaceroidsBullet;
+	return Bullet;
 });

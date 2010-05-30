@@ -2591,7 +2591,7 @@ var Engine = Engine.extend(/** @scope Engine.prototype */{
     * <pre>
     *  &lt;script type="text/javascript"&gt;
     *     // Load the game script
-    *     Engine.loadGame('game.js','Spaceroids');
+    *     Engine.loadGame('game.js','PistolSlut');
     *  &lt;/script&gt;
     * </pre>
     *

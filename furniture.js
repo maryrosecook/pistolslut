@@ -16,7 +16,7 @@ Engine.initObject("Furniture", "Object2D", function() {
 
 		constructor: function(name, position) {
 			this.base(name);
-			this.field = Spaceroids;
+			this.field = PistolSlut;
 
 			// Add components to move and draw
 			this.add(Mover2DComponent.create("move"));
@@ -68,7 +68,6 @@ Engine.initObject("Furniture", "Object2D", function() {
 		},
 		
 		onCollide: function(obj) {
-			obj.collisionWith(this); // tell other object
 			return this.collisionWith(obj); // deal with it own self; 
 		},
 

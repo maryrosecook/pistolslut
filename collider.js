@@ -12,10 +12,34 @@ var Collider = Base.extend({
 		this.field = field;
 	},
 	
+	aFallingThroughB: function(a, b) {
+		var aRect = this.getRect(a).get();
+		var bRect = this.getRect(b).get();
+		return a.velocity.y > 0 && aRect.b > bRect.y && aRect.b < bRect.y + 6;
+	},
+	
+	aOnB: function(a, b) {
+		var aRect = this.getRect(a).get();
+		var bRect = this.getRect(b).get();
+		return aRect.b == bRect.y;
+	},
+	
+	aOnLeftAndBumpingB: function(a, b) {
+		var aRect = this.getRect(a).get();
+		var bRect = this.getRect(b).get();
+		return !this.aOnB(a, b) && aRect.r >= bRect.x && aRect.x < bRect.x;
+	},
+	
+	aOnRightAndBumpingB: function(a, b) {
+		var aRect = this.getRect(a).get();
+		var bRect = this.getRect(b).get();
+		return !this.aOnB(a, b) && aRect.x <= bRect.r && aRect.r > bRect.r;
+	},
+	
 	// returns true if subject colliding with any of the objects
 	colliding: function(subject, objects) {
 		for(var i in objects)
-			if(subject.colliding(objects[i]))
+			if(this.getRect(subject).isIntersecting(this.getRect(objects[i])))
 				return true;
 		return false;
 	},

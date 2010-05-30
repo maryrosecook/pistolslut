@@ -134,8 +134,11 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
       if (!obj.ModelData)
       {
          obj.ModelData = { lastNode: null };
-				 obj.ModelData.lastNode = aNode;
-				 aNode.addObject(obj);
+				 if(aNode != null)
+				 {
+					 obj.ModelData.lastNode = aNode;
+				 	 aNode.addObject(obj);
+				 }
       }
 
       if ( obj.ModelData.lastNode && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) )

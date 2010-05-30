@@ -17,12 +17,12 @@ Game.load("/furnishedlevel.js");
 Game.load("/furniture.js");
 Game.load("/collider.js");
 
-Engine.initObject("Spaceroids", "Game", function() {
+Engine.initObject("PistolSlut", "Game", function() {
 
 	/**
 	 * @class The game.
 	 */
-	var Spaceroids = Game.extend({
+	var PistolSlut = Game.extend({
 
 		constructor: null,
 
@@ -40,7 +40,7 @@ Engine.initObject("Spaceroids", "Game", function() {
 		snowTimer: null,
 		snowFallRate: 0,
 		snowFallInterval: 100,
-		groundY: 500,
+		groundY: 400,
 	
 		fieldWidth: 500,
 		fieldHeight: 580,
@@ -91,7 +91,7 @@ Engine.initObject("Spaceroids", "Game", function() {
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
 		
 			// Don't start until all of the resources are loaded
-			Spaceroids.loadTimeout = Timeout.create("wait", 250, Spaceroids.waitForResources);
+			PistolSlut.loadTimeout = Timeout.create("wait", 250, PistolSlut.waitForResources);
 			this.waitForResources();
 		},
 	
@@ -99,14 +99,14 @@ Engine.initObject("Spaceroids", "Game", function() {
 			var pWidth = this.fieldWidth;
 			var pHeight = this.fieldHeight;
 		
-	    this.level = Spaceroids.levelLoader.getLevel("level1");
+	    this.level = PistolSlut.levelLoader.getLevel("level1");
 
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);
 			this.renderContext.setBackgroundColor("#000000");
 			Engine.getDefaultContext().add(this.renderContext);
 		
-			this.playerObj = SpaceroidsPlayer.create();
+			this.playerObj = Player.create();
 			this.renderContext.add(this.playerObj);
 			this.playerObj.setup(pWidth, pHeight);
 		
@@ -118,15 +118,15 @@ Engine.initObject("Spaceroids", "Game", function() {
 			this.renderContext.add(this.pEngine);
 				
 			//snow machine
-			Spaceroids.snowTimer = Interval.create("snow", this.snowFallInterval,
+			PistolSlut.snowTimer = Interval.create("snow", this.snowFallInterval,
 				function() {
-					Spaceroids.pEngine.addParticle(SnowParticle.create(Spaceroids.level.getWidth()));
+					PistolSlut.pEngine.addParticle(SnowParticle.create(PistolSlut.level.getWidth()));
 			});
 		
 			// gravity machine
-			Spaceroids.gravityTimer = Interval.create("gravity", this.gravityInterval,
+			PistolSlut.gravityTimer = Interval.create("gravity", this.gravityInterval,
 				function() {
-					Spaceroids.applyGravity(Spaceroids.playerObj);
+					PistolSlut.applyGravity(PistolSlut.playerObj);
 			});
 		},
 	
@@ -136,14 +136,14 @@ Engine.initObject("Spaceroids", "Game", function() {
 		},
 		
 	  waitForResources: function(){
-			if (Spaceroids.spriteLoader.isReady() && Spaceroids.levelLoader.isReady())
+			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
 			{
-				Spaceroids.loadTimeout.destroy();
-				Spaceroids.play();
+				PistolSlut.loadTimeout.destroy();
+				PistolSlut.play();
 				return;
 		  }
 		  else
-		  	Spaceroids.loadTimeout.restart();
+		  	PistolSlut.loadTimeout.restart();
 	  },
 
 		// load signs from the current level
@@ -199,5 +199,5 @@ Engine.initObject("Spaceroids", "Game", function() {
 
 	});
 
-	return Spaceroids;
+	return PistolSlut;
 });

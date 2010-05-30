@@ -5,14 +5,14 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.timers.js");
 Engine.include("/components/component.sprite.js");
 
-Engine.initObject("SpaceroidsPlayer", "Object2D", function() {
+Engine.initObject("Player", "Object2D", function() {
 
 /**
  * @class The player object.  Creates the player and assigns the
  *		  components which handle collision, drawing, drawing the thrust
  *		  and moving the object.
  */
-var SpaceroidsPlayer = Object2D.extend({
+var Player = Object2D.extend({
 
 	size: 4,
 
@@ -45,7 +45,7 @@ var SpaceroidsPlayer = Object2D.extend({
 	constructor: function() {
 		this.base("Player");
 
-		this.field = Spaceroids;
+		this.field = PistolSlut;
 
 		// Add components to move and draw the player
 		this.add(KeyboardInputComponent.create("input"));
@@ -99,22 +99,32 @@ var SpaceroidsPlayer = Object2D.extend({
 	},
 
 	onCollide: function(obj) {
-		obj.collisionWith(this);
 		return this.collisionWith(obj); // deal with it own self;
 	},
 
 	collisionWith: function(obj) {
-		if(obj instanceof Furniture && this.colliding(obj))
+		if(obj instanceof Furniture && this.field.collider.colliding(this, [obj]))
 		{
-			this.endFall(obj);
-			return ColliderComponent.STOP;
+			if(this.field.collider.aFallingThroughB(this, obj))
+			{
+				console.log("aFallingThroughB");
+				this.endFall(obj);
+				return ColliderComponent.STOP;
+			}
+			else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
+			{
+				console.log("aOnLeftAndBumpingB");
+				this.stopWalk(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
+				return ColliderComponent.STOP;
+			}
+			else if(this.field.collider.aOnRightAndBumpingB(this, obj))
+			{
+				console.log("aOnRightAndBumpingB");
+				this.stopWalk(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
+				return ColliderComponent.STOP;
+			}
 		}
 		return ColliderComponent.CONTINUE;
-	},
-	
-	// returns true if passed obj is colliding with this
-	colliding: function(obj) {
-		return this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj));
 	},
 
 	/**
@@ -225,13 +235,13 @@ var SpaceroidsPlayer = Object2D.extend({
 		if(new Date().getTime() - this.lastShot > this.shootDelay)
 		{
 			this.lastShot = new Date().getTime();
-			var bullet = SpaceroidsBullet.create(this);
+			var bullet = Bullet.create(this);
 			this.field.renderContext.add(bullet);
 			this.bullets++;
 
 			var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
 			for (var x = 0; x < this.muzzleParticleCount; x++)
-				Spaceroids.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
+				PistolSlut.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
 		}
 	},
 	
@@ -261,9 +271,11 @@ var SpaceroidsPlayer = Object2D.extend({
 		}
 	},
 
-	stopWalk: function() {
+	stopWalk: function(newX) {
 		this.velocity.setX(0);
 		this.walking = false;
+		if(newX != null)
+			this.setPosition(Point2D.create(newX, this.getPosition().y));
 	},
 	
 	endFall: function(groundObj) {
@@ -318,10 +330,10 @@ var SpaceroidsPlayer = Object2D.extend({
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
 			case 90: // z
-				this.shoot();
+				this.jump();
 				break;
 			case 88: // x
-				this.jump();
+				this.shoot();
 				break;
 			case 67: // c
 				break;
@@ -342,7 +354,7 @@ var SpaceroidsPlayer = Object2D.extend({
 		switch (event.keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 			case EventEngine.KEYCODE_RIGHT_ARROW:
-				this.stopWalk();
+				this.stopWalk(null);
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
@@ -366,11 +378,10 @@ var SpaceroidsPlayer = Object2D.extend({
 
 	}, { // Static
 		getClassName: function() {
-			return "SpaceroidsPlayer";
+			return "Player";
 		},
 	});
 
 
-	return SpaceroidsPlayer;
-
+	return Player;
 });
