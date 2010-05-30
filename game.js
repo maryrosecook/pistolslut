@@ -111,12 +111,11 @@ Engine.initObject("Spaceroids", "Game", function() {
 			this.playerObj.setup(pWidth, pHeight);
 		
 			this.level.addObjects(this.renderContext);
-		
+			this.loadSigns();
+			
 			// Start up the particle engine
 			this.pEngine = ParticleEngine.create();
 			this.renderContext.add(this.pEngine);
-
-			this.loadSigns();
 				
 			//snow machine
 			Spaceroids.snowTimer = Interval.create("snow", this.snowFallInterval,

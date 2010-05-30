@@ -200,9 +200,6 @@ var Vector2DComponent = RenderComponent.extend(/** @scope Vector2DComponent.prot
     * @param time {Number} The engine time in milliseconds
     */
    execute: function(renderContext, time) {
-		// if(this.host instanceof SpaceroidsBullet)
-		// 	console.log("draw: ", this.host.getPosition().x)
-		
       if (!(this.points && this.base(renderContext, time)))
       {
          return;

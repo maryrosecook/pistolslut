@@ -90,7 +90,7 @@ var HostObject = HashContainer.extend(/** @scope HostObject.prototype */{
 
    /**
     * Update this object within the render context, at the specified timeslice.
-    *
+    *f
     * @param renderContext {RenderContext} The context the object will be rendered within.
     * @param time {Number} The global time within the engine.
     */

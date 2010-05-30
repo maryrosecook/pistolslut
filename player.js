@@ -1,37 +1,3 @@
-
-/**
- * The Render Engine
- * Example Game: Spaceroids - an Asteroids clone
- *
- * The player object
- *
- * @author: Brett Fattori (brettf@renderengine.com)
- *
- * @author: $Author: bfattori $
- * @version: $Revision: 779 $
- *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
-
 Engine.include("/components/component.mover2d.js");
 Engine.include("/components/component.keyboardinput.js");
 Engine.include("/engine/engine.object2d.js");
@@ -134,17 +100,16 @@ var SpaceroidsPlayer = Object2D.extend({
 
 	onCollide: function(obj) {
 		obj.collisionWith(this);
-		this.collisionWith(obj)
-		return 0; // deal with it own self;
+		return this.collisionWith(obj); // deal with it own self;
 	},
 
 	collisionWith: function(obj) {
 		if(obj instanceof Furniture && this.colliding(obj))
 		{
 			this.endFall(obj);
-			return 0;
+			return ColliderComponent.STOP;
 		}
-		return 0;
+		return ColliderComponent.CONTINUE;
 	},
 	
 	// returns true if passed obj is colliding with this
@@ -261,7 +226,7 @@ var SpaceroidsPlayer = Object2D.extend({
 		{
 			this.lastShot = new Date().getTime();
 			var bullet = SpaceroidsBullet.create(this);
-			this.getRenderContext().add(bullet);
+			this.field.renderContext.add(bullet);
 			this.bullets++;
 
 			var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());

@@ -1,36 +1,3 @@
-/**
- * The Render Engine
- * Example Game: Spaceroids - an Asteroids clone
- *
- * A simple particle
- *
- * @author: Brett Fattori (brettf@renderengine.com)
- *
- * @author: $Author: bfattori $
- * @version: $Revision: 520 $
- *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- */
-
 Engine.include("/engine/engine.math2d.js");
 Engine.include("/engine/engine.particles.js");
 
@@ -53,12 +20,6 @@ Engine.initObject("RicochetParticle", "BurnoutParticle", function() {
 
 Engine.initObject("BurnoutParticle", "Particle", function() {
 
-	/**
-	 * @class A simple particle
-	 *
-	 * @param pos {Point2D} The starting position of the particle.  A
-	 *				velocity vector will be derived from this position.
-	 */
 	var BurnoutParticle = Particle.extend(/** @scope BurnoutParticle.prototype */{
 
 		pos: null,
@@ -119,12 +80,6 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 
 Engine.initObject("SnowParticle", "Particle", function() {
 
-	/**
-	 * @class A simple particle
-	 *
-	 * @param pos {Point2D} The starting position of the particle.  A
-	 *				velocity vector will be derived from this position.
-	 */
 	var SnowParticle = Particle.extend(/** @scope TrailParticle.prototype */{
 
 		pos: null,

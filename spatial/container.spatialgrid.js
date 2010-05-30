@@ -205,6 +205,7 @@ var SpatialGrid = SpatialContainer.extend(/** @scope SpatialGrid.prototype */{
 			var grid = this.getRoot();
 			for(var i in grid)
 				objects = objects.concat(grid[i].getObjects());
+	
 			return objects;
    }
 

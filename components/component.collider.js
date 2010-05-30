@@ -102,12 +102,40 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
     * </ul>
     */
    updateModel: function() {
-
+			//framechange
       // Get the model data for the object
+      // var obj = this.getHostObject();
+      // if (!obj.ModelData)
+      // {
+      //    obj.ModelData = { lastNode: null };
+      // }
+      // 
+      // if ( obj.ModelData.lastNode && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) )
+      // {
+      //    // The object is within the same node
+      //    return;
+      // }
+      // 
+      // // Find the node that contains the object
+      // var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
+      // if (aNode != null)
+      // {
+      //    if (obj.ModelData.lastNode && (obj.ModelData.lastNode.getIndex() != aNode.getIndex()))
+      //    {
+      //       obj.ModelData.lastNode.removeObject(obj);
+      //       aNode.addObject(obj);
+      //    }
+      //    obj.ModelData.lastNode = aNode;
+      // }
+      
       var obj = this.getHostObject();
+			var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
+      
       if (!obj.ModelData)
       {
          obj.ModelData = { lastNode: null };
+				 obj.ModelData.lastNode = aNode;
+				 aNode.addObject(obj);
       }
 
       if ( obj.ModelData.lastNode && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) )
@@ -117,14 +145,11 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
       }
 
       // Find the node that contains the object
-      var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
       if (aNode != null)
       {
          if (obj.ModelData.lastNode && (obj.ModelData.lastNode.getIndex() != aNode.getIndex()))
-         {
-            obj.ModelData.lastNode.removeObject(obj);
-            aNode.addObject(obj);
-         }
+            obj.ModelData.lastNode.removeObject(obj);   
+					
          obj.ModelData.lastNode = aNode;
       }
    },
