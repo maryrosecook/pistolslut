@@ -2,6 +2,9 @@
 body {
 	overflow: hidden;
 	margin: 0;
+	font-family:verdana, Helvetica;
+	font-size:11px;
+  
 }
 
 div.metrics {
@@ -12,7 +15,6 @@ div.metrics {
    border: 1px solid black;
    background: white;
    padding: 2px;
-   font: 10px Arial, Helvetica;
 	z-index: 10000;
 }
 
@@ -51,3 +53,6 @@ div.metric-button {
 .maximize {
    background: url('$<enginePath>/css/maximize.png') no-repeat;
 }
+
+div.intro { float:right; width:300px; padding:40px 30px 0 10px;}
+h3 { font-size: 16px; font-weight:normal; margin:0; padding:0; display:inline; }
