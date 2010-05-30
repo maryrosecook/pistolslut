@@ -7,6 +7,9 @@ body {
   
 }
 
+a { color:black; }
+a:visited { color:black; }
+
 div.metrics {
    position: absolute;
    top: 10px;
