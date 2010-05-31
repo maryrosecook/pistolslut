@@ -102,7 +102,6 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
     * </ul>
     */
    updateModel: function() {
-			console.log("yeah!")
 	    // Get the model data for the object
 	    var obj = this.getHostObject();
 	    if (obj.ModelData.lastNode !== null && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) ) {

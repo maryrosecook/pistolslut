@@ -107,19 +107,16 @@ var Player = Object2D.extend({
 		{
 			if(this.field.collider.aFallingThroughB(this, obj))
 			{
-				console.log("aFallingThroughB");
 				this.endFall(obj);
 				return ColliderComponent.STOP;
 			}
 			else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
 			{
-				console.log("aOnLeftAndBumpingB");
 				this.stopWalk(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
 				return ColliderComponent.STOP;
 			}
 			else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 			{
-				console.log("aOnRightAndBumpingB");
 				this.stopWalk(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
 				return ColliderComponent.STOP;
 			}
