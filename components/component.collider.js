@@ -102,59 +102,39 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
     * </ul>
     */
    updateModel: function() {
-			//framechange
-      // Get the model data for the object
-      // var obj = this.getHostObject();
-      // if (!obj.ModelData)
-      // {
-      //    obj.ModelData = { lastNode: null };
-      // }
-      // 
-      // if ( obj.ModelData.lastNode && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) )
-      // {
-      //    // The object is within the same node
-      //    return;
-      // }
-      // 
-      // // Find the node that contains the object
-      // var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
-      // if (aNode != null)
-      // {
-      //    if (obj.ModelData.lastNode && (obj.ModelData.lastNode.getIndex() != aNode.getIndex()))
-      //    {
-      //       obj.ModelData.lastNode.removeObject(obj);
-      //       aNode.addObject(obj);
-      //    }
-      //    obj.ModelData.lastNode = aNode;
-      // }
+			console.log("yeah!")
+	    // Get the model data for the object
+	    var obj = this.getHostObject();
+	    if (obj.ModelData.lastNode !== null && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) ) {
+	       // The object is within the same node
+	       return;
+	    }
       
-      var obj = this.getHostObject();
-			var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
-      
-      if (!obj.ModelData)
-      {
-         obj.ModelData = { lastNode: null };
-				 if(aNode != null)
-				 {
-					 obj.ModelData.lastNode = aNode;
-				 	 aNode.addObject(obj);
-				 }
-      }
+	    // Find the node that contains the object
+	    var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
+	    if (aNode != null)
+	    {
+	       if (obj.ModelData.lastNode !== null && (obj.ModelData.lastNode.getIndex() != aNode.getIndex())) {
+		  	    // The object has changed nodes
+	          obj.ModelData.lastNode.removeObject(obj);
+	          aNode.addObject(obj);
+	       }
+		 		 else if (obj.ModelData.lastNode == null) {
+		  	    // The object has never been in a node
+		        obj.ModelData.lastNode = aNode;
+		  	    aNode.addObject(obj);
+		     }
+	    }
+   },
 
-      if ( obj.ModelData.lastNode && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) )
-      {
-         // The object is within the same node
-         return;
-      }
-
-      // Find the node that contains the object
-      if (aNode != null)
-      {
-         if (obj.ModelData.lastNode && (obj.ModelData.lastNode.getIndex() != aNode.getIndex()))
-            obj.ModelData.lastNode.removeObject(obj);   
-					
-         obj.ModelData.lastNode = aNode;
-      }
+   setHostObject: function(hostObject) {
+   	  this.base(hostObject);
+   	  if (!hostObject.ModelData) {
+   		   // Create the modelData on the host object for collision data
+   		   hostObject.ModelData = {
+   			   lastNode: null
+   		   }
+   	  }	
    },
 
    /**

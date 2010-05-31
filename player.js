@@ -227,8 +227,8 @@ var Player = Object2D.extend({
 	 * in the playfield and keep track of the active number of bullets.
 	 */
 	muzzleFlashSpread: 15,
-	muzzleParticleCount: 20,
-	muzzleParticleTTL: 700,
+	muzzleParticleCount: 10,
+	muzzleParticleTTL: 500,
 	shootDelay: 100,
 	lastShot: 0,
 	shoot: function() {

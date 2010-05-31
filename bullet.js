@@ -151,8 +151,8 @@ Engine.initObject("Bullet", "Object2D", function() {
 		},
 	
 		ricochetFlashSpread: 15,
-		ricochetParticleCount: 20,
-		ricochetParticleTTL: 700,
+		ricochetParticleCount: 10,
+		ricochetParticleTTL: 500,
 		particleRicochet: function(objHit) {
 			var position = this.field.collider.pointOfImpact(this, objHit);
 			var angle = this.field.collider.angleOfImpact(this);
