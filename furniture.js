@@ -56,8 +56,6 @@ Engine.initObject("Furniture", "Object2D", function() {
 		},
 
 		update: function(renderContext, time) {
-			var c_mover = this.getComponent("move");
-
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();

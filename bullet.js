@@ -7,26 +7,26 @@ Engine.initObject("Bullet", "Object2D", function() {
 	/**
 	 * @class The bullet object.
 	 *
-	 * @param player {PistolSlut.Player} The player object this bullet comes from,
+	 * @param shooter The shooter of this bullet
 	 */
 	var Bullet = Object2D.extend({
 
-		player: null,
+		shooter: null,
 
 		field: null,
 
 		rot: null,
 		speed: 8,
 
-		constructor: function(player) {
+		constructor: function(shooter) {
 			this.base("Bullet");
 
 			// This is a hack!
 			this.field = PistolSlut;
 
-			// Track the player that created us
-			this.player = player;
-			this.rot = player.getRotation();
+			// Track the shooter
+			this.shooter = shooter;
+			this.rot = shooter.getRotation();
 
 			// Add components to move and draw the bullet
 			this.add(Mover2DComponent.create("move"));
@@ -36,7 +36,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 			// Get the player's position and rotation,
 			// then position this at the tip of the ship
 			// moving away from it
-			var p_mover = this.player.getComponent("move");
+			var p_mover = this.shooter.getComponent("move");
 			var c_mover = this.getComponent("move");
 			var c_draw = this.getComponent("draw");
 
@@ -44,19 +44,19 @@ Engine.initObject("Bullet", "Object2D", function() {
 			c_draw.setLineStyle("white");
 			c_draw.setFillStyle("white");
 
-			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, this.player.getGunAngle());
+			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, this.shooter.getGunAngle());
 			
-			var playerPosition = Point2D.create(p_mover.getPosition());
-			var gunTipPosition = playerPosition.add(this.player.getGunTip());
-			
-			c_mover.setPosition(gunTipPosition.add(Point2D.create(dir).mul(10)));
+			var shooterPosition = Point2D.create(p_mover.getPosition());
+			var gunTipPosition = shooterPosition.add(this.shooter.getGunTip());
+
+			c_mover.setPosition(gunTipPosition);
 			c_mover.setVelocity(dir.mul(this.speed));
 			c_mover.setCheckLag(false);
 		},
 
 		release: function() {
 			this.base();
-			this.player = null;
+			this.shooter = null;
 		},
 
 		/**
@@ -121,7 +121,6 @@ Engine.initObject("Bullet", "Object2D", function() {
 			// Is this bullet in field any more?
 			if (!this.field.inLevel(c_mover.getPosition()))
 			{
-				this.player.removeBullet(this);
 				this.destroy();
 				return;
 			}
@@ -138,7 +137,6 @@ Engine.initObject("Bullet", "Object2D", function() {
 			  {
 					this.particleRicochet(obj);
 					this.setPosition(this.field.collider.pointOfImpact(this, obj));
-					this.player.removeBullet(this);
 					this.destroy();
 					return ColliderComponent.STOP;
 				}
@@ -174,7 +172,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 		shape: [ new Point2D(-1, 0), new Point2D(0, 0),
 					new Point2D(0,  1), new Point2D(0,  1)],
 
-		// The tip of the player at zero rotation (up)
+		// The tip of the shooter at zero rotation (up)
 		tip: new Point2D(0, -1)
 	});
 

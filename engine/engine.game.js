@@ -101,17 +101,6 @@ var Game = Base.extend(/** @scope Game.prototype */{
       Engine.setQueueCallback(cb);
    },
 
-   /**
-    * Get the number of players this game supports.
-    *
-    * @type Number
-    * @memberOf Game
-    * @static
-    */
-   getPlayers: function() {
-      return 1;
-   },
-
    getGamePath: function() {
       var loc = window.location;
       var path = loc.protocol + "//" + loc.host + loc.pathname.substring(0,loc.pathname.lastIndexOf("/"));

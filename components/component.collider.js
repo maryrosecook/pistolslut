@@ -102,6 +102,7 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
     * </ul>
     */
    updateModel: function() {
+	
 	    // Get the model data for the object
 	    var obj = this.getHostObject();
 	    if (obj.ModelData.lastNode !== null && obj.ModelData.lastNode.getRect().containsPoint(obj.getPosition()) ) {
@@ -110,13 +111,14 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
 	    }
       
 	    // Find the node that contains the object
-	    var aNode = this.getCollisionModel().findNodePoint(obj.getPosition());
+	    var aNode = this.getCollisionModel().findNodePoint(obj.getPosition(), obj.name);
 	    if (aNode != null)
 	    {
 	       if (obj.ModelData.lastNode !== null && (obj.ModelData.lastNode.getIndex() != aNode.getIndex())) {
 		  	    // The object has changed nodes
 	          obj.ModelData.lastNode.removeObject(obj);
 	          aNode.addObject(obj);
+
 	       }
 		 		 else if (obj.ModelData.lastNode == null) {
 		  	    // The object has never been in a node

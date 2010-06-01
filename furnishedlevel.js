@@ -42,6 +42,13 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 					var furniturePieceData = levelObjects.furniture[i];					
 					this.spriteLoader.load(furniturePieceData.name, null, furniturePieceData.sprite, path);
 				}
+				
+				// and the enemies
+				for(var i in levelObjects.enemies)
+				{
+					var enemyData = levelObjects.enemies[i];
+					this.spriteLoader.load(enemyData.name, null, enemyData.sprite, path);
+				}
 			}
 		},
 
@@ -56,6 +63,7 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 		get: function(name) {
 			var level = this.base(name);
 			level.furniture = this.levels[name].furniture;
+			level.enemies = this.levels[name].enemies;
 			return level;
 		},
 
@@ -87,23 +95,39 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		
 		furniture: null, // actual furniture objs
 		furnitureData: null,
+		enemies: null,
+		enemiesData: null,
 
 	  constructor: function(name, levelResource) {
 			var level = this.base(name, levelResource);
 			this.furniture = [];
+			this.enemies = [];
 			this.furnitureData = levelResource.info.objects.furniture;
+			this.enemiesData = levelResource.info.objects.enemies;
 			return level;
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext
-		addObjects: function(renderContext) {
+		addFurniture: function(renderContext) {
 			for(var i in this.furnitureData)
 			{
 				var furniturePieceData = this.furnitureData[i];
 				var furniturePiece = Furniture.create(furniturePieceData.name, Point2D.create(furniturePieceData.x, furniturePieceData.y));
 				this.furniture[i] = furniturePiece;
 				renderContext.add(furniturePiece);
+			}
+		},
+		
+		// creates Enemy render objects for each piece of furniture loaded from
+		// level def file and adds them to the renderContext
+		addEnemies: function(renderContext) {
+			for(var i in this.enemiesData)
+			{
+				var enemyData = this.enemiesData[i];
+				var enemy = Enemy.create(enemyData.name, Point2D.create(enemyData.x, enemyData.y));
+				this.enemies[i] = enemy;
+				renderContext.add(enemy);
 			}
 		},
 

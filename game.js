@@ -9,6 +9,7 @@ Engine.include("/resourceloaders/loader.sprite.js");
 Engine.include("/resourceloaders/loader.level.js");
 
 // Load game objects
+Game.load("/mover.js");
 Game.load("/player.js");
 Game.load("/bullet.js");
 Game.load("/particle.js");
@@ -16,6 +17,7 @@ Game.load("/sign.js");
 Game.load("/furnishedlevel.js");
 Game.load("/furniture.js");
 Game.load("/collider.js");
+Game.load("/enemy.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -77,10 +79,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.fieldBox = Rectangle2D.create(0, 0, this.fieldWidth, this.fieldHeight);
 			this.centerPoint = this.fieldBox.getCenter();
 		
-			// We'll need something to detect collisions
-			this.collisionModel = SpatialGrid.create(this.fieldWidth, this.fieldHeight, 5);
-			this.collider = new Collider(this);
-		
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
 		
@@ -101,6 +99,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 		
 	    this.level = PistolSlut.levelLoader.getLevel("level1");
 
+			// We'll need something to detect collisions
+			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
+			this.collider = new Collider(this);
+
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);
 			this.renderContext.setBackgroundColor("#000000");
@@ -110,7 +112,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.add(this.playerObj);
 			this.playerObj.setup(pWidth, pHeight);
 		
-			this.level.addObjects(this.renderContext);
+			// load rest of level data
+			this.level.addFurniture(this.renderContext);
+			this.level.addEnemies(this.renderContext);
 			this.loadSigns();
 			
 			// Start up the particle engine

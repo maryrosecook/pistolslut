@@ -5,29 +5,14 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.timers.js");
 Engine.include("/components/component.sprite.js");
 
-Engine.initObject("Player", "Object2D", function() {
+Engine.initObject("Player", "Mover", function() {
 
-/**
- * @class The player object.  Creates the player and assigns the
- *		  components which handle collision, drawing, drawing the thrust
- *		  and moving the object.
- */
-var Player = Object2D.extend({
+var Player = Mover.extend({
 
 	size: 4,
-
-	field: null,
-	
-	velocity: null,
-	direction: null,
-	
+		
 	bullets: 0,
-
-	players: 3,
-
 	alive: false,
-	
-	playerSprites: null,
 
 	directionData: {
 		"left": {
@@ -53,35 +38,22 @@ var Player = Object2D.extend({
 		this.add(SpriteComponent.create("draw"));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
-		this.playerSprites = {};
-		this.playerSprites["rightstand"] = this.field.spriteLoader.getSprite("girl", "rightstand");
-		this.playerSprites["rightrun"] = this.field.spriteLoader.getSprite("girl", "rightrun");
-		this.playerSprites["leftstand"] = this.field.spriteLoader.getSprite("girl", "leftstand");
-		this.playerSprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
+		this.sprites = {};
+		this.sprites["rightstand"] = this.field.spriteLoader.getSprite("girl", "rightstand");
+		this.sprites["rightrun"] = this.field.spriteLoader.getSprite("girl", "rightrun");
+		this.sprites["leftstand"] = this.field.spriteLoader.getSprite("girl", "leftstand");
+		this.sprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
 		
 		this.direction = this.right;
-		this.players--;
 		this.velocity = Vector2D.create(0, 0);
-
 		this.alive = true;
-	},
-
-	destroy: function() {
-		if (this.ModelData && this.ModelData.lastNode) {
-			this.ModelData.lastNode.removeObject(this);
-		}
-		this.base();
 	},
 
 	release: function() {
 		this.base();
 		this.size = 4;
 		this.bullets = 0;
-		this.players = 3;
 		this.alive = false;
-		this.velocity = null;
-		this.direction = null;
-		this.playerSprites = null;
 		this.directionData = null;
 		this.left = null;
 		this.right = null;
@@ -99,10 +71,6 @@ var Player = Object2D.extend({
 	},
 
 	onCollide: function(obj) {
-		return this.collisionWith(obj); // deal with it own self;
-	},
-
-	collisionWith: function(obj) {
 		if(obj instanceof Furniture && this.field.collider.colliding(this, [obj]))
 		{
 			if(this.field.collider.aFallingThroughB(this, obj))
@@ -138,69 +106,6 @@ var Player = Object2D.extend({
 		this.move();
 		this.base(renderContext, time);
 		renderContext.popTransform();
-	},
-
-  setSprite: function(spriteKey) {
-	  var sprite = this.playerSprites[spriteKey];
-	  this.setBoundingBox(sprite.getBoundingBox());
-	  this.getComponent("draw").setSprite(sprite);
-  },
-
-	/**
-	 * Get the position of the ship from the mover component.
-	 * @type Point2D
-	 */
-	getPosition: function() {
-		return this.getComponent("move").getPosition();
-	},
-
-	getRenderPosition: function() {
-		return this.getComponent("move").getRenderPosition();
-	},
-
-	/**
-	 * Get the last position the ship was at before the current move.
-	 * @type Point2D
-	 */
-	getLastPosition: function() {
-		return this.getComponent("move").getLastPosition();
-	},
-
-	/**
-	 * Set, or initialize, the position of the mover component
-	 *
-	 * @param point {Point2D} The position to draw the ship in the playfield
-	 */
-	setPosition: function(point) {
-		this.base(point);
-		this.getComponent("move").setPosition(point);
-	},
-
-	/**
-	 * Get the rotation of the ship from the mover component.
-	 * @type Number
-	 */
-	getRotation: function() {
-		return this.getComponent("move").getRotation();
-	},
-
-	/**
-	 * Set the rotation of the ship on the mover component.
-	 *
-	 * @param angle {Number} The rotation angle of the ship
-	 */
-	setRotation: function(angle) {
-		this.base(angle);
-		this.getComponent("move").setRotation(angle);
-	},
-
-	getScale: function() {
-		return this.getComponent("move").getScale();
-	},
-
-	setScale: function(scale) {
-		this.base(scale);
-		this.getComponent("move").setScale(scale);
 	},
 
 	/**
@@ -290,22 +195,9 @@ var Player = Object2D.extend({
 	 */
 	kill: function() {
 		this.alive = false;
-
 		this.getComponent("draw").setDrawMode(RenderComponent.NO_DRAW);
-
-		var pCount = 40;
-
 		this.getComponent("move").setVelocity(Point2D.ZERO);
 		this.getComponent("move").setPosition(this.getRenderContext().getBoundingBox().getCenter());
-		this.getComponent("move").setRotation(0);
-
-		// Remove one of the players
-		if (this.players-- > 0)
-		{
-			// Set a timer to spawn another player
-			var pl = this;
-			OneShotTimeout.create("respawn", 3000, function() { pl.respawn(); });
-		}
 	},
 
 	/**
@@ -368,17 +260,11 @@ var Player = Object2D.extend({
 		return this.directionData[this.direction]["gunTip"];
 	},
 
-  removeBullet: function() {
-     // Clean up
-     this.bullets--;
-  },
-
 	}, { // Static
 		getClassName: function() {
 			return "Player";
 		},
 	});
-
 
 	return Player;
 });
