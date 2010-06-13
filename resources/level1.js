@@ -10,6 +10,15 @@
 		
 		furniture: [
 			{
+				name: "tallwall", x: 0, y: 417,
+				sprite: {
+					bitmapImage: "tallwall.gif", bitmapWidth: 20, bitmapHeight: 130,
+					sprites: {
+						"main": { "f" : [0, 0, 20, 130] }
+					}
+				}
+			},
+			{
 				name: "wall1", x: 350, y: 495,
 				sprite: {
 					bitmapImage: "wall1.gif", bitmapWidth: 20, bitmapHeight: 52,

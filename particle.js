@@ -1,6 +1,23 @@
 Engine.include("/engine/engine.math2d.js");
 Engine.include("/engine/engine.particles.js");
 
+Engine.initObject("ExplosionParticle", "BurnoutParticle", function() {
+
+	var ExplosionParticle = BurnoutParticle.extend(/** @scope ExplosionParticle.prototype */{
+
+		constructor: function(pos, spread, ttl) {
+			this.base(pos, 0, Vector2D.create(0,0), 360, ttl)
+		},
+	}, {
+		
+		getClassName: function() {
+			return "ExplosionParticle";
+		},
+	});
+
+	return ExplosionParticle;
+});
+
 Engine.initObject("RicochetParticle", "BurnoutParticle", function() {
 
 	var RicochetParticle = BurnoutParticle.extend(/** @scope RicochetParticle.prototype */{

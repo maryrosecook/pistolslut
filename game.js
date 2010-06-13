@@ -3,7 +3,7 @@ Engine.include("/rendercontexts/context.canvascontext.js");
 Engine.include("/rendercontexts/context.scrollingbackground.js");
 Engine.include("/spatial/container.spatialgrid.js");
 Engine.include("/engine/engine.timers.js");
-Engine.include("/textrender/text.vector.js");
+Engine.include("/resourceloaders/loader.bitmapfont.js");
 Engine.include("/textrender/text.renderer.js");
 Engine.include("/resourceloaders/loader.sprite.js");
 Engine.include("/resourceloaders/loader.level.js");
@@ -12,6 +12,7 @@ Engine.include("/resourceloaders/loader.level.js");
 Game.load("/mover.js");
 Game.load("/player.js");
 Game.load("/bullet.js");
+Game.load("/grenade.js");
 Game.load("/particle.js");
 Game.load("/sign.js");
 Game.load("/furnishedlevel.js");
@@ -57,11 +58,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		spriteLoader: null,
 		levelLoader: null,
+		fontLoader: null,
 		loadTimeout: null,
 	
 		gravityVector: Vector2D.create(0, 0.6),
-		gravityTimer: null,
-		gravityInterval: 100,
 	
 		bullets: 0,
 	
@@ -82,8 +82,12 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
 		
+		  this.fontLoader = BitmapFontLoader.create();
+      this.fontLoader.load("century", "century_gothic_36.js");
+		
 			// load sprite resources
 			this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
+			this.spriteLoader.load("grenade", this.getFilePath("resources/grenade.js"));
 
 			// load level resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
@@ -97,10 +101,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 			var pWidth = this.fieldWidth;
 			var pHeight = this.fieldHeight;
 		
-	    this.level = PistolSlut.levelLoader.getLevel("level1");
+	    this.level = PistolSlut.levelLoader.getLevel("level1", this.fieldWidth);
 
 			// We'll need something to detect collisions
-			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
+			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
 			this.collider = new Collider(this);
 
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
@@ -121,26 +125,20 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.pEngine = ParticleEngine.create();
 			this.renderContext.add(this.pEngine);
 				
-			//snow machine
+			// snow machine
 			PistolSlut.snowTimer = Interval.create("snow", this.snowFallInterval,
 				function() {
 					PistolSlut.pEngine.addParticle(SnowParticle.create(PistolSlut.level.getWidth()));
 			});
-		
-			// gravity machine
-			PistolSlut.gravityTimer = Interval.create("gravity", this.gravityInterval,
-				function() {
-					PistolSlut.applyGravity(PistolSlut.playerObj);
-			});
 		},
 	
 		applyGravity: function(obj) {
-			if(!this.collider.colliding(obj, this.level.furniture))
-				obj.velocity = obj.velocity.add(this.gravityVector);
+			if(!this.collider.colliding(obj, this.collider.getPCL(obj), Furniture))
+				obj.getVelocity().add(this.gravityVector);
 		},
 		
 	  waitForResources: function(){
-			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
+			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady() && PistolSlut.fontLoader.isReady())
 			{
 				PistolSlut.loadTimeout.destroy();
 				PistolSlut.play();
@@ -187,9 +185,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		// updates the position of the view frame
 		updateFramePosition: function(vector, centralObj) {
 			var centralObjWindowX = centralObj.getRenderPosition().x;
-			var minScroll = 0;
-			var maxScroll = this.level.getWidth() - this.fieldWidth;
-			var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;
 
 			var movingPastCentrePoint = false;
 			if(vector.x > 0 && centralObjWindowX > this.centerPoint.x)
@@ -197,10 +192,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 			else if(vector.x < 0 && centralObjWindowX < this.centerPoint.x)
 				movingPastCentrePoint = true;
 			
-			if(movingPastCentrePoint && potentialNewHorizontalScroll >= minScroll && potentialNewHorizontalScroll <= maxScroll)
+			var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;
+			if(movingPastCentrePoint && potentialNewHorizontalScroll >= this.level.minScroll && potentialNewHorizontalScroll <= this.level.maxScroll)
 				this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
 		},
-
 	});
 
 	return PistolSlut;

@@ -15,7 +15,7 @@ var Collider = Base.extend({
 	aFallingThroughB: function(a, b) {
 		var aRect = this.getRect(a).get();
 		var bRect = this.getRect(b).get();
-		return a.velocity.y > 0 && aRect.b > bRect.y && aRect.b < bRect.y + 6;
+		return a.velocity.y > 0 && aRect.b > bRect.y && aRect.b < bRect.y + 14;
 	},
 	
 	aOnB: function(a, b) {
@@ -27,66 +27,80 @@ var Collider = Base.extend({
 	aOnLeftAndBumpingB: function(a, b) {
 		var aRect = this.getRect(a).get();
 		var bRect = this.getRect(b).get();
-		return !this.aOnB(a, b) && aRect.r >= bRect.x && aRect.x < bRect.x;
+		return aRect.r >= bRect.x && aRect.x < bRect.x && !this.aOnB(a, b);
 	},
 	
 	aOnRightAndBumpingB: function(a, b) {
 		var aRect = this.getRect(a).get();
 		var bRect = this.getRect(b).get();
-		return !this.aOnB(a, b) && aRect.x <= bRect.r && aRect.r > bRect.r;
+		return aRect.x <= bRect.r && aRect.r > bRect.r && !this.aOnB(a, b);
+	},
+	
+	getPCL: function(subject) {
+		return this.field.collisionModel.getPCL(subject.getPosition());
 	},
 	
 	// returns true if subject colliding with any of the objects
-	colliding: function(subject, objects) {
+	// if clazz supplied, only checks objects of that type
+	colliding: function(subject, objects, clazz) {
 		for(var i in objects)
-			if(this.getRect(subject).isIntersecting(this.getRect(objects[i])))
-				return true;
+			if(clazz == null || objects[i] instanceof clazz)
+				if(this.getRect(subject).isIntersecting(this.getRect(objects[i])))
+					return true;
 		return false;
 	},
 	
+	// returns point that moving obj hit staticObj
 	pointOfImpact: function(movingObj, staticObj) {
 		var mOCurPos = movingObj.getPosition();
 		var mOPrevPos = movingObj.getLastPosition();
+		var mODims = movingObj.getBoundingBox().dims;
 		var sOPos = staticObj.getPosition();
 		var sODims = staticObj.getBoundingBox().dims;
-		
-		var p1 = Point2D.create(mOPrevPos.x, mOPrevPos.y);
-		var p2 = Point2D.create(mOCurPos.x, mOCurPos.y);
-		var p3 = null;
-		var p4 = null;
-		
-		var intersection = null;
-		
-		// top
-		p3 = Point2D.create(sOPos.x,sOPos.y);
-		p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y);
+				
+		// staticobj on left
+		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y);
+		var p2 = Point2D.create(mOCurPos.x,mOCurPos.y);
+		var p3 = Point2D.create(sOPos.x + sODims.x,sOPos.y);
+		var p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y + sODims.y);
 		if(Math2D.lineLineCollision(p1, p2, p3, p4))
-			intersection = Math2D.lineLineCollisionPoint(p1, p2, p3, p4);
-		
-		// left
-		p3 = Point2D.create(sOPos.x + sODims.x,sOPos.y);
-		p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y + sODims.y);
+			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "right"];
+				
+		// staticobj on right
+		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y);
+		var p2 = Point2D.create(mOCurPos.x + mODims.x,mOCurPos.y + mODims.y);
+		var p3 = Point2D.create(sOPos.x,sOPos.y);
+		var p4 = Point2D.create(sOPos.x,sOPos.y + sODims.y);
 		if(Math2D.lineLineCollision(p1, p2, p3, p4))
-			intersection = Math2D.lineLineCollisionPoint(p1, p2, p3, p4);
-		
-		// bottom
-		p3 = Point2D.create(sOPos.x,sOPos.y + sODims.y);
-		p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y + sODims.y);
+			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "left"];
+				
+		// staticobj on bottom
+		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y + mODims.y);
+		var p2 = Point2D.create(mOCurPos.x,mOCurPos.y + mODims.y);
+		var p3 = Point2D.create(sOPos.x,sOPos.y);
+		var p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y);
 		if(Math2D.lineLineCollision(p1, p2, p3, p4))
-			intersection = Math2D.lineLineCollisionPoint(p1, p2, p3, p4);
+			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "top"];
 		
-		// right
-		p3 = Point2D.create(sOPos.x,sOPos.y);
-		p4 = Point2D.create(sOPos.x,sOPos.y + sODims.y);
+		// staticobj on top
+		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y);
+		var p2 = Point2D.create(mOCurPos.x,mOCurPos.y);
+		var p3 = Point2D.create(sOPos.x,sOPos.y + sODims.y);
+		var p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y + sODims.y);
 		if(Math2D.lineLineCollision(p1, p2, p3, p4))
-			intersection = Math2D.lineLineCollisionPoint(p1, p2, p3, p4);
+			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "bottom"];
 		
-		return intersection;
+		return null; // no intersection
 	},
 	
 	angleOfImpact: function(movingObj) {
 		var vector = movingObj.getVelocity();
 		return Math2D.radToDeg(Math.atan2(vector.x, vector.y) + Math.PI);
+	},
+
+	bounce: function(vector, bounciness, sideHit) {
+		if(sideHit == "top" || sideHit == "bottom") return Vector2D.create(vector.x * bounciness, -vector.y * bounciness);
+		if(sideHit == "left" || sideHit == "right") return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
 	},
 	
 	getRect: function(obj) {
@@ -96,11 +110,7 @@ var Collider = Base.extend({
 	}
 	
 	}, {
-		/**
-		 * Get the class name of this object
-		 *
-		 * @type String
-		 */
+
 		getClassName: function() {
 			return "Collider";
 		},

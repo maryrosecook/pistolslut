@@ -47,10 +47,11 @@ var Enemy = Mover.extend({
 		this.alive = true;
 		
 		var enemy = this;
-		this.shootTimer = Interval.create("shoot", this.shootInterval,
-			function() {
-				enemy.shoot();
-		});
+		this.getComponent("move").setCheckLag(false);
+		// this.shootTimer = Interval.create("shoot", this.shootInterval,
+		// 	function() {
+		// 		enemy.shoot();
+		// });
 	},
 	
 	update: function(renderContext, time) {

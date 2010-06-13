@@ -1,0 +1,7 @@
+* Nicer background.
+* An invincible, impotent enemy.
+* Grenades that explode and bounce.
+* Speed optimisations.
+* Gravity now applied on every screen draw, rather than every x milliseconds.
+* Improved efficiency of collision calculation.
+* Added Kemal's Jump Physics for less floaty, more realistic jumping.

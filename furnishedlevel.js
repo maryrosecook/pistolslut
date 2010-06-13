@@ -67,8 +67,8 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 			return level;
 		},
 
-		getLevel: function(level) {
-			return FurnishedLevel.create(level, this.get(level));
+		getLevel: function(level, fieldWidth) {
+			return FurnishedLevel.create(level, this.get(level), fieldWidth);
 		},
 
 		/**
@@ -97,13 +97,16 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		furnitureData: null,
 		enemies: null,
 		enemiesData: null,
+		minScroll: 0,
+		maxScroll: null,
 
-	  constructor: function(name, levelResource) {
+	  constructor: function(name, levelResource, fieldWidth) {
 			var level = this.base(name, levelResource);
 			this.furniture = [];
 			this.enemies = [];
 			this.furnitureData = levelResource.info.objects.furniture;
 			this.enemiesData = levelResource.info.objects.enemies;
+			this.maxScroll = this.getWidth() - fieldWidth;
 			return level;
 		},
 

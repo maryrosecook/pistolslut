@@ -15,7 +15,6 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		field: null,
 
-		rot: null,
 		speed: 8,
 
 		constructor: function(shooter) {
@@ -26,7 +25,6 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 			// Track the shooter
 			this.shooter = shooter;
-			this.rot = shooter.getRotation();
 
 			// Add components to move and draw the bullet
 			this.add(Mover2DComponent.create("move"));
@@ -64,7 +62,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 		 * in the last collision model node.
 		 */
 		destroy: function() {
-			AssertWarn(this.ModelData.lastNode, "Bullet not located in a node!");
+			//AssertWarn(this.ModelData.lastNode, "Bullet not located in a node!");
 			if (this.ModelData.lastNode) {
 				this.ModelData.lastNode.removeObject(this);
 			}
@@ -130,29 +128,24 @@ Engine.initObject("Bullet", "Object2D", function() {
 			renderContext.popTransform();
 		},
 
-		collisionWith: function(obj) {
+		onCollide: function(obj) {
 			if(obj instanceof Furniture)
 			{
 				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
 			  {
 					this.particleRicochet(obj);
-					this.setPosition(this.field.collider.pointOfImpact(this, obj));
 					this.destroy();
 					return ColliderComponent.STOP;
 				}
 			}
 			return ColliderComponent.CONTINUE;
 		},
-
-		onCollide: function(obj) {
-			return this.collisionWith(obj);
-		},
 	
 		ricochetFlashSpread: 15,
 		ricochetParticleCount: 10,
 		ricochetParticleTTL: 500,
 		particleRicochet: function(objHit) {
-			var position = this.field.collider.pointOfImpact(this, objHit);
+			var position = this.field.collider.pointOfImpact(this, objHit)[0];
 			var angle = this.field.collider.angleOfImpact(this);
 			if(position && angle)
 				for(var x = 0; x < this.ricochetParticleCount; x++)

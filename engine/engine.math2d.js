@@ -146,6 +146,7 @@ var Math2D = Base.extend(/** @scope Math2D.prototype */{
 
 		return Point2D.create(x, y);
 	},
+		
 	/**
 	 * Test to see if a line intersects a Rectangle.
 	 *
@@ -359,7 +360,7 @@ var Point2D = MathObject.extend(/** @scope Point2D.prototype */{
 		}
 		else
 		{
-			AssertWarn((y != null), "Undefined Y value for point initialized to zero.");
+			//AssertWarn((y != null), "Undefined Y value for point initialized to zero.");
 			this._vec = $V([x, y || 0]);
 		}
 		this.upd();

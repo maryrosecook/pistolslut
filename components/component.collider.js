@@ -156,8 +156,32 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
     * @param renderContext {RenderContext} The render context for the component
     * @param time {Number} The current engine time in milliseconds
     */
-   execute: function(renderContext, time) {
+   // execute: function(renderContext, time) {
+   // 
+   //    var host = this.getHostObject();
+   // 
+   //    // Update the collision model
+   //    this.updateModel();
+   // 
+   //    // If the host object needs to know about collisions...
+   //    if (host.onCollide)
+   //    {
+   //       // Get the PCL and check for collisions
+   //       var pcl = this.getCollisionModel().getPCL(host.getPosition());
+   //       var status = ColliderComponent.CONTINUE;
+   //       EngineSupport.forEach(pcl, function(obj) {
+   //          if (this.getHostObject() != obj && 
+   //              (this.getObjectType() == null || obj instanceof this.getObjectType()) &&
+   //              status == ColliderComponent.CONTINUE)
+   //          {
+   //             status = this.testCollision(time, obj);
+   //          }
+   //       }, this);
+   //    }
+   // },
 
+	//framechange
+   execute: function(renderContext, time) {
       var host = this.getHostObject();
 
       // Update the collision model
@@ -169,14 +193,16 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
          // Get the PCL and check for collisions
          var pcl = this.getCollisionModel().getPCL(host.getPosition());
          var status = ColliderComponent.CONTINUE;
-         EngineSupport.forEach(pcl, function(obj) {
-            if (this.getHostObject() != obj && 
-                (this.getObjectType() == null || obj instanceof this.getObjectType()) &&
-                status == ColliderComponent.CONTINUE)
+				 var thisObjType = this.getObjectType();
+         for(var i in pcl)
+				 {
+				    var obj = pcl[i];
+            if (status == ColliderComponent.CONTINUE
+								&& this.getHostObject() != obj && (thisObjType == null || obj instanceof thisObjType))
             {
                status = this.testCollision(time, obj);
             }
-         }, this);
+         }
       }
    },
    
@@ -192,7 +218,9 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
     * @return {Number} A status indicating whether to continue checking, or to stop
     */
    testCollision: function(time, collisionObj) {
-      return this.getHostObject().onCollide(collisionObj, time);
+			// framechange
+      //return this.getHostObject().onCollide(collisionObj, time);
+			return this.host.onCollide(collisionObj, time);
    }
 
 }, /** @scope ColliderComponent.prototype */{ // Statics

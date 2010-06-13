@@ -462,7 +462,7 @@ var HashContainer = Container.extend(/** @scope HashContainer.prototype */{
     * @param obj {BaseObject} The object to add to the container.
     */
    add: function(key, obj) {
-      AssertWarn(!this.isInHash(key), "Object already exists within hash!");
+      //AssertWarn(!this.isInHash(key), "Object already exists within hash!");
 
       if (this.isInHash(key)) {
          // Remove the old one first

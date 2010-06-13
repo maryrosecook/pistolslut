@@ -18,10 +18,14 @@ var Player = Mover.extend({
 		"left": {
 			"angle": 270,
 			"gunTip": new Point2D(0, 9),
+			"armAngle": 315,
+			"armTip": new Point2D(0, 2),
 		},
 		"right": {
 			"angle": 90,
 			"gunTip": new Point2D(44, 9),
+			"armAngle": 45,
+			"armTip": new Point2D(44, 2),
 		}
 	},
 	left: "left",
@@ -45,8 +49,12 @@ var Player = Mover.extend({
 		this.sprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
 		
 		this.direction = this.right;
+		
+		this.setSprite(this.direction + "stand");
+		
 		this.velocity = Vector2D.create(0, 0);
 		this.alive = true;
+		this.getComponent("move").setCheckLag(false);
 	},
 
 	release: function() {
@@ -60,14 +68,16 @@ var Player = Mover.extend({
 	},
 
 	move: function() {
+		this.field.applyGravity(this);
 		this.setPosition(this.getPosition().add(this.velocity));
-		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
 
 		// set sprite
 		if(this.velocity.x != 0)
 			this.setSprite(this.direction + "run");
 		else
 			this.setSprite(this.direction + "stand");
+			
+		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
 	},
 
 	onCollide: function(obj) {
@@ -102,8 +112,8 @@ var Player = Mover.extend({
 	 * @param time {Number} The engine time in milliseconds
 	 */
 	update: function(renderContext, time) {
-		renderContext.pushTransform();
 		this.move();
+		renderContext.pushTransform();
 		this.base(renderContext, time);
 		renderContext.popTransform();
 	},
@@ -147,8 +157,19 @@ var Player = Mover.extend({
 		}
 	},
 	
+	throwDelay: 100,
+	lastThrow: 0,
+	throwGrenade: function() {
+		if(new Date().getTime() - this.lastThrow > this.throwDelay)
+		{
+			this.lastThrow = new Date().getTime();
+			var grenade = Grenade.create(this);
+			this.field.renderContext.add(grenade);
+		}
+	},
+	
 	jumping: false,
-	jumpSpeed: -4.5,
+	jumpSpeed: -9.0,
 	postJumpVector: Vector2D.create(0, -1),
 	jump: function() {
 		if(!this.jumping)
@@ -225,6 +246,7 @@ var Player = Mover.extend({
 				this.shoot();
 				break;
 			case 67: // c
+				this.throwGrenade();
 				break;
 		}
 		
@@ -258,6 +280,22 @@ var Player = Mover.extend({
 	
 	getGunTip: function() {
 		return this.directionData[this.direction]["gunTip"];
+	},
+	
+	getArmTip: function() {
+		return this.directionData[this.direction]["armTip"];
+	},
+	
+	getArmAngle: function() {
+		return this.directionData[this.direction]["armAngle"];
+	},
+
+	getVelocity: function() {
+		return this.velocity;
+	},
+
+	setVelocity: function(vector) {
+		return this.velocity = vector;
 	},
 
 	}, { // Static

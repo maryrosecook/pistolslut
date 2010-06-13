@@ -19,7 +19,7 @@ Engine.initObject("Furniture", "Object2D", function() {
 			this.field = PistolSlut;
 
 			// Add components to move and draw
-			this.add(Mover2DComponent.create("move"));
+			this.add(Transform2DComponent.create("move"));
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 			
@@ -60,14 +60,10 @@ Engine.initObject("Furniture", "Object2D", function() {
 			this.base(renderContext, time);
 			renderContext.popTransform();
 		},
-		
-		collisionWith: function(obj) {
-			return ColliderComponent.CONTINUE;
-		},
-		
-		onCollide: function(obj) {
-			return this.collisionWith(obj); // deal with it own self; 
-		},
+
+		// onCollide: function(obj) {
+		// 	return ColliderComponent.CONTINUE;
+		// },
 
 	}, {
 
