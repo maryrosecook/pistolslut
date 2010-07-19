@@ -15,7 +15,7 @@ Game.load("/bullet.js");
 Game.load("/grenade.js");
 Game.load("/particle.js");
 Game.load("/sign.js");
-Game.load("/furnishedlevel.js");
+Game.load("/loader.furnishedlevel.js");
 Game.load("/furniture.js");
 Game.load("/collider.js");
 Game.load("/enemy.js");

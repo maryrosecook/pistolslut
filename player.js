@@ -47,14 +47,32 @@ var Player = Mover.extend({
 		this.sprites["rightrun"] = this.field.spriteLoader.getSprite("girl", "rightrun");
 		this.sprites["leftstand"] = this.field.spriteLoader.getSprite("girl", "leftstand");
 		this.sprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
+		//this.loadWeapons();
 		
 		this.direction = this.right;
-		
 		this.setSprite(this.direction + "stand");
 		
 		this.velocity = Vector2D.create(0, 0);
 		this.alive = true;
 		this.getComponent("move").setCheckLag(false);
+	},
+	
+	setup: function(pWidth, pHeight) {
+		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
+
+		// Put us on the ground in the middle
+		var c_mover = this.getComponent("move");
+		c_mover.setPosition(new Point2D(50, this.field.groundY));
+	},
+
+	loadWeapons: function() {
+		var weaponData = this.level.levelResource.info.objects.signs;
+		for(var i in signs)
+		{
+			var signData = signs[i];
+			var sign = new Sign(this.renderContext, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
+			this.renderContext.add(sign);
+		}
 	},
 
 	release: function() {
@@ -76,8 +94,6 @@ var Player = Mover.extend({
 			this.setSprite(this.direction + "run");
 		else
 			this.setSprite(this.direction + "stand");
-			
-		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
 	},
 
 	onCollide: function(obj) {
@@ -116,22 +132,7 @@ var Player = Mover.extend({
 		renderContext.pushTransform();
 		this.base(renderContext, time);
 		renderContext.popTransform();
-	},
-
-	/**
-	 * Set up the player object on the playfield.  The width and
-	 * heigh of the playfield are used to determine the center point
-	 * where the player starts.
-	 *
-	 * @param pWidth {Number} The width of the playfield in pixels
-	 * @param pHeight {Number} The height of the playfield in pixels
-	 */
-	setup: function(pWidth, pHeight) {
-		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
-
-		// Put us on the ground in the middle
-		var c_mover = this.getComponent("move");
-		c_mover.setPosition(new Point2D(50, this.field.groundY));
+		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
 	},
 
 	/**
@@ -141,7 +142,7 @@ var Player = Mover.extend({
 	muzzleFlashSpread: 15,
 	muzzleParticleCount: 10,
 	muzzleParticleTTL: 500,
-	shootDelay: 100,
+	shootDelay: 500,
 	lastShot: 0,
 	shoot: function() {
 		if(new Date().getTime() - this.lastShot > this.shootDelay)
@@ -152,12 +153,13 @@ var Player = Mover.extend({
 			this.bullets++;
 
 			var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
+			var gunAngle = this.getGunAngle();
 			for (var x = 0; x < this.muzzleParticleCount; x++)
-				PistolSlut.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
+				PistolSlut.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, gunAngle, this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
 		}
 	},
 	
-	throwDelay: 100,
+	throwDelay: 1000,
 	lastThrow: 0,
 	throwGrenade: function() {
 		if(new Date().getTime() - this.lastThrow > this.throwDelay)
@@ -170,27 +172,27 @@ var Player = Mover.extend({
 	
 	jumping: false,
 	jumpSpeed: -9.0,
-	postJumpVector: Vector2D.create(0, -1),
+	postJumpAdjustmentVector: Vector2D.create(0, -1),
 	jump: function() {
 		if(!this.jumping)
 		{
 			this.jumping = true;
 			this.velocity.add(Vector2D.create(0, this.jumpSpeed));
-			this.setPosition(this.getPosition().add(this.postJumpVector));
+			this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
 		}
 	},
 
 	walking: false,	
-	runSpeed: 3,
+	walkSpeed: 3,
 	walk: function(direction) {
 		if(!this.walking)
 		{
 			this.walking = true;
 			this.direction = direction;
 			if(direction == this.left)
-				this.velocity.add(Vector2D.create(-this.runSpeed, 0));
+				this.velocity.add(Vector2D.create(-this.walkSpeed, 0));
 			else if(direction == this.right)
-				this.velocity.add(Vector2D.create(this.runSpeed, 0));
+				this.velocity.add(Vector2D.create(this.walkSpeed, 0));
 		}
 	},
 

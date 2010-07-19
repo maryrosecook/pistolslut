@@ -69,10 +69,6 @@ Engine.initObject("Bullet", "Object2D", function() {
 			this.base();
 		},
 
-		/**
-		 * Returns the bullet position
-		 * @type Point2D
-		 */
 		getPosition: function() {
 			return this.getComponent("move").getPosition();
 		},
@@ -129,11 +125,19 @@ Engine.initObject("Bullet", "Object2D", function() {
 		},
 
 		onCollide: function(obj) {
-			if(obj instanceof Furniture)
-			{
+			if(obj instanceof Furniture) {
 				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
 			  {
 					this.particleRicochet(obj);
+					this.destroy();
+					return ColliderComponent.STOP;
+				}
+			}
+			else if(obj instanceof Enemy) {
+				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
+			  {
+					this.bloodSpurt(obj);
+					obj.die(); // be nicer to do this in the enemy's collision detection but can't because must destroy bullet
 					this.destroy();
 					return ColliderComponent.STOP;
 				}
@@ -150,6 +154,21 @@ Engine.initObject("Bullet", "Object2D", function() {
 			if(position && angle)
 				for(var x = 0; x < this.ricochetParticleCount; x++)
 					this.field.pEngine.addParticle(RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL));
+		},
+		
+		bloodSpread: 15,
+		bloodParticleCount: 10,
+		bloodParticleTTL: 300,
+		bloodSpurt: function(objHit) {
+			var positionData = this.field.collider.pointOfImpact(this, objHit);
+			var position = null;
+			if(positionData != null)
+				var position = Point2D.create(positionData[0].x, positionData[0].y)
+				
+			var angle = this.field.collider.angleOfImpact(this);
+			if(position && angle)
+				for(var x = 0; x < this.bloodParticleCount; x++)
+			 		this.field.pEngine.addParticle(BloodParticle.create(position, angle, this.bloodSpread, this.bloodParticleTTL));
 		},
 
 	}, {

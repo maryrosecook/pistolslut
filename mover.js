@@ -29,6 +29,10 @@ var Mover = Object2D.extend({
 	  this.getComponent("draw").setSprite(sprite);
   },
 
+	getSprite: function() {
+		return this.getComponent("draw").getSprite();
+	},
+
 	/**
 	 * Get the position of the ship from the mover component.
 	 * @type Point2D

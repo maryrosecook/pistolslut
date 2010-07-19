@@ -6,25 +6,29 @@
 		signs: [
 			{ text: "Pistol Slut", x: 89, y: 460, width: 140 },
 			{ text: "Please  return  to  your  homes", x: 517, y: 172, width: 245	}
+			//{ text: "It  is  illegal  to  buy  or  possess  a  gas  mask", x: 517, y: 172, width: 245	}
 		],
 		
 		furniture: [
 			{
-				name: "tallwall", x: 0, y: 417,
+				name: "blockwallleft", x: 0, y: 417,
 				sprite: {
-					bitmapImage: "tallwall.gif", bitmapWidth: 20, bitmapHeight: 130,
-					sprites: {
-						"main": { "f" : [0, 0, 20, 130] }
-					}
+					bitmapImage: "blockwallleft.gif", bitmapWidth: 20, bitmapHeight: 130,
+					sprites: { "main": { "f" : [0, 0, 20, 130] } }
 				}
 			},
 			{
 				name: "wall1", x: 350, y: 495,
 				sprite: {
 					bitmapImage: "wall1.gif", bitmapWidth: 20, bitmapHeight: 52,
-					sprites: {
-						"main": { "f" : [0, 0, 20, 52] }
-					}
+					sprites: { "main": { "f" : [0, 0, 20, 52] } }
+				}
+			},
+			{
+				name: "blockwallright", x: 1980, y: 417,
+				sprite: {
+					bitmapImage: "blockwallright.gif", bitmapWidth: 20, bitmapHeight: 130,
+					sprites: { "main": { "f" : [0, 0, 20, 130] } }
 				}
 			},
 			{
@@ -38,23 +42,25 @@
 			},
 			{ name: "floorpiece1", x: 0, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
 			{ name: "floorpiece2", x: 400, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece3", x: 801, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece4", x: 1202, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece5", x: 1603, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } }
+			{ name: "floorpiece3", x: 800, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
+			{ name: "floorpiece4", x: 1200, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
+			{ name: "floorpiece5", x: 1600, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } }
 		],
 		
 		enemies: [
 			{
-				name: "machinegunner1", x: 364, y: 472,
+				name: "enemy1", x: 364, y: 472,
 				sprite: {
-					bitmapImage: "machinegunner.gif", bitmapWidth: 92, bitmapHeight: 46,
+					bitmapImage: "enemy.gif", bitmapWidth: 522, bitmapHeight: 46,
 					sprites: {
 						"standing": { "f" : [0, 0, 46, 46] },
-						"shooting": { "a" : [0, 0, 46, 46, 2, 50, "loop"] }
+						"shooting": { "f" : [0, 0, 46, 46] },
+						"dying": { "a" : [0, 0, 46, 46, 6, 150, "toggle"] },
+						"dead": { "f" : [276, 0, 46, 46] }
 					}
 				}
 			}
 		]
-		// "It is illegal to buy or possess a gas mask", "Your trade union is your voice", "Support your country: vote in the election", "England is your future"]
+		// "It is illegal to buy or possess a gas mask", "Your trade union is your voice", "Be a good citizen: vote"]
 	}
 }

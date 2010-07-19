@@ -313,6 +313,17 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          return this.frame;
       } else {
          var f = Rectangle2D.create(this.frame);
+				 // framechange
+         var fn = this.getFrameNumber(time);
+         return f.offset(f.dims.x * fn, 0);
+      }
+   },
+
+	 // framechange
+   getFrameNumber: function(time) {
+      if (!this.isAnimation()) {
+         return 0;
+      } else {
          var fn;
          if (this.isLoop()) {
             fn = Math.floor(time / this.speed) % this.count;
@@ -322,7 +333,7 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
                fn = this.count - (fn - (this.count - 1));
             }
          }
-         return f.offset(f.dims.x * fn, 0);
+         return fn;
       }
    },
 

@@ -9,9 +9,9 @@ Engine.initObject("Enemy", "Mover", function() {
 
 var Enemy = Mover.extend({
 
-	alive: false,
 	direction: null,
 	
+	stateOfHealth: null,
 	shootTimer: null,
 	shootInterval: 1000,
 	
@@ -29,6 +29,7 @@ var Enemy = Mover.extend({
 	constructor: function(name, position) {
 		this.base(name);
 		this.field = PistolSlut;
+		this.stateOfHealth = Enemy.ALIVE;
 
 		// Add components to move and draw
 		this.add(Mover2DComponent.create("move"));
@@ -38,16 +39,16 @@ var Enemy = Mover.extend({
 		this.sprites = [];
 		this.sprites["standing"] = this.field.spriteLoader.getSprite(name, "standing");
 		this.sprites["shooting"] = this.field.spriteLoader.getSprite(name, "shooting");
+		this.sprites["dying"] = this.field.spriteLoader.getSprite(name, "dying");
+		this.sprites["dead"] = this.field.spriteLoader.getSprite(name, "dead");
 		this.setSprite("standing");
 		
 		this.setPosition(position);
 		this.velocity = Vector2D.create(0, 0);
-		
 		this.direction = "left";
-		this.alive = true;
+		this.getComponent("move").setCheckLag(false);
 		
 		var enemy = this;
-		this.getComponent("move").setCheckLag(false);
 		// this.shootTimer = Interval.create("shoot", this.shootInterval,
 		// 	function() {
 		// 		enemy.shoot();
@@ -58,7 +59,27 @@ var Enemy = Mover.extend({
 		renderContext.pushTransform();
 		this.base(renderContext, time);
 		renderContext.popTransform();
-		this.setSprite("standing");
+		
+		if(this.stateOfHealth == Enemy.DYING) // we are playing their dying animation and might need to stop it
+		{
+			var currentSprite = this.getSprite();
+			if(currentSprite.getFrameNumber(time) >= currentSprite.count - 1) // at end of anim
+			{
+				this.setSprite("dead");
+				this.stateOfHealth = Enemy.DEAD
+			}
+		}
+	},
+	
+	onCollide: function(obj) {
+		return ColliderComponent.CONTINUE;
+	},
+	
+	die: function(bullet) {
+		this.stateOfHealth = Enemy.DYING;
+		this.setSprite("dying");
+		if (this.ModelData.lastNode) // make uncollidable but leave enemy in the level
+			this.ModelData.lastNode.removeObject(this);
 	},
 	
 	muzzleFlashSpread: 15,
@@ -84,12 +105,16 @@ var Enemy = Mover.extend({
 	
 	release: function() {
 		this.base();
-	},
+	}
 
 	}, { // Static
 		getClassName: function() {
 			return "Enemy";
 		},
+		
+		ALIVE: 0,
+		DYING: 1,
+		DEAD: 2
 	});
 
 	return Enemy;

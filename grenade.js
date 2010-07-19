@@ -40,6 +40,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 		release: function() {
 			this.base();
 			this.shooter = null;
+			this.timeThrown = null;
 		},
 
 		/**
@@ -99,11 +100,12 @@ Engine.initObject("Grenade", "Object2D", function() {
 			if(obj instanceof Furniture)
 			{
 				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
-			  {
-					this.bounce(obj);
+				{
+					this.bounce(obj);	
 					return ColliderComponent.STOP;
 				}
 			}
+			
 			return ColliderComponent.CONTINUE;
 		},
 		
@@ -113,7 +115,6 @@ Engine.initObject("Grenade", "Object2D", function() {
 			var pointOfImpactData = this.field.collider.pointOfImpact(this, objHit);
 			if(pointOfImpactData != null)
 			{
-				console.log(pointOfImpactData)
 				var sideHit = pointOfImpactData[1];
 				this.setVelocity(this.field.collider.bounce(this.getVelocity(), this.bounciness, sideHit));	
 			}
