@@ -30,7 +30,6 @@ Engine.initObject("Sign", "Object2D", function() {
 			var textPieces = text.split(""); // set each letter in its own renderer
 			for(var i in textPieces) 
 			{				
-				//PistolSlut.fontLoader.get("century")
 				this.textRenderers[i] = TextRenderer.create(VectorText.create(), textPieces[i], 1);
 		    this.textRenderers[i].setTextWeight(1);
 		    this.textRenderers[i].setColor(this.signColor);

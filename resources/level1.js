@@ -5,8 +5,8 @@
 	objects: {
 		signs: [
 			{ text: "Pistol Slut", x: 89, y: 460, width: 140 },
-			{ text: "Please  return  to  your  homes", x: 517, y: 172, width: 245	}
-			//{ text: "It  is  illegal  to  buy  or  possess  a  gas  mask", x: 517, y: 172, width: 245	}
+			{ text: "Please  return  to  your  homes", x: 517, y: 172, width: 245	},
+			{ text: "Free  shop", x: 1188, y: 460, width: 140 }
 		],
 		
 		furniture: [
