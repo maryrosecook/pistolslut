@@ -127,7 +127,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
+				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 			  {
 					obj.shot(this);
 					this.destroy();
@@ -135,7 +135,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 				}
 			}
 			else if(obj instanceof Human) {
-				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
+				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 			  {
 					obj.shot(this);
 					this.destroy();

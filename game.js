@@ -20,6 +20,7 @@ Game.load("/furniture.js");
 Game.load("/collider.js");
 Game.load("/enemy.js");
 Game.load("/human.js");
+Game.load("/cheaprect.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 

@@ -17,7 +17,9 @@ var Human = Mover.extend({
 		this.stateOfBeing = Human.ALIVE;
 		this.loadSprites();
 	},
-	
+	//bullet oncollide bullet update, furniture shot furniutre particle ricochet - long executions
+	// player update, human shoot, collider point of impact- high ave
+	// collider getrect, bullet oncollide getposition, sign update, mover get position - high % of time
 	// if dying, check it they need to be switched to being dead
 	updateDeathState: function(time) {
 		if(this.stateOfBeing == Human.DYING) // we are playing their dying animation and might need to stop it

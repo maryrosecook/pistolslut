@@ -13,26 +13,26 @@ var Collider = Base.extend({
 	},
 	
 	aFallingThroughB: function(a, b) {
-		var aRect = this.getRect(a).get();
-		var bRect = this.getRect(b).get();
+		var aRect = new CheapRect(a);
+		var bRect = new CheapRect(b);
 		return a.velocity.y > 0 && aRect.b > bRect.y && aRect.b < bRect.y + 14;
 	},
 	
 	aOnB: function(a, b) {
-		var aRect = this.getRect(a).get();
-		var bRect = this.getRect(b).get();
+		var aRect = new CheapRect(a);
+		var bRect = new CheapRect(b);
 		return aRect.b == bRect.y;
 	},
 	
 	aOnLeftAndBumpingB: function(a, b) {
-		var aRect = this.getRect(a).get();
-		var bRect = this.getRect(b).get();
+		var aRect = new CheapRect(a);
+		var bRect = new CheapRect(b);
 		return aRect.r >= bRect.x && aRect.x < bRect.x && !this.aOnB(a, b);
 	},
 	
 	aOnRightAndBumpingB: function(a, b) {
-		var aRect = this.getRect(a).get();
-		var bRect = this.getRect(b).get();
+		var aRect = new CheapRect(a);
+		var bRect = new CheapRect(b);
 		return aRect.x <= bRect.r && aRect.r > bRect.r && !this.aOnB(a, b);
 	},
 	
@@ -45,7 +45,7 @@ var Collider = Base.extend({
 	colliding: function(subject, objects, clazz) {
 		for(var i in objects)
 			if(clazz == null || objects[i] instanceof clazz)
-				if(this.getRect(subject).isIntersecting(this.getRect(objects[i])))
+				if(new CheapRect(subject).isIntersecting(new CheapRect(objects[i])))
 					return true;
 		return false;
 	},
