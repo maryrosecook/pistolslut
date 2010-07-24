@@ -19,6 +19,7 @@ Game.load("/loader.furnishedlevel.js");
 Game.load("/furniture.js");
 Game.load("/collider.js");
 Game.load("/enemy.js");
+Game.load("/human.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 

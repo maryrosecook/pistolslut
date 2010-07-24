@@ -51,13 +51,7 @@
 			{
 				name: "enemy1", x: 364, y: 472,
 				sprite: {
-					bitmapImage: "enemy.gif", bitmapWidth: 522, bitmapHeight: 46,
-					sprites: {
-						"standing": { "f" : [0, 0, 46, 46] },
-						"shooting": { "f" : [0, 0, 46, 46] },
-						"dying": { "a" : [0, 0, 46, 46, 6, 150, "loop"] },
-						"dead": { "f" : [276, 0, 46, 46] }
-					}
+					bitmapImage: "enemy.gif", bitmapWidth: 522, bitmapHeight: 46
 				}
 			}
 		]

@@ -57,7 +57,6 @@ var Collider = Base.extend({
 		var mODims = movingObj.getBoundingBox().dims;
 		var sOPos = staticObj.getPosition();
 		var sODims = staticObj.getBoundingBox().dims;
-		//console.log(mOCurPos.x, mOCurPos.y, mOPrevPos.x, mOPrevPos.y, mODims, sOPos, sODims)
 		
 		// staticobj on right
 		var p1 = Point2D.create(mOPrevPos.x + mODims.x,mOPrevPos.y + mODims.y);

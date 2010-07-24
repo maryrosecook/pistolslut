@@ -60,6 +60,21 @@ Engine.initObject("Furniture", "Object2D", function() {
 			this.base(renderContext, time);
 			renderContext.popTransform();
 		},
+		
+		shot: function(bullet) {
+			this.particleRicochet(bullet);
+		},	
+		
+		ricochetFlashSpread: 15,
+		ricochetParticleCount: 10,
+		ricochetParticleTTL: 500,
+		particleRicochet: function(bullet) {
+			var position = this.field.collider.pointOfImpact(bullet, this)[0];
+			var angle = this.field.collider.angleOfImpact(bullet);
+			if(position && angle)
+				for(var x = 0; x < this.ricochetParticleCount; x++)
+					this.field.pEngine.addParticle(RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL));
+		},
 
 		// onCollide: function(obj) {
 		// 	return ColliderComponent.CONTINUE;

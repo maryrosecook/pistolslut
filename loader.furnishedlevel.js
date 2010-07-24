@@ -44,11 +44,11 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 				}
 				
 				// and the enemies
-				for(var i in levelObjects.enemies)
-				{
-					var enemyData = levelObjects.enemies[i];
-					this.spriteLoader.load(enemyData.name, null, enemyData.sprite, path);
-				}
+				// for(var i in levelObjects.enemies)
+				// {
+				// 	var enemyData = levelObjects.enemies[i];
+				// 	this.spriteLoader.load(enemyData.name, null, enemyData.sprite, path);
+				// }
 			}
 		},
 

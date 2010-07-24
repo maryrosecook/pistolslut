@@ -328,7 +328,6 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
 				return true;
 			}
 			else {
-				//console.log(this.previousFrameNumber, currentFrameNumber)
 				this.previousFrameNumber = currentFrameNumber;
 				return false;
 			}
@@ -342,7 +341,6 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          var fn;
          if (this.isLoop()) {
             fn = Math.floor(time / this.speed) % this.count;
-						console.log(fn)
          } else {
             fn = Math.floor(time / this.speed) % (this.count * 2);
             if (fn > this.count - 1) {

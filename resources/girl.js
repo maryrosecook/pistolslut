@@ -5,17 +5,29 @@
 	bitmapWidth: 50,
 	bitmapHeight: 25,
 	sprites: {
+		"leftstand": {
+			"f" : [0, 46, 46, 46]
+		},
+		"leftrun": {
+			"a" : [0, 46, 46, 46, 11, 100, "loop"]
+		},
+		"leftdying": {
+			"a" : [0, 138, 46, 46, 7, 100, "loop"]
+		},
+		"leftdead": {
+			"f" : [276, 138, 46, 46]
+		},
 		"rightstand": {
 			"f" : [0, 0, 46, 46]
 		},
 		"rightrun": {
 			"a" : [0, 0, 46, 46, 11, 100, "loop"]
 		},
-		"leftstand": {
-			"f" : [0, 46, 46, 46]
+		"rightdying": {
+			"a" : [0, 92, 46, 46, 7, 100, "loop"]
 		},
-		"leftrun": {
-			"a" : [0, 46, 46, 46, 11, 100, "loop"]
+		"rightdead": {
+			"f" : [276, 92, 46, 46]
 		}
 	}
 }

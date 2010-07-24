@@ -15,7 +15,8 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		field: null,
 
-		speed: 8,
+		speed: 15,
+		damage: 1,
 
 		constructor: function(shooter) {
 			this.base("Bullet");
@@ -128,47 +129,20 @@ Engine.initObject("Bullet", "Object2D", function() {
 			if(obj instanceof Furniture) {
 				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
 			  {
-					this.particleRicochet(obj);
+					obj.shot(this);
 					this.destroy();
 					return ColliderComponent.STOP;
 				}
 			}
-			else if(obj instanceof Enemy) {
+			else if(obj instanceof Human) {
 				if(this.field.collider.getRect(this).isIntersecting(this.field.collider.getRect(obj)))
 			  {
-					this.bloodSpurt(obj);
-					obj.die(); // be nicer to do this in the enemy's collision detection but can't because must destroy bullet
+					obj.shot(this);
 					this.destroy();
 					return ColliderComponent.STOP;
 				}
 			}
 			return ColliderComponent.CONTINUE;
-		},
-	
-		ricochetFlashSpread: 15,
-		ricochetParticleCount: 10,
-		ricochetParticleTTL: 500,
-		particleRicochet: function(objHit) {
-			var position = this.field.collider.pointOfImpact(this, objHit)[0];
-			var angle = this.field.collider.angleOfImpact(this);
-			if(position && angle)
-				for(var x = 0; x < this.ricochetParticleCount; x++)
-					this.field.pEngine.addParticle(RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL));
-		},
-		
-		bloodSpread: 15,
-		bloodParticleCount: 10,
-		bloodParticleTTL: 300,
-		bloodSpurt: function(objHit) {
-			var positionData = this.field.collider.pointOfImpact(this, objHit);
-			var position = null;
-			if(positionData != null)
-				var position = Point2D.create(positionData[0].x, positionData[0].y)
-				
-			var angle = this.field.collider.angleOfImpact(this);
-			if(position && angle)
-				for(var x = 0; x < this.bloodParticleCount; x++)
-			 		this.field.pEngine.addParticle(BloodParticle.create(position, angle, this.bloodSpread, this.bloodParticleTTL));
 		},
 
 	}, {

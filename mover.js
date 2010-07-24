@@ -16,6 +16,12 @@ var Mover = Object2D.extend({
 
 	sprites: null,
 
+	constructor: function(name) {
+		this.base(name);
+		this.field = PistolSlut;
+		this.sprites = {};
+	},
+
 	destroy: function() {
 		if (this.ModelData && this.ModelData.lastNode) {
 			this.ModelData.lastNode.removeObject(this);
@@ -31,6 +37,10 @@ var Mover = Object2D.extend({
 
 	getSprite: function() {
 		return this.getComponent("draw").getSprite();
+	},
+	
+	addSprite: function(name, sprite) {
+		this.sprites[name] = sprite;
 	},
 
 	/**

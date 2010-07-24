@@ -5,14 +5,13 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.timers.js");
 Engine.include("/components/component.sprite.js");
 
-Engine.initObject("Player", "Mover", function() {
+Engine.initObject("Player", "Human", function() {
 
-var Player = Mover.extend({
+var Player = Human.extend({
 
 	size: 4,
 		
 	bullets: 0,
-	alive: false,
 
 	directionData: {
 		"left": {
@@ -34,7 +33,7 @@ var Player = Mover.extend({
 	constructor: function() {
 		this.base("Player");
 
-		this.field = PistolSlut;
+		this.health = 2;
 
 		// Add components to move and draw the player
 		this.add(KeyboardInputComponent.create("input"));
@@ -42,18 +41,12 @@ var Player = Mover.extend({
 		this.add(SpriteComponent.create("draw"));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
-		this.sprites = {};
-		this.sprites["rightstand"] = this.field.spriteLoader.getSprite("girl", "rightstand");
-		this.sprites["rightrun"] = this.field.spriteLoader.getSprite("girl", "rightrun");
-		this.sprites["leftstand"] = this.field.spriteLoader.getSprite("girl", "leftstand");
-		this.sprites["leftrun"] = this.field.spriteLoader.getSprite("girl", "leftrun");
 		//this.loadWeapons();
 		
 		this.direction = this.right;
 		this.setSprite(this.direction + "stand");
 		
 		this.velocity = Vector2D.create(0, 0);
-		this.alive = true;
 		this.getComponent("move").setCheckLag(false);
 	},
 	
@@ -79,21 +72,9 @@ var Player = Mover.extend({
 		this.base();
 		this.size = 4;
 		this.bullets = 0;
-		this.alive = false;
 		this.directionData = null;
 		this.left = null;
 		this.right = null;
-	},
-
-	move: function() {
-		this.field.applyGravity(this);
-		this.setPosition(this.getPosition().add(this.velocity));
-
-		// set sprite
-		if(this.velocity.x != 0)
-			this.setSprite(this.direction + "run");
-		else
-			this.setSprite(this.direction + "stand");
 	},
 
 	onCollide: function(obj) {
@@ -128,11 +109,54 @@ var Player = Mover.extend({
 	 * @param time {Number} The engine time in milliseconds
 	 */
 	update: function(renderContext, time) {
-		this.move();
+		this.move(time);
 		renderContext.pushTransform();
 		this.base(renderContext, time);
 		renderContext.popTransform();
 		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
+	},
+
+	move: function(time) {
+		this.updateDeathState(time);
+		this.field.applyGravity(this);
+
+		// set sprite
+		if(this.isAlive())
+		{
+			if(this.velocity.x != 0)
+				this.setSprite(this.direction + "run");
+			else
+				this.setSprite(this.direction + "stand");
+		}
+		
+		this.handleFriction();
+		
+		this.setPosition(this.getPosition().add(this.velocity));
+	},
+	
+	// if dead, carry on moving. A bit.
+	friction: 0.05,
+	handleFriction: function() {
+		newX = null;
+		if(!this.isAlive())
+		{
+			var x = this.velocity.x;
+			if(x == 0)
+				return;
+			else if(x > 0)
+			{
+				newX = x - this.friction;
+				if(newX < 0)
+					newX = 0;
+			}
+			else // x < 0
+			{
+				newX = x + this.friction;
+				if(newX < 0)
+					newX = 0;
+			}
+			this.velocity.setX(newX);
+		}
 	},
 
 	/**
@@ -211,27 +235,14 @@ var Player = Mover.extend({
 	},
 
 	/**
-	 * Kills the player, creating the particle explosion and removing a
-	 * life from the extra lives.  Afterwards, it determines if the
-	 * player can respawn (any lives left) and either calls the
-	 * respawn method or signals that the game is over.
-	 */
-	kill: function() {
-		this.alive = false;
-		this.getComponent("draw").setDrawMode(RenderComponent.NO_DRAW);
-		this.getComponent("move").setVelocity(Point2D.ZERO);
-		this.getComponent("move").setPosition(this.getRenderContext().getBoundingBox().getCenter());
-	},
-
-	/**
 	 * Called by the keyboard input component to handle a key down event.
 	 *
 	 * @param event {Event} The event object
 	 */
 	onKeyDown: function(event) {
-		if (!this.alive)
+		if(!this.isAlive())
 			return;
-		
+			
 		switch (event.keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 				this.walk(this.left);
@@ -261,9 +272,9 @@ var Player = Mover.extend({
 	 * @param event {Event} The event object
 	 */
 	onKeyUp: function(event) {
-		if (!this.alive)
+		if(!this.isAlive())
 			return;
-
+			
 		switch (event.keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 			case EventEngine.KEYCODE_RIGHT_ARROW:
