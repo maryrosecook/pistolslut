@@ -57,18 +57,21 @@ var Enemy = Mover.extend({
 	
 	update: function(renderContext, time) {
 		renderContext.pushTransform();
-		this.base(renderContext, time);
-		renderContext.popTransform();
 		
 		if(this.stateOfHealth == Enemy.DYING) // we are playing their dying animation and might need to stop it
 		{
 			var currentSprite = this.getSprite();
-			if(currentSprite.getFrameNumber(time) >= currentSprite.count - 1) // at end of anim
+			if(currentSprite.animationPlayed(time)) // at end of anim
 			{
 				this.setSprite("dead");
 				this.stateOfHealth = Enemy.DEAD
 			}
 		}
+		
+		
+		this.base(renderContext, time);
+
+		renderContext.popTransform();		
 	},
 	
 	onCollide: function(obj) {
@@ -78,7 +81,9 @@ var Enemy = Mover.extend({
 	die: function(bullet) {
 		this.stateOfHealth = Enemy.DYING;
 		this.setSprite("dying");
-		if (this.ModelData.lastNode) // make uncollidable but leave enemy in the level
+		
+		// make uncollidable but leave enemy in the level
+		if (this.ModelData.lastNode) 
 			this.ModelData.lastNode.removeObject(this);
 	},
 	

@@ -313,13 +313,28 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          return this.frame;
       } else {
          var f = Rectangle2D.create(this.frame);
-				 // framechange
-         var fn = this.getFrameNumber(time);
+         var fn = this.getFrameNumber(time); // framechange - moved code to this method
          return f.offset(f.dims.x * fn, 0);
       }
    },
 
-	 // framechange
+   // returns true if animation seems to have played through at least once
+	 // framechange - new method
+   previousFrameNumber: 0,
+   animationPlayed: function(time) {
+			var currentFrameNumber = this.getFrameNumber(time);
+			if(currentFrameNumber < this.previousFrameNumber) {
+				this.previousFrameNumber = 0;
+				return true;
+			}
+			else {
+				//console.log(this.previousFrameNumber, currentFrameNumber)
+				this.previousFrameNumber = currentFrameNumber;
+				return false;
+			}
+   },
+
+	 // framechange - new method
    getFrameNumber: function(time) {
       if (!this.isAnimation()) {
          return 0;
@@ -327,6 +342,7 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          var fn;
          if (this.isLoop()) {
             fn = Math.floor(time / this.speed) % this.count;
+						console.log(fn)
          } else {
             fn = Math.floor(time / this.speed) % (this.count * 2);
             if (fn > this.count - 1) {
