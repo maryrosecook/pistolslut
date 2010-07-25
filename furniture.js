@@ -76,10 +76,6 @@ Engine.initObject("Furniture", "Object2D", function() {
 					this.field.pEngine.addParticle(RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL));
 		},
 
-		// onCollide: function(obj) {
-		// 	return ColliderComponent.CONTINUE;
-		// },
-
 	}, {
 
 		getClassName: function() {

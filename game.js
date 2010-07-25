@@ -60,7 +60,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		spriteLoader: null,
 		levelLoader: null,
-		fontLoader: null,
 		loadTimeout: null,
 	
 		gravityVector: Vector2D.create(0, 0.6),
@@ -83,9 +82,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
-		
-		  this.fontLoader = BitmapFontLoader.create();
-      this.fontLoader.load("century", "century_gothic_36.js");
 		
 			// load sprite resources
 			this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
@@ -140,7 +136,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		},
 		
 	  waitForResources: function(){
-			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady() && PistolSlut.fontLoader.isReady())
+			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
 			{
 				PistolSlut.loadTimeout.destroy();
 				PistolSlut.play();

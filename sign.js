@@ -61,7 +61,9 @@ Engine.initObject("Sign", "Object2D", function() {
 		},
 	
 		getScrollStartPosition: function() {
-			return Point2D.create(this.signPosition).add(Vector2D.create(this.signWidth, 0));
+			var scrollStartPos = Point2D.create(this.signPosition);
+			scrollStartPos.setX(scrollStartPos.x + this.signWidth);
+			return scrollStartPos;
 		},
 
 		isScrollComplete: function() {
@@ -74,8 +76,6 @@ Engine.initObject("Sign", "Object2D", function() {
 		},
 	
 		getTextBoundingBox: function(textRenderer) {
-			// console.log(textRenderer.renderer.getHostObject())
-			// console.log(woooooo)
 			return textRenderer.renderer.getHostObject().getBoundingBox().dims;
 		},
 

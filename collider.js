@@ -98,9 +98,29 @@ var Collider = Base.extend({
 		return Math2D.radToDeg(Math.atan2(vector.x, vector.y) + Math.PI);
 	},
 
+	// allows a cheaper test because no Rectangle2Ds are created
+	isIntersectingObjects: function(objA, objB) {
+		var objAPos = objA.getPosition();
+		var objABBoxDims = objA.getBoundingBox().dims;
+		var objBPos = objB.getPosition();
+		var objBBBoxDims = objB.getBoundingBox().dims;
+
+		return this.isIntersectingPoints(objAPos.x, objAPos.y, objAPos.x + objABBoxDims.x, objAPos.y + objABBoxDims.y,
+																		 objBPos.x, objBPos.y, objBPos.x + objBBBoxDims.x, objBPos.y + objBBBoxDims.y);
+	},
+	
+	isIntersectingPoints: function(objAx, objAy, objAr, objAb, objBx, objBy, objBr, objBb) {
+		return !(objAr < objBx ||
+					objAx > objBr ||
+					objAy > objBb ||
+					objAb < objBy);
+	},
+
 	bounce: function(vector, bounciness, sideHit) {
-		if(sideHit == "top" || sideHit == "bottom") return Vector2D.create(vector.x * bounciness, -vector.y * bounciness);
-		if(sideHit == "left" || sideHit == "right") return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
+		if(sideHit == "top" || sideHit == "bottom")
+			return vector.mul(bounciness);
+		else if(sideHit == "left" || sideHit == "right")
+			return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
 	},
 	
 	getRect: function(obj) {

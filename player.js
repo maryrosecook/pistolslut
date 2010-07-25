@@ -201,7 +201,7 @@ var Player = Human.extend({
 		if(!this.jumping)
 		{
 			this.jumping = true;
-			this.velocity.add(Vector2D.create(0, this.jumpSpeed));
+			this.velocity.setY(this.velocity.y + this.jumpSpeed);
 			this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
 		}
 	},
@@ -214,9 +214,9 @@ var Player = Human.extend({
 			this.walking = true;
 			this.direction = direction;
 			if(direction == this.left)
-				this.velocity.add(Vector2D.create(-this.walkSpeed, 0));
+				this.velocity.setX(this.velocity.x - this.walkSpeed);
 			else if(direction == this.right)
-				this.velocity.add(Vector2D.create(this.walkSpeed, 0));
+				this.velocity.setX(this.velocity.x + this.walkSpeed);
 		}
 	},
 
@@ -224,12 +224,11 @@ var Player = Human.extend({
 		this.velocity.setX(0);
 		this.walking = false;
 		if(newX != null)
-			this.setPosition(Point2D.create(newX, this.getPosition().y));
+			this.getPosition().setX(newX);
 	},
 	
 	endFall: function(groundObj) {
-		var newPos = Point2D.create(this.getPosition().x, groundObj.getPosition().y).sub(Vector2D.create(0, this.getBoundingBox().dims.y));
-		this.setPosition(newPos);
+		this.getPosition().setY(groundObj.getPosition().y - this.getBoundingBox().dims.y);
 		this.velocity.setY(0);
 		this.jumping = false;
 	},
