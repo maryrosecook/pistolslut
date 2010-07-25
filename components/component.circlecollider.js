@@ -2,14 +2,15 @@
  * The Render Engine
  * CircleColliderComponent
  *
- * @fileoverview A circle-circle collision component.
+ * @fileoverview A collision component which determines collisions via
+ *               bounding circle comparisons.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  *
  * @author: $Author: bfattori $
- * @version: $Revision: 677 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,17 +39,19 @@ Engine.initObject("CircleColliderComponent", "CircleColliderComponent", function
 
 /**
  * @class An extension of the {@link ColliderComponent} which will check if the
- *        two object's are colliding based on a bounding circle.  For this component to
- *        function, a movement vector must be available on the host object by implementing
- *        a <tt>getVelocity()</tt> method which returns a {@link Vector2D} instance.  Additionally
- *        the host object and collision object must provide the method <tt>getCircle()</tt>
- *        which returns a {@link Circle2D} instance.
+ *        object's are colliding based on a bounding circle.  
  *
  * @param name {String} Name of the component
  * @param collisionModel {SpatialCollection} The collision model
  * @param priority {Number} Between 0.0 and 1.0, with 1.0 being highest
  *
  * @extends ColliderComponent
+ * @constructor
+ * @description For this component to function, a movement vector must be available on the 
+ *        host object by implementing the {@link Object2D#getVelocity} method which returns 
+ *        a {@link Vector2D} instance.  Additionally the host object and collision object 
+ *        must implement the {@link Object2D#getCircle} method which returns a 
+ *        {@link Circle2D} instance.
  */
 var CircleColliderComponent = ColliderComponent.extend(/** @scope CircleColliderComponent.prototype */{
 

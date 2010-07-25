@@ -121,6 +121,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			
 			// Start up the particle engine
 			this.pEngine = ParticleEngine.create();
+			this.pEngine.setMaximum(1000);
 			this.renderContext.add(this.pEngine);
 				
 			// snow machine

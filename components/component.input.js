@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 615 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,24 +37,96 @@ Engine.initObject("InputComponent", "BaseComponent", function() {
 
 /**
  * @class A component which can read an input device and make those inputs
- * available for usage.
+ *        available to a {@link HostObject}.
+ *
+ * @param name {String} The name of the component
+ * @param [priority=1.0] {Number} The component's priority
  * @extends BaseComponent
+ * @constructor
+ * @description Create an input component.
  */
 var InputComponent = BaseComponent.extend(/** @scope InputComponent.prototype */{
 
+	recording: false,
+	playback: false,
+	script: null,
+	lastInputTime: 0,
+
    /**
-    * @constructor
-    * @memberOf InputComponent
+    * @private
     */
    constructor: function(name, priority) {
       this.base(name, BaseComponent.TYPE_INPUT, priority || 1.0);
-   }
-}, {
+		this.recording = false;
+		this.playback = false;
+   },
+	
+	startRecording: function() {
+		Console.debug("RECORDING INPUT");
+		this.recording = true;
+		this.lastInputTime = Engine.worldTime;
+		this.script = [];
+	},
+	
+	stopRecording: function() {
+		Console.debug("RECORDING STOPPED");
+		this.recording = false;
+	},
+	
+	getScript: function() {
+		return this.script;
+	},
+	
+	setScript: function(script) {
+		this.script = script;
+	},
+	
+	playEvent: function() {
+		// ABSTRACT	
+	},
+	
+	playScript: function(script) {
+		this.recording = false;
+		this.playback = true;
+		this.script = script;
+		
+		var popCall = function() {
+			if (arguments.callee.script.length == 0) {
+				return;
+			}
+			if (arguments.callee.e != null) {
+				Console.log("PLAYBACK:", arguments.callee.e.type);
+				arguments.callee.self.playEvent(arguments.callee.e);
+			}
+			arguments.callee.e = arguments.callee.script.shift();
+			setTimeout(arguments.callee, arguments.callee.e.delay);
+		};
+		popCall.script = this.script;
+		popCall.self = this;
+		popCall.e = null;
+		
+		popCall();
+	},
+	
+	record: function(eventObj,parts) {
+		if (!this.recording) {
+			return;
+		}
+		var evtCall={};
+		for (var x in parts) {
+			evtCall[parts[x]] = eventObj[parts[x]];
+		}
+		evtCall.delay = Engine.worldTime - this.lastInputTime;
+		this.lastInputTime = Engine.worldTime;
+		evtCall.type = eventObj.type;
+		this.script.push(evtCall);
+	}
+	
+}, /** @scope InputComponent.prototype */{
    /**
     * Get the class name of this object
     *
-    * @type String
-    * @memberOf InputComponent
+    * @return {String} "InputComponent"
     */
    getClassName: function() {
       return "InputComponent";

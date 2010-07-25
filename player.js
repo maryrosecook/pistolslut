@@ -178,8 +178,11 @@ var Player = Human.extend({
 
 			var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
 			var gunAngle = this.getGunAngle();
+			
+			var particles = [];
 			for (var x = 0; x < this.muzzleParticleCount; x++)
-				PistolSlut.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, gunAngle, this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
+				particles[x] = BurnoutParticle.create(gunTipInWorld, gunAngle, this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
+			this.field.pEngine.addParticles(particles);
 		}
 	},
 	
@@ -238,11 +241,11 @@ var Player = Human.extend({
 	 *
 	 * @param event {Event} The event object
 	 */
-	onKeyDown: function(event) {
+	onKeyDown: function(keyCode) {
 		if(!this.isAlive())
 			return;
 			
-		switch (event.keyCode) {
+		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 				this.walk(this.left);
 				break;
@@ -270,11 +273,11 @@ var Player = Human.extend({
 	 *
 	 * @param event {Event} The event object
 	 */
-	onKeyUp: function(event) {
+	onKeyUp: function(keyCode) {
 		if(!this.isAlive())
 			return;
 			
-		switch (event.keyCode) {
+		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 			case EventEngine.KEYCODE_RIGHT_ARROW:
 				this.stopWalk(null);

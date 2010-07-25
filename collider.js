@@ -117,10 +117,8 @@ var Collider = Base.extend({
 	},
 
 	bounce: function(vector, bounciness, sideHit) {
-		if(sideHit == "top" || sideHit == "bottom")
-			return vector.mul(bounciness);
-		else if(sideHit == "left" || sideHit == "right")
-			return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
+		if(sideHit == "top" || sideHit == "bottom") return Vector2D.create(vector.x * bounciness, -vector.y * bounciness);
+		if(sideHit == "left" || sideHit == "right") return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
 	},
 	
 	getRect: function(obj) {

@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+   <head>
+      <title>My First Game</title>
+
+		<!-- ChromeFrame Support -->
+		<meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+      <!-- Load the supporting libraries -->
+      <script type="text/javascript" src="../../libs/base.js"></script>
+      <script type="text/javascript" src="../../libs/jquery.js"></script>
+      <script type="text/javascript" src="../../libs/jquery.ext.engine.js"></script>
+      <script type="text/javascript" src="../../libs/sylvester.js"></script>
+
+      <!-- Load the main engine script -->
+      <script type="text/javascript" src="../../engine/runtime/engine.js"></script>
+
+      <style type="text/css">
+         #loading {
+            padding-left: 20px;
+         }
+
+         #engine-load-progress {
+            position: relative;
+            border: 1px solid;
+            width: 300px;
+            height: 10px;
+         }
+
+         #engine-load-progress .bar {
+            background: blue;
+         }
+      </style>
+   </head>
+   <body>
+      <span id="loading">Loading My First Game...
+         <div id="engine-load-progress"></div>
+      </span>
+      <script type="text/javascript">
+         // Load the game script
+         Engine.loadGame('game.js','MyFirstGame');
+      </script>
+   </body>
+</html>

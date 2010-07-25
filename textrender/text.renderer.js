@@ -8,9 +8,9 @@
  * @author: Brett Fattori (brettf@renderengine.com)
  *
  * @author: $Author: bfattori $
- * @version: $Revision: 779 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,11 +45,13 @@ Engine.initObject("TextRenderer", "Object2D", function() {
  *        context.
  *
  * @constructor
+ * @description Create an instance of one of the text renderers.
  * @param renderer {AbstractTextRenderer} The text renderer to use
  * @param text {String} The text to render
  * @param size {Number} The size of the text to render
  * @see VectorText
  * @see BitmapText
+ * @see ContextText
  */
 var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
 
@@ -62,7 +64,7 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     */
    constructor: function(renderer, text, size) {
 
-      Assert((renderer instanceof AbstractTextRenderer), "Text renderer must extend AbstractTextRenderer");
+      Assert((AbstractTextRenderer.isInstance(renderer)), "Text renderer must extend AbstractTextRenderer");
 
       this.base("TextRenderer");
 
@@ -71,7 +73,9 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
       this.add(this.renderer);
       this.add(Transform2DComponent.create("transform"));
       this.getComponent("TextRenderObject").setText(text || "");
-      this.getComponent("transform").setScale(size || 1);
+      //this.getComponent("transform").setScale(size || 1);
+      this.getComponent("TextRenderObject").setSize(size || 1);
+		this.drawMode = TextRenderer.DRAW_TEXT;
    },
 
    /**
@@ -79,7 +83,7 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     */
    release: function() {
       this.base();
-      this.drawMode = 0;
+		this.drawMode = TextRenderer.DRAW_TEXT;
 		this.renderer = null;
    },
 
@@ -126,7 +130,8 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     * @param size {Number} Defaults to 1
     */
    setTextSize: function(size) {
-      this.getComponent("transform").setScale(size || 1);
+      //this.getComponent("transform").setScale(size || 1);
+      this.getComponent("TextRenderObject").setSize(size || 1);
    },
 
    /**
@@ -134,7 +139,7 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     * @return {Number} The size/scale of the text
     */
    getTextSize: function() {
-      this.getComponent("transform").getScale();
+      return this.getComponent("TextRenderObject").getSize();
    },
 
    /**
@@ -207,6 +212,7 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     */
    setPosition: function(point) {
       this.getComponent("transform").setPosition(point);
+		point.destroy();
    },
 
    /**
@@ -298,7 +304,13 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     * Don't draw the text to the context.
     * @type Number
     */
-   NO_DRAW: 1
+   NO_DRAW: 1,
+	
+   /**
+    * The size of a text element, in pixels
+    * @type Number
+    */
+	BASE_TEXT_PIXELSIZE: 12
 });
 
 return TextRenderer;

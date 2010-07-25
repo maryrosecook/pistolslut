@@ -72,8 +72,12 @@ Engine.initObject("Furniture", "Object2D", function() {
 			var position = this.field.collider.pointOfImpact(bullet, this)[0];
 			var angle = this.field.collider.angleOfImpact(bullet);
 			if(position && angle)
+			{
+				var particles = [];
 				for(var x = 0; x < this.ricochetParticleCount; x++)
-					this.field.pEngine.addParticle(RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL));
+					particles[x] = RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL);
+				this.field.pEngine.addParticles(particles);
+			}
 		},
 
 	}, {

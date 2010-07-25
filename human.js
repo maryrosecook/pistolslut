@@ -52,8 +52,11 @@ var Human = Mover.extend({
 		this.field.renderContext.add(bullet);
 		
 		var gunTipInWorld = Point2D.create(this.getGunTip()).add(this.getPosition());
+		
+		var particles = [];
 		for (var x = 0; x < this.muzzleParticleCount; x++)
-			this.field.pEngine.addParticle(BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL));
+			particles[x] = BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
+		this.field.pEngine.addParticles(particles);
 	},
 	
 	shot: function(bullet) {
@@ -77,8 +80,12 @@ var Human = Mover.extend({
 			
 		var angle = this.field.collider.angleOfImpact(bullet);
 		if(position && angle)
+		{
+			var particles = [];
 			for(var x = 0; x < this.bloodParticleCount; x++)
-		 		this.field.pEngine.addParticle(BloodParticle.create(position, angle, this.bloodSpread, this.bloodParticleTTL));
+				particles[x] = BloodParticle.create(position, angle, this.bloodSpread, this.bloodParticleTTL);
+			this.field.pEngine.addParticles(particles);
+		}
 	},
 	
 	loadSprites: function() {

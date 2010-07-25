@@ -3,13 +3,13 @@
  * BaseComponent
  *
  * @fileoverview The base class from which all components extend.  A component
- * 				  is a piece of functionality used by a HostObject.
+ *               is a single part of the functionality used by a HostObject.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 615 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,6 +64,13 @@ Engine.initObject("BaseComponent", "BaseObject", function() {
  *
  *
  * @extends BaseObject
+ * @constructor
+ * @description Create a new instance of a component, setting the name, type, and
+ *              update priority of this component compared to all other components
+ *              within the host.
+ * @param name {String} The name of the component
+ * @param type {Number} The type of the component
+ * @param priority {Number} A value between 0.0 and 1.0.  Default: 0.5
  */
 var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
 
@@ -74,13 +81,7 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    host: null,
 
    /**
-    * Create a new instance of a component, setting the name, type, and
-    * update priority of this component compared to all other components
-    * within the host.
-    *
-    * @param name {String} The name of the component
-    * @param type {Number} The type of the component
-    * @param priority {Number} A value between 0.0 and 1.0.  Default: 0.5
+    * @private 
     */
    constructor: function(name, type, priority) {
       Assert((name != null), "You must assign a name to every Component.");
@@ -99,7 +100,8 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    },
 
    /**
-    * Release the object back into the object pool.
+    * Releases the object back into the object pool.  See {@link PooledObject#release}
+    * for more information.
     */
    release: function() {
       this.base();
@@ -109,7 +111,10 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    },
 
    /**
-    * Set the host object this component exists within.
+    * Establishes the link between this component and its host object.
+    * When you assign components to a host object, it will call this method
+    * so that each component can refer to its host object, the same way
+    * a host object can refer to a component with {@link HostObject#getComponent}.
     *
     * @param hostObject {HostObject} The object which hosts this component
     */
@@ -118,16 +123,18 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    },
 
    /**
-    * Get the host object this component exists within.
+    * Gets the host object this component is a part of.  When the component was
+    * assigned to a host object, the host object will have set itself as the container
+    * via {@link #setHostObject}.
     *
-    * @type HostObject
+    * @return {HostObject}
     */
    getHostObject: function() {
       return this.host;
    },
 
    /**
-    * Get the type of this component.  Will be one of:
+    * Get the type of this component.  The value will be one of:
     * {@link #TYPE_INPUT}, {@link #TYPE_TRANSFORM}, {@link #TYPE_LOGIC},
     * {@link #TYPE_COLLIDER}, or {@link #TYPE_RENDERING}
     *
@@ -140,7 +147,11 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    /**
     * Set the execution priority of this component with
     * 1.0 being the highest priority and 0.0 being the lowest.  Components
-    * within a host object are sorted by type, and then priority.
+    * within a host object are sorted by type, and then priority.  As such,
+    * two components with the same type will be sorted by priority with the
+    * higer value executing before the lower value.  This allows you to layer
+    * components like the {@link #TYPE_RENDER} componenent so that one effect
+    * is drawn before another.
     *
     * @param priority {Number} A value between 0.0 and 1.0
     */
@@ -152,29 +163,28 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    /**
     * Returns the priority of this component.
     *
-    * @type Number
+    * @return {Number} A value between 0.0 and 1.0
     */
    getPriority: function() {
       return this.priority;
    },
 
    /**
-    * Run the component, updating its state.  Not all components will need an execute
-    * method.  However, it is important to include one if you need to run calculations
-    * or update the state of the component each engine cycle.
+    * [ABSTRACT] This method is called by the host object to run the component, 
+    * updating its state.  Not all components will need an execute
+    * method.  However, it is important to include one if you need to 
+    * update the state of the component each engine cycle.
     *
     * @param renderContext {RenderContext} The context the component will render within.
     * @param time {Number} The global engine time
-    * @param rendering {Boolean} <tt>true</tt> during the rendering phase
     */
-   execute: function(renderContext, time, rendering) {
-      // Does nothing...
+   execute: function(renderContext, time) {
+      // ABSTRACT METHOD DECLARATION
    },
 
    /**
-    * Converts the type name to a string.
-    *
-    * @type String
+    * Get the type of the component as a string.
+    * @return {String}
     */
    getTypeString: function() {
       var ts = "";
@@ -203,32 +213,32 @@ var BaseComponent = BaseObject.extend(/** @scope BaseComponent.prototype */{
    },
 
    /**
-    * An input component
-    * @type Number
+    * The constant value for INPUT components.
+    * @type {Number}
     */
    TYPE_INPUT:          1,
 
    /**
-    * A transformation (move,rotate,scale) component
-    * @type Number
+    * The constant value for TRANSFORM (movement) components.
+    * @type {Number}
     */
    TYPE_TRANSFORM:      2,
 
    /**
-    * A logic component
-    * @type Number
+    * The constant value for LOGIC components.
+    * @type {Number}
     */
    TYPE_LOGIC:          3,
 
    /**
-    * A collider component
-    * @type Number
+    * The constant value for COLLIDER components.
+    * @type {Number}
     */
    TYPE_COLLIDER:       4,
 
    /**
-    * A rendering component
-    * @type Number
+    * The constant value for RENDERING components.
+    * @type {Number}
     */
    TYPE_RENDERING:      5
 });

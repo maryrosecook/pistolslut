@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 654 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,38 +43,43 @@ Engine.initObject("WiimoteInputComponent", "KeyboardInputComponent", function() 
  * should implement any of the following methods to receive the corresponding events.
  * <br/>
  * The next few events are fired on the host object, if they exist, when
- * the corresponding button is pressed and released.  All methods take two
- * arguments: the controller number and a boolean indicating <tt>true</tt>
- * if the button has been pressed and <tt>false</tt> when released.
+ * the corresponding button is pressed and released.  All methods take three
+ * arguments: the controller number, a boolean indicating <tt>true</tt>
+ * if the button has been pressed or <tt>false</tt> when released, and
+ * the event object that caused the method to be invoked.
  * <br/>
  * <ul>
- * <li>onWiimoteLeft - Direction pad left</li>
- * <li>onWiimoteRight - Direction pad right</li>
- * <li>onWiimoteUp - Direction pad up</li>
- * <li>onWiimoteDown - Direction pad down</li>
- * <li>onWiimotePlus - Plus button pressed/released</li>
- * <li>onWiimoteMinus - Minus button pressed/released</li>
- * <li>onWiimoteButton1 - Button 1 pressed/released</li>
- * <li>onWiimoteButton2 - Button 2 pressed/released</li>
- * <li>onWiimoteButtonA - Button A pressed/released</li>
- * <li>onWiimoteButtonB - Button B pressed/released</li>
- * <li>onWiimoteButtonC - Button C pressed/released</li>
- * <li>onWiimoteButtonZ - Button Z pressed/released</li>
+ * <li><tt>onWiimoteLeft()</tt> - Direction pad left</li>
+ * <li><tt>onWiimoteRight()</tt> - Direction pad right</li>
+ * <li><tt>onWiimoteUp()</tt> - Direction pad up</li>
+ * <li><tt>onWiimoteDown()</tt> - Direction pad down</li>
+ * <li><tt>onWiimotePlus()</tt> - Plus button pressed/released</li>
+ * <li><tt>onWiimoteMinus()</tt> - Minus button pressed/released</li>
+ * <li><tt>onWiimoteButton1()</tt> - Button 1 pressed/released</li>
+ * <li><tt>onWiimoteButton2()</tt> - Button 2 pressed/released</li>
+ * <li><tt>onWiimoteButtonA()</tt> - Button A pressed/released</li>
+ * <li><tt>onWiimoteButtonB()</tt> - Button B pressed/released</li>
+ * <li><tt>onWiimoteButtonC()</tt> - Button C pressed/released</li>
+ * <li><tt>onWiimoteButtonZ()</tt> - Button Z pressed/released</li>
  * </ul>
  * <br/><br/>
  * The following events are status events and take different
  * arguments:
  * <ul>
- * <li>onWiimoteEnabled - Enabled/disabled status (controller, state)</li>
- * <li>onWiimoteValidity - Validity of data transfer (controller, validity)</li>
- * <li>onWiimoteDistance - Distance from screen in meters (controller, dist)</li>
- * <li>onWiimotePosition - X/Y position (controller, x, y)</li>
- * <li>onWiimoteRoll - X-axis roll in radians (controller, roll)</li>
- * <li>onWiimoteOffscreen - Triggered <i>instead of</i> onWiimotePosition if the
+ * <li><tt>onWiimoteEnabled()</tt> - Enabled/disabled status (controller, state)</li>
+ * <li><tt>onWiimoteValidity()</tt> - Validity of data transfer (controller, validity)</li>
+ * <li><tt>onWiimoteDistance()</tt> - Distance from screen in meters (controller, dist)</li>
+ * <li><tt>onWiimotePosition()</tt> - X/Y position (controller, x, y)</li>
+ * <li><tt>onWiimoteRoll()</tt> - X-axis roll in radians (controller, roll)</li>
+ * <li><tt>onWiimoteOffscreen()</tt> - Triggered <i>instead of</i> onWiimotePosition if the
  *                          remote isn't pointing at the screen.</li>
  * </ul>
  *
- * @extends InputComponent
+ * @param name {String} The name of the component
+ * @param [priority=0.1] {Number} The priority of the component
+ * @extends KeyboardInputComponent
+ * @constructor
+ * @description Create a Wii remote input component.
  */
 var WiimoteInputComponent = KeyboardInputComponent.extend(/** @scope WiimoteInputComponent.prototype */{
 
@@ -83,14 +88,10 @@ var WiimoteInputComponent = KeyboardInputComponent.extend(/** @scope WiimoteInpu
    remoteValid: null,
    
    /**
-    * Create an instance of a Wiimote input component.
-    *
-    * @param name {String} The unique name of the component.
-    * @param priority {Number} The priority of the component among other input components.
-    * @constructor
+    * @private
     */
    constructor: function(name, priority) {
-      this.base(name, priority);
+      this.base(name, priority || 0.1);
       this.enabledRemotes = [false, false, false, false];
       this.remoteValid = [0, 0, 0, 0];
 
@@ -114,6 +115,10 @@ var WiimoteInputComponent = KeyboardInputComponent.extend(/** @scope WiimoteInpu
       }
    },
 
+   /**
+    * Releases the component back into the object pool. See {@link PooledObject#release}
+    * for more information.
+    */
    release: function() {
       this.base();
       this.enabledRemotes = null;
@@ -122,6 +127,7 @@ var WiimoteInputComponent = KeyboardInputComponent.extend(/** @scope WiimoteInpu
 
    /**
     * Destroy this instance and remove all references.
+    * @private
     */
    destroy: function() {
       var ctx = Engine.getDefaultContext();
@@ -496,13 +502,12 @@ var WiimoteInputComponent = KeyboardInputComponent.extend(/** @scope WiimoteInpu
          this.getHostObject().onWiimoteRoll(c, x, y, z);
       }
    }
-}, { /** @scope WiimoteInputComponent.prototype */
+}, /** @scope WiimoteInputComponent.prototype */{ 
 
    /**
     * Get the class name of this object
     *
-    * @type String
-    * @memberOf KeyboardInputComponent
+    * @return {String} "WiimoteInputComponent"
     */
    getClassName: function() {
       return "WiimoteInputComponent";
@@ -510,51 +515,104 @@ var WiimoteInputComponent = KeyboardInputComponent.extend(/** @scope WiimoteInpu
 
    /**
     * For second argument to <tt>onWiimoteValidity()</tt>: the data is good
+    * @type {Number}
     */
    DATA_GOOD: 2,
 
    /**
     * For second argument to <tt>onWiimoteValidity()</tt>: the data is poor
+    * @type {Number}
     */
    DATA_POOR: 1,
 
    /**
     * For second argument to <tt>onWiimoteValidity()</tt>: the Wiimote isn't pointing at the screen
+    * @type {Number}
     */
    DATA_INVALID: 0,
 
    /**
     * For second argument to <tt>onWiimoteValidity()</tt>: the data is very poor (unreliable)
+    * @type {Number}
     */
    DATA_VERY_POOR: -1,
 
    /**
     * For second argument to <tt>onWiimoteValidity()</tt>: the data is extremely poor (garbage)
+    * @type {Number}
     */
    DATA_EXTREMELY_POOR: -2,
 
+   /**
+    * Keycode for button "A"
+    * @type {Number}
+    */    
    KEYCODE_A: 13,
 
+   /**
+    * Keycode for button "B"
+    * @type {Number}
+    */    
    KEYCODE_B: 32,       // 171
 
+   /**
+    * Keycode for button "C"
+    * @type {Number}
+    */    
    KEYCODE_C: 67,       // 201
 
+   /**
+    * Keycode for button "Z"
+    * @type {Number}
+    */    
    KEYCODE_Z: 90,       // 200
 
+   /**
+    * Keycode for button "1"
+    * @type {Number}
+    */    
    KEYCODE_1: 173,
 
+   /**
+    * Keycode for button "2"
+    * @type {Number}
+    */    
    KEYCODE_2: 173,
 
+   /**
+    * Keycode for button "-"
+    * @type {Number}
+    */    
    KEYCODE_MINUS: 170,
 
+   /**
+    * Keycode for button "+"
+    * @type {Number}
+    */    
    KEYCODE_PLUS: 174,
 
+   /**
+    * Keycode for dpad left
+    * @type {Number}
+    */    
    KEYCODE_LEFT: 178,
 
+   /**
+    * Keycode for dpad right
+    * @type {Number}
+    */    
    KEYCODE_RIGHT: 177,
 
+   /**
+    * Keycode for dpad up
+    * @type {Number}
+    */    
    KEYCODE_UP: 175,
 
+   /**
+    * Keycode for dpad down
+    * @type {Number}
+    */    
    KEYCODE_DOWN: 176
 });
 

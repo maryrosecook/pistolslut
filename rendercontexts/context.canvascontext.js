@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 779 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,11 @@ Engine.initObject("CanvasContext", "RenderContext2D", function() {
  * can be saved and restored, allowing for complex, stacked transformations.
  *
  * @extends RenderContext2D
+ * @constructor
+ * @description Create a new instance of a canvas context.
+ * @param name {String} The name of the context
+ * @param width {Number} The width (in pixels) of the canvas context.
+ * @param height {Number} The height (in pixels) of the canvas context.
  */
 var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */{
 
@@ -53,12 +58,7 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
    mouseHandler: false,
 
    /**
-    * Create an instance of a 2D rendering context using the canvas element.
-    *
-    * @param name {String} The name of this context.  Default: CanvasContext
-    * @param width {Number} The width (in pixels) of the canvas context.
-    * @param height {Number} The height (in pixels) of the canvas context.
-    * @constructor
+    * @private
     */
    constructor: function(name, width, height) {
       Assert((width != null && height != null), "Width and height must be specified in CanvasContext");
@@ -80,12 +80,21 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
    afterAdd: function(parent) {
    },
 
+   /**
+    * Releases the object back into the object pool.  See {@link PooledObject#release}
+    * for more information.
+    */
    release: function() {
       this.base();
       this.context2D = null;
       this.mouseHandler = false;
    },
 
+	/**
+	 * Set the scale of the world
+	 * @param scaleX {Number} The scale of the world along the X axis
+	 * @param scaleY {Number} The scale of the world along the y axis 
+	 */
    setWorldScale: function(scaleX, scaleY) {
       this.base(scaleX, scaleY);
 
@@ -111,7 +120,6 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
 
    /**
     * Push a transform state onto the stack.
-
     */
    pushTransform: function() {
       this.base();
@@ -120,7 +128,6 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
 
    /**
     * Pop a transform state off the stack.
-
     */
    popTransform: function() {
       this.base();
@@ -136,9 +143,14 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
     */
    reset: function(rect) {
       var cRect = (rect != null ? rect : this.getViewport());
-      this.get2DContext().clearRect(cRect.getTopLeft().x, cRect.getTopLeft().y, cRect.getDims().x, cRect.getDims().y);
+		var d = cRect.get();
+      this.get2DContext().clearRect(d.x, d.y, d.w, d.h);
    },
 
+	/**
+	 * Set up the world for the given time before any rendering is dont.
+	 * @param time {Number} The render time
+	 */
    setupWorld: function(time) {
       this.setScale(this.getWorldScale());
 
@@ -216,8 +228,7 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
    /**
     * Set the line width for drawing paths.
     *
-    * @param width {Number} The width of lines in pixels
-    * @default 1
+    * @param [width=1] {Number} The width of lines in pixels
     */
    setLineWidth: function(width) {
       this.get2DContext().lineWidth = width * 1.0;
@@ -325,11 +336,10 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
    /**
     * Draw a sprite on the context.
     *
-    * @param obj {Object} A reference object, or <tt>null</tt>
     * @param sprite {Sprite} The sprite to draw
     * @param time {Number} The current world time
     */
-   drawSprite: function(obj, sprite, time) {
+   drawSprite: function(sprite, time) {
       var f = sprite.getFrame(time);
       var tl = f.getTopLeft();
       var d = f.getDims();
@@ -340,21 +350,23 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
    /**
     * Draw an image on the context.
     *
-    * @param obj {Object} A reference object, or <tt>null</tt>
     * @param rect {Rectangle2D} The rectangle that specifies the position and
     *             dimensions of the image rectangle.
     * @param image {Object} The image to draw onto the context
     * @param [srcRect] {Rectangle2D} <i>[optional]</i> The source rectangle within the image, if
     *                <tt>null</tt> the entire image is used
     */
-   drawImage: function(obj, rect, image, srcRect) {
+   drawImage: function(rect, image, srcRect) {
       var d = rect.get();
       if (srcRect) {
          var s = srcRect.get();
          this.get2DContext().drawImage(image,
             s.x, s.y, s.w, s.h, d.x, d.y, d.w, d.h);
       } else {
-         this.get2DContext().drawImage(image, d.x, d.y, d.w, d.h);
+			try {
+         	this.get2DContext().drawImage(image, d.x, d.y, d.w, d.h);
+			}catch(ex) {
+			}
       }
       this.base(rect, image);
    },
@@ -363,8 +375,7 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
     * Capture an image from the context.
     *
     * @param rect {Rectangle2D} The area to capture
-    * @returns Image data capture
-    * @type ImageData
+    * @returns {ImageData} Image data capture
     */
    getImage: function(rect) {
       this.base();
@@ -388,8 +399,8 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
     * current state of the canvas context.  The URL can be passed to
     * an image element. <i>Note: Only works in Firefox and Opera!</i>
     *
-    * @param {String} format The format of the output, or <tt>null</tt> for
-    *                 the PNG default.
+    * @param {String} format The mime-type of the output, or <tt>null</tt> for
+    *                 the PNG default. (unsupported)
     * @return {String} The data URL
     */
    getDataURL: function(format) {
@@ -533,8 +544,7 @@ var CanvasContext = RenderContext2D.extend(/** @scope CanvasContext.prototype */
    /**
     * Get the class name of this object
     *
-    * @type String
-
+    * @return {String} "CanvasContext"
     */
    getClassName: function() {
       return "CanvasContext";

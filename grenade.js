@@ -124,8 +124,11 @@ Engine.initObject("Grenade", "Object2D", function() {
 		explosionParticleCount: 20,
 		explosionParticleTTL: 500,
 		explode: function() {
+			var particles = [];
 			for(var x = 0; x < this.explosionParticleCount; x++)
-				this.field.pEngine.addParticle(ExplosionParticle.create(Point2D.create(this.getPosition()), this.explosionFlashSpread, this.explosionParticleTTL));
+				particles[x] = ExplosionParticle.create(this.getPosition(), this.explosionFlashSpread, this.explosionParticleTTL);
+			this.field.pEngine.addParticles(particles);
+			
 			this.destroy();
 		},
 		

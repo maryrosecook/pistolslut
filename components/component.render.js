@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 642 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,22 +37,33 @@ Engine.initObject("RenderComponent", "BaseComponent", function() {
 
 /**
  * @class The base component class for components which render
- *        to a context.
+ *        to a context.  Rendering consists of anything which alters the
+ *        visual state of the render context.
  *
  * @param name {String} The name of the component
  * @param priority {Number} The priority of the component between 0.0 and 1.0
+ * @constructor
+ * @extends BaseComponent
+ * @description Creates a render component.
  */
 var RenderComponent = BaseComponent.extend(/** @scope RenderComponent.prototype */{
 
    drawMode: 0,
-	
-	oldDisplay: null,
+   
+   oldDisplay: null,
 
+   /**
+    * @private
+    */
    constructor: function(name, priority) {
       this.base(name, BaseComponent.TYPE_RENDERING, priority || 0.1);
-		this.oldDisplay = null;
+      this.oldDisplay = null;
    },
 
+   /**
+    * Releases the component back into the object pool. See {@link PooledObject#release}
+    * for more information.
+    */
    release: function() {
       this.base();
       this.drawMode = 0;
@@ -62,8 +73,8 @@ var RenderComponent = BaseComponent.extend(/** @scope RenderComponent.prototype 
     * Set the draw mode of the component.  Currently this determines
     * if the component should render itself to the context or not.
     *
-    * @param drawMode {Number} One of <tt>RenderComponent.DRAW</tt> or
-    *                 <tt>RenderComponent.NO_DRAW</tt>
+    * @param drawMode {Number} One of {@link RenderComponent#DRAW} or
+    *                 {@link RenderComponent#NO_DRAW}.
     */
    setDrawMode: function(drawMode) {
       this.drawMode = drawMode;
@@ -71,7 +82,7 @@ var RenderComponent = BaseComponent.extend(/** @scope RenderComponent.prototype 
 
    /**
     * Get the drawing mode of the component.
-    * @type Number
+    * @return {Number}
     */
    getDrawMode: function() {
       return this.drawMode;
@@ -85,35 +96,36 @@ var RenderComponent = BaseComponent.extend(/** @scope RenderComponent.prototype 
     * @param time {Number} The engine time in milliseconds
     */
    execute: function(renderContext, time) {
+
       // Check visibility
       if ((this.drawMode == RenderComponent.NO_DRAW) ||
           this.getHostObject().getWorldBox &&
           (!renderContext.getViewport().isIntersecting(this.getHostObject().getWorldBox())))
       {
-			if (this.getHostObject().getElement() && !this.oldDisplay) {
-				this.oldDisplay = this.getHostObject().jQ().css("display");
-				this.getHostObject().jQ().css("display", "none");
-			}
+         if (this.getHostObject().getElement() && !this.oldDisplay) {
+            this.oldDisplay = this.getHostObject().jQ().css("display");
+            this.getHostObject().jQ().css("display", "none");
+         }
 
          return false;
       }
 
-		if (this.getHostObject().getElement() && this.oldDisplay) {
-			this.getHostObject().jQ().css("display", this.oldDisplay);
-			this.oldDisplay = null;
-		}
+      if (this.getHostObject().getElement() && this.oldDisplay) {
+         this.getHostObject().jQ().css("display", this.oldDisplay);
+         this.oldDisplay = null;
+      }
 
       // The object is visible
       Engine.vObj++;
       return true;
    }
 
-}, { /** @scope RenderComponent.prototype */
+}, /** @scope RenderComponent.prototype */{ 
 
    /**
     * Get the class name of this object
     *
-    * @type String
+    * @return {String} "RenderComponent"
     */
    getClassName: function() {
       return "RenderComponent";
@@ -121,13 +133,13 @@ var RenderComponent = BaseComponent.extend(/** @scope RenderComponent.prototype 
 
    /**
     * The component should render itself to the rendering context.
-    * @type Number
+    * @type {Number}
     */
    DRAW: 0,
 
    /**
     * The component <i>should not</i> render itself to the rendering context.
-    * @type Number
+    * @type {Number}
     */
    NO_DRAW: 1
 

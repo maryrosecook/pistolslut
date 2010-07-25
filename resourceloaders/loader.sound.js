@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 615 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,7 @@
 
 // Includes
 Engine.include("/libs/soundmanager2.js");
+Engine.include("/libs/AC_OETags.js");
 Engine.include("/engine/engine.pooledobject.js");
 Engine.include("/resourceloaders/loader.remote.js");
 
@@ -80,6 +81,14 @@ var SoundLoader = RemoteLoader.extend(/** @scope SoundLoader.prototype */{
 
          // directory where SM2 .SWFs live
          this.soundManager.url = Engine.getEnginePath() + '/libs/';
+			
+			// Detect the version of flash available.  If 9 or higher, use 9
+			var hasReqestedVersion = DetectFlashVer(9, 0, 0);
+			if (hasReqestedVersion) {
+				this.soundManager.flashVersion = 9;
+			} else {
+				this.soundManager.flashVersion = 8;
+			}
 
          // Debugging enabled?
          this.soundManager.debugMode = EngineSupport.checkBooleanParam("debugSound");

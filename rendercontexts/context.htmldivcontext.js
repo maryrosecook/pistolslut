@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 779 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,31 +39,28 @@ Engine.initObject("HTMLDivContext", "HTMLElementContext", function() {
  * @class A simple extension of the {@link HTMLElementContext} which uses a DIV
  * element to represent the context.  This is just a convenience method.
  * <p/>
- * As of the 1.3 beta version, further development on HTMLDivContext is
- * hereby ceased.  No further development will occur to support HTML elements
- * as viable targetable contexts.  Due to the nature of updating an HTML
- * context, the decision has been made to drop support for it.
  *
  * @extends HTMLElementContext
- * @deprecated
+ * @constructor
+ * @description Create a new instance of a context drawn on a <tt>div</tt> element.
+ * @param name {String} The name of the context
+ * @param contextWidth {Number} The width (in pixels) of the context.
+ * @param contextHeight {Number} The height (in pixels) of the context.
  */
 var HTMLDivContext = HTMLElementContext.extend(/** @scope HTMLDivContext.prototype */{
 
    /**
-    * Create an instance of a document rendering context.  This context
-    * represents the HTML document body.  Theoretically, only one of these
-    * contexts should ever be created.
-    * @constructor
+    * @private
     */
    constructor: function(name, contextWidth, contextHeight) {
       var ctx = $("<div>").css({
          width: contextWidth,
          height: contextHeight,
          position: "absolute",
-			overflow: "hidden"
+         overflow: "hidden"
       });
       this.base(name || "HTMLDivContext", ctx);
-		this.setViewport(Rectangle2D.create(0, 0, contextWidth, contextHeight));
+      this.setViewport(Rectangle2D.create(0, 0, contextWidth, contextHeight));
    }
    
 }, /** @scope HTMLDivContext.prototype */{
@@ -71,7 +68,7 @@ var HTMLDivContext = HTMLElementContext.extend(/** @scope HTMLDivContext.prototy
    /**
     * Get the class name of this object
     *
-    * @return {String} The string "HTMLDivContext"
+    * @return {String} "HTMLDivContext"
     */
    getClassName: function() {
       return "HTMLDivContext";

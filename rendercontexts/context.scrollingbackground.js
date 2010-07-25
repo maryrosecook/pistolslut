@@ -5,14 +5,14 @@
  *               for usage as a single layered scrolling background.
  *
  * @fileoverview An extension of the canvas context that provides the
- * 				  display of a scrolling background.
+ *               display of a scrolling background.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  *
  * @author: $Author: bfattori $
- * @version: $Revision: 615 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -118,13 +118,12 @@ var ScrollingBackground = CanvasContext.extend(/** @scope ScrollingBackground.pr
       return this.visRect.getTopLeft().y;
    },
 
-   // framechange
    setupWorld: function(time) {
       this.base(time);
 
       // Render the slice of the level image first
-      this.drawImage(null, this.getViewport(), this.level.getSourceImage(), this.visRect);
-   },
+      this.drawImage(this.getViewport(), this.level.getSourceImage(), this.visRect);
+   }
 
 }, /** @scope ScrollingBackground.prototype */{
 

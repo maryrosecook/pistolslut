@@ -2,13 +2,13 @@
  * The Render Engine
  * Transform2DComponent
  *
- * @fileoverview The base 2D transformation component.
+ * @fileoverview The base 2d transformation component.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 615 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,33 +38,47 @@ Engine.initObject("Transform2DComponent", "BaseComponent", function() {
 
 /**
  * @class A simple component that maintains position, rotation, and scale.
+ *
+ * @param name {String} The name of the component
+ * @param [priority=1.0] {Number} The priority of the component
  * @extends BaseComponent
+ * @constructor
+ * @description Create a 2d transformation component
  */
 var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.prototype */{
 
    position: null,
-
    rotation: 0,
-
    scale: 1.0,
-
    lastPosition: null,
-
    lastRenderPosition: null,
+	worldPos: null,
 
    /**
-    * @constructor
-    * @memberOf Transform2DComponent
+    * @private
     */
    constructor: function(name, priority) {
       this.base(name, BaseComponent.TYPE_TRANSFORM, priority || 1.0);
       this.position = Point2D.create(0,0);
+		this.worldPos = Point2D.create(0,0);
       this.lastPosition = Point2D.create(0,0);
       this.lastRenderPosition = Point2D.create(0,0);
       this.rotation = 0;
       this.scale = 1.0;
    },
+	
+	destroy: function() {
+		this.position.destroy();
+		this.worldPos.destroy();
+		this.lastPosition.destroy();
+		this.lastRenderPosition.destroy();
+		this.base();
+	},
 
+   /**
+    * Releases the component back into the object pool. See {@link PooledObject#release} for
+    * more information.
+    */
    release: function() {
       this.base();
       this.position = null;
@@ -72,6 +86,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
       this.scale = 1.0;
       this.lastPosition = null;
       this.lastRenderPosition = null;
+		this.worldPos = null;
    },
 
    /**
@@ -86,7 +101,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Returns the position of the transform.
-    * @type Point2D
+    * @return {Point2D}
     */
    getPosition: function() {
       return this.position;
@@ -94,12 +109,12 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Returns the render position of the transform.
-    * @type Point2D
+    * @return {Point2D}
     */
    getRenderPosition: function() {
-      var wP = Point2D.create(this.getHostObject().getRenderContext().getWorldPosition());
-      var p = Point2D.create(this.position).sub(wP);
-      return p;
+		this.worldPos.set(this.getPosition());
+		this.worldPos.sub(this.getHostObject().getRenderContext().getWorldPosition());
+      return this.worldPos;
    },
 
    /**
@@ -109,13 +124,11 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
     */
    setLastPosition: function(point) {
       this.lastPosition.set(point);
-      //var wP = Point2D.create(this.getHostObject().getRenderContext().getWorldPosition());
-      //this.lastRenderPosition.set(wP.sub(point));
    },
 
    /**
     * Get the last position of the transform.
-    * @type Point2D
+    * @return {Point2D}
     */
    getLastPosition: function() {
       return this.lastPosition;
@@ -123,7 +136,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Get the last position of the transform.
-    * @type Point2D
+    * @return {Point2D}
     */
    getLastRenderPosition: function() {
       return this.lastRenderPosition;
@@ -140,7 +153,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Get the rotation of the transform.
-    * @type Number
+    * @return {Number}
     */
    getRotation: function() {
       return this.rotation;
@@ -148,7 +161,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Get the render rotation of the transform.
-    * @type Number
+    * @return {Number}
     */
    getRenderRotation: function() {
       var wR = this.getHostObject().getRenderContext().getWorldRotation();
@@ -167,7 +180,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Get the uniform scale of the transform.
-    * @type Number
+    * @return {Number}
     */
    getScale: function() {
       return this.scale;
@@ -175,7 +188,7 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
 
    /**
     * Get the uniform render scale of the transform.
-    * @type Number
+    * @return {Number}
     */
    getRenderScale: function() {
 //    var wS = this.getHostObject().getRenderContext().getWorldScale();
@@ -197,12 +210,11 @@ var Transform2DComponent = BaseComponent.extend(/** @scope Transform2DComponent.
       var s = this.getRenderScale();
       renderContext.setScale(s);
    }
-}, {
+}, /** @scope Transform2DComponent.prototype */{
    /**
     * Get the class name of this object
     *
-    * @type String
-    * @memberOf Transform2DComponent
+    * @return {String} "Transform2DComponent"
     */
    getClassName: function() {
       return "Transform2DComponent";

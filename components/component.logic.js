@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 683 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,14 +36,23 @@ Engine.include("/components/component.base.js");
 Engine.initObject("LogicComponent", "BaseComponent", function() {
 
 /**
- * @class A component which performs a form of logic.
+ * @class Logic components are sort of a catch-all of components.  They aren't
+ *        any one of the specific types, so they fall under the type of LOGIC.
+ *        Logic components are in the middle of the importance scale, so they
+ *        are processed after input and transformations, but before collision and
+ *        rendering.  This makes them ideal for additional processing, such as the
+ *        {@link HostComponent}.
+ *
+ * @param name {String} The name of the component
+ * @param [priority=1.0] {Number} The priority of the component
  * @extends BaseComponent
+ * @constructor
+ * @description Creates a logic component.
  */
 var LogicComponent = BaseComponent.extend(/** @scope LogicComponent.prototype */{
 
    /**
-    * @constructor
-    * @memberOf LogicComponent
+    * @private
     */
    constructor: function(name, priority) {
       this.base(name, BaseComponent.TYPE_LOGIC, priority || 1.0);
@@ -51,7 +60,7 @@ var LogicComponent = BaseComponent.extend(/** @scope LogicComponent.prototype */
 }, /** @scope LogicComponent.prototype */{
    /**
     * Get the class name of this object
-    * @return {String} The string "LogicComponent"
+    * @return {String} "LogicComponent"
     */
    getClassName: function() {
       return "LogicComponent";

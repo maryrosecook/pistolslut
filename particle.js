@@ -14,7 +14,7 @@ Engine.initObject("BloodParticle", "Particle", function() {
 			this.pos = new Point2D(pos);
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BurnoutParticle.ref, a);
+			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BloodParticle.ref, a);
 			var vel = 2 + (Math.random() * 2);
 			this.vec.mul(vel)
 		},

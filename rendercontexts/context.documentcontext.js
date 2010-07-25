@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 687 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,14 +42,15 @@ Engine.initObject("DocumentContext", "HTMLElementContext", function() {
  * us to update not only this context, but all other contexts during an engine frame.
  *
  * @extends HTMLElementContext
+ * @constructor
+ * @description Create an instance of a document rendering context.  This context
+ * represents the HTML document body.  Theoretically, only one of these
+ * contexts should ever be created.
  */
 var DocumentContext = HTMLElementContext.extend(/** @scope DocumentContext.prototype */{
 
    /**
-    * Create an instance of a document rendering context.  This context
-    * represents the HTML document body.  Theoretically, only one of these
-    * contexts should ever be created.
-    * @constructor
+    * @private
     */
    constructor: function() {
       this.base("DocumentContext", document.body);
@@ -65,7 +66,7 @@ var DocumentContext = HTMLElementContext.extend(/** @scope DocumentContext.proto
    /**
     * Get the class name of this object
     *
-    * @type String
+    * @return {String} "DocumentContext"
     */
    getClassName: function() {
       return "DocumentContext";

@@ -2,14 +2,15 @@
  * The Render Engine
  * BoxColliderComponent
  *
- * @fileoverview A box-box collision component.
+ * @fileoverview A collision component which determines collisions via
+ *               bounding box comparisons.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  *
  * @author: $Author: bfattori $
- * @version: $Revision: 677 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,13 +39,17 @@ Engine.initObject("BoxColliderComponent", "ColliderComponent", function() {
 
 /**
  * @class An extension of the {@link ColliderComponent} which will check the
- *        two object's bounding boxes for a more precise collision.
+ *        object's bounding boxes for semi-precise collision.
  *
  * @param name {String} Name of the component
  * @param collisionModel {SpatialCollection} The collision model
  * @param priority {Number} Between 0.0 and 1.0, with 1.0 being highest
  *
  * @extends ColliderComponent
+ * @constructor
+ * @description Creates a collider component for box-box collision testing.  Each object
+ *              must implement the {@link Object2D#getWorldBox} method and return a
+ *              world-oriented bounding box.
  */
 var BoxColliderComponent = ColliderComponent.extend(/** @scope BoxColliderComponent.prototype */{
 
@@ -73,8 +78,7 @@ var BoxColliderComponent = ColliderComponent.extend(/** @scope BoxColliderCompon
 
    /**
     * Get the class name of this object
-    *
-    * @return {String}
+    * @return {String} "BoxColliderComponent"
     */
    getClassName: function() {
       return "BoxColliderComponent";

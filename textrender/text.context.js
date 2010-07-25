@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 779 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,6 +54,7 @@ var ContextText = AbstractTextRenderer.extend(/** @scope ContextText.prototype *
 
 	/**
 	 * Initialize some basics
+	 * @private
 	 */
 	tInit: function() {
 		this.setTextAlignment(RenderContext2D.FONT_ALIGN_LEFT);
@@ -92,15 +93,16 @@ var ContextText = AbstractTextRenderer.extend(/** @scope ContextText.prototype *
 		renderContext.setFontAlign(this.getTextAlignment());
 		renderContext.setFontWeight(this.getTextWeight());
 		renderContext.setFont(this.getTextFont());
+		renderContext.setFontSize(Math.floor(this.getSize() * TextRenderer.BASE_TEXT_PIXELSIZE) || TextRenderer.BASE_TEXT_PIXELSIZE);
 		
 		renderContext.setFillStyle(this.getColor());
-      renderContext.drawText(Point2D.ZERO, this.getText());
+      renderContext.drawText(Point2D.ZERO, this.getText(), this.getHostObject());
    }
 	
-}, /** @scope BitmapText.prototype */{
+}, /** @scope ContextText.prototype */{
    /**
     * Get the class name of this object
-    * @return {String} The string "BitmapText"
+    * @return {String} The string "ContextText"
     */
    getClassName: function() {
       return "ContextText";

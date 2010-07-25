@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 708 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,21 +38,37 @@ Engine.include("/components/component.render.js");
 Engine.initObject("SpriteComponent", "RenderComponent", function() {
 
 /**
- * @class A render component that renders its contents from a {@link Sprite}.
+ * @class A render component that renders its contents from a {@link Sprite}.  Sprites
+ *        are 2d graphics which are either a single frame (static) or multiple frames
+ *        (dynamic).  The sprite's descriptor will define that for the component.
+ *
+ * @param name {String} The component name
+ * @param [priority=0.1] {Number} The render priority
+ * @param sprite {Sprite} The sprite to render
  * @extends RenderComponent
+ * @constructor
+ * @description Create a sprite component.
  */
 var SpriteComponent = RenderComponent.extend(/** @scope SpriteComponent.prototype */{
 
    currentSprite: null,
 
    /**
-    * @constructor
+    * @private
     */
    constructor: function(name, priority, sprite) {
-      this.base(name, priority || 0.1);
+      if (priority instanceof Sprite) {
+         sprite = priority;
+         priority = 0.1;
+      }
+      this.base(name, priority);
       this.currentSprite = sprite;
    },
 
+   /**
+    * Releases the component back into the object pool. See {@link PooledObject#release} for
+    * more information.
+    */
    release: function() {
       this.base();
       this.currentSprite = null;
@@ -74,20 +90,20 @@ var SpriteComponent = RenderComponent.extend(/** @scope SpriteComponent.prototyp
     */
    setSprite: function(sprite) {
       this.currentSprite = sprite;
-		
-		if (this.getHostObject().jQ()) {
-			this.getHostObject().jQ().css({
-				width: sprite.getBoundingBox().len_x(),
-				height: sprite.getBoundingBox().len_y(),
-				background: "url('" + sprite.getSourceImage().src + "') no-repeat"
-			});
-		}
+      
+      if (this.getHostObject().jQ()) {
+         this.getHostObject().jQ().css({
+            width: sprite.getBoundingBox().len_x(),
+            height: sprite.getBoundingBox().len_y(),
+            background: "url('" + sprite.getSourceImage().src + "') no-repeat"
+         });
+      }
    },
 
    /**
     * Get the sprite the component is rendering.
     *
-    * @return A {@link Sprite} object
+    * @return {Sprite} A <tt>Sprite</tt> instance
     */
    getSprite: function() {
       return this.currentSprite;
@@ -96,7 +112,7 @@ var SpriteComponent = RenderComponent.extend(/** @scope SpriteComponent.prototyp
    /**
     * Draw the sprite to the render context.  The frame, for animated
     * sprites, will be automatically determined based on the current
-    * time passed to the method.
+    * time passed as the second argument.
     *
     * @param renderContext {RenderContext} The context to render to
     * @param time {Number} The engine time in milliseconds
@@ -109,14 +125,14 @@ var SpriteComponent = RenderComponent.extend(/** @scope SpriteComponent.prototyp
       }
 
       if (this.currentSprite) {
-         renderContext.drawSprite(this.getHostObject(), this.currentSprite, time);
+         renderContext.drawSprite(this.currentSprite, time, this.getHostObject());
       }
    }
-}, { /** @scope SpriteComponent.prototype */
+}, /** @scope SpriteComponent.prototype */{ 
    /**
     * Get the class name of this object
     *
-    * @type String
+    * @return {String} "SpriteComponent"
     */
    getClassName: function() {
       return "SpriteComponent";

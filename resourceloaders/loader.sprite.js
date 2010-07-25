@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 642 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -95,11 +95,10 @@ var SpriteLoader = ImageLoader.extend(/** @scope SpriteLoader.prototype */{
          }
 
          this.queuedSprites++;
-
          var thisObj = this;
 
          // Get the file from the server
-         $.get(url, function(data) {
+         $.get(url, function(data, status) {
             var spriteInfo = EngineSupport.evalJSON(data);
             // get the path to the resource file
             var path = url.substring(0, url.lastIndexOf("/"));
