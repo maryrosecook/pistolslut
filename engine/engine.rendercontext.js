@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 780 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,12 +42,12 @@ Engine.initObject("RenderContext", "Container", function() {
  * during engine runtime.  A render context is a container of all of the objects
  * added to it so that each object is given the chance to render.
  *
- * @constructor
  * @param contextName {String} The name of this context.  Default: RenderContext
  * @param [surface] {HTMLElement} The surface node that all objects will be rendered to.
- * @see CanvasContext
- * @see DocumentContext
+ * @see {CanvasContext}
  * @extends Container
+ * @constructor
+ * @description Creates a render context
  */
 var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
 
@@ -57,6 +57,7 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
    worldPosition: null,
    worldRotation: null,
    worldScale: null,
+	staticCtx: null,
 
    /**
     * @private
@@ -69,6 +70,7 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
       this.worldPosition = Point2D.create(0, 0);
       this.worldRotation = 0;
       this.viewport = Rectangle2D.create(0, 0, 100, 100);
+		this.staticCtx = false;
    },
 
    /**
@@ -81,6 +83,7 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
       this.worldScale = null;
       this.worldPosition = null;
       this.worldRotation = null;
+		this.staticCtx = null;
    },
 
    /**
@@ -110,8 +113,29 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
       return this.surface;
    },
 
+	/**
+	 * Set the context to be static.  Setting a context to be static effectively removes 
+	 * it from the automatic update when the world is updated.  The user will need to call
+	 * {@link render}, passing the world time (gotten with {@link Engine#worldTime})
+	 * to manually render the context.  Any objects within the context will then render
+	 * to the context.
+	 * 
+	 * @param state {Boolean} <tt>true</tt> to set the context to static
+	 */
+	setStatic: function(state) {
+		this.staticCtx = state;
+	},
+	
+	/**
+	 * Determine if the context is static.
+	 * @return {Boolean}
+	 */
+	isStatic: function() {
+		return this.staticCtx;
+	},
+
    /**
-    * Set the scale of the rendering context.
+    * [ABSTRACT] Set the scale of the rendering context.
     *
     * @param scaleX {Number} The scale along the X dimension
     * @param scaleY {Number} The scale along the Y dimension
@@ -129,42 +153,69 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
       this.worldScale = scale;
    },
 
+   /**
+    * Set the world rotation of the rendering context.  All objects
+    * should be adjusted by this rotation when the context renders.
+    * @param rotation {Number} The rotation angle
+    */
    setWorldRotation: function(rotation) {
       this.worldRotation = rotation;
    },
 
+   /**
+    * Set the world position of the rendering context.  All objects
+    * should be adjuest by this position when the context renders.
+    * @param point {Point2D} The world position
+    */
    setWorldPosition: function(point) {
       this.worldPosition.set(point);
    },
 
    /**
     * Gets an array representing the rendering scale of the world.
-    * @return {Array} The first element is the X axis, the second is the Y axis
+    * @return {Number[]} The first element is the X axis, the second is the Y axis
     */
    getWorldScale: function() {
       return this.worldScale;
    },
 
+   /**
+    * Gets the world rotation angle.
+    * @return {Number}
+    */
    getWorldRotation: function() {
       return this.worldRotation;
    },
 
+   /**
+    * Get the world render position.
+    * @return {Point2D}
+    */
    getWorldPosition: function() {
       return this.worldPosition;
    },
 
+   /**
+    * Set the viewport of the render context.  The viewport is a window
+    * upon the world so that not all of the world is rendered at one time.
+    * @param rect {Rectangle2D} A rectangle defining the viewport
+    */
    setViewport: function(rect) {
       this.viewport = Rectangle2D.create(rect);
    },
 
+   /**
+    * Get the viewport of the render context.
+    * @return {Rectangle2D}
+    */
    getViewport: function() {
       return this.viewport;
    },
 
    /**
-    * Add an object to the render list.  Only objects
-    * within the render list will be rendered.  If an object declared
-    * an <tt>afterAdd</tt> method, it will be called after the object
+    * Add an object to the context.  Only objects
+    * within the context will be rendered.  If an object declared
+    * an <tt>afterAdd()</tt> method, it will be called after the object
     * has been added to the context.
     *
     * @param obj {BaseObject} The object to add to the render list
@@ -206,7 +257,7 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
    },
 
    /**
-    * Clear the context and prepare it for rendering.  If you pass a
+    * [ABSTRACT] Clear the context and prepare it for rendering.  If you pass a
     * rectangle, only that portion of the world will be cleared.  If
     * you don't pass a rectangle, the entire context is cleared.
     *
@@ -218,45 +269,59 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
 
    /**
     * Update the render context before rendering the objects to the surface.
+    * If the context isn't static, this will reset and then render the context.
+    * If the context is static, you'll need to perform the reset and render yourself.
+    * This allows you to updated objects in the world, skip the reset, and then
+    * render yourself.  This can be an effective way to handle redrawing the world
+    * only as needed.
     *
     * @param parentContext {RenderContext} A parent context, or <tt>null</tt>
     * @param time {Number} The current render time in milliseconds from the engine.
     */
    update: function(parentContext, time)
    {
-      this.render(time);
+		if (!this.staticCtx) {
+	      // Clear and render world
+	      this.reset();
+	      this.render(time);
+		}
    },
 
    /**
-    * Called after the update to render all of the objects to the context.
+    * Called to render all of the objects to the context.
     *
     * @param time {Number} The current render time in milliseconds from the engine.
     */
    render: function(time) {
-      // Setup the world
-      this.reset();
-
       // Push the world transform
       this.pushTransform();
-      this.setupWorld(time);
 
-      // Run the objects if they are visible
-      var objs = this.getObjects();
-      for (var o in objs)
-      {
-         this.renderObject(objs[o], time);
-      }
-
-      // Restore the world transform
-      this.popTransform();
+		try {
+	      this.setupWorld(time);
+	
+	      // Run the objects if they are visible
+	      var objs = this.getObjects();
+	      for (var o in objs)
+	      {
+	         this.renderObject(objs[o], time);
+	      }
+		} finally {
+	      // Restore the world transform
+	      this.popTransform();
+		}
    },
 
+   /**
+    * Render a single object into the world for the given time.
+    * @param obj {BaseObject} An object to render
+    * @param time {Number} The world time, in milliseconds
+    */
    renderObject: function(obj, time) {
       obj.update(this, time);
    },
 
    /**
-    * Gives the render context a chance to initialize the world.
+    * [ABSTRACT] Gives the render context a chance to initialize the world.
     * Use this method to change the world position, rotation, scale, etc.
     *
     * @param time {Number} The current world time
@@ -291,7 +356,7 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
          this.popTransform();
       }
    }
-}, { /** @scope RenderContext.prototype */
+}, /** @scope RenderContext.prototype */{ 
 
    /**
     * Sort the objects to draw from objects with the lowest
@@ -310,7 +375,7 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
 
    /**
     * Get the class name of this object
-    * @return {String} The string "RenderContext"
+    * @return {String} "RenderContext"
     */
    getClassName: function() {
       return "RenderContext";

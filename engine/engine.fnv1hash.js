@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 779 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2009 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

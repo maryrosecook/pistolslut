@@ -2,15 +2,15 @@
  * The Render Engine
  * SpatialContainer
  *
- * @fileoverview Spatial containers maintain a collection objects and can report
+ * @fileoverview Spatial containers maintain a collection of objects and can report
  *               on potential objects within a defined space of that container.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  *
  * @author: $Author: bfattori $
- * @version: $Revision: 680 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +47,9 @@ Engine.initObject("SpatialNode", null, function() {
 /**
  * @class A single node within a spatial container.  Has an index for fast node
  *        comparisons, and a list of objects contained within the node.
+ *
+ * @constructor
+ * @description Creates a spatial node
  */
 var SpatialNode = Base.extend(/** @scope SpatialNode.prototype */{
 
@@ -54,6 +57,9 @@ var SpatialNode = Base.extend(/** @scope SpatialNode.prototype */{
 
    objects: null,
 
+   /**
+    * @private
+    */
    constructor: function() {
       this.idx = Engine.NodeIndex++;
       this.objects = [];
@@ -69,7 +75,7 @@ var SpatialNode = Base.extend(/** @scope SpatialNode.prototype */{
 
    /**
     * Get an array of objects within this node.
-    * @return {Array} Objects in the node
+    * @return {BaseObject[]} Objects in the node
     */
    getObjects: function() {
       return this.objects;
@@ -92,7 +98,7 @@ var SpatialNode = Base.extend(/** @scope SpatialNode.prototype */{
    removeObject: function(obj) {
       EngineSupport.arrayRemove(this.objects, obj);
    }
-}, { /** @scope SpatialNode.prototype */
+}, /** @scope SpatialNode.prototype */{ 
 
    /**
     * Get the class name of this object
@@ -113,13 +119,15 @@ Engine.initObject("SpatialContainer", "BaseObject", function() {
 
 /**
  * @class An abstract class to represent spatial containers.  Spatial containers
- *        contain objects and can report on potential objects within a defined
+ *        contain game-world objects and can report on potential objects within a defined
  *        space of that container.
  *
  * @param name {String} The name of the container
  * @param width {Number} The width of the container
  * @param height {Number} The height of the container
  * @extends BaseObject
+ * @constructor
+ * @description Create a spatial container
  */
 var SpatialContainer = BaseObject.extend(/** @scope SpatialContainer.prototype */{
 
@@ -129,12 +137,18 @@ var SpatialContainer = BaseObject.extend(/** @scope SpatialContainer.prototype *
 
    height: 0,
 
+   /**
+    * @private
+    */
    constructor: function(name, width, height) {
       this.base(name || "SpatialContainer");
       this.width = width;
       this.height = height;
    },
 
+   /**
+    * @private
+    */
    release: function() {
       this.base();
       this.root = null;
@@ -184,14 +198,32 @@ var SpatialContainer = BaseObject.extend(/** @scope SpatialContainer.prototype *
     */
    getPCL: function(point) {
       return new HashContainer();
+   },
+
+   /**
+    * Returns all objects within the spatial container.
+    * @return {Array} An array of all objects in the container
+    */
+   getObjects: function() {
+      return [];
+   },
+   
+   /**
+    * Returns all objects within the spatial container of a particular
+    * class type.
+    * @return {Array} An array of objects in the container, filtered by class
+    */
+   getObjectsOfType: function(clazz) {
+      return EngineSupport.filter(this.getObjects(), function(obj) {
+         return clazz.isInstance(obj);
+      }, this);
    }
 
-}, { /** @scope SpatialContainer.prototype */
+}, /** @scope SpatialContainer.prototype */{ 
    /**
     * Get the class name of this object
     *
-    * @type String
-    * @memberOf Container
+    * @return {String} "SpatialContainer"
     */
    getClassName: function() {
       return "SpatialContainer";

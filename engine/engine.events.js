@@ -1,16 +1,16 @@
 /**
  * The Render Engine
- * Events
+ * EventEngine
  *
  * @fileoverview Methods for handling events (adding & removing) and keycodes for
- * 				  keys like the arrows and function keys.
+ *               special keys like the arrows and function keys.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  *
  * @author: $Author: bfattori $
- * @version: $Revision: 642 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,16 +36,16 @@ Engine.initObject("EventEngine", null, function() {
 
 /**
  * @class A static object for unformly handling events within all browser
- * 		 platforms.  The event engine is an abstraction of the jQuery event
- * 		 system.  Methods are provided for adding and removing events in
- * 		 a programmatic way.  Additionally the engine has key codes for
- * 		 common keys which aren't part of the letters or numbers.
- * 		 <p/>
- * 		 While the engine provides a low-level way to attach events, when
- * 		 working with game objects methods are provided to manage events
- * 		 better than with the engine itself.
- * 		 <p/>
- * 		 Adding an event:
+ *        platforms.  The event engine is an abstraction of the jQuery event
+ *        system.  Methods are provided for adding and removing events in
+ *        a programmatic way.  Additionally the engine has key codes for
+ *        common keys which aren't part of the letters or numbers.
+ *        <p/>
+ *        While the engine provides a low-level way to attach events, when
+ *        working with game objects methods are provided to manage events
+ *        better than with the engine itself.
+ *        <p/>
+ *        Adding an event:
  * <pre>
  * var t = $(".myElement");
  * EventEngine.setHandler(t, "click", function(event) {
@@ -78,8 +78,8 @@ var EventEngine = Base.extend(/** @scope EventEngine.prototype */{
       }
 
       if (target == document.body) {
-			target = document;
-		}
+         target = document;
+      }
 
       jQuery(target).bind(name, data || handler, handler);
    },
@@ -95,109 +95,184 @@ var EventEngine = Base.extend(/** @scope EventEngine.prototype */{
     */
    clearHandler: function(target, name, handler) {
       if (target == document.body) {
-			target = document;
-		}
+         target = document;
+      }
       jQuery(target).unbind(name, handler);
    },
-
+   
+   /**
+    * Get the key code for the provided character.  The value returned
+    * will be for the lowercase key value, unless the second argument is
+    * set to <code>true</code> which will return the exact key code for the
+    * provided character.
+    * @param charStr {String} A single character to get the key code for
+    * @param [literal] {Boolean} <code>true</code> to return the literal code without
+    *        first converting the character to lower case.
+    * @return {Number} The key code for the given character
+    */
+   keyCodeForChar: function(charStr, literal) {
+      return (literal ? charStr : charStr.toUpperCase()).charCodeAt(0);
+   },
 
    //====================================================================================================================
    // MOUSE BUTTON CONSTANTS
 
-   /** No mouse button pressed. */
+   /** No mouse button pressed. 
+    * @type {Number}
+    */
    MOUSE_NO_BUTTON: 0,
 
-   /** Left mouse button. */
+   /** Left mouse button.
+    * @type {Number}
+    */
    MOUSE_LEFT_BUTTON: 1,
 
-   /** Right mouse button. */
+   /** Right mouse button.
+    * @type {Number}
+    */
    MOUSE_RIGHT_BUTTON: 3,
 
-   /** Middle mouse button. */
+   /** Middle mouse button.
+    * @type {Number}
+    */
    MOUSE_MIDDLE_BUTTON: 2,
 
    //====================================================================================================================
    // KEY CODE CONSTANTS
 
-   /** Constant for the "Tab" key */
+   /** Constant for the "Tab" key
+    * @type {Number}
+    */
    KEYCODE_TAB: 9,
 
-   /** Constant for the "Enter" key */
+   /** Constant for the "Enter" key
+    * @type {Number}
+    */
    KEYCODE_ENTER: 13,
 
-   /** Constant for the "Delete" key */
+   /** Constant for the "Delete" key
+    * @type {Number}
+    */
    KEYCODE_DELETE: 46,
 
-   /** Constant for the "Space" key */
+   /** Constant for the "Space" key
+    * @type {Number}
+    */
    KEYCODE_SPACE: 32,
 
-   /** Constant for the "Backspace" */
+   /** Constant for the "Backspace"
+    * @type {Number}
+    */
    KEYCODE_BACKSPACE: 8,
 
-   /** Constant for the "Up" key  */
+   /** Constant for the "Up" key
+    * @type {Number}
+    */
    KEYCODE_UP_ARROW: 38,
 
-   /** Constant for the "Down" key */
+   /** Constant for the "Down" key
+    * @type {Number}
+    */
    KEYCODE_DOWN_ARROW: 40,
 
-   /** Constant for the "Left" key */
+   /** Constant for the "Left" key
+    * @type {Number}
+    */
    KEYCODE_LEFT_ARROW: 37,
 
-   /** Constant for the "RIGHT" key */
+   /** Constant for the "RIGHT" key
+    * @type {Number}
+    */
    KEYCODE_RIGHT_ARROW: 39,
 
-   /** Constant for the "Plus" key */
+   /** Constant for the "Plus" key
+    * @type {Number}
+    */
    KEYCODE_KEYPAD_PLUS: 61,
 
-   /** Constant for the "Minus" key */
+   /** Constant for the "Minus" key
+    * @type {Number}
+    */
    KEYCODE_KEYPAD_MINUS: 109,
 
-   /** Constant for the "Home" key */
+   /** Constant for the "Home" key
+    * @type {Number}
+    */
    KEYCODE_HOME: 36,
 
-   /** Constant for the "End" key */
+   /** Constant for the "End" key
+    * @type {Number}
+    */
    KEYCODE_END: 35,
 
-   /** Constant for the "F1" key */
+   /** Constant for the "F1" key
+    * @type {Number}
+    */
    KEYCODE_F1: 112,
 
-   /** Constant for the "F2" key */
+   /** Constant for the "F2" key
+    * @type {Number}
+    */
    KEYCODE_F2: 113,
 
-   /** Constant for the "F3" key */
+   /** Constant for the "F3" key
+    * @type {Number}
+    */
    KEYCODE_F3: 114,
 
-   /** Constant for the "F4" key */
+   /** Constant for the "F4" key
+    * @type {Number}
+    */
    KEYCODE_F4: 115,
 
-   /** Constant for the "F5" key */
+   /** Constant for the "F5" key
+    * @type {Number}
+    */
    KEYCODE_F5: 116,
 
-   /** Constant for the "F6" key */
+   /** Constant for the "F6" key
+    * @type {Number}
+    */
    KEYCODE_F6: 117,
 
-   /** Constant for the "F7" key */
+   /** Constant for the "F7" key
+    * @type {Number}
+    */
    KEYCODE_F7: 118,
 
-   /** Constant for the "F8" key */
+   /** Constant for the "F8" key
+    * @type {Number}
+    */
    KEYCODE_F8: 119,
 
-   /** Constant for the "F9" key */
+   /** Constant for the "F9" key
+    * @type {Number}
+    */
    KEYCODE_F9: 120,
 
-   /** Constant for the "F10" key */
+   /** Constant for the "F10" key
+    * @type {Number}
+    */
    KEYCODE_F10: 121,
 
-   /** Constant for the "F11" key */
+   /** Constant for the "F11" key
+    * @type {Number}
+    */
    KEYCODE_F11: 122,
 
-   /** Constant for the "F12" key */
+   /** Constant for the "F12" key
+    * @type {Number}
+    */
    KEYCODE_F12: 123,
 
-   /** Constant for the "Context Menu" key (Windows) */
+   /** Constant for the "Context Menu" key (Windows)
+    * @type {Number}
+    */
    KEYCODE_MENU: 93,
 
-   /** Constant for the "Windows" key (Windows) */
+   /** Constant for the "Windows" key (Windows)
+    * @type {Number}
+    */
    KEYCODE_WINDOW: 91
 
 });

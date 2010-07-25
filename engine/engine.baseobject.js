@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 780 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,10 @@ Engine.initObject("BaseObject", "PooledObject", function() {
  * In this method, you'll be able to update the components and perform
  * housekeeping.
  * 
+ * @param name {String} The name of the object
  * @extends PooledObject
+ * @constructor
+ * @description Create a base object. 
  */
 var BaseObject = PooledObject.extend(/** @scope BaseObject.prototype */{
 
@@ -67,10 +70,9 @@ var BaseObject = PooledObject.extend(/** @scope BaseObject.prototype */{
 
    events: null,
 
-	/**
-	 * @constructor
-	 * @param name {String} The name of the object
-	 */
+   /**
+    * @private
+    */
    constructor: function(name) {
       this.base(name);
       this.events = {};
@@ -195,7 +197,7 @@ var BaseObject = PooledObject.extend(/** @scope BaseObject.prototype */{
    /**
     * Get the class name of this object
     *
-    * @return {String} The string "BaseObject"
+    * @return {String} "BaseObject"
     */
    getClassName: function() {
       return "BaseObject";

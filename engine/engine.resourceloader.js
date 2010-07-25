@@ -7,9 +7,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 781 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,9 +42,10 @@ Engine.initObject("ResourceLoader", "BaseObject", function() {
  *         loading resources (fonts, images, game data, etc...) from some
  *         location.
  *
+ * @param [name=ResourceLoader] {String} The name of the resource loader.
  * @constructor
- * @param name {String=ResourceLoader} The name of the resource loader.
  * @extends BaseObject
+ * @description Create a resource loader
  */
 var ResourceLoader = BaseObject.extend(/** @scope ResourceLoader.prototype */{
 
@@ -215,11 +216,11 @@ var ResourceLoader = BaseObject.extend(/** @scope ResourceLoader.prototype */{
    getResourceType: function() {
       return "default";
    }
-}, { /** @scope ResourceLoader.prototype */
+}, /** @scope ResourceLoader.prototype */{ 
 
    /**
     * Get the class name of this object
-    * @return {String} The string "ResourceLoader"
+    * @return {String} "ResourceLoader"
     */
    getClassName: function() {
       return "ResourceLoader";

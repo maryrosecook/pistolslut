@@ -6,9 +6,9 @@
  *
  * @author: Brett Fattori (brettf@renderengine.com)
  * @author: $Author: bfattori $
- * @version: $Revision: 781 $
+ * @version: $Revision: 1216 $
  *
- * Copyright (c) 2008 Brett Fattori (brettf@renderengine.com)
+ * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +42,7 @@ Engine.initObject("Iterator", "PooledObject", function() {
  * within the container.  The simplest way to traverse the list is
  * as follows:
  * <pre>
- * var itr = Iterator.create(containerObj);
- * while (itr.hasNext()) {
+ * for (var itr = Iterator.create(containerObj); itr.hasNext(); ) {
  *    // Get the next object in the container
  *    var o = itr.next();
  *    
@@ -51,7 +50,7 @@ Engine.initObject("Iterator", "PooledObject", function() {
  *    o.doSomething();
  * }
  * 
- * // Destroy the container when done
+ * // Destroy the iterator when done
  * itr.destroy();
  * </pre>
  * The last step is important so that you're not creating a lot
@@ -59,6 +58,9 @@ Engine.initObject("Iterator", "PooledObject", function() {
  * Since the iterator is a pooled object, it will be reused.
  *
  * @param container {Container} The container to iterate over.
+ * @constructor
+ * @extends PooledObject
+ * @description Create an iterator over a collection
  */
 var Iterator = PooledObject.extend(/** @scope Iterator.prototype */{
 
@@ -69,8 +71,7 @@ var Iterator = PooledObject.extend(/** @scope Iterator.prototype */{
    objs: null,
 
    /**
-    * @constructor
-    * @param container {Container} The container to iterate over
+    * @private
     */
    constructor: function(container) {
       this.base("Iterator");
@@ -121,11 +122,11 @@ var Iterator = PooledObject.extend(/** @scope Iterator.prototype */{
       return (this.idx < this.c.size());
    }
 
-}, { /** @scope Iterator.prototype */
+}, /** @scope Iterator.prototype */{ 
    /**
     * Get the class name of this object
     *
-    * @return {String} The string "Iterator"
+    * @return {String} "Iterator"
     */
    getClassName: function() {
       return "Iterator";
@@ -144,15 +145,17 @@ Engine.initObject("Container", "BaseObject", function() {
  *        When a container is destroyed, all objects within the container
  *        are destroyed with it.
  *
+ * @param containerName {String} The name of the container
  * @extends BaseObject
+ * @constructor
+ * @description Create a container.
  */
 var Container = BaseObject.extend(/** @scope Container.prototype */{
 
    objects: null,
 
    /**
-    * @constructor
-    * @param containerName {String} The name of the container
+    * @private
     */
    constructor: function(containerName) {
       this.base(containerName || "Container");
@@ -199,45 +202,46 @@ var Container = BaseObject.extend(/** @scope Container.prototype */{
       }
    },
 
-	/**
-	 * Insert an object into the container at the given index. Asserts if the
-	 * index is out of bounds for the container.  The index must be greater than
-	 * or equal to zero, and less than or equal to the size of the container minus one.
-	 * 
-	 * @param index {Number} The index to insert the object at.
-	 * @param obj {Object} The object to insert into the container
-	 */
-	insert: function(index, obj) {
-		Assert(!(index < 0 || index > this.objects.length - 1), "Index out of range when inserting object!");
-		this.objects.splice(index, 0, obj);
-	},
-	
-	/**
-	 * Replaces the given object with the new object.  If the old object is
-	 * not found, no action is performed.
-	 * 
-	 * @param oldObj {Object} The object to replace
-	 * @param newObj {Object} The object to put in place
-	 */
-	replace: function(oldObj, newObj) {
-		this.replaceAt(EngineSupport.indexOf(this.objects, oldObj), newObj);		
-	},
-	
-	/**
-	 * Replaces the object at the given index, returning the object that was there
-	 * previously. Asserts if the index is out of bounds for the container.  The index 
-	 * must be greater than or equal to zero, and less than or equal to the size of the 
-	 * container minus one.
-	 * 
-	 * @param index {Number} The index at which to replace the object
-	 * @param obj {Object} The object to put in place
-	 * @return {Object} The object which was replaced
-	 */
-	replaceAt: function(index, obj) {
-		Assert(!(index < 0 || index > this.objects.length - 1), "Index out of range when inserting object!");
-		return this.objects.splice(index, 1, obj);		
-	},
-	
+   /**
+    * Insert an object into the container at the given index. Asserts if the
+    * index is out of bounds for the container.  The index must be greater than
+    * or equal to zero, and less than or equal to the size of the container minus one.
+    * 
+    * @param index {Number} The index to insert the object at.
+    * @param obj {Object} The object to insert into the container
+    */
+   insert: function(index, obj) {
+      Assert(!(index < 0 || index > this.objects.length - 1), "Index out of range when inserting object!");
+      this.objects.splice(index, 0, obj);
+   },
+   
+   /**
+    * Replaces the given object with the new object.  If the old object is
+    * not found, no action is performed.
+    * 
+    * @param oldObj {Object} The object to replace
+    * @param newObj {Object} The object to put in place
+    * @return {Object} The object which was replaced
+    */
+   replace: function(oldObj, newObj) {
+      return this.replaceAt(EngineSupport.indexOf(this.objects, oldObj), newObj);      
+   },
+   
+   /**
+    * Replaces the object at the given index, returning the object that was there
+    * previously. Asserts if the index is out of bounds for the container.  The index 
+    * must be greater than or equal to zero, and less than or equal to the size of the 
+    * container minus one.
+    * 
+    * @param index {Number} The index at which to replace the object
+    * @param obj {Object} The object to put in place
+    * @return {Object} The object which was replaced
+    */
+   replaceAt: function(index, obj) {
+      Assert(!(index < 0 || index > this.objects.length - 1), "Index out of range when inserting object!");
+      return this.objects.splice(index, 1, obj);      
+   },
+   
    /**
     * Remove an object from the container.  The object is
     * not destroyed when it is removed from the container.
@@ -349,16 +353,16 @@ var Container = BaseObject.extend(/** @scope Container.prototype */{
     * A and B retain their order.  If the result is greater than zero, A will
     * be sorted after B.
     *
-    * @param fn {Function} The function to sort with.
+    * @param [fn] {Function} The function to sort with. If <tt>null</tt> the objects
+    *          will be sorted in "natural" order.
     */
    sort: function(fn) {
-      Assert((fn != null), "A function must be provided to sort the Container");
       Console.log("Sorting ", this.getName(), "[" + this.getId() + "]");
       this.objects.sort(fn);
    },
 
    /**
-    * Returns a property object with accessor methods.
+    * Returns a property object with accessor methods to modify the property.
     * @return {Object} The properties object
     */
    getProperties: function() {
@@ -370,11 +374,15 @@ var Container = BaseObject.extend(/** @scope Container.prototype */{
       });
    },
 
+	toString: function() {
+		return this.constructor.getClassName();	
+	},
+
    /**
     * Serializes a container to XML.
     * @return {String} The XML string
     */
-   toString: function(indent) {
+   toXML: function(indent) {
       indent = indent ? indent : "";
       var props = this.getProperties();
       var xml = indent + "<" + this.constructor.getClassName();
@@ -394,13 +402,21 @@ var Container = BaseObject.extend(/** @scope Container.prototype */{
       // Closing tag
       xml += indent + "</" + this.constructor.getClassName() + ">\n";
       return xml;
+   },
+   
+   /**
+    * Returns an iterator over the collection.
+    * @return {Iterator} An iterator
+    */
+   iterator: function() {
+      return Iterator.create(this);   
    }
 
 }, /** @scope Container.prototype */{
    /**
     * Get the class name of this object
     *
-    * @return {String} The string "Container"
+    * @return {String} "Container"
     */
    getClassName: function() {
       return "Container";
@@ -418,17 +434,18 @@ Engine.initObject("HashContainer", "Container", function() {
  *        is a container with a backing object for faster lookups.  Objects within
  *        the container must have unique names. When a container is destroyed, all
  *        objects within the container are destroyed with it.
+ *
+ * @param containerName {String} The name of the container. Default: Container
  * @extends Container
+ * @constructor
+ * @description Create a hashed container object.
  */
 var HashContainer = Container.extend(/** @scope HashContainer.prototype */{
 
    objHash: null,
 
    /**
-    * Create an instance of a container object.
-    *
-    * @param containerName {String} The name of the container. Default: Container
-    * @constructor
+    * @private
     */
    constructor: function(containerName) {
       this.base(containerName || "HashContainer");
@@ -462,7 +479,7 @@ var HashContainer = Container.extend(/** @scope HashContainer.prototype */{
     * @param obj {BaseObject} The object to add to the container.
     */
    add: function(key, obj) {
-      //AssertWarn(!this.isInHash(key), "Object already exists within hash!");
+      AssertWarn(!this.isInHash(key), "Object already exists within hash!");
 
       if (this.isInHash(key)) {
          // Remove the old one first
@@ -531,16 +548,13 @@ var HashContainer = Container.extend(/** @scope HashContainer.prototype */{
     * base object, otherwise a name is assumed and the hash will
     * be retrieved.
     *
-    * @param idx {Number/String} The index or hash of the object to get
+    * @param idx {Number|String} The index or hash of the object to get
     * @return {Object}
     */
    get: function(idx) {
-      if (typeof idx == 'string')
-      {
+      if (typeof idx == 'string') {
          return this.objHash["_" + String(idx)];
-      }
-      else
-      {
+      } else {
          return this.base(idx);
       }
    },
@@ -560,14 +574,13 @@ var HashContainer = Container.extend(/** @scope HashContainer.prototype */{
     */
    cleanUp: function() {
       this.base();
-      this.clear();
    }
 
 }, /** @scope HashContainer.prototype */{
    /**
     * Get the class name of this object
     *
-    * @return {String} The string "HashContainer"
+    * @return {String} "HashContainer"
     */
    getClassName: function() {
       return "HashContainer";
