@@ -1,42 +1,69 @@
 Engine.include("/components/component.mover2d.js");
 Engine.include("/components/component.vector2d.js");
 Engine.include("/textrender/text.vector.js");
-Engine.include("/textrender/text.bitmap.js");
 Engine.include("/engine/engine.object2d.js");
 Engine.include("/engine/engine.timers.js");
 
 Engine.initObject("Sign", "Object2D", function() {
 	var Sign = Object2D.extend({
-	
+		
+		field: null,
+		defaultText: null,
+		currentText: null,
 		textRenderers: null,
 		scrollVec: Vector2D.create(-2.5, 0),
 		signPosition: null,
 		signWidth: null,
 		signColor: null,
 	
-		constructor: function(renderContext, text, color, position, signWidth, letterSpacing) {
+		constructor: function(field, text, color, position, signWidth, letterSpacing) {
 			this.base("Sign");
+			this.field = field;
+			this.defaultText = text; // text that the sign normally displays
 			this.signPosition = position;
 			this.signWidth = signWidth;
 			this.textRenderers = [];
 			this.signColor = color;
 			this.letterSpacing = letterSpacing;
 
-			this.setupTextRenderers(renderContext, text);
+			this.setupTextRenderers(text);
+		},
+		
+		// switches sign to display passed text
+		changeText: function(newText) {
+			var textToDisplay = newText;
+			if(textToDisplay == null) // been told to switch back to default
+				textToDisplay = this.defaultText;
+
+			console.log(textToDisplay, this.currentText)
+			if(textToDisplay != this.currentText)
+			{
+				var renderObjects = this.field.renderContext.getObjects();
+	      for(var i in this.textRenderers)
+				{
+					this.textRenderers[i].destroy();
+	        this.textRenderers[i] = null;
+				}
+
+				this.textRenderers = [];
+				this.setupTextRenderers(textToDisplay);
+			}
 		},
 	
 		// splits up text so each letter is handled by a different TextRenderer
-		setupTextRenderers: function(renderContext, text) {
+		setupTextRenderers: function(text) {
+			this.currentText = text;
 			var textPieces = text.split(""); // set each letter in its own renderer
 			for(var i in textPieces) 
-			{				
+			{
 				this.textRenderers[i] = TextRenderer.create(VectorText.create(), textPieces[i], 1);
+				this.textRenderers[i].setDrawMode(TextRenderer.NO_DRAW); // turn off drawing so no flashes
 		    this.textRenderers[i].setTextWeight(1);
 		    this.textRenderers[i].setColor(this.signColor);
 				this.textRenderers[i].scrollStartPosition = this.getScrollStartPosition();
 				this.textRenderers[i].textBoundingBox = this.getTextBoundingBox(this.textRenderers[i]);
-				renderContext.add(this.textRenderers[i]);
-			}		
+				this.field.renderContext.add(this.textRenderers[i]);
+			}	
 		
 			this.resetScroll();
 		},

@@ -99,7 +99,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			var pWidth = this.fieldWidth;
 			var pHeight = this.fieldHeight;
 		
-	    this.level = PistolSlut.levelLoader.getLevel("level1", this.fieldWidth);
+	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
 
 			// We'll need something to detect collisions
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
@@ -117,7 +117,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			// load rest of level data
 			this.level.addFurniture(this.renderContext);
 			this.level.addEnemies(this.renderContext);
-			this.loadSigns();
+			this.level.loadSigns();
 			
 			// Start up the particle engine
 			this.pEngine = ParticleEngine.create();
@@ -146,19 +146,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		  else
 		  	PistolSlut.loadTimeout.restart();
 	  },
-
-		// load signs from the current level
-		signLetterSpacing: 7,
-		signColor: "#ff0000",
-		loadSigns: function() {
-			var signs = this.level.levelResource.info.objects.signs;
-			for(var i in signs)
-			{
-				var signData = signs[i];
-				var sign = new Sign(this.renderContext, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
-				this.renderContext.add(sign);
-			}
-		},
 
 		/**
 		 * Called when the game is being shut down to allow the game

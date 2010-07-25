@@ -15,7 +15,7 @@ var Collider = Base.extend({
 	aFallingThroughB: function(a, b) {
 		var aRect = new CheapRect(a);
 		var bRect = new CheapRect(b);
-		return a.velocity.y > 0 && aRect.b > bRect.y && aRect.b < bRect.y + 14;
+		return aRect.b > bRect.y && aRect.b < bRect.y + 14;
 	},
 	
 	aOnB: function(a, b) {

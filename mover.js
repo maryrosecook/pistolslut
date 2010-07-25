@@ -100,6 +100,14 @@ var Mover = Object2D.extend({
 		this.getComponent("move").setScale(scale);
 	},
 	
+	getVelocity: function() {
+		return this.velocity;
+	},
+
+	setVelocity: function(vector) {
+		return this.velocity = vector;
+	},
+	
 	release: function() {
 		this.base();
 		this.velocity = null;

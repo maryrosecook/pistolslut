@@ -4,9 +4,9 @@
 	bitmapImage: "level1.gif", bitmapWidth: 2000, bitmapHeight: 580, collisionMap: [],
 	objects: {
 		signs: [
-			{ text: "Pistol Slut", x: 89, y: 460, width: 140 },
+			{ text: "Pistol  Slut", x: 89, y: 460, width: 140 },
 			{ text: "Please  return  to  your  homes", x: 517, y: 172, width: 245	},
-			{ text: "Free  shop", x: 1188, y: 460, width: 140 }
+			{ text: "Free  shop", x: 1188, y: 461, width: 140 }
 		],
 		
 		furniture: [
@@ -18,13 +18,6 @@
 				}
 			},
 			{
-				name: "wall1", x: 350, y: 495,
-				sprite: {
-					bitmapImage: "wall1.gif", bitmapWidth: 20, bitmapHeight: 52,
-					sprites: { "main": { "f" : [0, 0, 20, 52] } }
-				}
-			},
-			{
 				name: "blockwallright", x: 1980, y: 417,
 				sprite: {
 					bitmapImage: "blockwallright.gif", bitmapWidth: 20, bitmapHeight: 130,
@@ -32,12 +25,17 @@
 				}
 			},
 			{
-				name: "platform2", x: 370, y: 517,
+				name: "bin1", x: 170, y: 520,
 				sprite: {
-					bitmapImage: "platform2.gif", bitmapWidth: 40, bitmapHeight: 30,
-					sprites: {
-						"main": { "f" : [0, 0, 40, 30] }
-					}
+					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
+					sprites: { "main": { "f" : [0, 0, 20, 25] } }
+				}
+			},
+			{
+				name: "bin2", x: 370, y: 520,
+				sprite: {
+					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
+					sprites: { "main": { "f" : [0, 0, 20, 25] } }
 				}
 			},
 			{ name: "floorpiece1", x: 0, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
@@ -49,9 +47,9 @@
 		
 		enemies: [
 			{
-				name: "enemy1", x: 364, y: 472,
+				name: "enemy1", x: 390, y: 500,
 				sprite: {
-					bitmapImage: "enemy.gif", bitmapWidth: 522, bitmapHeight: 46
+					bitmapImage: "enemy.gif", bitmapWidth: 506, bitmapHeight: 230
 				}
 			}
 		]

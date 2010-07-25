@@ -67,8 +67,8 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 			return level;
 		},
 
-		getLevel: function(level, fieldWidth) {
-			return FurnishedLevel.create(level, this.get(level), fieldWidth);
+		getLevel: function(levelName, field, fieldWidth) {
+			return FurnishedLevel.create(levelName, field, this.get(levelName), fieldWidth);
 		},
 
 		/**
@@ -93,19 +93,25 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 	
 	var FurnishedLevel = Level.extend(/** @scope Level.prototype */{
 		
+		field: null,
+		signs: null,
 		furniture: null, // actual furniture objs
 		furnitureData: null,
 		enemies: null,
 		enemiesData: null,
 		minScroll: 0,
 		maxScroll: null,
+		levelResource: null,
 
-	  constructor: function(name, levelResource, fieldWidth) {
+	  constructor: function(name, field, levelResource, fieldWidth) {
 			var level = this.base(name, levelResource);
+			this.field = field;
+			this.signs = [];
 			this.furniture = [];
 			this.enemies = [];
-			this.furnitureData = levelResource.info.objects.furniture;
-			this.enemiesData = levelResource.info.objects.enemies;
+			this.levelResource = levelResource;
+			this.furnitureData = this.levelResource.info.objects.furniture;
+			this.enemiesData = this.levelResource.info.objects.enemies;
 			this.maxScroll = this.getWidth() - fieldWidth;
 			return level;
 		},
@@ -131,6 +137,30 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				var enemy = Enemy.create(enemyData.name, Point2D.create(enemyData.x, enemyData.y));
 				this.enemies[i] = enemy;
 				renderContext.add(enemy);
+			}
+		},
+
+		tellSigns: function(text) {
+			for(var i in this.signs)
+				this.signs[i].changeText(text);
+		},
+		
+		// switches signs to display normal text
+		revertSigns: function() {
+			this.tellSigns(null);
+		},
+
+		// load signs from the current level
+		signLetterSpacing: 7,
+		signColor: "#ff0000",
+		loadSigns: function() {
+			var signs = this.levelResource.info.objects.signs;
+			for(var i in signs)
+			{
+				var signData = signs[i];
+				var sign = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
+				this.signs[i] = sign;
+				this.field.renderContext.add(sign);
 			}
 		},
 

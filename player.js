@@ -10,25 +10,9 @@ Engine.initObject("Player", "Human", function() {
 var Player = Human.extend({
 
 	size: 4,
-		
+	
+	shootDelay: 500,
 	bullets: 0,
-
-	directionData: {
-		"left": {
-			"angle": 270,
-			"gunTip": new Point2D(0, 9),
-			"armAngle": 315,
-			"armTip": new Point2D(0, 2),
-		},
-		"right": {
-			"angle": 90,
-			"gunTip": new Point2D(44, 9),
-			"armAngle": 45,
-			"armTip": new Point2D(44, 2),
-		}
-	},
-	left: "left",
-	right: "right",
 
 	constructor: function() {
 		this.base("Player");
@@ -43,8 +27,8 @@ var Player = Human.extend({
 		
 		//this.loadWeapons();
 		
-		this.direction = this.right;
-		this.setSprite(this.direction + "stand");
+		this.direction = Human.RIGHT;
+		this.setSprite(this.direction + Human.STANDING + Human.STILL);
 		
 		this.velocity = Vector2D.create(0, 0);
 		this.getComponent("move").setCheckLag(false);
@@ -72,9 +56,6 @@ var Player = Human.extend({
 		this.base();
 		this.size = 4;
 		this.bullets = 0;
-		this.directionData = null;
-		this.left = null;
-		this.right = null;
 	},
 
 	onCollide: function(obj) {
@@ -99,16 +80,8 @@ var Player = Human.extend({
 		return ColliderComponent.CONTINUE;
 	},
 
-	/**
-	 * Update the player within the rendering context.  This draws
-	 * the shape to the context, after updating the transform of the
-	 * object.  If the player is thrusting, draw the thrust flame
-	 * under the ship.
-	 *
-	 * @param renderContext {RenderContext} The rendering context
-	 * @param time {Number} The engine time in milliseconds
-	 */
 	update: function(renderContext, time) {
+		//this.base(renderContext, time);
 		this.move(time);
 		renderContext.pushTransform();
 		this.base(renderContext, time);
@@ -121,12 +94,12 @@ var Player = Human.extend({
 		this.field.applyGravity(this);
 
 		// set sprite
-		if(this.isAlive())
+		if(this.isAlive() && !this.isCrouching())
 		{
 			if(this.velocity.x != 0)
-				this.setSprite(this.direction + "run");
+				this.setSprite(this.direction + Human.STANDING + Human.RUNNING);
 			else
-				this.setSprite(this.direction + "stand");
+				this.setSprite(this.direction + Human.STANDING + Human.STILL);
 		}
 		
 		this.handleFriction();
@@ -135,7 +108,7 @@ var Player = Human.extend({
 	},
 	
 	// if dead, carry on moving. A bit.
-	friction: 0.05,
+	friction: 0.1,
 	handleFriction: function() {
 		newX = null;
 		if(!this.isAlive())
@@ -156,33 +129,6 @@ var Player = Human.extend({
 					newX = 0;
 			}
 			this.velocity.setX(newX);
-		}
-	},
-
-	/**
-	 * Called when the player shoots a bullet to create a bullet
-	 * in the playfield and keep track of the active number of bullets.
-	 */
-	muzzleFlashSpread: 15,
-	muzzleParticleCount: 10,
-	muzzleParticleTTL: 500,
-	shootDelay: 500,
-	lastShot: 0,
-	shoot: function() {
-		if(new Date().getTime() - this.lastShot > this.shootDelay)
-		{
-			this.lastShot = new Date().getTime();
-			var bullet = Bullet.create(this);
-			this.field.renderContext.add(bullet);
-			this.bullets++;
-
-			var gunTipInWorld = new Point2D(this.getGunTip()).add(this.getPosition());
-			var gunAngle = this.getGunAngle();
-			
-			var particles = [];
-			for (var x = 0; x < this.muzzleParticleCount; x++)
-				particles[x] = BurnoutParticle.create(gunTipInWorld, gunAngle, this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
-			this.field.pEngine.addParticles(particles);
 		}
 	},
 	
@@ -212,13 +158,13 @@ var Player = Human.extend({
 	walking: false,	
 	walkSpeed: 3,
 	walk: function(direction) {
-		if(!this.walking)
+		if(!this.walking && !this.isCrouching())
 		{
 			this.walking = true;
 			this.direction = direction;
-			if(direction == this.left)
+			if(direction == Human.LEFT)
 				this.velocity.setX(this.velocity.x - this.walkSpeed);
-			else if(direction == this.right)
+			else if(direction == Human.RIGHT)
 				this.velocity.setX(this.velocity.x + this.walkSpeed);
 		}
 	},
@@ -236,43 +182,44 @@ var Player = Human.extend({
 		this.jumping = false;
 	},
 
-	/**
-	 * Called by the keyboard input component to handle a key down event.
-	 *
-	 * @param event {Event} The event object
-	 */
+	shootKeyHasBeenUpSinceLastShot: true,
 	onKeyDown: function(keyCode) {
 		if(!this.isAlive())
 			return;
 			
 		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
-				this.walk(this.left);
+				this.walk(Human.LEFT);
 				break;
 			case EventEngine.KEYCODE_RIGHT_ARROW:
-				this.walk(this.right);
+				this.walk(Human.RIGHT);
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
+				break;
+			case EventEngine.KEYCODE_DOWN_ARROW:
+				this.crouch();
 				break;
 			case 90: // z
 				this.jump();
 				break;
 			case 88: // x
-				this.shoot();
+				if(this.shootKeyHasBeenUpSinceLastShot)
+				{
+					this.shoot();
+					this.shootKeyHasBeenUpSinceLastShot = false;
+				}
 				break;
 			case 67: // c
 				this.throwGrenade();
+				break;
+			case 82: // r
+				this.reload();
 				break;
 		}
 		
 		return false;
 	},
-	
-	/**
-	 * Called by the keyboard input component to handle a key up event.
-	 *
-	 * @param event {Event} The event object
-	 */
+
 	onKeyUp: function(keyCode) {
 		if(!this.isAlive())
 			return;
@@ -282,35 +229,17 @@ var Player = Human.extend({
 			case EventEngine.KEYCODE_RIGHT_ARROW:
 				this.stopWalk(null);
 				break;
+			case EventEngine.KEYCODE_DOWN_ARROW:
+				this.stand();
+				break;
 			case EventEngine.KEYCODE_UP_ARROW:
+				break;
+			case 88: // x
+				this.shootKeyHasBeenUpSinceLastShot = true;
 				break;
 		}
 		
 		return false;
-	},
-	
-	getGunAngle: function() {
-		return this.directionData[this.direction]["angle"];
-	},
-	
-	getGunTip: function() {
-		return this.directionData[this.direction]["gunTip"];
-	},
-	
-	getArmTip: function() {
-		return this.directionData[this.direction]["armTip"];
-	},
-	
-	getArmAngle: function() {
-		return this.directionData[this.direction]["armAngle"];
-	},
-
-	getVelocity: function() {
-		return this.velocity;
-	},
-
-	setVelocity: function(vector) {
-		return this.velocity = vector;
 	},
 
 	}, { // Static

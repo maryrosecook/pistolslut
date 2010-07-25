@@ -2,13 +2,13 @@
 	// Frame (f): left, top, frameWidth, frameHeight
 	// Animation (a): left, top, frameWidth, frameHeight, frameCount, speedMS, loop/toggle
 	bitmapImage: "girl.gif",
-	bitmapWidth: 50,
-	bitmapHeight: 25,
+	bitmapWidth: 506,
+	bitmapHeight: 230,
 	sprites: {
-		"leftstand": {
+		"leftstandingstill": {
 			"f" : [0, 46, 46, 46]
 		},
-		"leftrun": {
+		"leftstandingrunning": {
 			"a" : [0, 46, 46, 46, 11, 100, "loop"]
 		},
 		"leftdying": {
@@ -17,10 +17,13 @@
 		"leftdead": {
 			"f" : [276, 138, 46, 46]
 		},
-		"rightstand": {
+		"leftcrouchingstill": {
+			"f" : [0, 219, 46, 35]
+		},
+		"rightstandingstill": {
 			"f" : [0, 0, 46, 46]
 		},
-		"rightrun": {
+		"rightstandingrunning": {
 			"a" : [0, 0, 46, 46, 11, 100, "loop"]
 		},
 		"rightdying": {
@@ -28,6 +31,9 @@
 		},
 		"rightdead": {
 			"f" : [276, 92, 46, 46]
+		},
+		"rightcrouchingstill": {
+			"f" : [0, 185, 46, 35]
 		}
 	}
 }

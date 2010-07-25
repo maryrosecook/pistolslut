@@ -8,19 +8,9 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
-
-	direction: null,
 	
-	directionData: {
-		"left": {
-			"angle": 270,
-			"gunTip": new Point2D(4, 9),
-		},
-		"right": {
-			"angle": 90,
-			"gunTip": new Point2D(44, 9),
-		}
-	},
+	shootTimer: null,
+	shootDelay: 1000,
 	
 	constructor: function(name, position) {
 		this.base(name);
@@ -33,19 +23,20 @@ var Enemy = Human.extend({
 		
 		this.setPosition(position);
 		this.velocity = Vector2D.create(0, 0);
-		this.direction = "left";
+		this.direction = Human.LEFT;
 		this.getComponent("move").setCheckLag(false);
 		
-		this.setSprite(this.direction + "stand");
+		this.setSprite(this.direction + Human.STANDING + Human.STILL);
 		
 		var enemy = this;
-		this.shootTimer = Interval.create("shoot", this.shootInterval,
+		this.shootTimer = Interval.create("shoot", this.shootDelay,
 			function() {
 				enemy.shoot();
 		});
 	},
 	
 	update: function(renderContext, time) {
+		//this.base(renderContext, time);
 		renderContext.pushTransform();
 		this.updateDeathState(time);
 		this.base(renderContext, time);
@@ -55,14 +46,6 @@ var Enemy = Human.extend({
 	die: function() {
 		this.base();
 		this.shootTimer.destroy();
-	},
-	
-	getGunAngle: function() {
-		return this.directionData[this.direction]["angle"];
-	},
-	
-	getGunTip: function() {
-		return this.directionData[this.direction]["gunTip"];
 	},
 	
 	release: function() {
