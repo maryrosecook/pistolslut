@@ -35,16 +35,8 @@ var Enemy = Human.extend({
 		});
 	},
 	
-	update: function(renderContext, time) {
-		//this.base(renderContext, time);
-		renderContext.pushTransform();
-		this.updateDeathState(time);
-		this.base(renderContext, time);
-		renderContext.popTransform();		
-	},
-	
-	die: function() {
-		this.base();
+	die: function(bullet) {
+		this.base(bullet);
 		this.shootTimer.destroy();
 	},
 	

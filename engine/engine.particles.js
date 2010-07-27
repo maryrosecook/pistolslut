@@ -96,9 +96,7 @@ var Particle = PooledObject.extend(/** @scope Particle.prototype */{
    update: function(renderContext, time) {
       if (time < this.life) {
          // Draw it ( I think this is an optimization point )
-         renderContext.pushTransform();
          this.draw(renderContext, time);
-         renderContext.popTransform();
          return true;
       } else {
          return false;

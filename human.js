@@ -55,10 +55,31 @@ var Human = Mover.extend({
 	// player update, human shoot, collider point of impact- high ave
 	// collider getrect, bullet oncollide getposition, sign update, mover get position - high % of time
 	
-	
 	update: function(renderContext, time) {
-		this.base(renderContext, time)
+		this.move(time);
+		renderContext.pushTransform();
+		this.base(renderContext, time);
+		renderContext.popTransform();
+		
 		this.handleReload();
+	},
+
+	move: function(time) {
+		this.updateDeathState(time);
+		this.field.applyGravity(this);
+
+		// set sprite
+		if(this.isAlive() && !this.isCrouching())
+		{
+			if(this.velocity.x != 0)
+				this.setSprite(this.direction + Human.STANDING + Human.RUNNING);
+			else
+				this.setSprite(this.direction + Human.STANDING + Human.STILL);
+		}
+		
+		this.handleFriction();
+		
+		this.setPosition(this.getPosition().add(this.velocity));
 	},
 	
 	// if dying, check if need to be switched to being dead
@@ -74,13 +95,20 @@ var Human = Mover.extend({
 		}
 	},
 	
-	die: function() {
+	die: function(bullet) {
 		this.stateOfBeing = Human.DYING;
 		this.setSprite(this.direction + "dying");
+		
+		this.throwBackwards(bullet);
 		
 		// make uncollidable but leave human in the level
 		if (this.ModelData.lastNode) 
 			this.ModelData.lastNode.removeObject(this);
+	},
+	
+	throwBackwards: function(bullet) {
+		this.getVelocity().setX(bullet.getVelocity().x / 5);
+		this.getVelocity().setY(-2);
 	},
 	
 	triggerHeldDown: true, // whether trigger is being held down
@@ -142,6 +170,7 @@ var Human = Mover.extend({
 			this.standState = Human.CROUCHING;
 			this.setSprite(this.direction + Human.CROUCHING + Human.STILL);
 			this.getPosition().setY(this.getPosition().y + this.getStandCrouchHeightDifference());
+			this.stopWalk();
 		}
 	},
 	
@@ -154,6 +183,56 @@ var Human = Mover.extend({
 		}
 	},
 	
+	throwDelay: 1000,
+	lastThrow: 0,
+	throwGrenade: function() {
+		if(new Date().getTime() - this.lastThrow > this.throwDelay)
+		{
+			this.lastThrow = new Date().getTime();
+			var grenade = Grenade.create(this);
+			this.field.renderContext.add(grenade);
+		}
+	},
+	
+	jumping: false,
+	jumpSpeed: -9.0,
+	postJumpAdjustmentVector: Vector2D.create(0, -1),
+	jump: function() {
+		if(!this.jumping)
+		{
+			this.jumping = true;
+			this.velocity.setY(this.velocity.y + this.jumpSpeed);
+			this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
+		}
+	},
+
+	walking: false,	
+	walkSpeed: 3,
+	walk: function(direction) {
+		if(!this.walking && !this.isCrouching())
+		{
+			this.walking = true;
+			this.direction = direction;
+			if(direction == Human.LEFT)
+				this.velocity.setX(this.velocity.x - this.walkSpeed);
+			else if(direction == Human.RIGHT)
+				this.velocity.setX(this.velocity.x + this.walkSpeed);
+		}
+	},
+
+	stopWalk: function(newX) {
+		this.velocity.setX(0);
+		this.walking = false;
+		if(newX != null)
+			this.getPosition().setX(newX);
+	},
+	
+	endFall: function(groundObj) {
+		this.getPosition().setY(groundObj.getPosition().y - this.getBoundingBox().dims.y);
+		this.velocity.setY(0);
+		this.jumping = false;
+	},
+	
 	getStandCrouchHeightDifference: function() {
 		return this.coordinates["standCrouchHeightDifference"];
 	},
@@ -164,7 +243,10 @@ var Human = Mover.extend({
 			this.bloodSpurt(bullet);
 			this.health -= bullet.damage;
 			if(this.health <= 0)
-				this.die();
+			{
+				console.log(bullet)
+				this.die(bullet);
+			}
 		}
 	},
 	
@@ -184,6 +266,53 @@ var Human = Mover.extend({
 			for(var x = 0; x < this.bloodParticleCount; x++)
 				particles[x] = BloodParticle.create(position, angle, this.bloodSpread, this.bloodParticleTTL);
 			this.field.pEngine.addParticles(particles);
+		}
+	},
+	
+	onCollide: function(obj) {
+		if(obj instanceof Furniture && this.field.collider.colliding(this, [obj]))
+		{
+			if(this.field.collider.aFallingThroughB(this, obj))
+			{
+				this.endFall(obj);
+				return ColliderComponent.STOP;
+			}
+			else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
+			{
+				this.stopWalk(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
+				return ColliderComponent.STOP;
+			}
+			else if(this.field.collider.aOnRightAndBumpingB(this, obj))
+			{
+				this.stopWalk(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
+				return ColliderComponent.STOP;
+			}
+		}
+		return ColliderComponent.CONTINUE;
+	},
+	
+	// if dead, carry on moving. A bit.
+	friction: 0.1,
+	handleFriction: function() {
+		newX = null;
+		if(!this.isAlive())
+		{
+			var x = this.velocity.x;
+			if(x == 0)
+				return;
+			else if(x > 0)
+			{
+				newX = x - this.friction;
+				if(newX < 0)
+					newX = 0;
+			}
+			else // x < 0
+			{
+				newX = x + this.friction;
+				if(newX < 0)
+					newX = 0;
+			}
+			this.velocity.setX(newX);
 		}
 	},
 	

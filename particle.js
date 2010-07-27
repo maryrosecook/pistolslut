@@ -28,9 +28,8 @@ Engine.initObject("BloodParticle", "Particle", function() {
 		draw: function(renderContext, time) {
 			this.pos.add(this.vec);
 			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
-			renderContext.setPosition(this.pos);
 			renderContext.setFillStyle(this.color);
-			renderContext.drawPoint(Point2D.ZERO);
+			renderContext.drawPoint(this.pos);
 		}
 
 	}, {
@@ -111,7 +110,6 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 		draw: function(renderContext, time) {
 			this.pos.add(this.vec);
 			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
-			renderContext.setPosition(this.pos);
 			
 			var colr = "#f00";
 			var s = time - this.getBirth();
@@ -124,7 +122,7 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 			colr = "#" + (colr.toString(16) + colr.toString(16) + "66");
 
 			renderContext.setFillStyle(colr);
-			renderContext.drawPoint(Point2D.ZERO);
+			renderContext.drawPoint(this.pos);
 		}
 
 	}, {
@@ -175,9 +173,8 @@ Engine.initObject("SnowParticle", "Particle", function() {
 		draw: function(renderContext, time) {
 			this.pos.add(this.vec);
 			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
-			renderContext.setPosition(this.pos);
 			renderContext.setFillStyle(this.clr);
-			renderContext.drawPoint(Point2D.ZERO);
+			renderContext.drawPoint(this.pos);
 		}
 
 	}, {
