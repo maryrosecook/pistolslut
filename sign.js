@@ -35,7 +35,6 @@ Engine.initObject("Sign", "Object2D", function() {
 			if(textToDisplay == null) // been told to switch back to default
 				textToDisplay = this.defaultText;
 
-			console.log(textToDisplay, this.currentText)
 			if(textToDisplay != this.currentText)
 			{
 				var renderObjects = this.field.renderContext.getObjects();

@@ -11,7 +11,7 @@ var Player = Human.extend({
 
 	size: 4,
 	
-	shootDelay: 500,
+	lastShot: 0,
 	bullets: 0,
 
 	constructor: function() {
@@ -63,6 +63,25 @@ var Player = Human.extend({
 		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
 	},
 
+	// if walking when pressed crouch, have now stood up
+	// and want to resume walk.  A workaround for weird keyboard handling.
+	resumeWalk: function() {
+		if(this.walkPaused == true)
+		{
+			this.walk(this.direction);
+			this.walkPaused = false;
+		}
+	},
+	
+	// if walking when pressed crouch, save direction of walk
+	// for future resuption.  A workaround for weird keyboard handling.
+	walkPaused: false,
+	handlePausedWalk: function() {
+		if(this.walking)
+			this.walkPaused = true;
+		this.stopWalk(null);
+	},
+
 	shootKeyHasBeenUpSinceLastShot: true,
 	onKeyDown: function(keyCode) {
 		if(!this.isAlive())
@@ -76,25 +95,26 @@ var Player = Human.extend({
 				this.walk(Human.RIGHT);
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
+				this.jump();
 				break;
 			case EventEngine.KEYCODE_DOWN_ARROW:
+				this.handlePausedWalk();
 				this.crouch();
 				break;
 			case 90: // z
-				this.jump();
-				break;
-			case 88: // x
 				if(this.shootKeyHasBeenUpSinceLastShot)
 				{
 					this.shoot();
 					this.shootKeyHasBeenUpSinceLastShot = false;
 				}
 				break;
-			case 67: // c
+			case 88: // x
 				this.throwGrenade();
 				break;
-			case 82: // r
+			case 67: // c
 				this.reload();
+				break;
+			case 82: // r
 				break;
 		}
 		
@@ -112,10 +132,13 @@ var Player = Human.extend({
 				break;
 			case EventEngine.KEYCODE_DOWN_ARROW:
 				this.stand();
+				// allowed to start walking now, but must
+				// work around lack of keyboard repeat support in engine
+				this.resumeWalk();
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
-			case 88: // x
+			case 90: // z
 				this.shootKeyHasBeenUpSinceLastShot = true;
 				break;
 		}

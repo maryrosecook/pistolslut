@@ -51,10 +51,7 @@ var Human = Mover.extend({
 		this.standState = Human.STANDING;
 		this.loadSprites();
 	},
-	//bullet oncollide bullet update, furniture shot furniutre particle ricochet - long executions
-	// player update, human shoot, collider point of impact- high ave
-	// collider getrect, bullet oncollide getposition, sign update, mover get position - high % of time
-	
+
 	update: function(renderContext, time) {
 		this.move(time);
 		renderContext.pushTransform();
@@ -127,6 +124,7 @@ var Human = Mover.extend({
 				particles[x] = BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
 			this.field.pEngine.addParticles(particles);
 			this.shotsInClip -= 1;
+			this.lastShot = new Date().getTime();
 		}
 		else if(this instanceof Player)
 			this.field.level.tellSigns("Reload.  Love  from  SWiG.");
@@ -170,7 +168,7 @@ var Human = Mover.extend({
 			this.standState = Human.CROUCHING;
 			this.setSprite(this.direction + Human.CROUCHING + Human.STILL);
 			this.getPosition().setY(this.getPosition().y + this.getStandCrouchHeightDifference());
-			this.stopWalk();
+			this.stopWalk(null);
 		}
 	},
 	
@@ -198,12 +196,16 @@ var Human = Mover.extend({
 	jumpSpeed: -9.0,
 	postJumpAdjustmentVector: Vector2D.create(0, -1),
 	jump: function() {
-		if(!this.jumping)
+		if(!this.jumping && !this.isCrouching())
 		{
 			this.jumping = true;
 			this.velocity.setY(this.velocity.y + this.jumpSpeed);
 			this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
 		}
+	},
+
+	turn: function(direction) {
+		this.direction = direction;
 	},
 
 	walking: false,	
@@ -219,7 +221,7 @@ var Human = Mover.extend({
 				this.velocity.setX(this.velocity.x + this.walkSpeed);
 		}
 	},
-
+	
 	stopWalk: function(newX) {
 		this.velocity.setX(0);
 		this.walking = false;
@@ -243,10 +245,7 @@ var Human = Mover.extend({
 			this.bloodSpurt(bullet);
 			this.health -= bullet.damage;
 			if(this.health <= 0)
-			{
-				console.log(bullet)
 				this.die(bullet);
-			}
 		}
 	},
 	

@@ -17,7 +17,8 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		speed: 15,
 		damage: 1,
-
+		timeRequiredForDeadAim: 1000,
+		
 		constructor: function(shooter) {
 			this.base("Bullet");
 
@@ -43,7 +44,15 @@ Engine.initObject("Bullet", "Object2D", function() {
 			c_draw.setLineStyle("white");
 			c_draw.setFillStyle("white");
 
-			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, this.shooter.getGunAngle());
+			// the faster the shooter shoots, the wilder their shots go
+			var now = new Date().getTime();
+			var timeSinceLastShot = now - shooter.lastShot;
+			var spread = 0;
+			if(timeSinceLastShot < this.timeRequiredForDeadAim)
+				spread = (this.timeRequiredForDeadAim - timeSinceLastShot) / 100;
+			var shootAngle = (this.shooter.getGunAngle() - (spread / 2)) + (Math.random() * spread);
+
+			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, shootAngle);
 			
 			var shooterPosition = Point2D.create(p_mover.getPosition());
 			var gunTipPosition = shooterPosition.add(this.shooter.getGunTip());
@@ -135,11 +144,17 @@ Engine.initObject("Bullet", "Object2D", function() {
 				}
 			}
 			else if(obj instanceof Human) {
-				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
-			  {
-					obj.shot(this);
-					this.destroy();
-					return ColliderComponent.STOP;
+				if(obj.isAlive())
+				{
+					if(obj instanceof Enemy) // tell enemy about shots being fired
+						obj.incoming(this);
+					
+					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+				  {
+						obj.shot(this);
+						this.destroy();
+						return ColliderComponent.STOP;
+					}
 				}
 			}
 			return ColliderComponent.CONTINUE;

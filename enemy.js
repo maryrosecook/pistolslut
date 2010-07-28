@@ -11,6 +11,7 @@ var Enemy = Human.extend({
 	
 	shootTimer: null,
 	shootDelay: 1000,
+	lastShot: 0,
 	
 	constructor: function(name, position) {
 		this.base(name);
@@ -19,6 +20,7 @@ var Enemy = Human.extend({
 		// Add components to move and draw
 		this.add(Mover2DComponent.create("move"));
 		this.add(SpriteComponent.create("draw"));
+		this.add(AIComponent.create("logic", null, this.field.playerObj));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
 		this.setPosition(position);
@@ -35,13 +37,23 @@ var Enemy = Human.extend({
 		});
 	},
 	
+	getLogic: function() { return this.getComponent("logic"); },
+	
+	// tell AI that shots have been fired nearby
+	incoming: function(bullet) {
+		this.getLogic().incoming(bullet);
+	},
+	
 	die: function(bullet) {
 		this.base(bullet);
 		this.shootTimer.destroy();
+		this.remove(this.getComponent("logic"));
 	},
 	
 	release: function() {
 		this.base();
+		this.shootTimer = null;
+		this.lastShot = 0;
 	}
 
 	}, { // Static

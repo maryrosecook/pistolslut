@@ -21,6 +21,7 @@ Game.load("/collider.js");
 Game.load("/enemy.js");
 Game.load("/human.js");
 Game.load("/cheaprect.js");
+Game.load("/ai.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -102,7 +103,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
 
 			// We'll need something to detect collisions
-			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
+			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
 			this.collider = new Collider(this);
 
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
