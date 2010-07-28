@@ -14,7 +14,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		scrollVec: Vector2D.create(-2.5, 0),
 		signPosition: null,
 		signWidth: null,
-		signColor: null,
+		defaultSignColor: null,
 	
 		constructor: function(field, text, color, position, signWidth, letterSpacing) {
 			this.base("Sign");
@@ -23,17 +23,29 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.signPosition = position;
 			this.signWidth = signWidth;
 			this.textRenderers = [];
-			this.signColor = color;
+			this.defaultSignColor = color;
 			this.letterSpacing = letterSpacing;
 
-			this.setupTextRenderers(text);
+			this.setupTextRenderers(text, this.defaultSignColor);
+		},
+		
+		hijack: function(newText) {
+			this.changeText(newText, "#F7B800");
+		},
+		
+		revert: function(blah) {
+			this.changeText(this.defaultText, this.defaultSignColor);
 		},
 		
 		// switches sign to display passed text
-		changeText: function(newText) {
+		changeText: function(newText, color) {
 			var textToDisplay = newText;
 			if(textToDisplay == null) // been told to switch back to default
 				textToDisplay = this.defaultText;
+
+			var colorToUse = color;
+				if(colorToUse == null) // been told to switch back to default
+					colorToUse = this.defaultSignColor;
 
 			if(textToDisplay != this.currentText)
 			{
@@ -45,12 +57,12 @@ Engine.initObject("Sign", "Object2D", function() {
 				}
 
 				this.textRenderers = [];
-				this.setupTextRenderers(textToDisplay);
+				this.setupTextRenderers(textToDisplay, colorToUse);
 			}
 		},
 	
 		// splits up text so each letter is handled by a different TextRenderer
-		setupTextRenderers: function(text) {
+		setupTextRenderers: function(text, color) {
 			this.currentText = text;
 			var textPieces = text.split(""); // set each letter in its own renderer
 			for(var i in textPieces) 
@@ -58,7 +70,7 @@ Engine.initObject("Sign", "Object2D", function() {
 				this.textRenderers[i] = TextRenderer.create(VectorText.create(), textPieces[i], 1);
 				this.textRenderers[i].setDrawMode(TextRenderer.NO_DRAW); // turn off drawing so no flashes
 		    this.textRenderers[i].setTextWeight(1);
-		    this.textRenderers[i].setColor(this.signColor);
+		    this.textRenderers[i].setColor(color);
 				this.textRenderers[i].scrollStartPosition = this.getScrollStartPosition();
 				this.textRenderers[i].textBoundingBox = this.getTextBoundingBox(this.textRenderers[i]);
 				this.field.renderContext.add(this.textRenderers[i]);
@@ -110,7 +122,7 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.textRenderers = null;
 			this.signPosition = null;
 			this.signWidth = null;
-			this.signColor = null;
+			this.defaultSignColor = null;
 		},
 
 		update: function(renderContext, time) {
@@ -145,6 +157,9 @@ Engine.initObject("Sign", "Object2D", function() {
 		getClassName: function() {
 			return "Sign";
 		},
+		
+		HIJACK: "hijack",
+		REVERT: "revert"
 	});
 
 	return Sign;

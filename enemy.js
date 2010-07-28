@@ -15,13 +15,19 @@ var Enemy = Human.extend({
 	
 	constructor: function(name, position) {
 		this.base(name);
-		this.health = 5;
+		this.health = 10;
 
 		// Add components to move and draw
 		this.add(Mover2DComponent.create("move"));
 		this.add(SpriteComponent.create("draw"));
-		this.add(AIComponent.create("logic", null, this.field.playerObj));
+		this.add(AIComponent.create("logic", null, this.field.playerObj, this));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
+		
+		// subscribe to events the enemy should care about
+		this.field.notifier.subscribe(Bullet.INCOMING_EVENT, this.getLogic(), this.getLogic().notifyIncoming);
+		this.field.notifier.subscribe(Human.CLIP_EMPTY, this.getLogic(), this.getLogic().notifyClipEmpty);
+		this.field.notifier.subscribe(Human.RELOADED, this.getLogic(), this.getLogic().notifyReloaded);
+		//this.field.notifier.subscribe("playerMove", this.getLogic(), this.getLogic().playerMove);
 		
 		this.setPosition(position);
 		this.velocity = Vector2D.create(0, 0);
@@ -29,20 +35,14 @@ var Enemy = Human.extend({
 		this.getComponent("move").setCheckLag(false);
 		
 		this.setSprite(this.direction + Human.STANDING + Human.STILL);
-		
-		var enemy = this;
-		this.shootTimer = Interval.create("shoot", this.shootDelay,
-			function() {
-				enemy.shoot();
-		});
 	},
 	
 	getLogic: function() { return this.getComponent("logic"); },
 	
-	// tell AI that shots have been fired nearby
-	incoming: function(bullet) {
-		this.getLogic().incoming(bullet);
-	},
+	// tell AI that the player has moved
+	// playerMove: function() {
+	// 	this.getLogic().playerMove();
+	// },
 	
 	die: function(bullet) {
 		this.base(bullet);

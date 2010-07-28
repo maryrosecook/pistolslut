@@ -147,7 +147,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 				if(obj.isAlive())
 				{
 					if(obj instanceof Enemy) // tell enemy about shots being fired
-						obj.incoming(this);
+						this.field.notifier.post(Bullet.INCOMING_EVENT, this);
 					
 					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 				  {
@@ -174,7 +174,9 @@ Engine.initObject("Bullet", "Object2D", function() {
 					new Point2D(0,  1), new Point2D(0,  1)],
 
 		// The tip of the shooter at zero rotation (up)
-		tip: new Point2D(0, -1)
+		tip: new Point2D(0, -1),
+		
+		INCOMING_EVENT: "incoming"
 	});
 
 	return Bullet;

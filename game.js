@@ -7,6 +7,7 @@ Engine.include("/resourceloaders/loader.bitmapfont.js");
 Engine.include("/textrender/text.renderer.js");
 Engine.include("/resourceloaders/loader.sprite.js");
 Engine.include("/resourceloaders/loader.level.js");
+Engine.include("/components/component.notifier.js");
 
 // Load game objects
 Game.load("/mover.js");
@@ -42,10 +43,12 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		collisionModel: null,
 		collider: null,
+		
+		notifier: null,
 	
 		snowTimer: null,
 		snowFallRate: 0,
-		snowFallInterval: 100,
+		snowFallInterval: 50,
 		groundY: 400,
 	
 		fieldWidth: 500,
@@ -105,6 +108,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 			// We'll need something to detect collisions
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
 			this.collider = new Collider(this);
+			
+			this.notifier = NotifierComponent.create("notifier");
 
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);

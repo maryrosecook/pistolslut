@@ -140,16 +140,6 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			}
 		},
 
-		tellSigns: function(text) {
-			for(var i in this.signs)
-				this.signs[i].changeText(text);
-		},
-		
-		// switches signs to display normal text
-		revertSigns: function() {
-			this.tellSigns(null);
-		},
-
 		// load signs from the current level
 		signLetterSpacing: 7,
 		signColor: "#ff0000",
@@ -161,6 +151,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				var sign = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
 				this.signs[i] = sign;
 				this.field.renderContext.add(sign);
+				this.field.notifier.subscribe(Sign.HIJACK, sign, sign.hijack);
+				this.field.notifier.subscribe(Sign.REVERT, sign, sign.revert);
 			}
 		},
 

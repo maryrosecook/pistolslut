@@ -38,6 +38,13 @@
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
 				}
 			},
+			{
+				name: "bin3", x: 600, y: 520,
+				sprite: {
+					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
+					sprites: { "main": { "f" : [0, 0, 20, 25] } }
+				}
+			},
 			{ name: "floorpiece1", x: 0, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
 			{ name: "floorpiece2", x: 400, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
 			{ name: "floorpiece3", x: 800, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
@@ -47,7 +54,7 @@
 		
 		enemies: [
 			{
-				name: "enemy1", x: 390, y: 500,
+				name: "enemy1", x: 395, y: 500,
 				sprite: {
 					bitmapImage: "enemy.gif", bitmapWidth: 506, bitmapHeight: 230
 				}

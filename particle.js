@@ -15,7 +15,7 @@ Engine.initObject("BloodParticle", "Particle", function() {
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BloodParticle.ref, a);
-			var vel = 2 + (Math.random() * 2);
+			var vel = 2 + (Math.random() * 4);
 			this.vec.mul(vel)
 		},
 

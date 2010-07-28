@@ -17,7 +17,7 @@ var Player = Human.extend({
 	constructor: function() {
 		this.base("Player");
 
-		this.health = 2;
+		this.health = 10;
 
 		// Add components to move and draw the player
 		this.add(KeyboardInputComponent.create("input"));
@@ -118,6 +118,8 @@ var Player = Human.extend({
 				break;
 		}
 		
+		this.field.notifier.post(Player.MOVE_EVENT, this);
+		
 		return false;
 	},
 
@@ -150,6 +152,8 @@ var Player = Human.extend({
 		getClassName: function() {
 			return "Player";
 		},
+		
+		MOVE_EVENT: "playerMove"
 	});
 
 	return Player;

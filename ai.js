@@ -5,17 +5,55 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 	var AIComponent = LogicComponent.extend(/** @scope AIComponent.prototype */{
 		playerObj: null,
 
-		constructor: function(name, priority, playerObj) {
+		// I know it's insane to pass the host in the constructer, but it doesn't seem to be available at this point
+		constructor: function(name, priority, playerObj, host) {
 	  	this.base(name, priority || 1.0);
 			this.playerObj = playerObj;
+
+			// setup shoot timer
+			var ai = this;
+			host.shootTimer = Interval.create("shoot", host.shootDelay,
+				function() {
+					ai.notifyTimeToShoot();
+			});
 	  },
 
 		execute: function(renderContext, time) {
 			var host = this.getHostObject();
-			if(host.isCrouching() && this.noUnsafeIncomingForAWhile())
+			if(host.isCrouching() && !host.isReloading() && this.noUnsafeIncomingForAWhile())
 				host.stand();
 				
 			this.turnTowardsPlayer();
+		},
+		
+		notifyTimeToShoot: function() {
+			var host = this.getHostObject();
+			if(!host.isCrouching())
+				host.shoot();
+		},
+		
+		notifyReloaded: function() {
+			this.getHostObject().shoot(); // try and start shooting right away
+			// just let the execute method deal with standing up if necessary on the next go round
+		},
+		
+		notifyIncoming: function(bullet) {
+			var host = this.getHostObject();
+			if(bullet.shooter != host)
+			{
+				if(!this.objectSafeDistanceAway(bullet))
+				{
+					this.lastNearDeath = new Date().getTime();
+					host.crouch();
+				}
+			}
+		},
+		
+		// tell AI that clip is empty
+		notifyClipEmpty: function() {
+			var host = this.getHostObject();
+			host.reload();
+			host.crouch();
 		},
 		
 		turnTowardsPlayer: function() {
@@ -35,17 +73,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			return new Date().getTime() - this.lastNearDeath > this.safeIntervalAfterUnsafeIncoming;
 		},
 		
-		incoming: function(bullet) {
-			var host = this.getHostObject();
-			if(bullet.shooter != host)
-			{
-				if(!this.objectSafeDistanceAway(bullet))
-				{
-					this.lastNearDeath = new Date().getTime();
-					host.crouch();
-				}
-			}
-		},
+
 		
 		safeBulletDistance: 20,
 		objectSafeDistanceAway: function(obj) {

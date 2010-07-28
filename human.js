@@ -86,7 +86,7 @@ var Human = Mover.extend({
 			var currentSprite = this.getSprite();
 			if(currentSprite.animationPlayed(time)) // at end of anim
 			{
-				this.setSprite(this.direction + "dead");
+				this.setSprite(this.direction + Human.DEAD);
 				this.stateOfBeing = Human.DEAD
 			}
 		}
@@ -94,7 +94,7 @@ var Human = Mover.extend({
 	
 	die: function(bullet) {
 		this.stateOfBeing = Human.DYING;
-		this.setSprite(this.direction + "dying");
+		this.setSprite(this.direction + Human.DYING);
 		
 		this.throwBackwards(bullet);
 		
@@ -103,9 +103,9 @@ var Human = Mover.extend({
 			this.ModelData.lastNode.removeObject(this);
 	},
 	
+	throwBackwardsTempering: 5,
 	throwBackwards: function(bullet) {
-		this.getVelocity().setX(bullet.getVelocity().x / 5);
-		this.getVelocity().setY(-2);
+		this.getVelocity().setX(bullet.getVelocity().x / this.throwBackwardsTempering);
 	},
 	
 	triggerHeldDown: true, // whether trigger is being held down
@@ -114,7 +114,7 @@ var Human = Mover.extend({
 	muzzleParticleCount: 10,
 	muzzleParticleTTL: 500,
 	shoot: function() {
-		if(!this.clipEmpty())
+		if(!this.isClipEmpty() && !this.isReloading())
 		{
 			this.field.renderContext.add(Bullet.create(this));
 		
@@ -127,13 +127,15 @@ var Human = Mover.extend({
 			this.lastShot = new Date().getTime();
 		}
 		else if(this instanceof Player)
-			this.field.level.tellSigns("Reload.  Love  from  SWiG.");
+			this.field.notifier.post(Sign.HIJACK, "Reload.  Love  from  SWiG.");
+		else if(this instanceof Enemy)
+			this.field.notifier.post(Human.CLIP_EMPTY, this);
 	},
 	
 	reloadBegun: 0,  // time reload was started
 	reloadDelay: 2000,
 	reload: function() {
-		if(this.clipEmpty() && !this.isReloading())
+		if(!this.isReloading())
 		{
 			this.reloadBegun = new Date().getTime();
 			this.reloading = true;
@@ -147,7 +149,8 @@ var Human = Mover.extend({
 			{
 				this.fillClip();
 				this.reloading = false;
-				this.field.level.revertSigns(); // switch signs back to normal
+				this.field.notifier.post(Sign.REVERT, null); // switch signs back to normal
+				this.field.notifier.post(Human.RELOADED, null); // switch signs back to normal
 			}
 	},
 	
@@ -158,7 +161,7 @@ var Human = Mover.extend({
 		this.shotsInClip = 10;
 	},
 	
-	clipEmpty: function() {
+	isClipEmpty: function() {
 		return this.shotsInClip == 0;
 	},
 	
@@ -357,8 +360,6 @@ var Human = Mover.extend({
 		this.stateOfBeing = null;
 		this.health = -1;
 		this.coordinates = null;
-		this.left = null;
-		this.right = null;
 	},
 
 	}, { // Static
@@ -367,9 +368,9 @@ var Human = Mover.extend({
 		},
 		
 		// states of being
-		ALIVE: 0,
-		DYING: 1,
-		DEAD: 2,
+		ALIVE: "alive",
+		DYING: "dying",
+		DEAD: "dead",
 		
 		// directions
 		LEFT: "left",
@@ -380,7 +381,10 @@ var Human = Mover.extend({
 		CROUCHING: "crouching",
 		
 		RUNNING: "running",
-		STILL: "still"
+		STILL: "still",
+		
+		CLIP_EMPTY: "clip_empty",
+		RELOADED: "reloaded"
 	});
 
 	return Human;
