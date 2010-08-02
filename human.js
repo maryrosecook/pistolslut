@@ -9,6 +9,7 @@ Engine.initObject("Human", "Mover", function() {
 
 var Human = Mover.extend({
 	
+	weapon: null,
 	stateOfBeing: null,
 	health: -1,
 	standState: null,
@@ -50,6 +51,7 @@ var Human = Mover.extend({
 		this.stateOfBeing = Human.ALIVE;
 		this.standState = Human.STANDING;
 		this.loadSprites();
+		this.weapon = new Uzi(this);
 	},
 
 	update: function(renderContext, time) {
@@ -58,7 +60,8 @@ var Human = Mover.extend({
 		this.base(renderContext, time);
 		renderContext.popTransform();
 		
-		this.handleReload();
+		this.weapon.handleReload();
+		this.weapon.handleAutomatic();
 	},
 
 	move: function(time) {
@@ -103,66 +106,15 @@ var Human = Mover.extend({
 			this.ModelData.lastNode.removeObject(this);
 	},
 	
+	shoot: function() {
+		this.weapon.shoot();
+	},
+	
+	throwBackwardsUp: -2,
 	throwBackwardsTempering: 5,
 	throwBackwards: function(bullet) {
 		this.getVelocity().setX(bullet.getVelocity().x / this.throwBackwardsTempering);
-	},
-	
-	triggerHeldDown: true, // whether trigger is being held down
-	shotsInClip: 10,
-	muzzleFlashSpread: 15,
-	muzzleParticleCount: 10,
-	muzzleParticleTTL: 500,
-	shoot: function() {
-		if(!this.isClipEmpty() && !this.isReloading())
-		{
-			this.field.renderContext.add(Bullet.create(this));
-		
-			var gunTipInWorld = Point2D.create(this.getGunTip()).add(this.getPosition());
-			var particles = [];
-			for (var x = 0; x < this.muzzleParticleCount; x++)
-				particles[x] = BurnoutParticle.create(gunTipInWorld, this.getGunAngle(), this.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
-			this.field.pEngine.addParticles(particles);
-			this.shotsInClip -= 1;
-			this.lastShot = new Date().getTime();
-		}
-		else if(this instanceof Player)
-			this.field.notifier.post(Sign.HIJACK, "Reload.  Love  from  SWiG.");
-		else if(this instanceof Enemy)
-			this.field.notifier.post(Human.CLIP_EMPTY, this);
-	},
-	
-	reloadBegun: 0,  // time reload was started
-	reloadDelay: 2000,
-	reload: function() {
-		if(!this.isReloading())
-		{
-			this.reloadBegun = new Date().getTime();
-			this.reloading = true;
-		}
-	},
-	
-	// if reloading and the time to reload has elapsed, fill clip
-	handleReload: function() {
-		if(this.reloading)
-			if(new Date().getTime() - this.reloadBegun > this.reloadDelay) // reload period has passed
-			{
-				this.fillClip();
-				this.reloading = false;
-				this.field.notifier.post(Sign.REVERT, null); // switch signs back to normal
-				this.field.notifier.post(Human.RELOADED, null); // switch signs back to normal
-			}
-	},
-	
-	reloading: false,
-	isReloading: function() { return this.reloading; },
-	
-	fillClip: function() {
-		this.shotsInClip = 10;
-	},
-	
-	isClipEmpty: function() {
-		return this.shotsInClip == 0;
+		//this.getVelocity().setY(this.throwBackwardsUp);
 	},
 	
 	crouch: function() {
@@ -171,7 +123,7 @@ var Human = Mover.extend({
 			this.standState = Human.CROUCHING;
 			this.setSprite(this.direction + Human.CROUCHING + Human.STILL);
 			this.getPosition().setY(this.getPosition().y + this.getStandCrouchHeightDifference());
-			this.stopWalk(null);
+			this.stopWalk();
 		}
 	},
 	
@@ -228,6 +180,10 @@ var Human = Mover.extend({
 	stopWalk: function(newX) {
 		this.velocity.setX(0);
 		this.walking = false;
+	},
+	
+	// holds human at passed X
+	block: function(newX) {
 		if(newX != null)
 			this.getPosition().setX(newX);
 	},
@@ -277,17 +233,17 @@ var Human = Mover.extend({
 			if(this.field.collider.aFallingThroughB(this, obj))
 			{
 				this.endFall(obj);
-				return ColliderComponent.STOP;
+				//return ColliderComponent.STOP;
 			}
 			else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
 			{
-				this.stopWalk(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
-				return ColliderComponent.STOP;
+				this.block(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
+				//return ColliderComponent.STOP;
 			}
 			else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 			{
-				this.stopWalk(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
-				return ColliderComponent.STOP;
+				this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
+				//return ColliderComponent.STOP;
 			}
 		}
 		return ColliderComponent.CONTINUE;

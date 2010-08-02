@@ -33,6 +33,10 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.changeText(newText, "#F7B800");
 		},
 		
+		tellToReload: function() {
+			this.changeText("Reload.  Love  from  SWiG.", "#F7B800");
+		},
+		
 		revert: function(blah) {
 			this.changeText(this.defaultText, this.defaultSignColor);
 		},
@@ -159,7 +163,6 @@ Engine.initObject("Sign", "Object2D", function() {
 		},
 		
 		HIJACK: "hijack",
-		REVERT: "revert"
 	});
 
 	return Sign;

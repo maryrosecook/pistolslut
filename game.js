@@ -23,6 +23,10 @@ Game.load("/enemy.js");
 Game.load("/human.js");
 Game.load("/cheaprect.js");
 Game.load("/ai.js");
+Game.load("/weapon.js");
+Game.load("/pistol.js");
+Game.load("/uzi.js");
+Game.load("/shotgun.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -67,9 +71,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		loadTimeout: null,
 	
 		gravityVector: Vector2D.create(0, 0.6),
-	
-		bullets: 0,
-	
+		
 		/**
 		 * Called to set up the game, download any resources, and initialize
 		 * the game to its running state.

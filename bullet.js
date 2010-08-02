@@ -4,11 +4,7 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Bullet", "Object2D", function() {
-	/**
-	 * @class The bullet object.
-	 *
-	 * @param shooter The shooter of this bullet
-	 */
+
 	var Bullet = Object2D.extend({
 
 		shooter: null,
@@ -17,16 +13,15 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		speed: 15,
 		damage: 1,
-		timeRequiredForDeadAim: 1000,
 		
-		constructor: function(shooter) {
+		constructor: function(weapon) {
 			this.base("Bullet");
 
 			// This is a hack!
 			this.field = PistolSlut;
 
 			// Track the shooter
-			this.shooter = shooter;
+			this.weapon = weapon;
 
 			// Add components to move and draw the bullet
 			this.add(Mover2DComponent.create("move"));
@@ -36,40 +31,29 @@ Engine.initObject("Bullet", "Object2D", function() {
 			// Get the player's position and rotation,
 			// then position this at the tip of the ship
 			// moving away from it
-			var p_mover = this.shooter.getComponent("move");
+			var p_mover = this.weapon.owner.getComponent("move");
 			var c_mover = this.getComponent("move");
 			var c_draw = this.getComponent("draw");
 
 			c_draw.setPoints(Bullet.shape);
 			c_draw.setLineStyle("white");
 			c_draw.setFillStyle("white");
-
-			// the faster the shooter shoots, the wilder their shots go
-			var now = new Date().getTime();
-			var timeSinceLastShot = now - shooter.lastShot;
-			var spread = 0;
-			if(timeSinceLastShot < this.timeRequiredForDeadAim)
-				spread = (this.timeRequiredForDeadAim - timeSinceLastShot) / 100;
-			var shootAngle = (this.shooter.getGunAngle() - (spread / 2)) + (Math.random() * spread);
-
-			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, shootAngle);
 			
-			var shooterPosition = Point2D.create(p_mover.getPosition());
-			var gunTipPosition = shooterPosition.add(this.shooter.getGunTip());
-
+			var ownerPosition = Point2D.create(p_mover.getPosition());
+			var gunTipPosition = this.weapon.getGunTip();
+			
 			c_mover.setPosition(gunTipPosition);
-			c_mover.setVelocity(dir.mul(this.speed));
+			c_mover.setVelocity(this.weapon.bulletPhysics.call(this.weapon).mul(this.speed));
 			c_mover.setCheckLag(false);
 		},
 
 		release: function() {
 			this.base();
-			this.shooter = null;
+			this.weapon = null;
 		},
 
 		/**
-		 * Destroy a bullet, removing it from the list of objects
-		 * in the last collision model node.
+		 * Destroy a bullet, removing it from the list of objects in the last collision model node.
 		 */
 		destroy: function() {
 			//AssertWarn(this.ModelData.lastNode, "Bullet not located in a node!");
@@ -173,7 +157,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 		shape: [ new Point2D(-1, 0), new Point2D(0, 0),
 					new Point2D(0,  1), new Point2D(0,  1)],
 
-		// The tip of the shooter at zero rotation (up)
+		// The tip of the owner at zero rotation (up)
 		tip: new Point2D(0, -1),
 		
 		INCOMING_EVENT: "incoming"

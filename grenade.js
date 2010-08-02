@@ -98,13 +98,8 @@ Engine.initObject("Grenade", "Object2D", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture)
-			{
 				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
-				{
 					this.bounce(obj);	
-					return ColliderComponent.STOP;
-				}
-			}
 			
 			return ColliderComponent.CONTINUE;
 		},
@@ -116,7 +111,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			if(pointOfImpactData != null)
 			{
 				var sideHit = pointOfImpactData[1];
-				this.setVelocity(this.field.collider.bounce(this.getVelocity(), this.bounciness, sideHit));	
+				this.setVelocity(this.field.collider.bounce(this.getVelocity(), this.bounciness, sideHit));
 			}
 		},
 	

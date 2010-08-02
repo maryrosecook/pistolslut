@@ -1,7 +1,23 @@
-* Nicer background.
-* An invincible, impotent enemy.
-* Grenades that explode and bounce.
-* Speed optimisations.
-* Gravity now applied on every screen draw, rather than every x milliseconds.
-* Improved efficiency of collision calculation.
-* Added Kemal's Jump Physics for less floaty, more realistic jumping.
+enemies dodge incoming fire and can be suppressed,
+enemies turn towards you,
+keys remapped,
+rapid fire means lower accuracy,
+dead bodies thrown backwards,
+advice from Sluts With Guns,
+pistol semi-automatic,
+blood spurts,
+gun magazines,
+reloading (press c),
+crouching,
+bins,
+speedups,
+a mortal player,
+a mortal and armed enemy,
+a free shop,
+nicer background,
+an invincible, impotent enemy,
+grenades that explode and bounce,
+speed optimisations,
+gravity now applied on every screen draw, rather than every x milliseconds,
+improved efficiency of collision calculation,
+added Kemal's Jump Physics for less floaty, more realistic jumping,

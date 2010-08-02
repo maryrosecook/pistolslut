@@ -15,7 +15,7 @@ var Collider = Base.extend({
 	aFallingThroughB: function(a, b) {
 		var aRect = new CheapRect(a);
 		var bRect = new CheapRect(b);
-		return aRect.b > bRect.y && aRect.b < bRect.y + 14;
+		return a.getVelocity().y > 0 && aRect.b > bRect.y && aRect.b < bRect.y + 14;
 	},
 	
 	aOnB: function(a, b) {
@@ -57,6 +57,14 @@ var Collider = Base.extend({
 		var mODims = movingObj.getBoundingBox().dims;
 		var sOPos = staticObj.getPosition();
 		var sODims = staticObj.getBoundingBox().dims;
+	
+		// staticobj on bottom
+		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y + mODims.y);
+		var p2 = Point2D.create(mOCurPos.x,mOCurPos.y + mODims.y);
+		var p3 = Point2D.create(sOPos.x,sOPos.y);
+		var p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y);
+		if(Math2D.lineLineCollision(p1, p2, p3, p4))
+			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "top"];
 		
 		// staticobj on right
 		var p1 = Point2D.create(mOPrevPos.x + mODims.x,mOPrevPos.y + mODims.y);
@@ -65,14 +73,6 @@ var Collider = Base.extend({
 		var p4 = Point2D.create(sOPos.x,sOPos.y + sODims.y);
 		if(Math2D.lineLineCollision(p1, p2, p3, p4))
 			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "left"];
-		
-		// staticobj on bottom
-		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y + mODims.y);
-		var p2 = Point2D.create(mOCurPos.x,mOCurPos.y + mODims.y);
-		var p3 = Point2D.create(sOPos.x,sOPos.y);
-		var p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y);
-		if(Math2D.lineLineCollision(p1, p2, p3, p4))
-			return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), "top"];
 		
 		// staticobj on left
 		var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y);

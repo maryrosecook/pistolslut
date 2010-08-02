@@ -69,7 +69,11 @@ Engine.initObject("Furniture", "Object2D", function() {
 		ricochetParticleCount: 10,
 		ricochetParticleTTL: 500,
 		particleRicochet: function(bullet) {
-			var position = this.field.collider.pointOfImpact(bullet, this)[0];
+			var positionData = this.field.collider.pointOfImpact(bullet, this);
+			var position = null;
+			if(positionData != null)
+				var position = Point2D.create(positionData[0].x, positionData[0].y)
+
 			var angle = this.field.collider.angleOfImpact(bullet);
 			if(position && angle)
 			{

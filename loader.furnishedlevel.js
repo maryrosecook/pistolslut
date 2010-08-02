@@ -151,8 +151,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				var sign = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
 				this.signs[i] = sign;
 				this.field.renderContext.add(sign);
-				this.field.notifier.subscribe(Sign.HIJACK, sign, sign.hijack);
-				this.field.notifier.subscribe(Sign.REVERT, sign, sign.revert);
+				this.field.notifier.subscribe(Human.CLIP_EMPTY, sign, sign.tellToReload);
+				this.field.notifier.subscribe(Human.RELOADED, sign, sign.revert);
 			}
 		},
 

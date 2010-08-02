@@ -11,7 +11,6 @@ var Enemy = Human.extend({
 	
 	shootTimer: null,
 	shootDelay: 1000,
-	lastShot: 0,
 	
 	constructor: function(name, position) {
 		this.base(name);
@@ -39,11 +38,6 @@ var Enemy = Human.extend({
 	
 	getLogic: function() { return this.getComponent("logic"); },
 	
-	// tell AI that the player has moved
-	// playerMove: function() {
-	// 	this.getLogic().playerMove();
-	// },
-	
 	die: function(bullet) {
 		this.base(bullet);
 		this.shootTimer.destroy();
@@ -53,7 +47,6 @@ var Enemy = Human.extend({
 	release: function() {
 		this.base();
 		this.shootTimer = null;
-		this.lastShot = 0;
 	}
 
 	}, { // Static

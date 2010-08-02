@@ -20,7 +20,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		execute: function(renderContext, time) {
 			var host = this.getHostObject();
-			if(host.isCrouching() && !host.isReloading() && this.noUnsafeIncomingForAWhile())
+			if(host.isCrouching() && !host.weapon.isReloading() && this.noUnsafeIncomingForAWhile())
 				host.stand();
 				
 			this.turnTowardsPlayer();
@@ -29,7 +29,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
 			if(!host.isCrouching())
-				host.shoot();
+				host.weapon.shoot();
 		},
 		
 		notifyReloaded: function() {
@@ -39,7 +39,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		
 		notifyIncoming: function(bullet) {
 			var host = this.getHostObject();
-			if(bullet.shooter != host)
+			if(bullet.weapon.owner != host)
 			{
 				if(!this.objectSafeDistanceAway(bullet))
 				{
@@ -52,7 +52,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		// tell AI that clip is empty
 		notifyClipEmpty: function() {
 			var host = this.getHostObject();
-			host.reload();
+			host.weapon.reload();
 			host.crouch();
 		},
 		

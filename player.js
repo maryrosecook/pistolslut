@@ -10,9 +10,6 @@ Engine.initObject("Player", "Human", function() {
 var Player = Human.extend({
 
 	size: 4,
-	
-	lastShot: 0,
-	bullets: 0,
 
 	constructor: function() {
 		this.base("Player");
@@ -24,8 +21,6 @@ var Player = Human.extend({
 		this.add(Mover2DComponent.create("move"));
 		this.add(SpriteComponent.create("draw"));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
-		
-		//this.loadWeapons();
 		
 		this.direction = Human.RIGHT;
 		this.setSprite(this.direction + Human.STANDING + Human.STILL);
@@ -42,20 +37,9 @@ var Player = Human.extend({
 		c_mover.setPosition(new Point2D(50, this.field.groundY));
 	},
 
-	loadWeapons: function() {
-		var weaponData = this.level.levelResource.info.objects.signs;
-		for(var i in signs)
-		{
-			var signData = signs[i];
-			var sign = new Sign(this.renderContext, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
-			this.renderContext.add(sign);
-		}
-	},
-
 	release: function() {
 		this.base();
 		this.size = 4;
-		this.bullets = 0;
 	},
 
 	update: function(renderContext, time) {
@@ -79,10 +63,9 @@ var Player = Human.extend({
 	handlePausedWalk: function() {
 		if(this.walking)
 			this.walkPaused = true;
-		this.stopWalk(null);
+		this.stopWalk();
 	},
 
-	shootKeyHasBeenUpSinceLastShot: true,
 	onKeyDown: function(keyCode) {
 		if(!this.isAlive())
 			return;
@@ -102,19 +85,26 @@ var Player = Human.extend({
 				this.crouch();
 				break;
 			case 90: // z
-				if(this.shootKeyHasBeenUpSinceLastShot)
-				{
-					this.shoot();
-					this.shootKeyHasBeenUpSinceLastShot = false;
-				}
+				this.weapon.startShooting();
+				this.weapon.shoot();
+				this.weapon.shootKeyDown();
 				break;
 			case 88: // x
 				this.throwGrenade();
 				break;
 			case 67: // c
-				this.reload();
+				this.weapon.reload();
 				break;
 			case 82: // r
+				break;
+			case 49: // 1
+				this.weapon = new Pistol(this);
+				break;
+			case 50: // 2
+				this.weapon = new Uzi(this);
+				break;
+			case 51: // 3
+				this.weapon = new Shotgun(this);
 				break;
 		}
 		
@@ -130,18 +120,20 @@ var Player = Human.extend({
 		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 			case EventEngine.KEYCODE_RIGHT_ARROW:
-				this.stopWalk(null);
+				this.stopWalk();
+				this.walkPaused = false; // stopped walking so walk no longer paused
 				break;
 			case EventEngine.KEYCODE_DOWN_ARROW:
 				this.stand();
 				// allowed to start walking now, but must
-				// work around lack of keyboard repeat support in engine
+				// work around lack of keyboard repeat support in engine for this case
 				this.resumeWalk();
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
 			case 90: // z
-				this.shootKeyHasBeenUpSinceLastShot = true;
+				this.weapon.stopShooting();
+				this.weapon.shootKeyUp();
 				break;
 		}
 		
