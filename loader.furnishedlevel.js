@@ -42,13 +42,6 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 					var furniturePieceData = levelObjects.furniture[i];					
 					this.spriteLoader.load(furniturePieceData.name, null, furniturePieceData.sprite, path);
 				}
-				
-				// and the enemies
-				// for(var i in levelObjects.enemies)
-				// {
-				// 	var enemyData = levelObjects.enemies[i];
-				// 	this.spriteLoader.load(enemyData.name, null, enemyData.sprite, path);
-				// }
 			}
 		},
 

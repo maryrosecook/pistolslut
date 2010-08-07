@@ -9,38 +9,73 @@ Engine.initObject("Human", "Mover", function() {
 
 var Human = Mover.extend({
 	
-	weapon: null,
 	stateOfBeing: null,
 	health: -1,
 	standState: null,
 	
 	coordinates: {
 		"Left": {
+			"armAngle": 315,
+			"gunAngle": 270,
 		 	"Standing": {
-				"angle": 270,
-				"gunTip": new Point2D(0, 9),
-				"armAngle": 315,
-				"armTip": new Point2D(0, 2),
+				"M9": {
+					"gunTip": new Point2D(3, 9),
+					"armTip": new Point2D(0, 2),
+				},
+				"Mac10": {
+					"gunTip": new Point2D(4, 7),
+					"armTip": new Point2D(0, 2),
+				},
+				"SPAS": {
+					"gunTip": new Point2D(3, 12),
+					"armTip": new Point2D(0, 2),
+				}
 			},
 			"Crouching": {
-				"angle": 270,
-				"gunTip": new Point2D(0, 9),
-				"armAngle": 315,
-				"armTip": new Point2D(0, 2),
+				"M9": {
+					"gunTip": new Point2D(0, 9),
+					"armTip": new Point2D(0, 2),
+				},
+				"Mac10": {
+					"gunTip": new Point2D(3, 7),
+					"armTip": new Point2D(0, 2),
+				},
+				"SPAS": {
+					"gunTip": new Point2D(3, 12),
+					"armTip": new Point2D(0, 2),
+				}
 			}
 		},
 		"Right": {
+			"armAngle": 45,
+			"gunAngle": 90,
 			"Standing": {
-				"angle": 90,
-				"gunTip": new Point2D(44, 9),
-				"armAngle": 45,
-				"armTip": new Point2D(44, 2),
+				"M9": {
+					"gunTip": new Point2D(45, 9),
+					"armTip": new Point2D(44, 2),
+				},
+				"Mac10": {
+					"gunTip": new Point2D(45, 7),
+					"armTip": new Point2D(44, 2),
+				},
+				"SPAS": {
+					"gunTip": new Point2D(45, 12),
+					"armTip": new Point2D(44, 2),
+				}
 			},
 			"Crouching": {
-				"angle": 90,
-				"gunTip": new Point2D(44, 9),
-				"armAngle": 45,
-				"armTip": new Point2D(44, 2),
+				"M9": {
+					"gunTip": new Point2D(45, 9),
+					"armTip": new Point2D(44, 2),
+				},
+				"Mac10": {
+					"gunTip": new Point2D(45, 7),
+					"armTip": new Point2D(44, 2),
+				},
+				"SPAS": {
+					"gunTip": new Point2D(45, 12),
+					"armTip": new Point2D(44, 2),
+				}
 			}
 		},
 		"standCrouchHeightDifference": 11
@@ -51,7 +86,7 @@ var Human = Mover.extend({
 		this.stateOfBeing = Human.ALIVE;
 		this.standState = Human.STANDING;
 		this.loadSprites();
-		this.weapon = new M9(this);
+		this.setupWeapons();
 	},
 
 	update: function(renderContext, time) {
@@ -107,14 +142,16 @@ var Human = Mover.extend({
 	},
 	
 	shoot: function() {
+		this.weapon.startShooting();
 		this.weapon.shoot();
 	},
 	
-	throwBackwardsDown: 2,
-	throwBackwardsTempering: 5,
+	throwBackwardsUp: -3,
+	throwBackwardsTempering: 6,
 	throwBackwards: function(bullet) {
 		this.getVelocity().setX(bullet.getVelocity().x / this.throwBackwardsTempering);
-		this.getVelocity().setY(this.throwBackwardsDown);
+		this.getPosition().setY(this.getPosition().y - 5);
+		this.getVelocity().setY(this.throwBackwardsUp);
 	},
 	
 	crouch: function() {
@@ -164,10 +201,24 @@ var Human = Mover.extend({
 		}
 	},
 	
-	switchWeapon: function(newWeapon) {
-		this.weapon = newWeapon;
+	cycleWeapon: function() {
+		if(this.weapons.length == 0)
+			return;
+			
+		for(var i = 0; i < this.weapons.length; i++)
+			if(i == this.weapons.length - 1)
+				this.setWeapon(this.weapons[0]);
+			else if(this.weapons[i] == this.weapon)
+			{
+				this.setWeapon(this.weapons[i + 1]);
+				break;
+			}
+				
 		if(this.isCrouching()) // not moving so sprite won't get updated by normal update mechani
 			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name, 0);
+	},
+	setWeapon: function(weapon) {
+		this.weapon = weapon;
 	},
 	
 	jumping: false,
@@ -250,23 +301,28 @@ var Human = Mover.extend({
 		}
 	},
 	
+	setupWeapons: function() {
+		this.weapons = [];
+		this.weapons.push(new M9(this));
+		this.weapons.push(new Mac10(this));
+		this.weapons.push(new SPAS(this));
+		this.setWeapon(this.weapons[0]);
+	},
+	
 	onCollide: function(obj) {
 		if(obj instanceof Furniture && this.field.collider.colliding(this, [obj]))
 		{
 			if(this.field.collider.aFallingThroughB(this, obj))
 			{
 				this.endFall(obj);
-				//return ColliderComponent.STOP;
 			}
 			else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
 			{
 				this.block(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
-				//return ColliderComponent.STOP;
 			}
 			else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 			{
 				this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
-				//return ColliderComponent.STOP;
 			}
 		}
 		return ColliderComponent.CONTINUE;
@@ -307,19 +363,19 @@ var Human = Mover.extend({
 	},
 	
 	getGunAngle: function() {
-		return this.coordinates[this.direction][this.standState]["angle"];
+		return this.coordinates[this.direction]["gunAngle"];
 	},
 	
 	getGunTip: function() {
-		return this.coordinates[this.direction][this.standState]["gunTip"];
+		return this.coordinates[this.direction][this.standState][this.weapon.name]["gunTip"];
 	},
 	
 	getArmTip: function() {
-		return this.coordinates[this.direction][this.standState]["armTip"];
+		return this.coordinates[this.direction][this.standState][this.weapon.name]["armTip"];
 	},
 	
 	getArmAngle: function() {
-		return this.coordinates[this.direction][this.standState]["armAngle"];
+		return this.coordinates[this.direction]["armAngle"];
 	},
 	
 	isCrouching: function() {

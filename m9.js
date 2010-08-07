@@ -4,7 +4,7 @@ Engine.initObject("M9", "Weapon", function() {
 		
 		constructor: function(owner) {
 			this.base(owner, owner.field, M9.getClassName(), M9.CLIP_CAPACITY, Weapon.SEMI_AUTOMATIC, M9.ROUNDS_PER_MINUTE,
-								M9.PROJECTILES_PER_SHOT, M9.TIME_TO_RELOAD);
+								M9.PROJECTILES_PER_SHOT, M9.TIME_TO_RELOAD, M9.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
 		bulletPhysics: function() {
@@ -21,7 +21,9 @@ Engine.initObject("M9", "Weapon", function() {
 		
 		BASE_SPREAD: 2,
 		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
-		STEADINESS: 100
+		STEADINESS: 100,
+		
+		PROJECTILE_VELOCITY_VARIABILITY: 0.5
 	});
 
 	return M9;

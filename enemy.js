@@ -8,7 +8,8 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
-	
+	weapon: null,
+	weapons: [],
 	shootTimer: null,
 	shootDelay: 1000,
 	
@@ -32,7 +33,7 @@ var Enemy = Human.extend({
 		this.velocity = Vector2D.create(0, 0);
 		this.direction = Human.LEFT;
 		this.getComponent("move").setCheckLag(false);
-		
+				
 		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
 	},
 	

@@ -8,7 +8,8 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Player", "Human", function() {
 
 var Player = Human.extend({
-
+	weapon: null,
+	weapons: null,
 	size: 4,
 
 	constructor: function() {
@@ -89,25 +90,16 @@ var Player = Human.extend({
 				if(!this.weapon.isShooting()) // got to block delayed keyboard auto-repeat
 					this.shoot();
 					
-				this.weapon.startShooting();
 				this.weapon.shootKeyDown();
 				break;
 			case 88: // x
 				this.throwGrenade();
 				break;
-			case 67: // c
+			case 65: // a
 				this.weapon.reload();
 				break;
-			case 82: // r
-				break;
-			case 49: // 1
-				this.switchWeapon(new M9(this));
-				break;
-			case 50: // 2
-				this.switchWeapon(new Mac10(this));
-				break;
-			case 51: // 3
-				this.switchWeapon(new SPAS(this));
+			case 83: // s
+				this.cycleWeapon();
 				break;
 		}
 		

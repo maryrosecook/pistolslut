@@ -29,7 +29,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
 			if(!host.isCrouching())
-				host.weapon.shoot();
+				host.shoot();
 		},
 		
 		notifyReloaded: function() {
@@ -50,10 +50,12 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 		
 		// tell AI that clip is empty
-		notifyClipEmpty: function() {
+		notifyClipEmpty: function(ownerOfEmptyGun) {
 			var host = this.getHostObject();
-			host.weapon.reload();
-			host.crouch();
+			if(ownerOfEmptyGun == host) {
+				host.weapon.reload();
+				host.crouch();
+			}
 		},
 		
 		turnTowardsPlayer: function() {

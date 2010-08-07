@@ -1,5 +1,6 @@
 Engine.initObject("Weapon", "Base", function() {
 	var Weapon = Base.extend({
+		name: null,
 		owner: null,
 		field: null,
 		clipCapacity: 0,
@@ -9,9 +10,9 @@ Engine.initObject("Weapon", "Base", function() {
 		projectilesPerShot: 0,
 		timeToReload: 0,
 		lastShot: 0,
-		name: null,
+		projectileVelocityVariability: 1,
 		
-		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload) {
+		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload, projectileVelocityVariability) {
 			this.owner = owner;
 			this.field = field;
 			this.name = name;
@@ -21,6 +22,7 @@ Engine.initObject("Weapon", "Base", function() {
 			this.roundsPerMinute = roundsPerMinute;
 			this.projectilesPerShot = projectilesPerShot;
 			this.timeToReload = timeToReload;
+			this.projectileVelocityVariability = projectileVelocityVariability;
 		},
 		
 		muzzleFlashSpread: 15,
@@ -32,7 +34,7 @@ Engine.initObject("Weapon", "Base", function() {
 				if(this.passSemiAutomaticCheck())
 				{
 					for(var x = 0; x < this.projectilesPerShot; x++)
-						this.field.renderContext.add(Bullet.create(this));
+						this.field.renderContext.add(Bullet.create(this, this.projectileVelocityVariability));
 
 					var gunTipInWorld = this.getGunTip();
 					var particles = [];
@@ -108,7 +110,7 @@ Engine.initObject("Weapon", "Base", function() {
 				{
 					this.fillClip();
 					this.reloading = false;
-					this.field.notifier.post(Human.RELOADED, null); // switch signs back to normal
+					this.field.notifier.post(Human.RELOADED, this); // switch signs back to normal
 				}
 		},
 

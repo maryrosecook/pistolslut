@@ -11,16 +11,16 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		field: null,
 
-		speed: 15,
+		baseSpeed: 15,
 		damage: 1,
 		
-		constructor: function(weapon) {
+		constructor: function(weapon, projectileVelocityVariability) {
 			this.base("Bullet");
 
 			// This is a hack!
 			this.field = PistolSlut;
 
-			// Track the shooter
+			// Track the shooting weapon
 			this.weapon = weapon;
 
 			// Add components to move and draw the bullet
@@ -41,9 +41,10 @@ Engine.initObject("Bullet", "Object2D", function() {
 			
 			var ownerPosition = Point2D.create(p_mover.getPosition());
 			var gunTipPosition = this.weapon.getGunTip();
+			var speed = this.baseSpeed + (Math.random() * projectileVelocityVariability * this.baseSpeed);
 			
 			c_mover.setPosition(gunTipPosition);
-			c_mover.setVelocity(this.weapon.bulletPhysics.call(this.weapon).mul(this.speed));
+			c_mover.setVelocity(this.weapon.bulletPhysics.call(this.weapon).mul(speed));
 			c_mover.setCheckLag(false);
 		},
 
