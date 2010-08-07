@@ -57,5 +57,5 @@ div.metric-button {
    background: url('$<enginePath>/css/maximize.png') no-repeat;
 }
 
-div.intro { float:right; width:300px; position: absolute; left: 550px; top:100px; padding:0px 30px 0 10px; line-height:16px;}
+div.intro { float:right; width:300px; position: absolute; text-align:justify; left: 550px; top:65px; padding:0px 30px 0 10px; line-height:16px;}
 h3 { font-size: 16px; font-weight:normal; margin:0; padding:0; display:inline; }
