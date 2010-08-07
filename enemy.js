@@ -33,7 +33,7 @@ var Enemy = Human.extend({
 		this.direction = Human.LEFT;
 		this.getComponent("move").setCheckLag(false);
 		
-		this.setSprite(this.direction + Human.STANDING + Human.STILL);
+		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
 	},
 	
 	getLogic: function() { return this.getComponent("logic"); },

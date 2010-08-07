@@ -9,10 +9,12 @@ Engine.initObject("Weapon", "Base", function() {
 		projectilesPerShot: 0,
 		timeToReload: 0,
 		lastShot: 0,
+		name: null,
 		
-		constructor: function(owner, field, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload) {
+		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload) {
 			this.owner = owner;
 			this.field = field;
+			this.name = name;
 			this.clipCapacity = clipCapacity;
 			this.shotsInClip = clipCapacity;
 			this.automatic = automatic;
@@ -60,13 +62,8 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		shootKeyHasBeenUpSinceLastShot: true,
-		shootKeyUp: function() {
-			this.shootKeyHasBeenUpSinceLastShot = true;
-		},
-		
-		shootKeyDown: function() {
-			this.shootKeyHasBeenUpSinceLastShot = false;
-		},
+		shootKeyUp: function() { this.shootKeyHasBeenUpSinceLastShot = true; },
+		shootKeyDown: function() { this.shootKeyHasBeenUpSinceLastShot = false; },
 		isShootKeyHasBeenUpSinceLastShot: function() { return this.shootKeyHasBeenUpSinceLastShot; },
 		
 		// either not player, or automatic weapon, or player has let shoot key up since last shot
@@ -74,10 +71,13 @@ Engine.initObject("Weapon", "Base", function() {
 			return !(this.owner instanceof Player) || this.automatic == Weapon.AUTOMATIC || this.isShootKeyHasBeenUpSinceLastShot();
 		},
 		
-		shooting: false,
-		startShooting: function(shooting) { this.shooting = true; },
-		stopShooting: function(shooting) { this.shooting = false; },
-		isShooting: function() { return this.shooting; },
+		shooting: "Notshooting",
+		startShooting: function(shooting) { this.shooting = Weapon.SHOOTING; },
+		stopShooting: function(shooting) {
+			this.owner.stoppedShooting();
+			this.shooting = Weapon.NOT_SHOOTING;
+		},
+		isShooting: function() { return this.shooting == Weapon.SHOOTING; },
 		
 		// keyboard repeat doesn't kick in right away
 		handleAutomatic: function() {
@@ -133,7 +133,10 @@ Engine.initObject("Weapon", "Base", function() {
 		tip: new Point2D(0, -1), // The tip of the owner at zero rotation (up)
 		
 		SEMI_AUTOMATIC: "semi_automatic",
-		AUTOMATIC: "automatic"
+		AUTOMATIC: "automatic",
+		
+		SHOOTING: "Shooting",
+		NOT_SHOOTING: "Notshooting"
 	});
 
 	return Weapon;

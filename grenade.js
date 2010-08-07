@@ -27,7 +27,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 
 			this.sprites = {};
 			this.sprites["throw"] = this.field.spriteLoader.getSprite("grenade", "throw");
-			this.setSprite("throw");
+			this.setSprite("throw", 0);
 
 			var c_mover = this.getComponent("move");
 			var dir = Math2D.getDirectionVector(Point2D.ZERO, Grenade.tip, this.shooter.getArmAngle());
@@ -127,8 +127,9 @@ Engine.initObject("Grenade", "Object2D", function() {
 			this.destroy();
 		},
 		
-	  setSprite: function(spriteKey) {
+	  setSprite: function(spriteKey, startFrame) {
 		  var sprite = this.sprites[spriteKey];
+			sprite.setStartFrame(startFrame);
 		  this.setBoundingBox(sprite.getBoundingBox());
 		  this.getComponent("draw").setSprite(sprite);
 	  },

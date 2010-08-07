@@ -29,8 +29,9 @@ var Mover = Object2D.extend({
 		this.base();
 	},
 
-  setSprite: function(spriteKey) {
+  setSprite: function(spriteKey, startFrame) {
 	  var sprite = this.sprites[spriteKey];
+		sprite.startFrame = startFrame;
 	  this.setBoundingBox(sprite.getBoundingBox());
 	  this.getComponent("draw").setSprite(sprite);
   },

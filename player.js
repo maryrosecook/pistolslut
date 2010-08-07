@@ -23,7 +23,7 @@ var Player = Human.extend({
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
 		this.direction = Human.RIGHT;
-		this.setSprite(this.direction + Human.STANDING + Human.STILL);
+		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
 		
 		this.velocity = Vector2D.create(0, 0);
 		this.getComponent("move").setCheckLag(false);
@@ -85,8 +85,11 @@ var Player = Human.extend({
 				this.crouch();
 				break;
 			case 90: // z
+				// deal with an initial shot on semi-automatic
+				if(!this.weapon.isShooting()) // got to block delayed keyboard auto-repeat
+					this.shoot();
+					
 				this.weapon.startShooting();
-				this.weapon.shoot();
 				this.weapon.shootKeyDown();
 				break;
 			case 88: // x
@@ -98,13 +101,13 @@ var Player = Human.extend({
 			case 82: // r
 				break;
 			case 49: // 1
-				this.weapon = new Pistol(this);
+				this.switchWeapon(new M9(this));
 				break;
 			case 50: // 2
-				this.weapon = new Uzi(this);
+				this.switchWeapon(new Mac10(this));
 				break;
 			case 51: // 3
-				this.weapon = new Shotgun(this);
+				this.switchWeapon(new SPAS(this));
 				break;
 		}
 		

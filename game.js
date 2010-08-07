@@ -24,9 +24,9 @@ Game.load("/human.js");
 Game.load("/cheaprect.js");
 Game.load("/ai.js");
 Game.load("/weapon.js");
-Game.load("/pistol.js");
-Game.load("/uzi.js");
-Game.load("/shotgun.js");
+Game.load("/m9.js");
+Game.load("/mac10.js");
+Game.load("/spas.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 

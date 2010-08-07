@@ -15,28 +15,28 @@ var Human = Mover.extend({
 	standState: null,
 	
 	coordinates: {
-		"left": {
-		 	"standing": {
+		"Left": {
+		 	"Standing": {
 				"angle": 270,
 				"gunTip": new Point2D(0, 9),
 				"armAngle": 315,
 				"armTip": new Point2D(0, 2),
 			},
-			"crouching": {
+			"Crouching": {
 				"angle": 270,
 				"gunTip": new Point2D(0, 9),
 				"armAngle": 315,
 				"armTip": new Point2D(0, 2),
 			}
 		},
-		"right": {
-			"standing": {
+		"Right": {
+			"Standing": {
 				"angle": 90,
 				"gunTip": new Point2D(44, 9),
 				"armAngle": 45,
 				"armTip": new Point2D(44, 2),
 			},
-			"crouching": {
+			"Crouching": {
 				"angle": 90,
 				"gunTip": new Point2D(44, 9),
 				"armAngle": 45,
@@ -51,7 +51,7 @@ var Human = Mover.extend({
 		this.stateOfBeing = Human.ALIVE;
 		this.standState = Human.STANDING;
 		this.loadSprites();
-		this.weapon = new Uzi(this);
+		this.weapon = new M9(this);
 	},
 
 	update: function(renderContext, time) {
@@ -72,9 +72,9 @@ var Human = Mover.extend({
 		if(this.isAlive() && !this.isCrouching())
 		{
 			if(this.velocity.x != 0)
-				this.setSprite(this.direction + Human.STANDING + Human.RUNNING);
+				this.setSprite(this.direction + Human.STANDING + Human.RUNNING + this.isShootingSprite() + this.weapon.name, this.getSprite().getFrameNumber(time));
 			else
-				this.setSprite(this.direction + Human.STANDING + Human.STILL);
+				this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
 		}
 		
 		this.handleFriction();
@@ -89,7 +89,7 @@ var Human = Mover.extend({
 			var currentSprite = this.getSprite();
 			if(currentSprite.animationPlayed(time)) // at end of anim
 			{
-				this.setSprite(this.direction + Human.DEAD);
+				this.setSprite(this.direction + Human.DEAD + this.weapon.name, 0);
 				this.stateOfBeing = Human.DEAD
 			}
 		}
@@ -97,7 +97,7 @@ var Human = Mover.extend({
 	
 	die: function(bullet) {
 		this.stateOfBeing = Human.DYING;
-		this.setSprite(this.direction + Human.DYING);
+		this.setSprite(this.direction + Human.DYING + this.weapon.name, 0);
 		
 		this.throwBackwards(bullet);
 		
@@ -110,20 +110,20 @@ var Human = Mover.extend({
 		this.weapon.shoot();
 	},
 	
-	throwBackwardsUp: -2,
+	throwBackwardsDown: 2,
 	throwBackwardsTempering: 5,
 	throwBackwards: function(bullet) {
 		this.getVelocity().setX(bullet.getVelocity().x / this.throwBackwardsTempering);
-		//this.getVelocity().setY(this.throwBackwardsUp);
+		this.getVelocity().setY(this.throwBackwardsDown);
 	},
 	
 	crouch: function() {
 		if(!this.isCrouching())
 		{
 			this.standState = Human.CROUCHING;
-			this.setSprite(this.direction + Human.CROUCHING + Human.STILL);
 			this.getPosition().setY(this.getPosition().y + this.getStandCrouchHeightDifference());
 			this.stopWalk();
+			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name, 0);
 		}
 	},
 	
@@ -131,10 +131,27 @@ var Human = Mover.extend({
 		if(this.isCrouching())
 		{
 			this.standState = Human.STANDING;
-			this.setSprite(this.direction + Human.STANDING + Human.STILL);
 			this.getPosition().setY(this.getPosition().y - this.getStandCrouchHeightDifference());
+			this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
 		}
 	},
+	
+	// delay on when human lowers their gun
+	delayBeforeLoweringGun: 1000,
+	lastStoppedShooting: null,
+	isShootingSprite: function() {
+		if(this.weapon.shooting == Weapon.SHOOTING)
+			return Weapon.SHOOTING;
+		else
+		{
+			if(new Date().getTime() - this.lastStoppedShooting > this.delayBeforeLoweringGun)
+				return Weapon.NOT_SHOOTING;
+			else
+				return Weapon.SHOOTING;
+		}
+	},
+	
+	stoppedShooting: function() { this.lastStoppedShooting = new Date().getTime(); },
 	
 	throwDelay: 1000,
 	lastThrow: 0,
@@ -145,6 +162,12 @@ var Human = Mover.extend({
 			var grenade = Grenade.create(this);
 			this.field.renderContext.add(grenade);
 		}
+	},
+	
+	switchWeapon: function(newWeapon) {
+		this.weapon = newWeapon;
+		if(this.isCrouching()) // not moving so sprite won't get updated by normal update mechani
+			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name, 0);
 	},
 	
 	jumping: false,
@@ -275,16 +298,8 @@ var Human = Mover.extend({
 	},
 	
 	loadSprites: function() {
-		this.addSprite("leftstandingstill", this.field.spriteLoader.getSprite("girl", "leftstandingstill"));
-		this.addSprite("leftstandingrunning", this.field.spriteLoader.getSprite("girl", "leftstandingrunning"));
-		this.addSprite("leftdying", this.field.spriteLoader.getSprite("girl", "leftdying"));
-		this.addSprite("leftdead", this.field.spriteLoader.getSprite("girl", "leftdead"));
-		this.addSprite("leftcrouchingstill", this.field.spriteLoader.getSprite("girl", "leftcrouchingstill"));
-		this.addSprite("rightstandingstill", this.field.spriteLoader.getSprite("girl", "rightstandingstill"));
-		this.addSprite("rightstandingrunning", this.field.spriteLoader.getSprite("girl", "rightstandingrunning"));
-		this.addSprite("rightdying", this.field.spriteLoader.getSprite("girl", "rightdying"));
-		this.addSprite("rightdead", this.field.spriteLoader.getSprite("girl", "rightdead"));
-		this.addSprite("rightcrouchingstill", this.field.spriteLoader.getSprite("girl", "rightcrouchingstill"));
+		for(var spriteIdentifier in this.field.spriteLoader.get("girl").info.sprites)
+			this.addSprite(spriteIdentifier, this.field.spriteLoader.getSprite("girl", spriteIdentifier));
 	},
 	
 	isAlive: function() {
@@ -324,23 +339,23 @@ var Human = Mover.extend({
 		},
 		
 		// states of being
-		ALIVE: "alive",
-		DYING: "dying",
-		DEAD: "dead",
+		ALIVE: "Alive",
+		DYING: "Dying",
+		DEAD: "Dead",
 		
 		// directions
-		LEFT: "left",
-		RIGHT: "right",
+		LEFT: "Left",
+		RIGHT: "Right",
 		
 		// standing state
-		STANDING: "standing",
-		CROUCHING: "crouching",
+		STANDING: "Standing",
+		CROUCHING: "Crouching",
 		
-		RUNNING: "running",
-		STILL: "still",
+		RUNNING: "Running",
+		STILL: "Still",
 		
-		CLIP_EMPTY: "clip_empty",
-		RELOADED: "reloaded"
+		CLIP_EMPTY: "Clipempty",
+		RELOADED: "Reloaded"
 	});
 
 	return Human;
