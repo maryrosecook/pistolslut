@@ -15,7 +15,7 @@ Engine.initObject("Mac10", "Weapon", function() {
 		getClassName: function() { return "Mac10"; },
 		
 		CLIP_CAPACITY: 30,
-		ROUNDS_PER_MINUTE: 500,
+		ROUNDS_PER_MINUTE: 700,
 		PROJECTILES_PER_SHOT: 1,
 		TIME_TO_RELOAD: 2000,
 		

@@ -42,6 +42,9 @@ var Enemy = Human.extend({
 		this.base(bullet);
 		this.shootTimer.destroy();
 		this.remove(this.getComponent("logic"));
+		this.field.notifier.unsubscribe(Bullet.INCOMING_EVENT, this.getLogic());
+		this.field.notifier.unsubscribe(Human.CLIP_EMPTY, this.getLogic());
+		this.field.notifier.unsubscribe(Human.RELOADED, this.getLogic());
 	},
 	
 	release: function() {
