@@ -4,11 +4,9 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Bullet", "Object2D", function() {
-
 	var Bullet = Object2D.extend({
-
 		shooter: null,
-
+		weapon: null,
 		field: null,
 
 		baseSpeed: 15,
@@ -22,6 +20,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 			// Track the shooting weapon
 			this.weapon = weapon;
+			this.shooter = weapon.owner;
 
 			// Add components to move and draw the bullet
 			this.add(Mover2DComponent.create("move"));

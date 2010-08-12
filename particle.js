@@ -43,35 +43,16 @@ Engine.initObject("BloodParticle", "Particle", function() {
 	return BloodParticle;
 });
 
-Engine.initObject("ExplosionParticle", "BurnoutParticle", function() {
-
-	var ExplosionParticle = BurnoutParticle.extend(/** @scope ExplosionParticle.prototype */{
-
-		constructor: function(pos, spread, ttl) {
-			this.base(pos, 0, Vector2D.create(0,0), 360, ttl)
-		},
-	}, {
-		
-		getClassName: function() {
-			return "ExplosionParticle";
-		},
-	});
-
-	return ExplosionParticle;
-});
-
 Engine.initObject("RicochetParticle", "BurnoutParticle", function() {
 
 	var RicochetParticle = BurnoutParticle.extend(/** @scope RicochetParticle.prototype */{
 
 		constructor: function(pos, rot, spread, ttl) {
-			this.base(pos, rot, Vector2D.create(0,0), spread, ttl)
+			this.base(pos, rot, spread, ttl)
 		},
-	}, {
 		
-		getClassName: function() {
-			return "RicochetParticle";
-		},
+	}, {
+		getClassName: function() { return "RicochetParticle"; },
 	});
 
 	return RicochetParticle;
@@ -84,14 +65,14 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 		pos: null,
 		vec: null,
 
-		constructor: function(pos, rot, sourceVec, spread, ttl) {
+		constructor: function(pos, rot, spread, ttl) {
 			this.base(ttl || 2000);
 			this.pos = new Point2D(pos);
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BurnoutParticle.ref, a);
 			var vel = 1 + (Math.random() * 2);
-			this.vec.mul(vel).add(sourceVec);
+			this.vec.mul(vel);
 		},
 
 		release: function() {

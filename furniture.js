@@ -61,25 +61,31 @@ Engine.initObject("Furniture", "Object2D", function() {
 			renderContext.popTransform();
 		},
 		
-		shot: function(bullet) {
-			this.particleRicochet(bullet);
+		shot: function(projectile) {
+			this.particleRicochet(projectile);
 		},	
 		
 		ricochetFlashSpread: 15,
 		ricochetParticleCount: 10,
 		ricochetParticleTTL: 500,
-		particleRicochet: function(bullet) {
-			var positionData = this.field.collider.pointOfImpact(bullet, this);
+		particleRicochet: function(projectile) {
+			var positionData = this.field.collider.pointOfImpact(projectile, this);
 			var position = null;
 			if(positionData != null)
 				var position = Point2D.create(positionData[0].x, positionData[0].y)
 
-			var angle = this.field.collider.angleOfImpact(bullet);
+			var angle = this.field.collider.angleOfImpact(projectile);
 			if(position && angle)
 			{
 				var particles = [];
+				
+				var sideHit = positionData[1];
+				var reflectedAngle = this.field.collider.reflect(angle, sideHit);
 				for(var x = 0; x < this.ricochetParticleCount; x++)
-					particles[x] = RicochetParticle.create(position, angle, this.ricochetFlashSpread, this.ricochetParticleTTL);
+				{
+					particles[x] = RicochetParticle.create(position, reflectedAngle, this.ricochetFlashSpread, this.ricochetParticleTTL);
+				}
+					
 				this.field.pEngine.addParticles(particles);
 			}
 		},

@@ -94,8 +94,23 @@ var Collider = Base.extend({
 	},
 	
 	angleOfImpact: function(movingObj) {
-		var vector = movingObj.getVelocity();
-		return Math2D.radToDeg(Math.atan2(vector.x, vector.y) + Math.PI);
+		var ret = 0;
+		var vector = movingObj.getVelocity().normalize();
+		var x = vector.x;
+		var y = -vector.y;
+
+		var deg = Math2D.radToDeg(Math.atan2(y, x) + Math.PI);
+		console.log(deg)
+    if(x <= 0 && y <= 0)
+			return 180 + deg;
+		else if(x <= 0 && y >= 0)
+			return 270 + deg;
+		else if(x >= 0 && y >= 0)
+			return deg;
+		else if(x >= 0 && y <= 0 )
+			return 90 + deg;
+			
+		return;
 	},
 
 	// allows a cheaper test because no Rectangle2Ds are created
@@ -119,6 +134,38 @@ var Collider = Base.extend({
 	bounce: function(vector, bounciness, sideHit) {
 		if(sideHit == "top" || sideHit == "bottom") return Vector2D.create(vector.x * bounciness, -vector.y * bounciness);
 		if(sideHit == "left" || sideHit == "right") return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
+	},
+	
+	// This is so horrible.  I need a maths person.
+	reflect: function(impactAngle, sideHit) {
+		if(sideHit == "top")
+		{
+			if(impactAngle < 90)
+				return 270 + (90 - impactAngle);
+			else
+				return 90 - (impactAngle - 270);
+		}
+		else if(sideHit == "right")
+		{
+			if(impactAngle < 90)
+				return 180 - (90 - impactAngle);
+			else
+				return (180 - impactAngle);
+		}
+		else if(sideHit == "bottom")
+		{
+			if(impactAngle < 180)
+				return 270 - (impactAngle - 90);
+			else
+				return 90 + (270 - impactAngle);
+		}
+		else if(sideHit == "left")
+		{
+			if(impactAngle < 90)
+				return 90 + (90 - impactAngle)
+			else
+				return impactAngle;
+		}
 	},
 	
 	getRect: function(obj) {

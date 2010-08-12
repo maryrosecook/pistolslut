@@ -14,7 +14,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			var ai = this;
 			host.shootTimer = Interval.create("shoot", host.shootDelay,
 				function() {
-					ai.notifyTimeToShoot();
+					//ai.notifyTimeToShoot();
 			});
 	  },
 
@@ -37,16 +37,14 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			// just let the execute method deal with standing up if necessary on the next go round
 		},
 		
-		notifyIncoming: function(bullet) {
+		notifyIncoming: function(ordinance) {
 			var host = this.getHostObject();
-			if(bullet.weapon.owner != host)
-			{
-				if(!this.objectSafeDistanceAway(bullet))
+			if(ordinance.shooter != host)
+				if(!this.objectSafeDistanceAway(ordinance))
 				{
 					this.lastNearDeath = new Date().getTime();
 					host.crouch();
 				}
-			}
 		},
 		
 		// tell AI that clip is empty

@@ -27,6 +27,7 @@ Game.load("/weapon.js");
 Game.load("/m9.js");
 Game.load("/mac10.js");
 Game.load("/spas.js");
+Game.load("/shrapnel.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
