@@ -14,7 +14,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			var ai = this;
 			host.shootTimer = Interval.create("shoot", host.shootDelay,
 				function() {
-					//ai.notifyTimeToShoot();
+					ai.notifyTimeToShoot();
 			});
 	  },
 
