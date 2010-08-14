@@ -285,18 +285,22 @@ var Human = Mover.extend({
 	bloodSpread: 15,
 	bloodParticleCount: 10,
 	bloodParticleTTL: 300,
-	bloodSpurt: function(bullet) {
-		var positionData = this.field.collider.pointOfImpact(bullet, this);
+	bloodSpurt: function(projectile) {
+		
+		var positionData = this.field.collider.pointOfImpact(projectile, this);
 		var position = null;
 		if(positionData != null)
 			var position = Point2D.create(positionData[0].x, positionData[0].y)
-			
-		var angle = this.field.collider.angleOfImpact(bullet);
-		if(position && angle)
+
+		if(position)
 		{
 			var particles = [];
+			
+			var sideHit = positionData[1];
+			var reflectedAngle = this.field.collider.reflect(projectile, sideHit);
 			for(var x = 0; x < this.bloodParticleCount; x++)
-				particles[x] = BloodParticle.create(position, angle, this.bloodSpread, this.bloodParticleTTL);
+				particles[x] = BloodParticle.create(position, reflectedAngle, this.bloodSpread, this.bloodParticleTTL);
+				
 			this.field.pEngine.addParticles(particles);
 		}
 	},

@@ -92,26 +92,6 @@ var Collider = Base.extend({
 		
 		return null; // no intersection
 	},
-	
-	angleOfImpact: function(movingObj) {
-		var ret = 0;
-		var vector = movingObj.getVelocity().normalize();
-		var x = vector.x;
-		var y = -vector.y;
-
-		var deg = Math2D.radToDeg(Math.atan2(y, x) + Math.PI);
-		console.log(deg)
-    if(x <= 0 && y <= 0)
-			return 180 + deg;
-		else if(x <= 0 && y >= 0)
-			return 270 + deg;
-		else if(x >= 0 && y >= 0)
-			return deg;
-		else if(x >= 0 && y <= 0 )
-			return 90 + deg;
-			
-		return;
-	},
 
 	// allows a cheaper test because no Rectangle2Ds are created
 	isIntersectingObjects: function(objA, objB) {
@@ -136,42 +116,39 @@ var Collider = Base.extend({
 		if(sideHit == "left" || sideHit == "right") return Vector2D.create(-vector.x * bounciness, vector.y * bounciness);
 	},
 	
-	// This is so horrible.  I need a maths person.
-	reflect: function(impactAngle, sideHit) {
-		if(sideHit == "top")
-		{
-			if(impactAngle < 90)
-				return 270 + (90 - impactAngle);
-			else
-				return 90 - (impactAngle - 270);
-		}
-		else if(sideHit == "right")
-		{
-			if(impactAngle < 90)
-				return 180 - (90 - impactAngle);
-			else
-				return (180 - impactAngle);
-		}
-		else if(sideHit == "bottom")
-		{
-			if(impactAngle < 180)
-				return 270 - (impactAngle - 90);
-			else
-				return 90 + (270 - impactAngle);
-		}
-		else if(sideHit == "left")
-		{
-			if(impactAngle < 90)
-				return 90 + (90 - impactAngle)
-			else
-				return impactAngle;
-		}
-	},
-	
 	getRect: function(obj) {
 		var pos = obj.getPosition();
 		var bBoxDims = obj.getBoundingBox().dims;
 		return Rectangle2D.create(pos.x, pos.y, bBoxDims.x, bBoxDims.y);
+	},
+	
+	reflect: function(movingObj, sideHit) {
+		var vector = movingObj.getVelocity().normalize();
+		var surfaceNormal = this.getSurfaceNormal(sideHit);
+		var d = vector.angleBetween(surfaceNormal);
+		return this.adjustForSide(d, sideHit);
+	},
+	
+	getSurfaceNormal: function(side) {
+		if(side == "left")
+			return Vector2D.create(-1, 0);
+		else if(side == "right")
+			return Vector2D.create(1, 0);
+		else if(side == "top")
+			return Vector2D.create(0, -1);
+		else if(side == "bottom")
+			return Vector2D.create(0, 1);
+	},
+	
+	adjustForSide: function(angleBetween, sideHit) {
+		if(sideHit == "left")
+			return angleBetween + 90;
+		else if(sideHit == "right")
+			return angleBetween - 90;
+		else if(sideHit == "top")
+			return angleBetween + 180;
+		else if(sideHit == "bottom")
+			return angleBetween;
 	}
 	
 	}, {

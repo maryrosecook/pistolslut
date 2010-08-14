@@ -74,13 +74,12 @@ Engine.initObject("Furniture", "Object2D", function() {
 			if(positionData != null)
 				var position = Point2D.create(positionData[0].x, positionData[0].y)
 
-			var angle = this.field.collider.angleOfImpact(projectile);
-			if(position && angle)
+			if(position)
 			{
 				var particles = [];
 				
 				var sideHit = positionData[1];
-				var reflectedAngle = this.field.collider.reflect(angle, sideHit);
+				var reflectedAngle = this.field.collider.reflect(projectile, sideHit);
 				for(var x = 0; x < this.ricochetParticleCount; x++)
 				{
 					particles[x] = RicochetParticle.create(position, reflectedAngle, this.ricochetFlashSpread, this.ricochetParticleTTL);

@@ -103,9 +103,9 @@ Engine.initObject("Grenade", "Object2D", function() {
 			
 			return ColliderComponent.CONTINUE;
 		},
-		
+
+		// bounce the grenade		
 		bounciness: 0.7,
-		// bounce the grenade
 		bounce: function(objHit) {
 			var pointOfImpactData = this.field.collider.pointOfImpact(this, objHit);
 			if(pointOfImpactData != null)
@@ -116,7 +116,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 		},
 	
 		shrapnelCount: 30,
-		shrapnelTTL: 400,
+		shrapnelTTL: 500,
 		explode: function() {
 			var particles = [];
 			for(var x = 0; x < this.shrapnelCount; x++)
