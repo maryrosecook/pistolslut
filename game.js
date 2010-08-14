@@ -102,42 +102,90 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.waitForResources();
 		},
 	
-		play: function() {
-			var pWidth = this.fieldWidth;
-			var pHeight = this.fieldHeight;
+		onKeyPress: function(event) {
+			if(PistolSlut.isStartScreen == true)
+    		PistolSlut.play();
+		},
 		
-	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
-
-			// We'll need something to detect collisions
-			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
-			this.collider = new Collider(this);
+		// an initial pause screen
+		startScreen: function() {
+    	PistolSlut.isStartScreen = true;
 			
-			this.notifier = NotifierComponent.create("notifier");
+			this.loadLevelBasics(); // just enough for a cogent start screen
+			
+      EventEngine.setHandler(document, "keypress", PistolSlut.onKeyPress);
 
+      PistolSlut.start = TextRenderer.create(VectorText.create(), "Press any key to start", 1);
+      PistolSlut.start.setPosition(Point2D.create(125, 200));
+      PistolSlut.start.setColor("#fff");
+      PistolSlut.renderContext.add(PistolSlut.start);
+
+      var flashText = function() {
+				if (!PistolSlut.showStart)
+				{
+				   PistolSlut.start.setDrawMode(TextRenderer.DRAW_TEXT);
+				   PistolSlut.showStart = true;
+				   PistolSlut.intv.restart();
+				}
+				else
+				{
+				   PistolSlut.start.setDrawMode(TextRenderer.NO_DRAW);
+				   PistolSlut.showStart = false;
+				   PistolSlut.intv.restart();
+				}
+      };
+      PistolSlut.intv = Timeout.create("startkey", 1000, flashText);
+		},
+	
+		loadLevelBasics: function() {
+			// load level
+	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);
 			this.renderContext.setBackgroundColor("#000000");
 			Engine.getDefaultContext().add(this.renderContext);
-		
-			this.playerObj = Player.create();
-			this.renderContext.add(this.playerObj);
-			this.playerObj.setup(pWidth, pHeight);
-		
-			// load rest of level data
-			this.level.addFurniture(this.renderContext);
-			this.level.addEnemies(this.renderContext);
-			this.level.loadSigns();
 			
-			// Start up the particle engine
-			this.pEngine = ParticleEngine.create();
-			this.pEngine.setMaximum(1000);
-			this.renderContext.add(this.pEngine);
-				
+			this.loadComponents();
+			
+			// load rest of level
+			this.level.addFurniture(this.renderContext);
+			this.level.loadSigns();
+			this.level.addEnemies(this.renderContext);
+			
 			// snow machine
 			PistolSlut.snowTimer = Interval.create("snow", this.snowFallInterval,
 				function() {
 					PistolSlut.pEngine.addParticle(SnowParticle.create(PistolSlut.level.getWidth()));
 			});
+		},
+		
+		loadComponents: function() {
+			// We'll need something to detect collisions
+			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
+			this.collider = new Collider(this);
+			
+			// inter object event notifier
+			this.notifier = NotifierComponent.create("notifier");
+			
+			// Start up the particle engine
+			this.pEngine = ParticleEngine.create();
+			this.pEngine.setMaximum(1000);
+			this.renderContext.add(this.pEngine);
+		},
+	
+		destroyStartScreen: function() {
+			this.isStartScreen = false;
+			this.intv.destroy();
+			this.renderContext.remove(PistolSlut.start);
+			this.start = null;
+		},
+	
+		play: function() {
+			this.destroyStartScreen();
+			
+			this.playerObj = Player.create();
+			this.renderContext.add(this.playerObj);
+			this.playerObj.setup(this.fieldWidth, this.fieldHeight);
 		},
 	
 		applyGravity: function(obj) {
@@ -149,7 +197,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
 			{
 				PistolSlut.loadTimeout.destroy();
-				PistolSlut.play();
+				PistolSlut.startScreen();
 				return;
 		  }
 		  else

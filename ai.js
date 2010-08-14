@@ -48,23 +48,26 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 		
 		// tell AI that clip is empty
-		notifyClipEmpty: function(ownerOfEmptyGun) {
+		notifyWeaponEmpty: function(emptyGun) {
 			var host = this.getHostObject();
-			if(ownerOfEmptyGun == host) {
+			if(emptyGun.owner == host) {
 				host.weapon.reload();
 				host.crouch();
 			}
 		},
 		
 		turnTowardsPlayer: function() {
-			var host = this.getHostObject();
+			if(this.playerObj) // player might not have been created, yet
+			{
+				var host = this.getHostObject();
 			
-			var dirToTurn = Human.LEFT;
-			if(host.getPosition().x < this.playerObj.getPosition().x) // host on left
-				dirToTurn = Human.RIGHT;
+				var dirToTurn = Human.LEFT;
+				if(host.getPosition().x < this.playerObj.getPosition().x) // host on left
+					dirToTurn = Human.RIGHT;
 				
-			if(host.direction != dirToTurn)
-				host.turn(dirToTurn);
+				if(host.direction != dirToTurn)
+					host.turn(dirToTurn);
+			}
 		},
 		
 		lastNearDeath: 0,
@@ -72,8 +75,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		noUnsafeIncomingForAWhile: function() {
 			return new Date().getTime() - this.lastNearDeath > this.safeIntervalAfterUnsafeIncoming;
 		},
-		
-
 		
 		safeBulletDistance: 20,
 		objectSafeDistanceAway: function(obj) {

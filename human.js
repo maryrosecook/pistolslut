@@ -213,10 +213,13 @@ var Human = Mover.extend({
 				this.setWeapon(this.weapons[i + 1]);
 				break;
 			}
-				
-		if(this.isCrouching()) // not moving so sprite won't get updated by normal update mechani
+		
+		this.field.notifier.post(Weapon.SWITCH, this.weapon);
+		
+		if(this.isCrouching()) // not moving so sprite won't get updated by normal update mechanism
 			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name, 0);
 	},
+	
 	setWeapon: function(weapon) {
 		this.weapon = weapon;
 	},

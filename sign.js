@@ -10,6 +10,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		field: null,
 		defaultText: null,
 		currentText: null,
+		hijacked: false,
 		textRenderers: null,
 		scrollVec: Vector2D.create(-2.5, 0),
 		signPosition: null,
@@ -29,16 +30,34 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.setupTextRenderers(text, this.defaultSignColor);
 		},
 		
+		notifyReloaded: function(weapon) {
+			if(weapon.owner == this.field.playerObj)
+				this.revert();
+		},
+		
+		notifyWeaponEmpty: function(weapon) {
+			if(weapon.owner == this.field.playerObj)
+				this.hijack(Sign.RELOAD_TEXT);
+		},
+		
+		notifyWeaponSwitch: function(weapon) {
+			if(weapon.owner == this.field.playerObj)
+			{
+				if(weapon.isClipEmpty() == true && this.hijacked == false) // switched to empty weapon and not already telling to reload
+					this.hijack(Sign.RELOAD_TEXT);
+				else if(weapon.isClipEmpty() == false && this.hijacked == true) // switch to non-empty weapon and hijacked so untell to reload
+					this.revert();
+			}
+		},
+		
 		hijack: function(newText) {
 			this.changeText(newText, "#F7B800");
+			this.hijacked = true;
 		},
 		
-		tellToReload: function() {
-			this.changeText("Reload.  Love  from  SWiG.", "#F7B800");
-		},
-		
-		revert: function(blah) {
+		revert: function() {
 			this.changeText(this.defaultText, this.defaultSignColor);
+			this.hijacked = false;
 		},
 		
 		// switches sign to display passed text
@@ -127,6 +146,7 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.signPosition = null;
 			this.signWidth = null;
 			this.defaultSignColor = null;
+			this.hijacked = false;
 		},
 
 		update: function(renderContext, time) {
@@ -163,6 +183,8 @@ Engine.initObject("Sign", "Object2D", function() {
 		},
 		
 		HIJACK: "hijack",
+		
+		RELOAD_TEXT: "Reload.  Love  from  SWiG."
 	});
 
 	return Sign;

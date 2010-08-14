@@ -25,7 +25,7 @@ var Enemy = Human.extend({
 		
 		// subscribe to events the enemy should care about
 		this.field.notifier.subscribe(Bullet.INCOMING_EVENT, this.getLogic(), this.getLogic().notifyIncoming);
-		this.field.notifier.subscribe(Human.CLIP_EMPTY, this.getLogic(), this.getLogic().notifyClipEmpty);
+		this.field.notifier.subscribe(Human.CLIP_EMPTY, this.getLogic(), this.getLogic().notifyWeaponEmpty);
 		this.field.notifier.subscribe(Human.RELOADED, this.getLogic(), this.getLogic().notifyReloaded);
 		//this.field.notifier.subscribe("playerMove", this.getLogic(), this.getLogic().playerMove);
 		

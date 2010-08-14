@@ -46,7 +46,7 @@ Engine.initObject("Weapon", "Base", function() {
 				}
 			}
 			else
-				this.field.notifier.post(Human.CLIP_EMPTY, this.owner);
+				this.field.notifier.post(Human.CLIP_EMPTY, this);
 		},
 		
 		// the faster the shooter shoots, the wilder their shots go
@@ -110,7 +110,7 @@ Engine.initObject("Weapon", "Base", function() {
 				{
 					this.fillClip();
 					this.reloading = false;
-					this.field.notifier.post(Human.RELOADED, this); // switch signs back to normal
+					this.field.notifier.post(Human.RELOADED, this);
 				}
 		},
 
@@ -138,7 +138,9 @@ Engine.initObject("Weapon", "Base", function() {
 		AUTOMATIC: "automatic",
 		
 		SHOOTING: "Shooting",
-		NOT_SHOOTING: "Notshooting"
+		NOT_SHOOTING: "Notshooting",
+		
+		SWITCH: "switch" // a weapon switch event
 	});
 
 	return Weapon;
