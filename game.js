@@ -28,6 +28,7 @@ Game.load("/m9.js");
 Game.load("/mac10.js");
 Game.load("/spas.js");
 Game.load("/shrapnel.js");
+Game.load("/fire.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -148,9 +149,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.loadComponents();
 			
 			// load rest of level
-			this.level.addFurniture(this.renderContext);
-			this.level.loadSigns();
-			this.level.addEnemies(this.renderContext);
+			this.level.addObjects(this.renderContext);
 			
 			// snow machine
 			PistolSlut.snowTimer = Interval.create("snow", this.snowFallInterval,

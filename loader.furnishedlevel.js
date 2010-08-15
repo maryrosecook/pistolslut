@@ -91,6 +91,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		furniture: null, // actual furniture objs
 		furnitureData: null,
 		enemies: null,
+		fires: null,
 		enemiesData: null,
 		minScroll: 0,
 		maxScroll: null,
@@ -102,11 +103,19 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.signs = [];
 			this.furniture = [];
 			this.enemies = [];
+			this.fires = [];
 			this.levelResource = levelResource;
 			this.furnitureData = this.levelResource.info.objects.furniture;
 			this.enemiesData = this.levelResource.info.objects.enemies;
 			this.maxScroll = this.getWidth() - fieldWidth;
 			return level;
+		},
+
+		addObjects: function(renderContext) {
+			this.addFurniture(renderContext);
+			this.addEnemies(renderContext);
+			this.addSigns(renderContext);
+			this.addFires(renderContext);
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
@@ -120,7 +129,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				renderContext.add(furniturePiece);
 			}
 		},
-		
+				
 		// creates Enemy render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext
 		addEnemies: function(renderContext) {
@@ -136,30 +145,39 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		// load signs from the current level
 		signLetterSpacing: 7,
 		signColor: "#ff0000",
-		loadSigns: function() {
+		addSigns: function() {
 			var signs = this.levelResource.info.objects.signs;
 			for(var i in signs)
 			{
 				var signData = signs[i];
-				var sign = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);	
-				this.signs[i] = sign;
-				this.field.renderContext.add(sign);
-				this.field.notifier.subscribe(Human.CLIP_EMPTY, sign, sign.notifyWeaponEmpty);
-				this.field.notifier.subscribe(Human.RELOADED, sign, sign.notifyReloaded);
-				this.field.notifier.subscribe(Weapon.SWITCH, sign, sign.notifyWeaponSwitch);
+				this.signs[i] = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);
+				this.field.renderContext.add(this.signs[i]);
+				this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
+				this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
+				this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
+			}
+		},
+		
+		addFires: function() {
+			var fires = this.levelResource.info.objects.fires;
+			for(var i in fires)
+			{
+				var fireData = fires[i];
+				this.fires[i] = new Fire(fireData.name, this.field, fireData.x, fireData.y, fireData.width);	
 			}
 		},
 
 		release: function() {
 			this.base();
 			this.furnitureData = null;
+			this.enemies = null;
+			this.signs = null;
+			this.fires = null;
 		},
 
-	}, /** @scope Level.prototype */{
+	},{
 
-		getClassName: function() {
-			return "FurnishedLevel";
-		}
+		getClassName: function() { return "FurnishedLevel"; }
 	});
 
 	return FurnishedLevel;

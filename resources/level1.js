@@ -59,6 +59,10 @@
 					bitmapImage: "enemy.gif", bitmapWidth: 506, bitmapHeight: 230
 				}
 			}
+		],
+		
+		fires: [
+			{ name: "fire1", x: 374, y: 520, width: 14 }
 		]
 		// "It is illegal to buy or possess a gas mask", "Your trade union is your voice", "Be a good citizen: vote"]
 	}
