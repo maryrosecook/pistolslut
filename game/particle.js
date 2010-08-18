@@ -190,9 +190,7 @@ Engine.initObject("FireParticle", "Particle", function() {
 	        var height = 1 - ((randPoint - ((1 - randPoint) * randPoint)) * (1 / (1 - midPoint)));
 	    } 
 			else
-			{
 	    	var height = (randPoint - ((1 - randPoint) * randPoint)) * (1 / midPoint);
-			}
 	
 			return ((height*height) / (width*width)) * maxTTL;
 		},

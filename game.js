@@ -10,25 +10,25 @@ Engine.include("/resourceloaders/loader.level.js");
 Engine.include("/components/component.notifier.js");
 
 // Load game objects
-Game.load("/mover.js");
-Game.load("/player.js");
-Game.load("/bullet.js");
-Game.load("/grenade.js");
-Game.load("/particle.js");
-Game.load("/sign.js");
-Game.load("/loader.furnishedlevel.js");
-Game.load("/furniture.js");
-Game.load("/collider.js");
-Game.load("/enemy.js");
-Game.load("/human.js");
-Game.load("/cheaprect.js");
-Game.load("/ai.js");
-Game.load("/weapon.js");
-Game.load("/m9.js");
-Game.load("/mac10.js");
-Game.load("/spas.js");
-Game.load("/shrapnel.js");
-Game.load("/fire.js");
+Game.load("/game/mover.js");
+Game.load("/game/player.js");
+Game.load("/game/bullet.js");
+Game.load("/game/grenade.js");
+Game.load("/game/particle.js");
+Game.load("/game/sign.js");
+Game.load("/game/loader.furnishedlevel.js");
+Game.load("/game/furniture.js");
+Game.load("/game/collider.js");
+Game.load("/game/enemy.js");
+Game.load("/game/human.js");
+Game.load("/game/cheaprect.js");
+Game.load("/game/ai.js");
+Game.load("/game/weapon.js");
+Game.load("/game/m9.js");
+Game.load("/game/mac10.js");
+Game.load("/game/spas.js");
+Game.load("/game/shrapnel.js");
+Game.load("/game/fire.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
