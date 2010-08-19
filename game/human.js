@@ -285,7 +285,7 @@ var Human = Mover.extend({
 		}
 	},
 	
-	bloodSpread: 15,
+	bloodSpread: 50,
 	bloodParticleCount: 10,
 	bloodParticleTTL: 300,
 	bloodSpurt: function(projectile) {

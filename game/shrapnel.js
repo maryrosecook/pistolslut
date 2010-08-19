@@ -30,7 +30,7 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 			var drawer = this.getComponent("draw");
 
 			drawer.setPoints(Shrapnel.shape);
-			drawer.setLineStyle("#f00");
+			drawer.setFillStyle("#f00");
 			drawer.setFillStyle("#f00");
 			
 			var spread = 360;
@@ -41,7 +41,6 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 			mover.setPosition(epicentre);
 			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Shrapnel.tip, a));
 			mover.setVelocity(mover.getVelocity().mul(vel));
-
 			mover.setCheckLag(false);
 		},
 
@@ -61,23 +60,13 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 		},
 		
 		updateColor: function(renderContext, time) {
-			var colr = null;
-			var s = time - this.birth;
-			var e = this.life - this.birth;
-
-			colr = 255 - Math.floor(255 * (s / e));
-			colr += (-10 + (Math.floor(Math.random() * 20)));
-			var fb = (Math.random() * 100);
-			if (fb > 90)
-				colr = 255;
-			colr = "#" + ("ff" + colr.toString(16) + "00");
-
+			var colr = ParticleColorChanger.explosion(time, this.birth, this.life);
 			if(this.color != colr)
 			{
 				this.color = colr;
 				var drawer = this.getComponent("draw");
-				drawer.setLineStyle(this.color);
 				drawer.setFillStyle(this.color);
+				drawer.setLineStyle(this.color);
 			}
 		},
 

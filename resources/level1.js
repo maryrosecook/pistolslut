@@ -63,6 +63,10 @@
 		
 		fires: [
 			{ name: "fire1", x: 374, y: 520, width: 14 }
+		],
+		
+		fireworkLaunchers: [
+			{ name: "fireworklauncher1", x: 381, y: 520, angle: 0, spread:20, interval: 10000 }
 		]
 		// "It is illegal to buy or possess a gas mask", "Your trade union is your voice", "Be a good citizen: vote"]
 	}

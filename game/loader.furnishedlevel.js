@@ -92,6 +92,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		furnitureData: null,
 		enemies: null,
 		fires: null,
+		fireworkLaunchers: null,
 		enemiesData: null,
 		minScroll: 0,
 		maxScroll: null,
@@ -104,6 +105,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.furniture = [];
 			this.enemies = [];
 			this.fires = [];
+			this.fireworkLaunchers = [];
 			this.levelResource = levelResource;
 			this.furnitureData = this.levelResource.info.objects.furniture;
 			this.enemiesData = this.levelResource.info.objects.enemies;
@@ -115,7 +117,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addFurniture(renderContext);
 			this.addEnemies(renderContext);
 			this.addSigns(renderContext);
-			this.addFires(renderContext);
+			this.addFires();
+			this.addFireworkLaunchers(renderContext);
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
@@ -145,13 +148,13 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		// load signs from the current level
 		signLetterSpacing: 7,
 		signColor: "#ff0000",
-		addSigns: function() {
+		addSigns: function(renderContext) {
 			var signs = this.levelResource.info.objects.signs;
 			for(var i in signs)
 			{
 				var signData = signs[i];
 				this.signs[i] = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);
-				this.field.renderContext.add(this.signs[i]);
+				renderContext.add(this.signs[i]);
 				this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
 				this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
 				this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
@@ -164,6 +167,15 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			{
 				var fireData = fires[i];
 				this.fires[i] = new Fire(fireData.name, this.field, fireData.x, fireData.y, fireData.width);	
+			}
+		},
+		
+		addFireworkLaunchers: function(renderContext) {
+			var fireworkLaunchers = this.levelResource.info.objects.fireworkLaunchers;
+			for(var i in fireworkLaunchers)
+			{
+				var data = fireworkLaunchers[i];
+				this.fireworkLaunchers[i] = new FireworkLauncher(data.name, this.field, renderContext, data.x, data.y, data.angle, data.spread, data.interval);
 			}
 		},
 

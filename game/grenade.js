@@ -120,8 +120,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 		explode: function() {
 			var particles = [];
 			for(var x = 0; x < this.shrapnelCount; x++)
-					this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
-			this.field.pEngine.addParticles(particles);
+				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
 			
 			this.destroy();
 		},

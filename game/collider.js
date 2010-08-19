@@ -153,9 +153,7 @@ var Collider = Base.extend({
 	
 	}, {
 
-		getClassName: function() {
-			return "Collider";
-		},
+		getClassName: function() { return "Collider"; },
 	});
 
 	return Collider;
