@@ -39,7 +39,7 @@
 				}
 			},
 			{
-				name: "bin3", x: 600, y: 520,
+				name: "bin3", x: 1000, y: 520,
 				sprite: {
 					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
@@ -53,12 +53,8 @@
 		],
 		
 		enemies: [
-			{
-				name: "enemy1", x: 395, y: 500,
-				sprite: {
-					bitmapImage: "enemy.gif", bitmapWidth: 506, bitmapHeight: 230
-				}
-			}
+			{ name: "enemy1", clazz: Enemy, x: 395, y: 500, health: 4 },
+			{ name: "enemy2", clazz: Enemy, x: 1025, y: 500, health: 4 },
 		],
 		
 		fires: [

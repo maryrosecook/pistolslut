@@ -103,10 +103,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 		 * @param time {Number} The engine time in milliseconds
 		 */
 		update: function(renderContext, time) {
-			var c_mover = this.getComponent("move");
-
-			// Is this bullet in field any more?
-			if (!this.field.inLevel(c_mover.getPosition()))
+			if (!this.field.inView(this)) // remove if not in field
 			{
 				this.destroy();
 				return;

@@ -78,7 +78,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 
 		update: function(renderContext, time) {
 			// Is this grenade in field any more?
-			if (!this.field.inLevel(this.getComponent("move").getPosition()))
+			if (!this.field.inView(this))
 			{
 				this.destroy();
 				return;
@@ -111,7 +111,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			if(pointOfImpactData != null)
 			{
 				var sideHit = pointOfImpactData[1];
-				this.setVelocity(this.field.collider.bounce(this.getVelocity(), this.bounciness, sideHit));
+				this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
 			}
 		},
 	

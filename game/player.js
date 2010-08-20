@@ -23,7 +23,7 @@ var Player = Human.extend({
 		this.add(SpriteComponent.create("draw"));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
-		this.direction = Human.RIGHT;
+		this.direction = Collider.RIGHT;
 		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
 		
 		this.velocity = Vector2D.create(0, 0);
@@ -73,10 +73,10 @@ var Player = Human.extend({
 			
 		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
-				this.walk(Human.LEFT);
+				this.walk(Collider.LEFT);
 				break;
 			case EventEngine.KEYCODE_RIGHT_ARROW:
-				this.walk(Human.RIGHT);
+				this.walk(Collider.RIGHT);
 				break;
 			case EventEngine.KEYCODE_UP_ARROW:
 				this.jump();

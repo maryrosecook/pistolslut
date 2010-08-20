@@ -45,14 +45,6 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 			}
 		},
 
-		/**
-		 * Get the level resource with the specified name from the cache.  The
-		 * object returned contains the bitmap as <tt>image</tt> and
-		 * the level definition as <tt>info</tt>.
-		 *
-		 * @param name {String} The name of the object to retrieve
-		 * @return {Object} The level resource specified by the name
-		 */
 		get: function(name) {
 			var level = this.base(name);
 			level.furniture = this.levels[name].furniture;
@@ -64,22 +56,16 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 			return FurnishedLevel.create(levelName, field, this.get(levelName), fieldWidth);
 		},
 
-		/**
-		 * The name of the resource this loader will get.
-		 * @returns {String} The string "level"
-		 */
 		getResourceType: function() {
 			return "furnishedLevel";
 		}
 
-	}, /** @scope FurnishedLevelLoader.prototype */{
-		getClassName: function() {
-			return "FurnishedLevelLoader";
-		}
+	}, {
+		
+		getClassName: function() { return "FurnishedLevelLoader"; }
 	});
 
 	return FurnishedLevelLoader;
-
 });
 
 Engine.initObject("FurnishedLevel", "Level", function() {
@@ -88,12 +74,14 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		
 		field: null,
 		signs: null,
-		furniture: null, // actual furniture objs
-		furnitureData: null,
+		furniture: null,
 		enemies: null,
 		fires: null,
 		fireworkLaunchers: null,
-		enemiesData: null,
+		
+		snowTimer: null,
+		snowFallInterval: 50,
+		
 		minScroll: 0,
 		maxScroll: null,
 		levelResource: null,
@@ -107,10 +95,17 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.fires = [];
 			this.fireworkLaunchers = [];
 			this.levelResource = levelResource;
-			this.furnitureData = this.levelResource.info.objects.furniture;
-			this.enemiesData = this.levelResource.info.objects.enemies;
 			this.maxScroll = this.getWidth() - fieldWidth;
 			return level;
+		},
+		
+		liveEnemies: function() {
+			var liveEnemies = [];
+			for(var i in this.enemies)
+				if(this.enemies[i].isAlive())
+					liveEnemies.push(this.enemies[i]);
+
+			return liveEnemies;
 		},
 
 		addObjects: function(renderContext) {
@@ -119,15 +114,17 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addSigns(renderContext);
 			this.addFires();
 			this.addFireworkLaunchers(renderContext);
+			this.addSnow();
+			this.addDayNightCycle(renderContext);
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext
 		addFurniture: function(renderContext) {
-			for(var i in this.furnitureData)
+			var data = this.levelResource.info.objects.furniture;
+			for(var i in data)
 			{
-				var furniturePieceData = this.furnitureData[i];
-				var furniturePiece = Furniture.create(furniturePieceData.name, Point2D.create(furniturePieceData.x, furniturePieceData.y));
+				var furniturePiece = Furniture.create(data[i].name, Point2D.create(data[i].x, data[i].y));
 				this.furniture[i] = furniturePiece;
 				renderContext.add(furniturePiece);
 			}
@@ -136,10 +133,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		// creates Enemy render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext
 		addEnemies: function(renderContext) {
-			for(var i in this.enemiesData)
+			data = this.levelResource.info.objects.enemies;
+			for(var i in data)
 			{
-				var enemyData = this.enemiesData[i];
-				var enemy = Enemy.create(enemyData.name, Point2D.create(enemyData.x, enemyData.y));
+				var enemy = eval(data[i].clazz).create(data[i].name, Point2D.create(data[i].x, data[i].y), data[i].health);
 				this.enemies[i] = enemy;
 				renderContext.add(enemy);
 			}
@@ -149,11 +146,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		signLetterSpacing: 7,
 		signColor: "#ff0000",
 		addSigns: function(renderContext) {
-			var signs = this.levelResource.info.objects.signs;
-			for(var i in signs)
+			var data = this.levelResource.info.objects.signs;
+			for(var i in data)
 			{
-				var signData = signs[i];
-				this.signs[i] = new Sign(this.field, signData.text, this.signColor, Point2D.create(signData.x, signData.y), signData.width, this.signLetterSpacing);
+				this.signs[i] = new Sign(this.field, data[i].text, this.signColor, Point2D.create(data[i].x, data[i].y), data[i].width, this.signLetterSpacing);
 				renderContext.add(this.signs[i]);
 				this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
 				this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
@@ -162,32 +158,76 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 		
 		addFires: function() {
-			var fires = this.levelResource.info.objects.fires;
-			for(var i in fires)
-			{
-				var fireData = fires[i];
-				this.fires[i] = new Fire(fireData.name, this.field, fireData.x, fireData.y, fireData.width);	
-			}
+			var data = this.levelResource.info.objects.fires;
+			for(var i in data)
+				this.fires[i] = new Fire(data[i].name, this.field, data[i].x, data[i].y, data[i].width);	
 		},
 		
 		addFireworkLaunchers: function(renderContext) {
-			var fireworkLaunchers = this.levelResource.info.objects.fireworkLaunchers;
-			for(var i in fireworkLaunchers)
-			{
-				var data = fireworkLaunchers[i];
-				this.fireworkLaunchers[i] = new FireworkLauncher(data.name, this.field, renderContext, data.x, data.y, data.angle, data.spread, data.interval);
-			}
+			var data = this.levelResource.info.objects.fireworkLaunchers;
+			for(var i in data)
+				this.fireworkLaunchers[i] = new FireworkLauncher(data[i].name, this.field, renderContext, data[i].x, data[i].y, data[i].angle, data[i].spread, data[i].interval);
+		},
+		
+		addSnow: function() {
+			var level = this;
+			this.snowTimer = Interval.create("snow", this.snowFallInterval,
+				function() {
+					level.field.pEngine.addParticle(SnowParticle.create(level.getWidth()));
+			});
+		},
+		
+		// makes sky lighten and darken
+		gettingLighter: true,
+		dayNightCycleMin: 50,
+		dayNightCycleMax: 255,
+		dayNightCycleState: 50,
+		dayNightCycleInterval: 500,
+		addDayNightCycle: function(renderContext) {
+			var level = this;
+			this.dayNightCycleTimer = Interval.create("dayNightCycle", this.dayNightCycleInterval,
+				function() {
+					level.updateSkyColor();
+					renderContext.setBackgroundColor(level.getSkyColor());
+			});
+		},
+		
+		updateSkyColor: function() {
+			console.log(this.dayNightCycleState)
+			if(this.gettingLighter)
+				this.dayNightCycleState += 1;
+			else
+				this.dayNightCycleState -= 1;
+
+			// maybe switch day/night direction
+			if(this.dayNightCycleState == this.dayNightCycleMin)
+				this.gettingLighter = true;
+			else if(this.dayNightCycleState == this.dayNightCycleMax)
+				this.gettingLighter = false;
+		},
+		
+		getSkyColor: function() {
+			return "#0000" + this.dayNightCycleState.toString(16);
+		},
+
+		// returns world coordinates of view frame
+		getViewFrame: function(renderContext) {
+			return Rectangle2D.create(renderContext.getHorizontalScroll(), renderContext.getVerticalScroll(), this.field.fieldWidth, this.field.fieldHeight);
 		},
 
 		release: function() {
 			this.base();
-			this.furnitureData = null;
-			this.enemies = null;
+			this.field = null;
 			this.signs = null;
+			this.furniture = null;
+			this.enemies = null;
 			this.fires = null;
+			this.fireworkLaunchers = null;
+			this.minScroll = 0;
+			this.maxScroll = null;
+			this.levelResource = null;
 		},
-
-	},{
+	}, {
 
 		getClassName: function() { return "FurnishedLevel"; }
 	});

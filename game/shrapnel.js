@@ -45,8 +45,7 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 		},
 
 		update: function(renderContext, time) {
-			// destroy if past life or not in level any more
-			if (time > this.life || !this.field.inLevel(this.getPosition()))
+			if (time > this.life || !this.field.inView(this)) // if past life or not in view any more, destroy
 			{
 				this.destroy();
 				return;

@@ -19,6 +19,7 @@ Game.load("/game/sign.js");
 Game.load("/game/loader.furnishedlevel.js");
 Game.load("/game/furniture.js");
 Game.load("/game/collider.js");
+Game.load("/game/physics.js");
 Game.load("/game/enemy.js");
 Game.load("/game/human.js");
 Game.load("/game/cheaprect.js");
@@ -50,13 +51,11 @@ Engine.initObject("PistolSlut", "Game", function() {
 		engineFPS: 30,
 
 		collisionModel: null,
+
 		collider: null,
-		
+		physics: null,		
 		notifier: null,
 	
-		snowTimer: null,
-		snowFallRate: 0,
-		snowFallInterval: 50,
 		groundY: 400,
 	
 		fieldWidth: 500,
@@ -145,25 +144,20 @@ Engine.initObject("PistolSlut", "Game", function() {
 	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);
-			this.renderContext.setBackgroundColor("#000000");
+			this.renderContext.setBackgroundColor(this.level.getSkyColor());
 			Engine.getDefaultContext().add(this.renderContext);
 			
 			this.loadComponents();
 			
 			// load rest of level
 			this.level.addObjects(this.renderContext);
-			
-			// snow machine
-			PistolSlut.snowTimer = Interval.create("snow", this.snowFallInterval,
-				function() {
-					PistolSlut.pEngine.addParticle(SnowParticle.create(PistolSlut.level.getWidth()));
-			});
 		},
 		
 		loadComponents: function() {
 			// We'll need something to detect collisions
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
 			this.collider = new Collider(this);
+			this.physics = new Physics(this);
 			
 			// inter object event notifier
 			this.notifier = NotifierComponent.create("notifier");
@@ -222,8 +216,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 		 * @param bBox {Rectangle2D} The bounding box of the field
 		 * @type Boolean
 		 */
-		inLevel: function(pos) {
-			return Math2D.boxPointCollision(this.level.getFrame(), pos);
+		inView: function(obj) {
+			return Math2D.boxBoxCollision(this.level.getViewFrame(this.renderContext), this.collider.getRect(obj));
 		},
 	
 		// updates the position of the view frame

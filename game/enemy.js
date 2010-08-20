@@ -12,15 +12,15 @@ var Enemy = Human.extend({
 	weapons: [],
 	shootTimer: null,
 	shootDelay: 1000,
-	
-	constructor: function(name, position) {
+
+	constructor: function(name, position, health) {
 		this.base(name);
-		this.health = 10;
+		this.health = health;
 
 		// Add components to move and draw
 		this.add(Mover2DComponent.create("move"));
 		this.add(SpriteComponent.create("draw"));
-		this.add(AIComponent.create("logic", null, this.field.playerObj, this));
+		this.add(AIComponent.create("logic", null, this.field, this));
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
 		// subscribe to events the enemy should care about
@@ -31,7 +31,7 @@ var Enemy = Human.extend({
 		
 		this.setPosition(position);
 		this.velocity = Vector2D.create(0, 0);
-		this.direction = Human.LEFT;
+		this.direction = Collider.LEFT;
 		this.getComponent("move").setCheckLag(false);
 				
 		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);

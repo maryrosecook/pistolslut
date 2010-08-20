@@ -38,7 +38,7 @@ Engine.initObject("Firework", "Object2D", function() {
 		},
 		
 		update: function(renderContext, time) {
-			if (!this.field.inLevel(this.getComponent("move").getPosition()))
+			if (!this.field.inView(this))
 			{
 				this.destroy();
 				return;
@@ -56,7 +56,7 @@ Engine.initObject("Firework", "Object2D", function() {
 			renderContext.popTransform();
 		},
 		
-		sparkCount: 150,
+		sparkCount: 120,
 		explode: function() {
 			var particles = [];
 			for(var i = 0; i < this.sparkCount; i++)

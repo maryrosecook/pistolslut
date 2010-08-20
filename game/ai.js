@@ -1,14 +1,13 @@
 Engine.include("/components/component.logic.js");
 
 Engine.initObject("AIComponent", "LogicComponent", function() {
-
-	var AIComponent = LogicComponent.extend(/** @scope AIComponent.prototype */{
-		playerObj: null,
+	var AIComponent = LogicComponent.extend({
+		field: null,
 
 		// I know it's insane to pass the host in the constructer, but it doesn't seem to be available at this point
-		constructor: function(name, priority, playerObj, host) {
+		constructor: function(name, priority, field, host) {
 	  	this.base(name, priority || 1.0);
-			this.playerObj = playerObj;
+			this.field = field;
 
 			// setup shoot timer
 			var ai = this;
@@ -18,23 +17,17 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			});
 	  },
 
-		execute: function(renderContext, time) {
-			var host = this.getHostObject();
-			if(host.isCrouching() && !host.weapon.isReloading() && this.noUnsafeIncomingForAWhile())
-				host.stand();
-				
-			this.turnTowardsPlayer();
-		},
-		
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
-			if(!host.isCrouching())
+			if(this.field.playerObj != null 
+				 && this.field.inView(host)
+				 && !host.isCrouching() 
+				 && !this.friendliesInLineOfFire())
 				host.shoot();
 		},
 		
 		notifyReloaded: function() {
-			this.getHostObject().shoot(); // try and start shooting right away
-			// just let the execute method deal with standing up if necessary on the next go round
+			this.notifyTimeToShoot(); // try and start shooting right away
 		},
 		
 		notifyIncoming: function(ordinance) {
@@ -55,15 +48,34 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 				host.crouch();
 			}
 		},
+
+		execute: function(renderContext, time) {
+			var host = this.getHostObject();
+			if(host.isCrouching() && !host.weapon.isReloading() && this.noUnsafeIncomingForAWhile())
+				host.stand();
+				
+			this.turnTowardsPlayer();
+		},
+		
+		friendliesInLineOfFire: function() {
+			var host = this.getHostObject();
+			var playerEnemies = this.field.level.liveEnemies();
+			for(var i in playerEnemies)
+				if(host != playerEnemies[i])
+					if(this.field.collider.inLineOfFire(host, playerEnemies[i]))
+						return true;
+			
+			return false;
+		},
 		
 		turnTowardsPlayer: function() {
-			if(this.playerObj) // player might not have been created, yet
+			if(this.field.playerObj) // player might not have been created, yet
 			{
 				var host = this.getHostObject();
 			
-				var dirToTurn = Human.LEFT;
-				if(host.getPosition().x < this.playerObj.getPosition().x) // host on left
-					dirToTurn = Human.RIGHT;
+				var dirToTurn = Collider.LEFT;
+				if(host.getPosition().x < this.field.playerObj.getPosition().x) // host on left
+					dirToTurn = Collider.RIGHT;
 				
 				if(host.direction != dirToTurn)
 					host.turn(dirToTurn);
@@ -94,10 +106,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		   this.base();
 		},
 
-	}, /** @scope AIComponent.prototype */{
-	  getClassName: function() {
-			return "AIComponent";
-	  }
+	}, {
+	  getClassName: function() { return "AIComponent"; }
 	});
 
 	return AIComponent;

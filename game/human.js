@@ -247,9 +247,9 @@ var Human = Mover.extend({
 		{
 			this.walking = true;
 			this.direction = direction;
-			if(direction == Human.LEFT)
+			if(direction == Collider.LEFT)
 				this.velocity.setX(this.velocity.x - this.walkSpeed);
-			else if(direction == Human.RIGHT)
+			else if(direction == Collider.RIGHT)
 				this.velocity.setX(this.velocity.x + this.walkSpeed);
 		}
 	},
@@ -289,7 +289,6 @@ var Human = Mover.extend({
 	bloodParticleCount: 10,
 	bloodParticleTTL: 300,
 	bloodSpurt: function(projectile) {
-		
 		var positionData = this.field.collider.pointOfImpact(projectile, this);
 		var position = null;
 		if(positionData != null)
@@ -300,9 +299,9 @@ var Human = Mover.extend({
 			var particles = [];
 			
 			var sideHit = positionData[1];
-			var reflectedAngle = this.field.collider.reflect(projectile, sideHit);
+			var reversedAngle = this.field.physics.reverseAngle(projectile, sideHit);
 			for(var x = 0; x < this.bloodParticleCount; x++)
-				particles[x] = BloodParticle.create(position, reflectedAngle, this.bloodSpread, this.bloodParticleTTL);
+				particles[x] = BloodParticle.create(position, reversedAngle, this.bloodSpread, this.bloodParticleTTL);
 				
 			this.field.pEngine.addParticles(particles);
 		}
@@ -320,17 +319,11 @@ var Human = Mover.extend({
 		if(obj instanceof Furniture && this.field.collider.colliding(this, [obj]))
 		{
 			if(this.field.collider.aFallingThroughB(this, obj))
-			{
 				this.endFall(obj);
-			}
 			else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
-			{
 				this.block(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
-			}
 			else if(this.field.collider.aOnRightAndBumpingB(this, obj))
-			{
 				this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
-			}
 		}
 		return ColliderComponent.CONTINUE;
 	},
@@ -405,10 +398,6 @@ var Human = Mover.extend({
 		ALIVE: "Alive",
 		DYING: "Dying",
 		DEAD: "Dead",
-		
-		// directions
-		LEFT: "Left",
-		RIGHT: "Right",
 		
 		// standing state
 		STANDING: "Standing",

@@ -79,10 +79,10 @@ Engine.initObject("Furniture", "Object2D", function() {
 				var particles = [];
 				
 				var sideHit = positionData[1];
-				var reflectedAngle = this.field.collider.reflect(projectile, sideHit);
+				var reversedAngle = this.field.physics.reverseAngle(projectile, sideHit);
 				for(var x = 0; x < this.ricochetParticleCount; x++)
 				{
-					particles[x] = BurnoutParticle.create(position, reflectedAngle, this.ricochetFlashSpread, this.ricochetParticleTTL);
+					particles[x] = BurnoutParticle.create(position, reversedAngle, this.ricochetFlashSpread, this.ricochetParticleTTL);
 				}
 					
 				this.field.pEngine.addParticles(particles);
