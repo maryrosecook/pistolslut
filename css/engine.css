@@ -61,3 +61,4 @@ div.intro { float:right; width:300px; position: absolute; text-align:justify; le
 h3 { font-size: 16px; font-weight:normal; margin:0; padding:0; display:inline; }
 .title { padding-left:60px; }
 .icon { float:left; }
+hr { color: #000; background-color:#000; height:1px; border:0; margin:25px 0 20px 0;}

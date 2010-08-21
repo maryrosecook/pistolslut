@@ -177,13 +177,20 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			});
 		},
 		
+		skyColor: [
+			{ start: 70,  end: 255, parts: [2],   },
+			{ start: 17,  end: 180, parts: [0,1], },
+			{ start: 180, end: 17,  parts: [0,1], },
+			{ start: 255, end: 70,  parts: [2],   },
+		],
+		
 		// makes sky lighten and darken
-		gettingLighter: true,
-		dayNightCycleMin: 50,
-		dayNightCycleMax: 255,
-		dayNightCycleState: 50,
+		stage: 0,
+		hue: 0,
 		dayNightCycleInterval: 500,
+		currentColor: ["00", "00", "46"],
 		addDayNightCycle: function(renderContext) {
+			this.hue = this.skyColor[this.stage].start; // get starting hue of starting stage
 			var level = this;
 			this.dayNightCycleTimer = Interval.create("dayNightCycle", this.dayNightCycleInterval,
 				function() {
@@ -193,21 +200,33 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 		
 		updateSkyColor: function() {
-			console.log(this.dayNightCycleState)
-			if(this.gettingLighter)
-				this.dayNightCycleState += 1;
+			// maybe move to next stage
+			if(this.hue == this.skyColor[this.stage].end)
+			{
+				if(this.stage == this.skyColor.length - 1)
+					this.stage = 0;
+				else
+					this.stage += 1;
+					
+				this.hue = this.skyColor[this.stage].start;
+			}
 			else
-				this.dayNightCycleState -= 1;
-
-			// maybe switch day/night direction
-			if(this.dayNightCycleState == this.dayNightCycleMin)
-				this.gettingLighter = true;
-			else if(this.dayNightCycleState == this.dayNightCycleMax)
-				this.gettingLighter = false;
+			{
+				if(this.skyColor[this.stage].start < this.skyColor[this.stage].end)
+					this.hue += 1;
+				else
+					this.hue -= 1;
+					
+				for(var i = 0; i < 3; i++)
+					if(this.skyColor[this.stage].parts.indexOf(i) > -1) // this part of hex is changing
+						this.currentColor[i] = this.hue.toString(16);
+					else // this part of hex is staying the same
+						this.currentColor[i] = this.currentColor[i];
+			}
 		},
 		
 		getSkyColor: function() {
-			return "#0000" + this.dayNightCycleState.toString(16);
+			return "#" + this.currentColor[0] + this.currentColor[1] + this.currentColor[2];
 		},
 
 		// returns world coordinates of view frame

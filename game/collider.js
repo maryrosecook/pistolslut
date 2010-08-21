@@ -17,12 +17,8 @@ Engine.initObject("Collider", "Base", function() {
 			
 			if(!(shooterRect.y > targetRect.b || shooterRect.b < targetRect.y)) // intersecting on y-axis
 			{
-				console.log("woo")
 				if(shooter.direction == Collider.LEFT)
-				{
-					console.log(targetRect.x < shooterRect.r)
 					return targetRect.x < shooterRect.r
-				}
 				else if(shooter.direction == Collider.RIGHT)
 					return shooterRect.x < targetRect.r				
 			}
