@@ -187,6 +187,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		// makes sky lighten and darken
 		stage: 0,
 		hue: 0,
+		hueStep: 1,
 		dayNightCycleInterval: 500,
 		currentColor: ["00", "00", "46"],
 		addDayNightCycle: function(renderContext) {
@@ -200,8 +201,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 		
 		updateSkyColor: function() {
-			// maybe move to next stage
-			if(this.hue == this.skyColor[this.stage].end)
+			if(this.hue == this.skyColor[this.stage].end) // maybe move to next stage
 			{
 				if(this.stage == this.skyColor.length - 1)
 					this.stage = 0;
@@ -212,20 +212,21 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			}
 			else
 			{
-				if(this.skyColor[this.stage].start < this.skyColor[this.stage].end)
-					this.hue += 1;
-				else
-					this.hue -= 1;
-					
 				for(var i = 0; i < 3; i++)
 					if(this.skyColor[this.stage].parts.indexOf(i) > -1) // this part of hex is changing
 						this.currentColor[i] = this.hue.toString(16);
 					else // this part of hex is staying the same
 						this.currentColor[i] = this.currentColor[i];
+						
+				if(this.skyColor[this.stage].start < this.skyColor[this.stage].end)
+					this.hue += this.hueStep;
+				else
+					this.hue -= this.hueStep;
 			}
 		},
 		
 		getSkyColor: function() {
+			console.log(this.currentColor[0], this.currentColor[1], this.currentColor[2], this.hue)
 			return "#" + this.currentColor[0] + this.currentColor[1] + this.currentColor[2];
 		},
 
