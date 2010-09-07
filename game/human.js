@@ -107,9 +107,9 @@ var Human = Mover.extend({
 		if(this.isAlive() && !this.isCrouching())
 		{
 			if(this.velocity.x != 0)
-				this.setSprite(this.direction + Human.STANDING + Human.RUNNING + this.isShootingSprite() + this.weapon.name, this.getSprite().getFrameNumber(time));
+				this.setSprite(this.direction + Human.STANDING + Human.RUNNING + this.isShootingSprite() + this.weapon.name);
 			else
-				this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
+				this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
 		}
 		
 		this.handleFriction();
@@ -124,7 +124,7 @@ var Human = Mover.extend({
 			var currentSprite = this.getSprite();
 			if(currentSprite.animationPlayed(time)) // at end of anim
 			{
-				this.setSprite(this.direction + Human.DEAD + this.weapon.name, 0);
+				this.setSprite(this.direction + Human.DEAD + this.weapon.name);
 				this.stateOfBeing = Human.DEAD
 			}
 		}
@@ -132,7 +132,7 @@ var Human = Mover.extend({
 	
 	die: function(bullet) {
 		this.stateOfBeing = Human.DYING;
-		this.setSprite(this.direction + Human.DYING + this.weapon.name, 0);
+		this.setSprite(this.direction + Human.DYING + this.weapon.name);
 		
 		this.throwBackwards(bullet);
 		
@@ -160,7 +160,7 @@ var Human = Mover.extend({
 			this.standState = Human.CROUCHING;
 			this.getPosition().setY(this.getPosition().y + this.getStandCrouchHeightDifference());
 			this.stopWalk();
-			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name, 0);
+			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name);
 		}
 	},
 	
@@ -169,7 +169,7 @@ var Human = Mover.extend({
 		{
 			this.standState = Human.STANDING;
 			this.getPosition().setY(this.getPosition().y - this.getStandCrouchHeightDifference());
-			this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
+			this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
 		}
 	},
 	
@@ -217,7 +217,7 @@ var Human = Mover.extend({
 		this.field.notifier.post(Weapon.SWITCH, this.weapon);
 		
 		if(this.isCrouching()) // not moving so sprite won't get updated by normal update mechanism
-			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name, 0);
+			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name);
 	},
 	
 	setWeapon: function(weapon) {
@@ -225,7 +225,7 @@ var Human = Mover.extend({
 	},
 	
 	jumping: false,
-	jumpSpeed: -9.0,
+	jumpSpeed: -5.0,
 	postJumpAdjustmentVector: Vector2D.create(0, -1),
 	jump: function() {
 		if(!this.jumping && !this.isCrouching())

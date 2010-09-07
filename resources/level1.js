@@ -62,7 +62,31 @@
 		],
 		
 		fireworkLaunchers: [
-			{ name: "fireworklauncher1", x: 381, y: 520, angle: 0, spread:20, interval: 10000 }
+			{ name: "fireworklauncher1", x: 381, y: 520, angle: 0, spread: 20, interval: 10000 }
+		],
+		
+		parallaxes: [
+			// { 
+			// 	name: "hills", zIndex: 2,
+			// 	sprite: {
+			// 		bitmapImage: "hills.gif", bitmapWidth: 500, bitmapHeight: 580,
+			// 		sprites: { "main": { "f" : [0, 0, 500, 580] } }
+			// 	}
+			// },
+			{ 
+				name: "city", zIndex: 3,
+				sprite: {
+					bitmapImage: "city.gif", bitmapWidth: 1000, bitmapHeight: 580,
+					sprites: { "main": { "f" : [0, 0, 1000, 580] } }
+				}
+			},
+			{ 
+				name: "street", zIndex: 4,
+				sprite: {
+					bitmapImage: "street.gif", bitmapWidth: 2000, bitmapHeight: 580,
+					sprites: { "main": { "f" : [0, 0, 2000, 580] } }
+				}
+			}
 		]
 		// "It is illegal to buy or possess a gas mask", "Your trade union is your voice", "Be a good citizen: vote"]
 	}

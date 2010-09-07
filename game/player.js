@@ -24,7 +24,7 @@ var Player = Human.extend({
 		this.add(ColliderComponent.create("collide", this.field.collisionModel));
 		
 		this.direction = Collider.RIGHT;
-		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
+		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
 		
 		this.velocity = Vector2D.create(0, 0);
 		this.getComponent("move").setCheckLag(false);

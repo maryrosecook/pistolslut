@@ -234,9 +234,6 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
    // The bounding box for the sprite
    bbox: null,
 
-	 //framechange
-	 startFrame: 0,
-
    /**
     * @private
     */
@@ -315,7 +312,7 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          return this.frame;
       } else {
          var f = Rectangle2D.create(this.frame);
-         var fn = this.getFrameNumber(time); // framechange - moved code to this method
+         var fn = this.getFrameNumber(time);
          return f.offset(f.dims.x * fn, 0);
       }
    },
@@ -340,9 +337,6 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
       if (!this.isAnimation()) {
          return 0;
       } else {
-         var fn;
-				 if(this.startFrame == 0) // start at the beginning
-				 {
 	         if (this.isLoop()) {
 	            fn = Math.floor((time / this.speed)) % this.count;
 	         } else {
@@ -351,19 +345,9 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
 	               fn = this.count - (fn - (this.count - 1));
 	            }
 	         }
-				 }
-				 else // non-zero start frame was set, so use that. Next time through, will start from beginning
-				 {
-				   fn = this.startFrame;
-				   this.startFrame = 0;
-				 }
          return fn;
       }
    },
-
-	 //framechange - new method
-	 // sets this sprite to start animating on passed frame
-	 setStartFrame: function(startFrame) { this.startFrame = startFrame; },
 
    /**
     * Set the speed, in milliseconds, that an animation runs at.  If the sprite is

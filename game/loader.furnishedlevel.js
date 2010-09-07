@@ -42,6 +42,13 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 					var furniturePieceData = levelObjects.furniture[i];					
 					this.spriteLoader.load(furniturePieceData.name, null, furniturePieceData.sprite, path);
 				}
+				
+				// load parallax data
+				for(var i in levelObjects.parallaxes)
+				{
+					var data = levelObjects.parallaxes[i];
+					this.spriteLoader.load(data.name, null, data.sprite, "resources/");
+				}
 			}
 		},
 
@@ -56,10 +63,7 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 			return FurnishedLevel.create(levelName, field, this.get(levelName), fieldWidth);
 		},
 
-		getResourceType: function() {
-			return "furnishedLevel";
-		}
-
+		getResourceType: function() { return "furnishedLevel"; }
 	}, {
 		
 		getClassName: function() { return "FurnishedLevelLoader"; }
@@ -78,6 +82,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		enemies: null,
 		fires: null,
 		fireworkLaunchers: null,
+		parallaxes: null,
+		parallaxesToMove: null,
 		
 		snowTimer: null,
 		snowFallInterval: 50,
@@ -94,6 +100,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.enemies = [];
 			this.fires = [];
 			this.fireworkLaunchers = [];
+			this.parallaxes = [];
+			this.parallaxesToMove = [];
 			this.levelResource = levelResource;
 			this.maxScroll = this.getWidth() - fieldWidth;
 			return level;
@@ -113,9 +121,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addEnemies(renderContext);
 			this.addSigns(renderContext);
 			this.addFires();
-			this.addFireworkLaunchers(renderContext);
-			this.addSnow();
+			//this.addFireworkLaunchers(renderContext);
+			//this.addSnow();
 			this.addDayNightCycle(renderContext);
+			this.addParallaxes(renderContext);
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
@@ -144,7 +153,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		// load signs from the current level
 		signLetterSpacing: 7,
-		signColor: "#ff0000",
+		signColor: "#fff",
 		addSigns: function(renderContext) {
 			var data = this.levelResource.info.objects.signs;
 			for(var i in data)
@@ -178,17 +187,15 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 		
 		skyColor: [
-			{ start: 70,  end: 255, parts: [2],   },
-			{ start: 17,  end: 180, parts: [0,1], },
-			{ start: 180, end: 17,  parts: [0,1], },
-			{ start: 255, end: 70,  parts: [2],   },
+			{ start: 50,  end: 110, parts: [0,1,2], },
+			{ start: 110, end: 50,  parts: [0,1,2], },
 		],
 		
 		// makes sky lighten and darken
 		stage: 0,
 		hue: 0,
 		hueStep: 1,
-		dayNightCycleInterval: 500,
+		dayNightCycleInterval: 1000,
 		currentColor: ["00", "00", "46"],
 		addDayNightCycle: function(renderContext) {
 			this.hue = this.skyColor[this.stage].start; // get starting hue of starting stage
@@ -223,11 +230,24 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				else
 					this.hue -= this.hueStep;
 			}
+			console.log(this.hue)
 		},
 		
 		getSkyColor: function() {
-			console.log(this.currentColor[0], this.currentColor[1], this.currentColor[2], this.hue)
 			return "#" + this.currentColor[0] + this.currentColor[1] + this.currentColor[2];
+		},
+
+		addParallaxes: function(renderContext) {
+			var data = this.levelResource.info.objects.parallaxes;
+			for(var i in data)
+			{
+				var parallax = new Parallax(data[i].name, this.field, data[i].zIndex, data[i].sprite.bitmapWidth, this.getWidth());
+				this.parallaxes.push(parallax);
+				if(parallax.scrollAttenuation != 0) // only want to iterate through parallaxes that actually move
+					this.parallaxesToMove.push(parallax);
+					
+				renderContext.add(this.parallaxes[i]);
+			}
 		},
 
 		// returns world coordinates of view frame
@@ -243,6 +263,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.enemies = null;
 			this.fires = null;
 			this.fireworkLaunchers = null;
+			this.parallaxes = null;
 			this.minScroll = 0;
 			this.maxScroll = null;
 			this.levelResource = null;

@@ -118,12 +118,13 @@ var ScrollingBackground = CanvasContext.extend(/** @scope ScrollingBackground.pr
       return this.visRect.getTopLeft().y;
    },
 
-   setupWorld: function(time) {
-      this.base(time);
-
-      // Render the slice of the level image first
-      this.drawImage(this.getViewport(), this.level.getSourceImage(), this.visRect);
-   }
+   // framechange - removed this function because background image is now blank because of parallax
+   // setupWorld: function(time) {
+   //    this.base(time);
+   // 
+   //    // Render the slice of the level image first
+   //    this.drawImage(this.getViewport(), this.level.getSourceImage(), this.visRect);
+   // }
 
 }, /** @scope ScrollingBackground.prototype */{
 

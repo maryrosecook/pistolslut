@@ -4,8 +4,6 @@ Engine.initObject("Firework", "Object2D", function() {
 		birth: null,
 		
 		launchTimer: null,
-		contrailTimer: null,
-		emitInterval: 1,
 		
 		constructor: function(name, field, x, y, angle) {
 			this.base(name);
@@ -26,15 +24,6 @@ Engine.initObject("Firework", "Object2D", function() {
 			c_draw.setPoints(Firework.shape);
 			c_draw.setLineStyle("white");
 			c_draw.setFillStyle("white");
-			
-			// setup contrail emitter
-			var firework = this;
-			this.contrailTimer = Interval.create(this.name, this.emitInterval,
-				function() {
-					var angle = firework.getVelocity().angleBetween(Firework.UP);
-					var ttl = Firework.CONTRAIL_BASE_TTL * Math.random();
-					field.pEngine.addParticle(ContrailParticle.create(Point2D.create(firework.getPosition()), ttl, angle, Firework.CONTRAIL_SPREAD));
-			});
 		},
 		
 		update: function(renderContext, time) {
@@ -73,8 +62,6 @@ Engine.initObject("Firework", "Object2D", function() {
 		},
 		
 		destroy: function() {
-			this.contrailTimer.destroy();
-			this.contrailTimer = null;
 			this.base();
 		},
 		
@@ -92,8 +79,6 @@ Engine.initObject("Firework", "Object2D", function() {
 		
 		UP: new Point2D(0, -1),
 		TIP: new Point2D(0, -1),
-		CONTRAIL_BASE_TTL: 800,
-		CONTRAIL_SPREAD: 10,
 		
 		shape: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
 	});

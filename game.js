@@ -32,6 +32,7 @@ Game.load("/game/shrapnel.js");
 Game.load("/game/fire.js");
 Game.load("/game/firework.js");
 Game.load("/game/fireworklauncher.js");
+Game.load("/game/parallax.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -164,7 +165,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			
 			// Start up the particle engine
 			this.pEngine = ParticleEngine.create();
-			this.pEngine.setMaximum(1000);
+			this.pEngine.setMaximum(100);
 			this.renderContext.add(this.pEngine);
 		},
 	
@@ -232,7 +233,15 @@ Engine.initObject("PistolSlut", "Game", function() {
 			
 			var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;
 			if(movingPastCentrePoint && potentialNewHorizontalScroll >= this.level.minScroll && potentialNewHorizontalScroll <= this.level.maxScroll)
+			{
 				this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
+
+				for(var i in this.level.parallaxesToMove)
+				{
+					var parallax = this.level.parallaxes[i];
+					parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
+				}
+			}
 		},
 	});
 

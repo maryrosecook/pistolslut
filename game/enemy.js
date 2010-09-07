@@ -34,7 +34,7 @@ var Enemy = Human.extend({
 		this.direction = Collider.LEFT;
 		this.getComponent("move").setCheckLag(false);
 				
-		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name, 0);
+		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
 	},
 	
 	getLogic: function() { return this.getComponent("logic"); },

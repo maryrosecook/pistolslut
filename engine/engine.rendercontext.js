@@ -358,19 +358,17 @@ var RenderContext = Container.extend(/** @scope RenderContext.prototype */{
    }
 }, /** @scope RenderContext.prototype */{ 
 
+	// framechange - rewrote method to actually fucking sort things by z index
    /**
     * Sort the objects to draw from objects with the lowest
     * z-index to the highest z-index.
     * @static
     */
    sortFn: function(obj1, obj2) {
-      if (obj1 instanceof HostObject ||
-          obj2 instanceof HostObject)
-      {
+      if (obj1 instanceof Object2D && obj2 instanceof Object2D)
+	      return obj1.getZIndex() - obj2.getZIndex();
+			else
          return 0;
-      }
-
-      return obj1.getZIndex() - obj2.getZIndex();
    },
 
    /**

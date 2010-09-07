@@ -48,7 +48,7 @@ Engine.initObject("Object2D", "HostObject", function() {
 var Object2D = HostObject.extend(/** @scope Object2D.prototype */{
 
    /** @private */
-   zIndex: 1,
+   zIndex: 20, // framechange - changed from 1,
 
    /** @private */
    bBox: null,
@@ -63,7 +63,7 @@ var Object2D = HostObject.extend(/** @scope Object2D.prototype */{
       this.lastPosition = Point2D.create(5,5);
 		this.bBox = Rectangle2D.create(0,0,1,1);
 		this.wBox = Rectangle2D.create(0,0,1,1);
-      this.zIndex = 1;
+      this.zIndex = Object2D.DEFAULT_Z_INDEX; // framechange - changed from 1
    },
 	
 	/**
@@ -81,7 +81,7 @@ var Object2D = HostObject.extend(/** @scope Object2D.prototype */{
     */
    release: function() {
       this.base();
-      this.zIndex = 1;
+      this.zIndex = Object2D.DEFAULT_Z_INDEX; // framechange - changed from 1
       this.bBox = null;
 		this.lastPosition = null;
    },
@@ -270,7 +270,10 @@ var Object2D = HostObject.extend(/** @scope Object2D.prototype */{
     */
    getClassName: function() {
       return "Object2D";
-   }
+   },
+
+   // framechange - added
+   DEFAULT_Z_INDEX: 20
 });
 
 return Object2D;

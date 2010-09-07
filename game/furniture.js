@@ -24,7 +24,7 @@ Engine.initObject("Furniture", "Object2D", function() {
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 			
 			this.sprite = this.field.spriteLoader.getSprite(name, "main");
-			this.setSprite(this.sprite, 0);
+			this.setSprite(this.sprite);
 			
 			this.setPosition(position);
 		},

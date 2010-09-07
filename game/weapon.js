@@ -59,8 +59,7 @@ Engine.initObject("Weapon", "Base", function() {
 				spread += (timeRequiredForDeadAim - timeSinceLastShot) / steadiness;
 				
 			var shootAngle = (this.owner.getGunAngle() - (spread / 2)) + (Math.random() * spread);
-			var dir = Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, shootAngle);
-			return dir;
+			return Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, shootAngle);
 		},
 		
 		shootKeyHasBeenUpSinceLastShot: true,
@@ -70,7 +69,7 @@ Engine.initObject("Weapon", "Base", function() {
 		
 		// either not player, or automatic weapon, or player has let shoot key up since last shot
 		passSemiAutomaticCheck: function() {
-			return !(this.owner instanceof Player) || this.automatic == Weapon.AUTOMATIC || this.isShootKeyHasBeenUpSinceLastShot();
+			return this.automatic == Weapon.AUTOMATIC || !(this.owner instanceof Player) || this.isShootKeyHasBeenUpSinceLastShot();
 		},
 		
 		shooting: "Notshooting",
