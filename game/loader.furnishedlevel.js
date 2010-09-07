@@ -118,11 +118,11 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		addObjects: function(renderContext) {
 			this.addFurniture(renderContext);
-			//this.addEnemies(renderContext);
+			this.addEnemies(renderContext);
 			this.addSigns(renderContext);
 			this.addFires();
-			//this.addFireworkLaunchers(renderContext);
-			//this.addSnow();
+			this.addFireworkLaunchers(renderContext);
+			this.addSnow();
 			this.addDayNightCycle(renderContext);
 			this.addParallaxes(renderContext);
 		},
