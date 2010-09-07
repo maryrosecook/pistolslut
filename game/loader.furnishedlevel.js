@@ -196,7 +196,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		hue: 0,
 		hueStep: 1,
 		dayNightCycleInterval: 1000,
-		currentColor: ["00", "00", "46"],
+		currentColor: ["32", "32", "32"],
 		addDayNightCycle: function(renderContext) {
 			this.hue = this.skyColor[this.stage].start; // get starting hue of starting stage
 			var level = this;
