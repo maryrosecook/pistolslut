@@ -118,7 +118,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		addObjects: function(renderContext) {
 			this.addFurniture(renderContext);
-			this.addEnemies(renderContext);
+			//this.addEnemies(renderContext);
 			this.addSigns(renderContext);
 			this.addFires();
 			//this.addFireworkLaunchers(renderContext);
@@ -230,7 +230,6 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				else
 					this.hue -= this.hueStep;
 			}
-			console.log(this.hue)
 		},
 		
 		getSkyColor: function() {
@@ -241,7 +240,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var data = this.levelResource.info.objects.parallaxes;
 			for(var i in data)
 			{
-				var parallax = new Parallax(data[i].name, this.field, data[i].zIndex, data[i].sprite.bitmapWidth, this.getWidth());
+				var parallax = new Parallax(data[i].name, this.field, data[i].zIndex, data[i].scrollAttenuation, data[i].x, data[i].y);
 				this.parallaxes.push(parallax);
 				if(parallax.scrollAttenuation != 0) // only want to iterate through parallaxes that actually move
 					this.parallaxesToMove.push(parallax);

@@ -5,7 +5,7 @@
 	objects: {
 		signs: [
 			{ text: "Pistol  Slut", x: 89, y: 460, width: 140 },
-			{ text: "Please  return  to  your  homes", x: 517, y: 172, width: 245	},
+			{ text: "Please  return  to  your  homes", x: 805, y: 172, width: 245	},
 			{ text: "Free  shop", x: 1188, y: 461, width: 140 }
 		],
 		
@@ -39,7 +39,7 @@
 				}
 			},
 			{
-				name: "bin3", x: 1000, y: 520,
+				name: "bin3", x: 1100, y: 520,
 				sprite: {
 					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
@@ -54,7 +54,7 @@
 		
 		enemies: [
 			{ name: "enemy1", clazz: Enemy, x: 395, y: 500, health: 4 },
-			{ name: "enemy2", clazz: Enemy, x: 1025, y: 500, health: 4 },
+			{ name: "enemy2", clazz: Enemy, x: 1140, y: 500, health: 4 },
 		],
 		
 		fires: [
@@ -66,24 +66,43 @@
 		],
 		
 		parallaxes: [
-			// { 
-			// 	name: "hills", zIndex: 2,
-			// 	sprite: {
-			// 		bitmapImage: "hills.gif", bitmapWidth: 500, bitmapHeight: 580,
-			// 		sprites: { "main": { "f" : [0, 0, 500, 580] } }
-			// 	}
-			// },
 			{ 
-				name: "city", zIndex: 3,
+				name: "farthestlight", zIndex: 2, x: 400, y: 507,
+				scrollAttenuation: 0.8,
 				sprite: {
-					bitmapImage: "city.gif", bitmapWidth: 1000, bitmapHeight: 580,
-					sprites: { "main": { "f" : [0, 0, 1000, 580] } }
+					bitmapImage: "farthestlight.png", bitmapWidth: 80, bitmapHeight: 40,
+					sprites: { "main": { "a" : [0, 0, 40, 40, 2, 6000, "loop"] } }
 				}
 			},
 			{ 
-				name: "street", zIndex: 4,
+				name: "fartherlight", zIndex: 3, x: 480, y: 450,
+				scrollAttenuation: 0.75,
 				sprite: {
-					bitmapImage: "street.gif", bitmapWidth: 2000, bitmapHeight: 580,
+					bitmapImage: "fartherlight.png", bitmapWidth: 100, bitmapHeight: 100,
+					sprites: { "main": { "f" : [0, 0, 100, 100] } }
+				}
+			},
+			{ 
+				name: "closerlight", zIndex: 4, x: 750, y: 350,
+				scrollAttenuation: 0.60,
+				sprite: {
+					bitmapImage: "closerlight.png", bitmapWidth: 200, bitmapHeight: 200,
+					sprites: { "main": { "f" : [0, 0, 200, 200] } }
+				}
+			},
+			{ 
+				name: "gantry", zIndex: 5, x: 0, y: 280,
+				scrollAttenuation: 0.5,
+				sprite: {
+					bitmapImage: "gantry.png", bitmapWidth: 700, bitmapHeight: 300,
+					sprites: { "main": { "f" : [0, 0, 700, 300] } }
+				}
+			},
+			{ 
+				name: "street", zIndex: 6, x: 0, y: 0,
+				scrollAttenuation: 0,
+				sprite: {
+					bitmapImage: "street.png", bitmapWidth: 2000, bitmapHeight: 580,
 					sprites: { "main": { "f" : [0, 0, 2000, 580] } }
 				}
 			}

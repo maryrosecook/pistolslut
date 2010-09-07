@@ -70,6 +70,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		pEngine: null,
 
+		imageLoader: null,
 		spriteLoader: null,
 		levelLoader: null,
 		loadTimeout: null,
@@ -90,9 +91,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.fieldBox = Rectangle2D.create(0, 0, this.fieldWidth, this.fieldHeight);
 			this.centerPoint = this.fieldBox.getCenter();
 		
+		  this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
-		
+    
 			// load sprite resources
 			this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
 			this.spriteLoader.load("grenade", this.getFilePath("resources/grenade.js"));

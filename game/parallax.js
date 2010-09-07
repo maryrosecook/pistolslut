@@ -15,11 +15,11 @@ Engine.initObject("Parallax", "Object2D", function() {
 		sprite: null,
 		scrollAttenuation: null,
 
-		constructor: function(name, field, zIndex, width, levelWidth) {
+		constructor: function(name, field, zIndex, scrollAttenuation, x, y) {
 			this.base(name);
 			this.field = field;
 			this.setZIndex(zIndex);
-			this.scrollAttenuation = 1 - (width / levelWidth);
+			this.scrollAttenuation = scrollAttenuation;
 
 			// Add components to move and draw
 			this.add(Transform2DComponent.create("move"));
@@ -28,7 +28,7 @@ Engine.initObject("Parallax", "Object2D", function() {
 			this.sprite = this.field.spriteLoader.getSprite(name, "main");
 			this.setSprite(this.sprite);
 			
-			this.setPosition(Point2D.create(0,0));
+			this.setPosition(Point2D.create(x,y));
 		},
 
 	  setSprite: function(sprite) {

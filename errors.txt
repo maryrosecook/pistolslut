@@ -1,2 +1,3 @@
 _MOVE: no base class
 elements: something wrong with vector
+INDEX_SIZE_ERR: DOM Exception 1: got dimensions of bitmap wrong
