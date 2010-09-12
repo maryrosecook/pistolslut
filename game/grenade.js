@@ -9,7 +9,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 
 		shooter: null,
 		field: null,
-		speed: 8,
+		speed: 6,
 		sprites: null,
 		timeThrown: null,
 		pinTimer: 2000, // how long the grande takes to explode

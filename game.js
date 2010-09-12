@@ -7,6 +7,8 @@ Engine.include("/resourceloaders/loader.bitmapfont.js");
 Engine.include("/textrender/text.renderer.js");
 Engine.include("/resourceloaders/loader.sprite.js");
 Engine.include("/resourceloaders/loader.level.js");
+Engine.include("/resourceloaders/loader.image.js");
+Engine.include("/components/component.image.js");
 Engine.include("/components/component.notifier.js");
 
 // Load game objects
@@ -33,6 +35,9 @@ Game.load("/game/fire.js");
 Game.load("/game/firework.js");
 Game.load("/game/fireworklauncher.js");
 Game.load("/game/parallax.js");
+Game.load("/game/caret.js");
+Game.load("/game/meter.js");
+
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -62,6 +67,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 		fieldWidth: 500,
 		fieldHeight: 580,
 		level: null,
+	
+		meters: [],
+		ammoMeter: null,
 	
 		debug: true,
 		playerObj: null,
@@ -95,6 +103,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
     
+			// load images
+      this.imageLoader.load(Caret.ON, this.getFilePath("resources/careton.gif"), 3, 15);
+			this.imageLoader.load(Caret.OFF, this.getFilePath("resources/caretoff.gif"), 3, 15);
+
 			// load sprite resources
 			this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
 			this.spriteLoader.load("grenade", this.getFilePath("resources/grenade.js"));
@@ -184,6 +196,13 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.playerObj = Player.create();
 			this.renderContext.add(this.playerObj);
 			this.playerObj.setup(this.fieldWidth, this.fieldHeight);
+			
+			// add meters
+			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, new Point2D(5, 5));
+			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
+			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
+			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
+			this.meters.push(this.ammoMeter);
 		},
 	
 		applyGravity: function(obj) {
@@ -192,7 +211,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		},
 		
 	  waitForResources: function(){
-			if (PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
+			if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
 			{
 				PistolSlut.loadTimeout.destroy();
 				PistolSlut.startScreen();
@@ -238,10 +257,18 @@ Engine.initObject("PistolSlut", "Game", function() {
 			{
 				this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
 
+				// move parallaxes
 				for(var i in this.level.parallaxesToMove)
 				{
 					var parallax = this.level.parallaxes[i];
 					parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
+				}
+				
+				// move meters
+				for(var i in this.meters)
+				{
+					var meter = this.meters[i];
+					meter.getPosition().setX(meter.getPosition().x + vector.x)
 				}
 			}
 		},

@@ -43,6 +43,7 @@ Engine.initObject("Weapon", "Base", function() {
 					this.field.pEngine.addParticles(particles);
 					this.shotsInClip -= 1;
 					this.lastShot = new Date().getTime();
+					this.field.notifier.post(Weapon.SHOOT, this);
 				}
 			}
 			else
@@ -124,6 +125,22 @@ Engine.initObject("Weapon", "Base", function() {
 			return this.shotsInClip == 0;
 		},
 		
+		// if weapon owner is the player, returns number of shots in clip for the ammo meter
+		getMeterReading: function() {
+			if(this.owner instanceof Player)
+				return this.shotsInClip;
+			else
+				return null;
+		},
+		
+		// if weapon owner is the player, returns number of shots in clip for the ammo meter
+		getMeterMax: function() {
+			if(this.owner instanceof Player)
+				return this.clipCapacity;
+			else
+				return null;
+		},
+		
 		getGunTip: function() {
 			return Point2D.create(this.owner.getGunTip()).add(this.owner.getPosition());
 		},
@@ -139,7 +156,8 @@ Engine.initObject("Weapon", "Base", function() {
 		SHOOTING: "Shooting",
 		NOT_SHOOTING: "Notshooting",
 		
-		SWITCH: "switch" // a weapon switch event
+		SWITCH: "switch", // a weapon switch event
+		SHOOT: "shoot" // weapon actually shot
 	});
 
 	return Weapon;

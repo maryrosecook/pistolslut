@@ -122,7 +122,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addSigns(renderContext);
 			this.addFires();
 			this.addFireworkLaunchers(renderContext);
-			this.addSnow();
+			//this.addSnow();
 			this.addDayNightCycle(renderContext);
 			this.addParallaxes(renderContext);
 		},
