@@ -23,31 +23,57 @@ Engine.initObject("Weapon", "Base", function() {
 			this.projectilesPerShot = projectilesPerShot;
 			this.timeToReload = timeToReload;
 			this.projectileVelocityVariability = projectileVelocityVariability;
+			
+			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
+		},
+		
+		notifyWeaponSwitch: function(weapon) {
+			if(this != weapon) // if not switched to this weapon, stop an in progress reload
+				this.reloading = false;
+			else
+				this.reload(); // if just switched to this weapon, start it reloading
 		},
 		
 		muzzleFlashSpread: 15,
 		muzzleParticleCount: 10,
 		muzzleParticleTTL: 500,
 		shoot: function() {
-			if(!this.isClipEmpty() && !this.isReloading())
+			if(!this.isClipEmpty())
 			{
 				if(this.passSemiAutomaticCheck())
 				{
+					// stop an in progress reload
+					if(this.isReloading())
+						this.reloading = false;
+					
+					// generate the bullets
 					for(var x = 0; x < this.projectilesPerShot; x++)
 						this.field.renderContext.add(Bullet.create(this, this.projectileVelocityVariability));
 
+					// generate the muzzle flash
 					var gunTipInWorld = this.getGunTip();
 					var particles = [];
 					for(var x = 0; x < this.muzzleParticleCount; x++)
 						particles[x] = BurnoutParticle.create(gunTipInWorld, this.owner.getGunAngle(), this.owner.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
 					this.field.pEngine.addParticles(particles);
+
 					this.shotsInClip -= 1;
 					this.lastShot = new Date().getTime();
-					this.field.notifier.post(Weapon.SHOOT, this);
+					if(this.owner instanceof Player)
+						this.field.notifier.post(Weapon.SHOOT, this);
+				}
+				
+				if(this.isClipEmpty())
+				{
+					this.reload(); // auto reload
+					this.field.notifier.post(Human.CLIP_EMPTY, this);		
 				}
 			}
 			else
-				this.field.notifier.post(Human.CLIP_EMPTY, this);
+			{
+				this.reload(); // auto reload
+				this.field.notifier.post(Human.CLIP_EMPTY, this);		
+			}
 		},
 		
 		// the faster the shooter shoots, the wilder their shots go
