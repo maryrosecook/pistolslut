@@ -9,21 +9,38 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 	  	this.base(name, priority || 1.0);
 			this.field = field;
 
-			// setup shoot timer
+			// setup grenade throw timer
 			var ai = this;
-			host.shootTimer = Interval.create("shoot", host.shootDelay,
+			this.shootTimer = Interval.create("shoot", host.shootDelay,
 				function() {
 					ai.notifyTimeToShoot();
+			});
+			
+			// setup grenade throw timer
+			var ai = this;
+			this.grenadeTimer = Interval.create("shoot", host.grenadeThrowDelay,
+				function() {
+					ai.notifyTimeToThrowGrenade();
 			});
 	  },
 
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
-			if(this.field.playerObj != null 
-				 && this.field.inView(host)
+			if(this.isEnemyInSights()
 				 && !host.isCrouching() 
 				 && !this.friendliesInLineOfFire())
 				host.shoot();
+		},
+		
+		notifyTimeToThrowGrenade: function() {
+			var host = this.getHostObject();
+			if(this.isEnemyInSights()
+				 && host.canThrowGrenades == true)
+				host.throwGrenade();
+		},
+		
+		isEnemyInSights: function() {
+			return this.field.playerObj != null && this.field.inView(this.getHostObject());
 		},
 		
 		notifyReloaded: function() {
@@ -103,11 +120,16 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
 		release: function() {
-		   this.base();
+			this.base();
+			this.shootTimer.destroy();
+			this.grenadeTimer.destroy();
+			this.shootTimer = null;
+			this.grenadeTimer = null; 
 		},
 
 	}, {
 	  getClassName: function() { return "AIComponent"; }
+	
 	});
 
 	return AIComponent;

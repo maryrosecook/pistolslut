@@ -11,37 +11,27 @@ var Enemy = Human.extend({
 	weapon: null,
 	weapons: [],
 	shootTimer: null,
-	shootDelay: 1000,
+	grenadeThrowDelay: 5000,
+	shootDelay: 1001,
 
-	constructor: function(name, position, health) {
-		this.base(name);
-		this.health = health;
-
-		// Add components to move and draw
-		this.add(Mover2DComponent.create("move"));
-		this.add(SpriteComponent.create("draw"));
-		this.add(AIComponent.create("logic", null, this.field, this));
-		this.add(ColliderComponent.create("collide", this.field.collisionModel));
+	constructor: function(name, position, health, weaponName, canThrowGrenades) {
+		this.direction = Collider.LEFT;
+		this.base(name, position, health, weaponName, canThrowGrenades);
 		
-		// subscribe to events the enemy should care about
+		this.add(AIComponent.create("logic", null, this.field, this));
+		
+		// subscribe to events the enemy cares about
 		this.field.notifier.subscribe(Bullet.INCOMING_EVENT, this.getLogic(), this.getLogic().notifyIncoming);
 		this.field.notifier.subscribe(Human.CLIP_EMPTY, this.getLogic(), this.getLogic().notifyWeaponEmpty);
 		this.field.notifier.subscribe(Human.RELOADED, this.getLogic(), this.getLogic().notifyReloaded);
 		//this.field.notifier.subscribe("playerMove", this.getLogic(), this.getLogic().playerMove);
-		
-		this.setPosition(position);
-		this.velocity = Vector2D.create(0, 0);
-		this.direction = Collider.LEFT;
-		this.getComponent("move").setCheckLag(false);
-				
-		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
 	},
 	
 	getLogic: function() { return this.getComponent("logic"); },
 	
 	die: function(bullet) {
 		this.base(bullet);
-		this.shootTimer.destroy();
+		this.getLogic().release();
 		this.remove(this.getComponent("logic"));
 		this.field.notifier.unsubscribe(Bullet.INCOMING_EVENT, this.getLogic());
 		this.field.notifier.unsubscribe(Human.CLIP_EMPTY, this.getLogic());
@@ -50,13 +40,11 @@ var Enemy = Human.extend({
 	
 	release: function() {
 		this.base();
-		this.shootTimer = null;
 	}
 
-	}, { // Static
-		getClassName: function() {
-			return "Enemy";
-		},
+	}, {
+		getClassName: function() { return "Enemy"; },
+		
 	});
 
 	return Enemy;

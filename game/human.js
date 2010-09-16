@@ -12,81 +12,27 @@ var Human = Mover.extend({
 	stateOfBeing: null,
 	health: -1,
 	standState: null,
+	canThrowGrenades: false,
 	
-	coordinates: {
-		"Left": {
-			"armAngle": 315,
-			"gunAngle": 270,
-		 	"Standing": {
-				"M9": {
-					"gunTip": new Point2D(3, 9),
-					"armTip": new Point2D(0, 2),
-				},
-				"Mac10": {
-					"gunTip": new Point2D(4, 7),
-					"armTip": new Point2D(0, 2),
-				},
-				"SPAS": {
-					"gunTip": new Point2D(3, 12),
-					"armTip": new Point2D(0, 2),
-				}
-			},
-			"Crouching": {
-				"M9": {
-					"gunTip": new Point2D(0, 9),
-					"armTip": new Point2D(0, 2),
-				},
-				"Mac10": {
-					"gunTip": new Point2D(3, 7),
-					"armTip": new Point2D(0, 2),
-				},
-				"SPAS": {
-					"gunTip": new Point2D(3, 12),
-					"armTip": new Point2D(0, 2),
-				}
-			}
-		},
-		"Right": {
-			"armAngle": 45,
-			"gunAngle": 90,
-			"Standing": {
-				"M9": {
-					"gunTip": new Point2D(45, 9),
-					"armTip": new Point2D(44, 2),
-				},
-				"Mac10": {
-					"gunTip": new Point2D(45, 7),
-					"armTip": new Point2D(44, 2),
-				},
-				"SPAS": {
-					"gunTip": new Point2D(45, 12),
-					"armTip": new Point2D(44, 2),
-				}
-			},
-			"Crouching": {
-				"M9": {
-					"gunTip": new Point2D(45, 9),
-					"armTip": new Point2D(44, 2),
-				},
-				"Mac10": {
-					"gunTip": new Point2D(45, 7),
-					"armTip": new Point2D(44, 2),
-				},
-				"SPAS": {
-					"gunTip": new Point2D(45, 12),
-					"armTip": new Point2D(44, 2),
-				}
-			}
-		},
-		"standCrouchHeightDifference": 11
-	},
-	
-	constructor: function(name) {
+	constructor: function(name, position, health, weaponName, canThrowGrenades) {
 		this.base(name);
+		this.health = health;
+		this.canThrowGrenades = canThrowGrenades;
 		this.stateOfBeing = Human.ALIVE;
 		this.standState = Human.STANDING;
 		this.loadSprites();
-		this.setupWeapons();
+		this.setupWeapons(weaponName);
+		
+		// Add components to move and draw the player
+		this.add(Mover2DComponent.create("move"));
+		this.add(SpriteComponent.create("draw"));
+		this.add(ColliderComponent.create("collide", this.field.collisionModel));
+
+		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
+
+		this.velocity = Vector2D.create(0, 0);
+		this.getComponent("move").setCheckLag(false);
+		this.getComponent("move").setPosition(position);
 	},
 
 	update: function(renderContext, time) {
@@ -201,16 +147,18 @@ var Human = Mover.extend({
 		}
 	},
 	
+	isGrenadesAvailable: function() { return true; },
+	
 	cycleWeapon: function() {
 		if(this.weapons.length == 0)
 			return;
 			
 		for(var i = 0; i < this.weapons.length; i++)
 			if(i == this.weapons.length - 1)
-				this.setWeapon(this.weapons[0]);
+				this.setWeapon(this.weapons[0].name);
 			else if(this.weapons[i] == this.weapon)
 			{
-				this.setWeapon(this.weapons[i + 1]);
+				this.setWeapon(this.weapons[i + 1].name);
 				break;
 			}
 		
@@ -220,12 +168,14 @@ var Human = Mover.extend({
 			this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.weapon.name);
 	},
 	
-	setWeapon: function(weapon) {
-		this.weapon = weapon;
+	setWeapon: function(weaponName) {
+		for(var i in this.weapons)
+			if(this.weapons[i].name == weaponName)
+				this.weapon = this.weapons[i];
 	},
 	
 	jumping: false,
-	jumpSpeed: -5.0,
+	jumpSpeed: -6.0,
 	postJumpAdjustmentVector: Vector2D.create(0, -1),
 	jump: function() {
 		if(!this.jumping && !this.isCrouching())
@@ -236,9 +186,7 @@ var Human = Mover.extend({
 		}
 	},
 
-	turn: function(direction) {
-		this.direction = direction;
-	},
+	turn: function(direction) { this.direction = direction; },
 
 	walking: false,	
 	walkSpeed: 3,
@@ -270,11 +218,7 @@ var Human = Mover.extend({
 		this.velocity.setY(0);
 		this.jumping = false;
 	},
-	
-	getStandCrouchHeightDifference: function() {
-		return this.coordinates["standCrouchHeightDifference"];
-	},
-	
+		
 	shot: function(bullet) {
 		if(this.isAlive())
 		{
@@ -307,12 +251,12 @@ var Human = Mover.extend({
 		}
 	},
 	
-	setupWeapons: function() {
+	setupWeapons: function(weaponName) {
 		this.weapons = [];
 		this.weapons.push(new M9(this));
 		this.weapons.push(new Mac10(this));
 		this.weapons.push(new SPAS(this));
-		this.setWeapon(this.weapons[0]);
+		this.setWeapon(weaponName);
 	},
 	
 	onCollide: function(obj) {
@@ -358,41 +302,23 @@ var Human = Mover.extend({
 			this.addSprite(spriteIdentifier, this.field.spriteLoader.getSprite("girl", spriteIdentifier));
 	},
 	
-	isAlive: function() {
-		return this.stateOfBeing == Human.ALIVE;
-	},
+	isAlive: function() { return this.stateOfBeing == Human.ALIVE; },
+	isCrouching: function() { return this.standState == Human.CROUCHING; },
 	
-	getGunAngle: function() {
-		return this.coordinates[this.direction]["gunAngle"];
-	},
-	
-	getGunTip: function() {
-		return this.coordinates[this.direction][this.standState][this.weapon.name]["gunTip"];
-	},
-	
-	getArmTip: function() {
-		return this.coordinates[this.direction][this.standState][this.weapon.name]["armTip"];
-	},
-	
-	getArmAngle: function() {
-		return this.coordinates[this.direction]["armAngle"];
-	},
-	
-	isCrouching: function() {
-		return this.standState == Human.CROUCHING;
-	},
+	getGunAngle: function() { return Human.COORDINATES[this.direction]["gunAngle"]; },
+	getGunTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunTip"]; },
+	getArmTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["armTip"]; },
+	getArmAngle: function() { return Human.COORDINATES[this.direction]["armAngle"]; },
+	getStandCrouchHeightDifference: function() { return Human.COORDINATES["standCrouchHeightDifference"]; },
 	
 	release: function() {
 		this.base();
 		this.stateOfBeing = null;
 		this.health = -1;
-		this.coordinates = null;
 	},
 
-	}, { // Static
-		getClassName: function() {
-			return "Human";
-		},
+	}, {
+		getClassName: function() { return "Human"; },
 		
 		// states of being
 		ALIVE: "Alive",
@@ -407,7 +333,75 @@ var Human = Mover.extend({
 		STILL: "Still",
 		
 		CLIP_EMPTY: "Clipempty",
-		RELOADED: "Reloaded"
+		RELOADED: "Reloaded",
+		
+		COORDINATES: {
+			"Left": {
+				"armAngle": 330,
+				"gunAngle": 270,
+			 	"Standing": {
+					"M9": {
+						"gunTip": new Point2D(3, 9),
+						"armTip": new Point2D(0, 2),
+					},
+					"Mac10": {
+						"gunTip": new Point2D(4, 7),
+						"armTip": new Point2D(0, 2),
+					},
+					"SPAS": {
+						"gunTip": new Point2D(3, 12),
+						"armTip": new Point2D(0, 2),
+					}
+				},
+				"Crouching": {
+					"M9": {
+						"gunTip": new Point2D(0, 9),
+						"armTip": new Point2D(0, 2),
+					},
+					"Mac10": {
+						"gunTip": new Point2D(3, 7),
+						"armTip": new Point2D(0, 2),
+					},
+					"SPAS": {
+						"gunTip": new Point2D(3, 12),
+						"armTip": new Point2D(0, 2),
+					}
+				}
+			},
+			"Right": {
+				"armAngle": 30,
+				"gunAngle": 90,
+				"Standing": {
+					"M9": {
+						"gunTip": new Point2D(45, 9),
+						"armTip": new Point2D(44, 2),
+					},
+					"Mac10": {
+						"gunTip": new Point2D(45, 7),
+						"armTip": new Point2D(44, 2),
+					},
+					"SPAS": {
+						"gunTip": new Point2D(45, 12),
+						"armTip": new Point2D(44, 2),
+					}
+				},
+				"Crouching": {
+					"M9": {
+						"gunTip": new Point2D(45, 9),
+						"armTip": new Point2D(44, 2),
+					},
+					"Mac10": {
+						"gunTip": new Point2D(45, 7),
+						"armTip": new Point2D(44, 2),
+					},
+					"SPAS": {
+						"gunTip": new Point2D(45, 12),
+						"armTip": new Point2D(44, 2),
+					}
+				}
+			},
+			"standCrouchHeightDifference": 11
+		},
 	});
 
 	return Human;

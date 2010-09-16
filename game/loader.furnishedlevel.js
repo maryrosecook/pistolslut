@@ -145,7 +145,11 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			data = this.levelResource.info.objects.enemies;
 			for(var i in data)
 			{
-				var enemy = eval(data[i].clazz).create(data[i].name, Point2D.create(data[i].x, data[i].y), data[i].health);
+				var enemy = eval(data[i].clazz).create(data[i].name,
+																							 Point2D.create(data[i].x, data[i].y),
+																							 data[i].health,
+																							 data[i].weaponName,
+																							 data[i].canThrowGrenades);
 				this.enemies[i] = enemy;
 				renderContext.add(enemy);
 			}
@@ -238,14 +242,16 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		addParallaxes: function(renderContext) {
 			var data = this.levelResource.info.objects.parallaxes;
+			var zIndex = 2;
 			for(var i in data)
 			{
-				var parallax = new Parallax(data[i].name, this.field, data[i].zIndex, data[i].scrollAttenuation, data[i].x, data[i].y);
+				var parallax = new Parallax(data[i].name, this.field, zIndex, data[i].scrollAttenuation, data[i].x, data[i].y);
 				this.parallaxes.push(parallax);
 				if(parallax.scrollAttenuation != 0) // only want to iterate through parallaxes that actually move
 					this.parallaxesToMove.push(parallax);
 					
 				renderContext.add(this.parallaxes[i]);
+				zIndex += 1;
 			}
 		},
 

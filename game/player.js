@@ -12,30 +12,17 @@ var Player = Human.extend({
 	weapons: null,
 	size: 4,
 
-	constructor: function() {
-		this.base("Player");
-
-		this.health = 10;
-
-		// Add components to move and draw the player
-		this.add(KeyboardInputComponent.create("input"));
-		this.add(Mover2DComponent.create("move"));
-		this.add(SpriteComponent.create("draw"));
-		this.add(ColliderComponent.create("collide", this.field.collisionModel));
-		
+	constructor: function(groundY) {
+		var startPosition = new Point2D(50, groundY);
 		this.direction = Collider.RIGHT;
-		this.setSprite(this.direction + Human.STANDING + Human.STILL + this.isShootingSprite() + this.weapon.name);
 		
-		this.velocity = Vector2D.create(0, 0);
-		this.getComponent("move").setCheckLag(false);
+		this.base("Player", startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
+		
+		this.add(KeyboardInputComponent.create("input"));
 	},
 	
 	setup: function(pWidth, pHeight) {
 		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
-
-		// Put us on the ground in the middle
-		var c_mover = this.getComponent("move");
-		c_mover.setPosition(new Point2D(50, this.field.groundY));
 	},
 
 	release: function() {
@@ -135,10 +122,12 @@ var Player = Human.extend({
 		return false;
 	},
 
-	}, { // Static
-		getClassName: function() {
-			return "Player";
-		},
+	}, {
+		getClassName: function() { return "Player"; },
+		
+		STARTING_HEALTH: 10,
+		STARTING_WEAPON: "M9",
+		CAN_THROW_GRENADES: true,
 		
 		MOVE_EVENT: "playerMove"
 	});

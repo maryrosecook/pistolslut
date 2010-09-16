@@ -11,50 +11,50 @@
 		
 		furniture: [
 			{
-				name: "blockwallleft", x: 0, y: 417,
+				name: "blockwallleft", x: 0, y: 417, 
 				sprite: {
-					bitmapImage: "blockwallleft.gif", bitmapWidth: 20, bitmapHeight: 130,
+					bitmapImage: "blockwallleft.gif",
 					sprites: { "main": { "f" : [0, 0, 20, 130] } }
 				}
 			},
 			{
 				name: "blockwallright", x: 1980, y: 417,
 				sprite: {
-					bitmapImage: "blockwallright.gif", bitmapWidth: 20, bitmapHeight: 130,
+					bitmapImage: "blockwallright.gif",
 					sprites: { "main": { "f" : [0, 0, 20, 130] } }
 				}
 			},
 			{
-				name: "bin1", x: 170, y: 520,
+				name: "postbox1", x: 170, y: 509,
 				sprite: {
-					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
+					bitmapImage: "postbox.gif",
+					sprites: { "main": { "f" : [0, 0, 16, 36] } }
+				}
+			},
+			{
+				name: "bin1", x: 370, y: 520,
+				sprite: {
+					bitmapImage: "bin.gif",
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
 				}
 			},
 			{
-				name: "bin2", x: 370, y: 520,
+				name: "bin2", x: 1100, y: 520,
 				sprite: {
-					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
+					bitmapImage: "bin.gif",
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
 				}
 			},
-			{
-				name: "bin3", x: 1100, y: 520,
-				sprite: {
-					bitmapImage: "bin.gif", bitmapWidth: 20, bitmapHeight: 25,
-					sprites: { "main": { "f" : [0, 0, 20, 25] } }
-				}
-			},
-			{ name: "floorpiece1", x: 0, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece2", x: 400, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece3", x: 800, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece4", x: 1200, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece5", x: 1600, y: 546, sprite: { bitmapImage: "floorpiece.gif", bitmapWidth: 400, bitmapHeight: 34, sprites: { "main": { "f" : [0, 0, 400, 34] } } } }
+			{ name: "floorpiece1", x: 0, y: 546, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
+			{ name: "floorpiece2", x: 400, y: 546, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
+			{ name: "floorpiece3", x: 800, y: 546, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
+			{ name: "floorpiece4", x: 1200, y: 546, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
+			{ name: "floorpiece5", x: 1600, y: 546, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } }
 		],
 		
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 395, y: 500, health: 4 },
-			{ name: "enemy2", clazz: Enemy, x: 1140, y: 500, health: 4 },
+			{ name: "enemy1", clazz: Enemy, x: 395, y: 500, health: 4, weaponName: "M9", canThrowGrenades: true },
+			{ name: "enemy2", clazz: Enemy, x: 1140, y: 500, health: 4, weaponName: "M9", canThrowGrenades: false },
 		],
 		
 		fires: [
@@ -67,42 +67,42 @@
 		
 		parallaxes: [
 			{ 
-				name: "farthestlight", zIndex: 2, x: 400, y: 507,
+				name: "farthestlight", x: 400, y: 507,
 				scrollAttenuation: 0.8,
 				sprite: {
-					bitmapImage: "farthestlight.png", bitmapWidth: 80, bitmapHeight: 40,
+					bitmapImage: "farthestlight.png",
 					sprites: { "main": { "a" : [0, 0, 40, 40, 2, 6000, "loop"] } }
 				}
 			},
 			{ 
-				name: "fartherlight", zIndex: 3, x: 480, y: 450,
+				name: "fartherlight", x: 480, y: 450,
 				scrollAttenuation: 0.75,
 				sprite: {
-					bitmapImage: "fartherlight.png", bitmapWidth: 100, bitmapHeight: 100,
+					bitmapImage: "fartherlight.png",
 					sprites: { "main": { "f" : [0, 0, 100, 100] } }
 				}
 			},
 			{ 
-				name: "closerlight", zIndex: 4, x: 750, y: 350,
+				name: "closerlight", x: 750, y: 350,
 				scrollAttenuation: 0.60,
 				sprite: {
-					bitmapImage: "closerlight.png", bitmapWidth: 200, bitmapHeight: 200,
+					bitmapImage: "closerlight.png",
 					sprites: { "main": { "f" : [0, 0, 200, 200] } }
 				}
 			},
 			{ 
-				name: "gantry", zIndex: 5, x: 0, y: 280,
+				name: "gantry", x: 0, y: 280,
 				scrollAttenuation: 0.5,
 				sprite: {
-					bitmapImage: "gantry.png", bitmapWidth: 700, bitmapHeight: 300,
+					bitmapImage: "gantry.png",
 					sprites: { "main": { "f" : [0, 0, 700, 300] } }
 				}
 			},
 			{ 
-				name: "street", zIndex: 6, x: 0, y: 0,
+				name: "street", x: 0, y: 0,
 				scrollAttenuation: 0,
 				sprite: {
-					bitmapImage: "street.png", bitmapWidth: 2000, bitmapHeight: 580,
+					bitmapImage: "street.png",
 					sprites: { "main": { "f" : [0, 0, 2000, 580] } }
 				}
 			}

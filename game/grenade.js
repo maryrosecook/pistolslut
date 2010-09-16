@@ -4,12 +4,11 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Grenade", "Object2D", function() {
-
 	var Grenade = Object2D.extend({
 
 		shooter: null,
 		field: null,
-		speed: 7,
+		speed: 8,
 		sprites: null,
 		timeThrown: null,
 		pinTimer: 2000, // how long the grande takes to explode
@@ -43,12 +42,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			this.timeThrown = null;
 		},
 
-		/**
-		 * Destroy a grenade, removing it from the list of objects
-		 * in the last collision model node.
-		 */
 		destroy: function() {
-			//AssertWarn(this.ModelData.lastNode, "Grenade not located in a node!");
 			if (this.ModelData.lastNode) {
 				this.ModelData.lastNode.removeObject(this);
 			}
@@ -145,8 +139,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			return "Grenade";
 		},
 
-		// The tip of the shooter at zero rotation (up)
-		tip: new Point2D(0, -1)
+		tip: new Point2D(0, -1) // the tip of the shooter at zero rotation (up)
 	});
 
 	return Grenade;

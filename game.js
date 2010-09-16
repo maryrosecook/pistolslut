@@ -193,7 +193,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		play: function() {
 			this.destroyStartScreen();
 			
-			this.playerObj = Player.create();
+			this.playerObj = Player.create(this.groundY);
 			this.renderContext.add(this.playerObj);
 			this.playerObj.setup(this.fieldWidth, this.fieldHeight);
 			
