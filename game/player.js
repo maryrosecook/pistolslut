@@ -10,24 +10,32 @@ Engine.initObject("Player", "Human", function() {
 var Player = Human.extend({
 	weapon: null,
 	weapons: null,
-	size: 4,
 
-	constructor: function(groundY) {
+	constructor: function(field, groundY) {
 		var startPosition = new Point2D(50, groundY);
 		this.direction = Collider.RIGHT;
 		
-		this.base("Player", startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
+		this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
 		
 		this.add(KeyboardInputComponent.create("input"));
+		
+		this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
+		this.field.notifier.subscribe(Human.GRENADE_NEARBY, this, this.notifyGrenadeNearby);
+		this.field.notifier.subscribe(Grenade.EXPLODED, this, this.notifyGrenadeExploded);
 	},
 	
 	setup: function(pWidth, pHeight) {
 		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
 	},
 
+	notifyIncoming: function(ordinance) {
+		if(ordinance instanceof Grenade)
+			if(!this.field.collider.objectDistanceAway(this, ordinance, ordinance.safeDistance))
+				this.field.notifier.post(Human.GRENADE_NEARBY, ordinance);
+	},
+
 	release: function() {
 		this.base();
-		this.size = 4;
 	},
 
 	update: function(renderContext, time) {

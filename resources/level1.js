@@ -28,7 +28,7 @@
 				name: "postbox1", x: 170, y: 509,
 				sprite: {
 					bitmapImage: "postbox.gif",
-					sprites: { "main": { "f" : [0, 0, 16, 36] } }
+					sprites: { "main": { "f" : [0, 0, 18, 36] } }
 				}
 			},
 			{
@@ -70,7 +70,7 @@
 				name: "farthestlight", x: 400, y: 507,
 				scrollAttenuation: 0.8,
 				sprite: {
-					bitmapImage: "farthestlight.png",
+					bitmapImage: "farthestlight.gif",
 					sprites: { "main": { "a" : [0, 0, 40, 40, 2, 6000, "loop"] } }
 				}
 			},
@@ -78,7 +78,7 @@
 				name: "fartherlight", x: 480, y: 450,
 				scrollAttenuation: 0.75,
 				sprite: {
-					bitmapImage: "fartherlight.png",
+					bitmapImage: "fartherlight.gif",
 					sprites: { "main": { "f" : [0, 0, 100, 100] } }
 				}
 			},
@@ -86,7 +86,7 @@
 				name: "closerlight", x: 750, y: 350,
 				scrollAttenuation: 0.60,
 				sprite: {
-					bitmapImage: "closerlight.png",
+					bitmapImage: "closerlight.gif",
 					sprites: { "main": { "f" : [0, 0, 200, 200] } }
 				}
 			},
@@ -94,7 +94,7 @@
 				name: "gantry", x: 0, y: 280,
 				scrollAttenuation: 0.5,
 				sprite: {
-					bitmapImage: "gantry.png",
+					bitmapImage: "gantry.gif",
 					sprites: { "main": { "f" : [0, 0, 700, 300] } }
 				}
 			},
@@ -102,7 +102,7 @@
 				name: "street", x: 0, y: 0,
 				scrollAttenuation: 0,
 				sprite: {
-					bitmapImage: "street.png",
+					bitmapImage: "street.gif",
 					sprites: { "main": { "f" : [0, 0, 2000, 580] } }
 				}
 			}

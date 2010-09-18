@@ -14,26 +14,19 @@ var Enemy = Human.extend({
 	grenadeThrowDelay: 5000,
 	shootDelay: 1001,
 
-	constructor: function(name, position, health, weaponName, canThrowGrenades) {
+	constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
 		this.direction = Collider.LEFT;
-		this.base(name, position, health, weaponName, canThrowGrenades);
+		this.base(name, field, position, health, weaponName, canThrowGrenades);
 		
-		this.add(AIComponent.create("logic", null, this.field, this));
-		
-		// subscribe to events the enemy cares about
-		this.field.notifier.subscribe(Bullet.INCOMING_EVENT, this.getLogic(), this.getLogic().notifyIncoming);
-		this.field.notifier.subscribe(Human.CLIP_EMPTY, this.getLogic(), this.getLogic().notifyWeaponEmpty);
-		this.field.notifier.subscribe(Human.RELOADED, this.getLogic(), this.getLogic().notifyReloaded);
-		//this.field.notifier.subscribe("playerMove", this.getLogic(), this.getLogic().playerMove);
+		this.add(AIComponent.create("logic" + this.name, null, this.field, this));
 	},
 	
-	getLogic: function() { return this.getComponent("logic"); },
+	getLogic: function() { return this.getComponent("logic" + this.name); },
 	
-	die: function(bullet) {
-		this.base(bullet);
-		this.getLogic().release();
-		this.remove(this.getComponent("logic"));
-		this.field.notifier.unsubscribe(Bullet.INCOMING_EVENT, this.getLogic());
+	die: function(ordinance) {
+		this.base(ordinance);
+		this.getLogic().removeFromHost();
+		this.field.notifier.unsubscribe(Human.INCOMING, this.getLogic());
 		this.field.notifier.unsubscribe(Human.CLIP_EMPTY, this.getLogic());
 		this.field.notifier.unsubscribe(Human.RELOADED, this.getLogic());
 	},

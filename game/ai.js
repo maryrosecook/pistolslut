@@ -9,20 +9,31 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 	  	this.base(name, priority || 1.0);
 			this.field = field;
 
+			// subscribe to events the enemy cares about
+			this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
+			this.field.notifier.subscribe(Human.CLIP_EMPTY, this, this.notifyWeaponEmpty);
+			this.field.notifier.subscribe(Human.RELOADED, this, this.notifyReloaded);
+			this.field.notifier.subscribe(Human.SHOT, this, this.notifyShot);
+			//this.field.notifier.subscribe("playerMove", this, this.playerMove);
+
 			// setup grenade throw timer
 			var ai = this;
-			this.shootTimer = Interval.create("shoot", host.shootDelay,
+			host.shootTimer = Interval.create("shoot", host.shootDelay,
 				function() {
 					ai.notifyTimeToShoot();
 			});
 			
 			// setup grenade throw timer
 			var ai = this;
-			this.grenadeTimer = Interval.create("shoot", host.grenadeThrowDelay,
+			host.grenadeTimer = Interval.create("shoot", host.grenadeThrowDelay,
 				function() {
 					ai.notifyTimeToThrowGrenade();
 			});
 	  },
+
+		notifyShot: function() {
+			this.reactToBeingUnderFire();
+		},
 
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
@@ -39,10 +50,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 				host.throwGrenade();
 		},
 		
-		isEnemyInSights: function() {
-			return this.field.playerObj != null && this.field.inView(this.getHostObject());
-		},
-		
 		notifyReloaded: function() {
 			this.notifyTimeToShoot(); // try and start shooting right away
 		},
@@ -50,11 +57,13 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyIncoming: function(ordinance) {
 			var host = this.getHostObject();
 			if(ordinance.shooter != host)
-				if(!this.objectSafeDistanceAway(ordinance))
-				{
-					this.lastNearDeath = new Date().getTime();
-					host.crouch();
-				}
+				if(!this.field.collider.objectDistanceAway(host, ordinance, ordinance.safeDistance))
+					this.reactToBeingUnderFire();
+		},
+		
+		reactToBeingUnderFire: function() {
+			this.lastUnderFire = new Date().getTime();
+			this.getHostObject().crouch();
 		},
 		
 		// tell AI that clip is empty
@@ -65,6 +74,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 				host.crouch();
 			}
 		},
+		
+		isEnemyInSights: function() { return this.field.playerObj != null && this.field.inView(this.getHostObject()); },
 
 		execute: function(renderContext, time) {
 			var host = this.getHostObject();
@@ -99,32 +110,19 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			}
 		},
 		
-		lastNearDeath: 0,
-		safeIntervalAfterUnsafeIncoming: 2000, 
+		lastUnderFire: 0,
+		safeIntervalAfterUnsafe: 2000, 
 		noUnsafeIncomingForAWhile: function() {
-			return new Date().getTime() - this.lastNearDeath > this.safeIntervalAfterUnsafeIncoming;
+			return new Date().getTime() - this.lastUnderFire > this.safeIntervalAfterUnsafe;
 		},
 		
-		safeBulletDistance: 20,
-		objectSafeDistanceAway: function(obj) {
+		removeFromHost: function() {
 			var host = this.getHostObject();
-			
-			var safeObjDistance = 9999999999999999;
-			if(obj instanceof Bullet)
-				safeObjDistance = this.safeBulletDistance;
-			
-			if(obj.getPosition().dist(host.getPosition()) >= safeObjDistance)
-				return true;
-			else
-				return false;
-		},
-
-		release: function() {
-			this.base();
-			this.shootTimer.destroy();
-			this.grenadeTimer.destroy();
-			this.shootTimer = null;
-			this.grenadeTimer = null; 
+			host.shootTimer.destroy();
+			host.shootTimer = null;
+			host.grenadeTimer.destroy();
+			host.grenadeTimer = null;
+			host.remove(this);
 		},
 
 	}, {

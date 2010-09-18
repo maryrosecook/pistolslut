@@ -63,6 +63,13 @@ Engine.initObject("Collider", "Base", function() {
 						return true;
 			return false;
 		},
+		
+		objectDistanceAway: function(obj1, obj2, distance) {
+			if(obj1.getPosition().dist(obj2.getPosition()) >= distance)
+				return true;
+			else
+				return false;
+		},
 	
 		// returns point that moving obj hit staticObj
 		pointOfImpact: function(movingObj, staticObj) {

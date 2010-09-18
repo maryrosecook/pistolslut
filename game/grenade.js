@@ -5,14 +5,15 @@ Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Grenade", "Object2D", function() {
 	var Grenade = Object2D.extend({
-
-		shooter: null,
 		field: null,
-		speed: 8,
+		shooter: null,
 		sprites: null,
 		timeThrown: null,
+		
+		speed: 8,
 		pinTimer: 2000, // how long the grande takes to explode
-
+		safeDistance: 150,
+		
 		constructor: function(shooter) {
 			this.base("Grenade");
 
@@ -92,8 +93,16 @@ Engine.initObject("Grenade", "Object2D", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture)
+			{
 				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
-					this.bounce(obj);	
+					this.bounce(obj);
+			}
+			else if(obj instanceof Human)
+			{
+				if(obj.isAlive())
+					if(obj instanceof Enemy) // tell enemy about shots being fired
+						this.field.notifier.post(Human.INCOMING, this);
+			}
 			
 			return ColliderComponent.CONTINUE;
 		},
@@ -116,6 +125,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
 			
+			this.field.notifier.post(Grenade.EXPLODED, this);
 			this.destroy();
 		},
 		
@@ -134,12 +144,11 @@ Engine.initObject("Grenade", "Object2D", function() {
 		},
 
 	}, {
+		getClassName: function() { return "Grenade"; },
 
-		getClassName: function() {
-			return "Grenade";
-		},
-
-		tip: new Point2D(0, -1) // the tip of the shooter at zero rotation (up)
+		tip: new Point2D(0, -1),
+		
+		EXPLODED: "exploded",
 	});
 
 	return Grenade;

@@ -11,6 +11,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 		baseSpeed: 15,
 		damage: 1,
+		safeDistance: 20,
 		
 		constructor: function(weapon, projectileVelocityVariability) {
 			this.base("Bullet");
@@ -125,12 +126,10 @@ Engine.initObject("Bullet", "Object2D", function() {
 			}
 			else if(obj instanceof Human) {
 				if(obj.isAlive())
-				{
-					if(obj instanceof Enemy) // tell enemy about shots being fired
-						this.field.notifier.post(Bullet.INCOMING_EVENT, this);
-					
+				{	
 					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 				  {
+						this.field.notifier.post(Human.SHOT, this);
 						obj.shot(this);
 						this.destroy();
 						return ColliderComponent.STOP;
@@ -141,22 +140,9 @@ Engine.initObject("Bullet", "Object2D", function() {
 		},
 
 	}, {
-		/**
-		 * Get the class name of this object
-		 *
-		 * @type String
-		 */
-		getClassName: function() {
-			return "Bullet";
-		},
-
-		shape: [ new Point2D(-1, 0), new Point2D(0, 0),
-					new Point2D(0,  1), new Point2D(0,  1)],
-
-		// The tip of the owner at zero rotation (up)
+		getClassName: function() { return "Bullet"; },
+		shape: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
 		tip: new Point2D(0, -1),
-		
-		INCOMING_EVENT: "incoming"
 	});
 
 	return Bullet;

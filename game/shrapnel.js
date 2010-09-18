@@ -7,12 +7,14 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 
 	var Shrapnel = Object2D.extend({
 		field: null,
-		baseSpeed: 15,
-		damage: 1,
 		shooter: null,
 		
 		birth: 0,
 		life: 0,
+		
+		baseSpeed: 15,
+		damage: 1,
+		safeDistance: 20,
 		
 		constructor: function(field, shooter, epicentre, ttl) {
 			this.base("Shrapnel");
@@ -82,7 +84,7 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 				if(obj.isAlive())
 				{
 					if(obj instanceof Enemy) // tell enemy about shots being fired
-						this.field.notifier.post(Bullet.INCOMING_EVENT, this);
+						this.field.notifier.post(Human.INCOMING, this);
 					
 					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 				  {

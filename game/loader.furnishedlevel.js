@@ -146,6 +146,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			for(var i in data)
 			{
 				var enemy = eval(data[i].clazz).create(data[i].name,
+																							 this.field,
 																							 Point2D.create(data[i].x, data[i].y),
 																							 data[i].health,
 																							 data[i].weaponName,
@@ -167,6 +168,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
 				this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
 				this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
+				this.field.notifier.subscribe(Human.GRENADE_NEARBY, this.signs[i], this.signs[i].notifyGrenadeNearby);
+				this.field.notifier.subscribe(Human.NO_NEARBY_GRENADES, this.signs[i], this.signs[i].notifyNoNearbyGrenades);
 			}
 		},
 		

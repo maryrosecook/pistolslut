@@ -32,7 +32,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		
 		notifyReloaded: function(weapon) {
 			if(weapon.owner == this.field.playerObj)
-				this.revert();
+				this.revert(Sign.RELOAD_TEXT);
 		},
 		
 		notifyWeaponEmpty: function(weapon) {
@@ -46,8 +46,18 @@ Engine.initObject("Sign", "Object2D", function() {
 				if(weapon.isClipEmpty() == true && this.hijacked == false) // switched to empty weapon and not already telling to reload
 					this.hijack(Sign.RELOAD_TEXT);
 				else if(weapon.isClipEmpty() == false && this.hijacked == true) // switch to non-empty weapon and hijacked so untell to reload
-					this.revert();
+					this.revert(Sign.RELOAD_TEXT);
 			}
+		},
+		
+		notifyGrenadeNearby: function(grenade) {
+			if(grenade.shooter != this.field.playerObj)
+				this.hijack(Sign.GRENADE_NEARBY_TEXT);
+		},
+		
+		notifyNoNearbyGrenades: function(human) {
+			if(human == this.field.playerObj)
+				this.revert(Sign.GRENADE_NEARBY_TEXT);
 		},
 		
 		hijack: function(newText) {
@@ -55,22 +65,17 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.hijacked = true;
 		},
 		
-		revert: function() {
-			this.changeText(this.defaultText, this.defaultSignColor);
-			this.hijacked = false;
+		revert: function(expectedTextRevertingFrom) {
+			if(this.currentText == expectedTextRevertingFrom) // only revert if text is still the same
+			{
+				this.changeText(this.defaultText, this.defaultSignColor);
+				this.hijacked = false;
+			}
 		},
 		
 		// switches sign to display passed text
 		changeText: function(newText, color) {
-			var textToDisplay = newText;
-			if(textToDisplay == null) // been told to switch back to default
-				textToDisplay = this.defaultText;
-
-			var colorToUse = color;
-				if(colorToUse == null) // been told to switch back to default
-					colorToUse = this.defaultSignColor;
-
-			if(textToDisplay != this.currentText)
+			if(newText != this.currentText)
 			{
 				var renderObjects = this.field.renderContext.getObjects();
 	      for(var i in this.textRenderers)
@@ -80,7 +85,7 @@ Engine.initObject("Sign", "Object2D", function() {
 				}
 
 				this.textRenderers = [];
-				this.setupTextRenderers(textToDisplay, colorToUse);
+				this.setupTextRenderers(newText, color);
 			}
 		},
 	
@@ -136,9 +141,7 @@ Engine.initObject("Sign", "Object2D", function() {
 			return textRendererPositionX > this.signPosition.x && textRendererPositionX + textRenderer.textBoundingBox.x < textRenderer.scrollStartPosition.x;
 		},
 	
-		getTextBoundingBox: function(textRenderer) {
-			return textRenderer.renderer.getHostObject().getBoundingBox().dims;
-		},
+		getTextBoundingBox: function(textRenderer) { return textRenderer.renderer.getHostObject().getBoundingBox().dims; },
 
 		release: function() {
 			this.base();
@@ -168,23 +171,15 @@ Engine.initObject("Sign", "Object2D", function() {
 			}
 		},
 
-		getPosition: function() {
-			return this.getComponent("move").getPosition();
-		},
+		getPosition: function() { return this.getComponent("move").getPosition(); },
+		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
 
-		getRenderPosition: function() {
-			return this.getComponent("move").getRenderPosition();
-		},
-
-	}, { // Static Only
-
-		getClassName: function() {
-			return "Sign";
-		},
+	}, {
+		getClassName: function() { return "Sign"; },
 		
 		HIJACK: "hijack",
-		
-		RELOAD_TEXT: "Reload.  Love  from  SWiG."
+		RELOAD_TEXT: "Reload",
+		GRENADE_NEARBY_TEXT: "Get  down"
 	});
 
 	return Sign;
