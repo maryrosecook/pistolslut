@@ -53,9 +53,6 @@ Engine.initObject("Bullet", "Object2D", function() {
 			this.weapon = null;
 		},
 
-		/**
-		 * Destroy a bullet, removing it from the list of objects in the last collision model node.
-		 */
 		destroy: function() {
 			if (this.ModelData.lastNode) {
 				this.ModelData.lastNode.removeObject(this);
@@ -63,46 +60,16 @@ Engine.initObject("Bullet", "Object2D", function() {
 			this.base();
 		},
 
-		getPosition: function() {
-			return this.getComponent("move").getPosition();
-		},
-
-		getRenderPosition: function() {
-			return this.getComponent("move").getRenderPosition();
-		},
-	
-		getVelocity: function() {
-			return this.getComponent("move").getVelocity();
-		},
-	
-		setVelocity: function(vector) {
-			return this.getComponent("move").setVelocity(vector);
-		},
-
-		/**
-		 * Returns the last position of the bullet
-		 * @type Point2D
-		 */
-		getLastPosition: function() {
-			return this.getComponent("move").getLastPosition();
-		},
-
-		/**
-		 * Set the position of the bullet.
-		 *
-		 * @param point {Point2D} The position of the bullet.
-		 */
+		getPosition: function() { return this.getComponent("move").getPosition(); },
+		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
+		getVelocity: function() { return this.getComponent("move").getVelocity(); },
+		setVelocity: function(vector) { return this.getComponent("move").setVelocity(vector); },
+		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
 		setPosition: function(point) {
 			this.base(point);
 			this.getComponent("move").setPosition(point);
 		},
 
-		/**
-		 * Update the host object to reflect the state of the bullet.
-		 *
-		 * @param renderContext {RenderContext} The rendering context
-		 * @param time {Number} The engine time in milliseconds
-		 */
 		update: function(renderContext, time) {
 			if (!this.field.inView(this)) // remove if not in field
 			{
@@ -141,6 +108,7 @@ Engine.initObject("Bullet", "Object2D", function() {
 
 	}, {
 		getClassName: function() { return "Bullet"; },
+		
 		shape: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
 		tip: new Point2D(0, -1),
 	});

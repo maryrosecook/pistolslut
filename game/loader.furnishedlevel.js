@@ -77,16 +77,20 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 	var FurnishedLevel = Level.extend(/** @scope Level.prototype */{
 		
 		field: null,
-		signs: null,
-		furniture: null,
-		enemies: null,
-		fires: null,
-		fireworkLaunchers: null,
-		parallaxes: null,
-		parallaxesToMove: null,
+		frameCheapRect: null, // world coords of level frame
+		signs: [],
+		furniture: [],
+		enemies: [],
+		fires: [],
+		fireworkLaunchers: [],
+		parallaxes: [],
+		parallaxesToMove: [],
+		lanterns: [],
 		
 		snowTimer: null,
 		snowFallInterval: 50,
+		
+		wind: 0,
 		
 		minScroll: 0,
 		maxScroll: null,
@@ -95,15 +99,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 	  constructor: function(name, field, levelResource, fieldWidth) {
 			var level = this.base(name, levelResource);
 			this.field = field;
-			this.signs = [];
-			this.furniture = [];
-			this.enemies = [];
-			this.fires = [];
-			this.fireworkLaunchers = [];
-			this.parallaxes = [];
-			this.parallaxesToMove = [];
+			this.frameCheapRect = new CheapRect(null, 0, 0, this.getWidth(), this.getHeight());
 			this.levelResource = levelResource;
 			this.maxScroll = this.getWidth() - fieldWidth;
+			this.wind = FurnishedLevel.BASE_WIND + (FurnishedLevel.RANDOMISED_WIND * Math.random());
 			return level;
 		},
 		
@@ -125,6 +124,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			//this.addSnow();
 			this.addDayNightCycle(renderContext);
 			this.addParallaxes(renderContext);
+			this.addLanterns(renderContext);
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
@@ -168,8 +168,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
 				this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
 				this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
-				this.field.notifier.subscribe(Human.GRENADE_NEARBY, this.signs[i], this.signs[i].notifyGrenadeNearby);
-				this.field.notifier.subscribe(Human.NO_NEARBY_GRENADES, this.signs[i], this.signs[i].notifyNoNearbyGrenades);
+				// this.field.notifier.subscribe(Human.GRENADE_NEARBY, this.signs[i], this.signs[i].notifyGrenadeNearby);
+				// this.field.notifier.subscribe(Human.NO_NEARBY_GRENADES, this.signs[i], this.signs[i].notifyNoNearbyGrenades);
 			}
 		},
 		
@@ -183,6 +183,15 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var data = this.levelResource.info.objects.fireworkLaunchers;
 			for(var i in data)
 				this.fireworkLaunchers[i] = new FireworkLauncher(data[i].name, this.field, renderContext, data[i].x, data[i].y, data[i].angle, data[i].spread, data[i].interval);
+		},
+		
+		numberOfLanterns: 10,
+		addLanterns: function(renderContext) {
+			for(var i = 0; i < this.numberOfLanterns; i++)
+			{
+				this.lanterns[i] = new Lantern(this.field, this.wind, this.field.fieldWidth, this.field.fieldHeight);
+				renderContext.add(this.lanterns[i]);
+			}
 		},
 		
 		addSnow: function() {
@@ -245,7 +254,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		addParallaxes: function(renderContext) {
 			var data = this.levelResource.info.objects.parallaxes;
-			var zIndex = 2;
+			var zIndex = Parallax.START_Z_INDEX;
 			for(var i in data)
 			{
 				var parallax = new Parallax(data[i].name, this.field, zIndex, data[i].scrollAttenuation, data[i].x, data[i].y);
@@ -258,9 +267,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			}
 		},
 
-		// returns world coordinates of view frame
-		getViewFrame: function(renderContext) {
-			return Rectangle2D.create(renderContext.getHorizontalScroll(), renderContext.getVerticalScroll(), this.field.fieldWidth, this.field.fieldHeight);
+		inLevel: function(obj) {
+			return this.frameCheapRect.isIntersecting(new CheapRect(obj));
 		},
 
 		release: function() {
@@ -277,8 +285,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.levelResource = null;
 		},
 	}, {
-
-		getClassName: function() { return "FurnishedLevel"; }
+		getClassName: function() { return "FurnishedLevel"; },
+		
+		BASE_WIND: -0.5,
+		RANDOMISED_WIND: -0.5,
 	});
 
 	return FurnishedLevel;

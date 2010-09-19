@@ -19,20 +19,20 @@ var Player = Human.extend({
 		
 		this.add(KeyboardInputComponent.create("input"));
 		
-		this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
-		this.field.notifier.subscribe(Human.GRENADE_NEARBY, this, this.notifyGrenadeNearby);
-		this.field.notifier.subscribe(Grenade.EXPLODED, this, this.notifyGrenadeExploded);
+		//this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
+		//this.field.notifier.subscribe(Human.GRENADE_NEARBY, this, this.notifyGrenadeNearby);
+		//this.field.notifier.subscribe(Grenade.EXPLODED, this, this.notifyGrenadeExploded);
 	},
 	
 	setup: function(pWidth, pHeight) {
 		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
 	},
 
-	notifyIncoming: function(ordinance) {
-		if(ordinance instanceof Grenade)
-			if(!this.field.collider.objectDistanceAway(this, ordinance, ordinance.safeDistance))
-				this.field.notifier.post(Human.GRENADE_NEARBY, ordinance);
-	},
+	// notifyIncoming: function(ordinance) {
+	// 	if(ordinance instanceof Grenade)
+	// 		if(!this.field.collider.objectDistanceAway(this, ordinance, ordinance.safeDistance))
+	// 			this.field.notifier.post(Human.GRENADE_NEARBY, ordinance);
+	// },
 
 	release: function() {
 		this.base();
@@ -98,7 +98,7 @@ var Player = Human.extend({
 				break;
 		}
 		
-		this.field.notifier.post(Player.MOVE_EVENT, this);
+		//this.field.notifier.post(Player.MOVE_EVENT, this);
 		
 		return false;
 	},

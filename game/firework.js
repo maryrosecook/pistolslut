@@ -27,12 +27,6 @@ Engine.initObject("Firework", "Object2D", function() {
 		},
 		
 		update: function(renderContext, time) {
-			if (!this.field.inView(this))
-			{
-				this.destroy();
-				return;
-			}			
-
 			if(this.getVelocity().y > -3)
 			{
 				this.explode();

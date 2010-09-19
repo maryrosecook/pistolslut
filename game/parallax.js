@@ -60,8 +60,9 @@ Engine.initObject("Parallax", "Object2D", function() {
 		},
 
 	}, {
-
 		getClassName: function() { return "Parallax"; },
+		
+		START_Z_INDEX: 3,
 	});
 
 	return Parallax;

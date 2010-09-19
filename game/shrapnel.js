@@ -4,7 +4,6 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Shrapnel", "Object2D", function() {
-
 	var Shrapnel = Object2D.extend({
 		field: null,
 		shooter: null,
@@ -47,7 +46,7 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 		},
 
 		update: function(renderContext, time) {
-			if (time > this.life || !this.field.inView(this)) // if past life or not in view any more, destroy
+			if (time > this.life) // if past life, destroy
 			{
 				this.destroy();
 				return;

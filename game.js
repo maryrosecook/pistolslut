@@ -37,6 +37,7 @@ Game.load("/game/fireworklauncher.js");
 Game.load("/game/parallax.js");
 Game.load("/game/caret.js");
 Game.load("/game/meter.js");
+Game.load("/game/lantern.js");
 
 
 Engine.initObject("PistolSlut", "Game", function() {
@@ -110,6 +111,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			// load sprite resources
 			this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
 			this.spriteLoader.load("grenade", this.getFilePath("resources/grenade.js"));
+			this.spriteLoader.load("lantern", this.getFilePath("resources/lantern.js"));
 
 			// load level resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
@@ -230,16 +232,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.destroy();
 		},
 
-		/**
-		 * A simple method that determines if the position is within the supplied bounding
-		 * box.
-		 *
-		 * @param pos {Point2D} The position to test
-		 * @param bBox {Rectangle2D} The bounding box of the field
-		 * @type Boolean
-		 */
 		inView: function(obj) {
-			return Math2D.boxBoxCollision(this.level.getViewFrame(this.renderContext), this.collider.getRect(obj));
+			return (new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight)).isIntersecting(new CheapRect(obj));
+			//return Math2D.boxBoxCollision(this.level.getViewFrame(this.renderContext), this.collider.getRect(obj));
 		},
 	
 		// updates the position of the view frame
@@ -253,7 +248,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 				movingPastCentrePoint = true;
 			
 			var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;
-			if(movingPastCentrePoint && potentialNewHorizontalScroll >= this.level.minScroll && potentialNewHorizontalScroll <= this.level.maxScroll)
+			if(movingPastCentrePoint
+				 && potentialNewHorizontalScroll >= this.level.minScroll
+				 && potentialNewHorizontalScroll <= this.level.maxScroll)
 			{
 				this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
 
@@ -269,6 +266,13 @@ Engine.initObject("PistolSlut", "Game", function() {
 				{
 					var meter = this.meters[i];
 					meter.getPosition().setX(meter.getPosition().x + vector.x)
+				}
+				
+				// move lanterns
+				for(var i in this.level.lanterns)
+				{
+					var lantern = this.level.lanterns[i];
+					lantern.getPosition().setX(lantern.getPosition().x + (Lantern.SCROLL_ATTENUATION * vector.x));
 				}
 			}
 		},

@@ -59,16 +59,16 @@ Engine.initObject("Human", "Mover", function() {
 				this.nearbyGrenades.push(grenade);
 		},
 	
-		notifyGrenadeExploded: function(grenade) {
-			for(var i in this.nearbyGrenades)
-				if(this.nearbyGrenades[i] == grenade)
-				{
-					EngineSupport.arrayRemove(this.nearbyGrenades, grenade);
-					if(this.nearbyGrenades.length == 0)
-						this.field.notifier.post(Human.NO_NEARBY_GRENADES, this);
-					break;
-				}
-		},
+		// notifyGrenadeExploded: function(grenade) {
+		// 	for(var i in this.nearbyGrenades)
+		// 		if(this.nearbyGrenades[i] == grenade)
+		// 		{
+		// 			EngineSupport.arrayRemove(this.nearbyGrenades, grenade);
+		// 			if(this.nearbyGrenades.length == 0)
+		// 				this.field.notifier.post(Human.NO_NEARBY_GRENADES, this);
+		// 			break;
+		// 		}
+		// },
 
 		move: function(time) {
 			this.updateDeathState(time);
@@ -294,7 +294,7 @@ Engine.initObject("Human", "Mover", function() {
 				else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 					this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
 			}
-			else if(obj instanceof Bullet || obj instanceof Shrapnel || obj instanceof Grenade)
+			else if(this instanceof Enemy && (obj instanceof Bullet || obj instanceof Shrapnel || obj instanceof Grenade))
 				this.field.notifier.post(Human.INCOMING, obj);
 
 			return ColliderComponent.CONTINUE;

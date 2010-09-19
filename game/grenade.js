@@ -72,7 +72,6 @@ Engine.initObject("Grenade", "Object2D", function() {
 		},
 
 		update: function(renderContext, time) {
-			// Is this grenade in field any more?
 			if (!this.field.inView(this))
 			{
 				this.destroy();
@@ -97,12 +96,12 @@ Engine.initObject("Grenade", "Object2D", function() {
 				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 					this.bounce(obj);
 			}
-			else if(obj instanceof Human)
-			{
-				if(obj.isAlive())
-					if(obj instanceof Enemy) // tell enemy about shots being fired
-						this.field.notifier.post(Human.INCOMING, this);
-			}
+			// else if(obj instanceof Human)
+			// {
+			// 	if(obj.isAlive())
+			// 		if(obj instanceof Enemy) // tell enemy about shots being fired
+			// 			this.field.notifier.post(Human.INCOMING, this);
+			// }
 			
 			return ColliderComponent.CONTINUE;
 		},
@@ -125,7 +124,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
 			
-			this.field.notifier.post(Grenade.EXPLODED, this);
+			//this.field.notifier.post(Grenade.EXPLODED, this);
 			this.destroy();
 		},
 		

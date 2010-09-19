@@ -4,14 +4,24 @@ Engine.initObject("CheapRect", "Base", function() {
 		y: null,
 		r: null,
 		b: null,
-
-		constructor: function(obj) {
-			var pos = obj.getPosition();
-			var bboxDims = obj.getBoundingBox().dims;
-			this.x = pos.x;
-			this.y = pos.y;
-			this.r = this.x + bboxDims.x;
-			this.b = this.y + bboxDims.y;
+		
+		constructor: function(obj, x, y, r, b) {
+			if(obj != null)
+			{
+				var pos = obj.getPosition();
+				var bboxDims = obj.getBoundingBox().dims;
+				this.x = pos.x;
+				this.y = pos.y;
+				this.r = this.x + bboxDims.x;
+				this.b = this.y + bboxDims.y;
+			}
+			else
+			{
+				this.x = x;
+				this.y = y;
+				this.r = r;
+				this.b = b;
+			}
 		},
 	
 		isIntersecting: function(rect) {
@@ -22,10 +32,8 @@ Engine.initObject("CheapRect", "Base", function() {
 		},
 
 	}, {
-
-		getClassName: function() {
-			return "CheapRect";
-		},
+		getClassName: function() { return "CheapRect"; },
+		
 	});
 
 	return CheapRect;

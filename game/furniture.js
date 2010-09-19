@@ -38,22 +38,14 @@ Engine.initObject("Furniture", "Object2D", function() {
 			this.base();
 		},
 
-		getPosition: function() {
-			return this.getComponent("move").getPosition();
-		},
-
+		getPosition: function() { return this.getComponent("move").getPosition(); },
 		setPosition: function(point) {
 			this.base(point);
 			this.getComponent("move").setPosition(point);
 		},
 
-		getRenderPosition: function() {
-			return this.getComponent("move").getRenderPosition();
-		},
-
-		getLastPosition: function() {
-			return this.getComponent("move").getLastPosition();
-		},
+		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
+		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
 
 		update: function(renderContext, time) {
 			renderContext.pushTransform();

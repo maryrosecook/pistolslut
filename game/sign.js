@@ -50,15 +50,15 @@ Engine.initObject("Sign", "Object2D", function() {
 			}
 		},
 		
-		notifyGrenadeNearby: function(grenade) {
-			if(grenade.shooter != this.field.playerObj)
-				this.hijack(Sign.GRENADE_NEARBY_TEXT);
-		},
-		
-		notifyNoNearbyGrenades: function(human) {
-			if(human == this.field.playerObj)
-				this.revert(Sign.GRENADE_NEARBY_TEXT);
-		},
+		// notifyGrenadeNearby: function(grenade) {
+		// 	if(grenade.shooter != this.field.playerObj)
+		// 		this.hijack(Sign.GRENADE_NEARBY_TEXT);
+		// },
+		// 
+		// notifyNoNearbyGrenades: function(human) {
+		// 	if(human == this.field.playerObj)
+		// 		this.revert(Sign.GRENADE_NEARBY_TEXT);
+		// },
 		
 		hijack: function(newText) {
 			this.changeText(newText, "#F7B800");
@@ -179,7 +179,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		
 		HIJACK: "hijack",
 		RELOAD_TEXT: "Reload",
-		GRENADE_NEARBY_TEXT: "Get  down"
+		//GRENADE_NEARBY_TEXT: "Get  down"
 	});
 
 	return Sign;
