@@ -23,10 +23,6 @@ var Player = Human.extend({
 		//this.field.notifier.subscribe(Human.GRENADE_NEARBY, this, this.notifyGrenadeNearby);
 		//this.field.notifier.subscribe(Grenade.EXPLODED, this, this.notifyGrenadeExploded);
 	},
-	
-	setup: function(pWidth, pHeight) {
-		this.pBox = Rectangle2D.create(0, 0, pWidth, pHeight); // Playfield bounding box for quick checks
-	},
 
 	// notifyIncoming: function(ordinance) {
 	// 	if(ordinance instanceof Grenade)

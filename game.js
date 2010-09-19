@@ -97,8 +97,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			Engine.setFPS(this.engineFPS);
 		
 			// Create the 2D context
-			this.fieldBox = Rectangle2D.create(0, 0, this.fieldWidth, this.fieldHeight);
-			this.centerPoint = this.fieldBox.getCenter();
+			this.centerPoint = Rectangle2D.create(0, 0, this.fieldWidth, this.fieldHeight).getCenter();
 		
 		  this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
@@ -197,7 +196,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 			
 			this.playerObj = Player.create(this, this.groundY);
 			this.renderContext.add(this.playerObj);
-			this.playerObj.setup(this.fieldWidth, this.fieldHeight);
 			
 			// add meters
 			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, new Point2D(5, 5));
