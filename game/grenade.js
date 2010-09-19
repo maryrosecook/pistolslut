@@ -12,7 +12,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 		
 		speed: 8,
 		pinTimer: 2000, // how long the grande takes to explode
-		safeDistance: 150,
+		safeDistance: 250,
 		
 		constructor: function(shooter) {
 			this.base("Grenade");
