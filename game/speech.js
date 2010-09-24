@@ -32,10 +32,10 @@ Engine.initObject("Speech", "Object2D", function() {
 			}	
 		},
 		
-		getTextWidth: function(text) {
-			for(var i in text.split(""))
-				VectorText.charSet[]
-		},
+		// getTextWidth: function(text) {
+		// 	for(var i in text.split(""))
+		// 		VectorText.charSet[]
+		// },
 		
 		getGlyph: function(letter) { return VectorText.charSet[letter - 32]; },
 	
