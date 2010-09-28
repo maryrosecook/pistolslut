@@ -78,7 +78,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		
 		field: null,
 		frameCheapRect: null, // world coords of level frame
-		triggers: {},
+		triggers: [],
 		triggerableObjects: {},
 		signs: [],
 		furniture: [],
@@ -243,7 +243,12 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.field.notifier.subscribe(Player.MOVE_EVENT, this, this.checkTrigger);
 			var data = this.levelResource.info.objects.triggers;
 			for(var i in data)
-				this.triggers[data[i].x] = new Trigger(data[i].triggerFunctionName, this.triggerableObjects[data[i].identifier]);
+				this.triggers.push(new Trigger(this,
+																			 data[i].triggerFunctionName,
+																			 this.triggerableObjects[data[i].identifier],
+																			 data[i].xStart,
+																			 Human.WALK_SPEED,
+																			 data[i].oneTime));
 		},
 		
 		// objs added can then be run by triggers in the level e.g.:
@@ -255,10 +260,14 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 
 		// player has moved so run an appropriate trigger if one exists
-		checkTrigger: function(playerObj) { 
-			//console.log(playerObj.getPosition().x, this.triggers[playerObj.getPosition().x] == undefined)
-			if(this.triggers[playerObj.getPosition().x] != undefined) // there is a trigger for this x
-				this.triggers[playerObj.getPosition().x].trigger(); // run that bitch
+		checkTrigger: function(playerObj) {
+			var playerX = playerObj.getPosition().x;
+			for(var i in this.triggers)
+				this.triggers[i].check(playerX);
+		},
+		
+		removeTrigger: function(trigger) {
+			EngineSupport.arrayRemove(this.triggers, trigger);
 		},
 
 		inLevel: function(obj) {

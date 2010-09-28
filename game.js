@@ -55,7 +55,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		renderContext: null,
 
 		fieldBox: null,
-		centerPoint: null,
+		playerCenterPoint: null,
 		areaScale: $.browser.Wii ? 0.7 : 0.93,
 
 		engineFPS: 30,
@@ -66,10 +66,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 		physics: null,		
 		notifier: null,
 	
-		groundY: 400,
+		groundY: 250,
 	
-		fieldWidth: 500,
-		fieldHeight: 580,
+		fieldWidth: 700,
+		fieldHeight: 430,
 		level: null,
 	
 		meters: [],
@@ -100,7 +100,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			Engine.setFPS(this.engineFPS);
 		
 			// Create the 2D context
-			this.centerPoint = Rectangle2D.create(0, 0, this.fieldWidth, this.fieldHeight).getCenter();
+			this.playerCenterX = this.fieldWidth / 4;
 		
 		  this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
@@ -136,8 +136,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 			
       EventEngine.setHandler(document, "keypress", PistolSlut.onKeyPress);
 
-      PistolSlut.start = TextRenderer.create(VectorText.create(), "Press any key to start", 1);
-      PistolSlut.start.setPosition(Point2D.create(125, 200));
+      PistolSlut.start = TextRenderer.create(VectorText.create(), "Press z to start", 1);
+      PistolSlut.start.setPosition(Point2D.create(300, 168));
       PistolSlut.start.setColor("#fff");
       PistolSlut.renderContext.add(PistolSlut.start);
 
@@ -243,9 +243,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 			var centralObjWindowX = centralObj.getRenderPosition().x;
 
 			var movingPastCentrePoint = false;
-			if(vector.x > 0 && centralObjWindowX > this.centerPoint.x)
+			if(vector.x > 0 && centralObjWindowX > this.playerCenterX)
 				movingPastCentrePoint = true;
-			else if(vector.x < 0 && centralObjWindowX < this.centerPoint.x)
+			else if(vector.x < 0 && centralObjWindowX < this.playerCenterX)
 				movingPastCentrePoint = true;
 			
 			var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;

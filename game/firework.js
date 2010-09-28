@@ -16,7 +16,7 @@ Engine.initObject("Firework", "Object2D", function() {
 			
 			this.setPosition(new Point2D(x, y));
 			this.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Firework.TIP, angle));
-			var speed = 20 + (Math.random() * 4);
+			var speed = 17 + (Math.random() * 4);
 			this.setVelocity(this.getVelocity().mul(speed));
 			this.getComponent("move").setCheckLag(false);
 			

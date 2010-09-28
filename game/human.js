@@ -212,18 +212,17 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		turn: function(direction) { this.direction = direction; },
-
+		
 		walking: false,	
-		walkSpeed: 3,
 		walk: function(direction) {
 			if(!this.walking && !this.isCrouching())
 			{
 				this.walking = true;
 				this.direction = direction;
 				if(direction == Collider.LEFT)
-					this.velocity.setX(this.velocity.x - this.walkSpeed);
+					this.velocity.setX(this.velocity.x - Human.WALK_SPEED);
 				else if(direction == Collider.RIGHT)
-					this.velocity.setX(this.velocity.x + this.walkSpeed);
+					this.velocity.setX(this.velocity.x + Human.WALK_SPEED);
 			}
 		},
 	
@@ -347,6 +346,8 @@ Engine.initObject("Human", "Mover", function() {
 
 	}, {
 		getClassName: function() { return "Human"; },
+		
+		WALK_SPEED: 3,
 		
 		// states of being
 		ALIVE: "Alive",

@@ -2965,7 +2965,7 @@ var Engine = Engine.extend({
             $("head").append($(Engine.loadingCSS));
 
             var loadingDialog = "<span id='loading' class='intrinsic'><table border='0' style='width:100%;height:100%;'><tr>";
-            loadingDialog += "<td style='width:100%;height:100%;' valign='middle' align='center'><div class='loadbox'>Loading ";
+            loadingDialog += "<td style='width:100%;height:100%;' valign='middle' align='left'><div class='loadbox'>Loading ";
             loadingDialog += gameDisplayName + "...<div id='engine-load-progress'></div><span id='engine-load-info'></span></div>";
             loadingDialog += "</td></tr></table></span>";
 
