@@ -37,6 +37,9 @@ var Player = Human.extend({
 	update: function(renderContext, time) {
 		this.base(renderContext, time);
 		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
+		
+		//if(this.velocity.x != 0)
+			this.field.notifier.post(Player.MOVE_EVENT, this);
 	},
 
 	// if walking when pressed crouch, have now stood up
@@ -93,8 +96,6 @@ var Player = Human.extend({
 				this.cycleWeapon();
 				break;
 		}
-		
-		//this.field.notifier.post(Player.MOVE_EVENT, this);
 		
 		return false;
 	},

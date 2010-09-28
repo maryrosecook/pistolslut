@@ -38,6 +38,9 @@ Game.load("/game/parallax.js");
 Game.load("/game/caret.js");
 Game.load("/game/meter.js");
 Game.load("/game/lantern.js");
+Game.load("/game/sky.js");
+Game.load("/game/speech.js");
+Game.load("/game/trigger.js");
 
 
 Engine.initObject("PistolSlut", "Game", function() {
@@ -160,13 +163,13 @@ Engine.initObject("PistolSlut", "Game", function() {
 	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);
-			this.renderContext.setBackgroundColor(this.level.getSkyColor());
 			Engine.getDefaultContext().add(this.renderContext);
 			
 			this.loadComponents();
 			
 			// load rest of level
 			this.level.addObjects(this.renderContext);
+			this.renderContext.setBackgroundColor(this.level.sky.getSkyColor());
 		},
 		
 		loadComponents: function() {

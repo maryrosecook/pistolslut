@@ -12,7 +12,7 @@ Engine.initObject("Human", "Mover", function() {
 		health: -1,
 		standState: null,
 		canThrowGrenades: false,
-		nearbyGrenades: [],
+		//nearbyGrenades: [],
 	
 		constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
 			this.base(name);

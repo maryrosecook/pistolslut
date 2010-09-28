@@ -74,10 +74,12 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 
 Engine.initObject("FurnishedLevel", "Level", function() {
 	
-	var FurnishedLevel = Level.extend(/** @scope Level.prototype */{
+	var FurnishedLevel = Level.extend({
 		
 		field: null,
 		frameCheapRect: null, // world coords of level frame
+		triggers: {},
+		triggerableObjects: {},
 		signs: [],
 		furniture: [],
 		enemies: [],
@@ -86,6 +88,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		parallaxes: [],
 		parallaxesToMove: [],
 		lanterns: [],
+		sky: null,
+		speeches: [],
 		
 		snowTimer: null,
 		snowFallInterval: 50,
@@ -103,6 +107,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.levelResource = levelResource;
 			this.maxScroll = this.getWidth() - fieldWidth;
 			this.wind = FurnishedLevel.BASE_WIND + (FurnishedLevel.RANDOMISED_WIND * Math.random());
+			
 			return level;
 		},
 		
@@ -122,9 +127,11 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addFires();
 			this.addFireworkLaunchers(renderContext);
 			//this.addSnow();
-			this.addDayNightCycle(renderContext);
+			this.addSky(renderContext);
 			this.addParallaxes(renderContext);
 			this.addLanterns(renderContext);
+			this.addSpeeches(renderContext);
+			this.addTriggers(); // must be called last so that all the triggerable objs have been added to this.triggerableObjects
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
@@ -157,17 +164,16 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 
 		// load signs from the current level
-		signLetterSpacing: 7,
-		signColor: "#fff",
 		addSigns: function(renderContext) {
 			var data = this.levelResource.info.objects.signs;
-			for(var i in data)
+			var signs = data.items;
+			for(var i in data.items)
 			{
-				this.signs[i] = new Sign(this.field, data[i].text, this.signColor, Point2D.create(data[i].x, data[i].y), data[i].width, this.signLetterSpacing);
+				this.signs[i] = new Sign(this.field, signs[i].text, data.color, Point2D.create(signs[i].x, signs[i].y), signs[i].width, data.letterSpacing);
 				renderContext.add(this.signs[i]);
-				this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
-				this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
-				this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
+				// this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
+				// this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
+				// this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
 				// this.field.notifier.subscribe(Human.GRENADE_NEARBY, this.signs[i], this.signs[i].notifyGrenadeNearby);
 				// this.field.notifier.subscribe(Human.NO_NEARBY_GRENADES, this.signs[i], this.signs[i].notifyNoNearbyGrenades);
 			}
@@ -202,54 +208,20 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			});
 		},
 		
-		skyColor: [
-			{ start: 50,  end: 110, parts: [0,1,2], },
-			{ start: 110, end: 50,  parts: [0,1,2], },
-		],
-		
-		// makes sky lighten and darken
-		stage: 0,
-		hue: 0,
-		hueStep: 1,
-		dayNightCycleInterval: 1000,
-		currentColor: ["32", "32", "32"],
-		addDayNightCycle: function(renderContext) {
-			this.hue = this.skyColor[this.stage].start; // get starting hue of starting stage
-			var level = this;
-			this.dayNightCycleTimer = Interval.create("dayNightCycle", this.dayNightCycleInterval,
-				function() {
-					level.updateSkyColor();
-					renderContext.setBackgroundColor(level.getSkyColor());
-			});
-		},
-		
-		updateSkyColor: function() {
-			if(this.hue == this.skyColor[this.stage].end) // maybe move to next stage
+		addSpeeches: function(renderContext) {
+			var data = this.levelResource.info.objects.speeches;
+			var speeches = data.items;
+			for(var i in speeches)
 			{
-				if(this.stage == this.skyColor.length - 1)
-					this.stage = 0;
-				else
-					this.stage += 1;
-					
-				this.hue = this.skyColor[this.stage].start;
-			}
-			else
-			{
-				for(var i = 0; i < 3; i++)
-					if(this.skyColor[this.stage].parts.indexOf(i) > -1) // this part of hex is changing
-						this.currentColor[i] = this.hue.toString(16);
-					else // this part of hex is staying the same
-						this.currentColor[i] = this.currentColor[i];
-						
-				if(this.skyColor[this.stage].start < this.skyColor[this.stage].end)
-					this.hue += this.hueStep;
-				else
-					this.hue -= this.hueStep;
+				this.speeches[i] = new Speech(this.field, speeches[i].text, data.lineSpacing, speeches[i].x, speeches[i].b, speeches[i].width, data.color);
+				this.addToTriggerableObjects(this.speeches[i], speeches[i]);
+				renderContext.add(this.speeches[i]);
 			}
 		},
 		
-		getSkyColor: function() {
-			return "#" + this.currentColor[0] + this.currentColor[1] + this.currentColor[2];
+		addSky: function(renderContext) {
+			var data = this.levelResource.info.objects.sky;
+			this.sky = new Sky(data.startColor, data.transformations, renderContext);
 		},
 
 		addParallaxes: function(renderContext) {
@@ -266,6 +238,28 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				zIndex += 1;
 			}
 		},
+		
+		addTriggers: function() {
+			this.field.notifier.subscribe(Player.MOVE_EVENT, this, this.checkTrigger);
+			var data = this.levelResource.info.objects.triggers;
+			for(var i in data)
+				this.triggers[data[i].x] = new Trigger(data[i].triggerFunctionName, this.triggerableObjects[data[i].identifier]);
+		},
+		
+		// objs added can then be run by triggers in the level e.g.:
+		// trigger - { id: "speechMortarGuy", text: "Oh no she's here. Opening fire.", x: 395, b: 480, width: 100 }
+		// obj     - { id: "speechMortarGuy", x: 400, call: show }
+		// yes, you can't have more than one trigger at the same x
+		addToTriggerableObjects: function(obj, objData) { 
+			this.triggerableObjects[objData.identifier] = obj;
+		},
+
+		// player has moved so run an appropriate trigger if one exists
+		checkTrigger: function(playerObj) { 
+			//console.log(playerObj.getPosition().x, this.triggers[playerObj.getPosition().x] == undefined)
+			if(this.triggers[playerObj.getPosition().x] != undefined) // there is a trigger for this x
+				this.triggers[playerObj.getPosition().x].trigger(); // run that bitch
+		},
 
 		inLevel: function(obj) {
 			return this.frameCheapRect.isIntersecting(new CheapRect(obj));
@@ -274,15 +268,19 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		release: function() {
 			this.base();
 			this.field = null;
-			this.signs = null;
-			this.furniture = null;
-			this.enemies = null;
-			this.fires = null;
-			this.fireworkLaunchers = null;
-			this.parallaxes = null;
+			this.triggers = {};
+			this.triggerableObjects = {};
+			this.signs = [];
+			this.furniture = [];
+			this.enemies = [];
+			this.fires = [];
+			this.fireworkLaunchers = [];
+			this.parallaxes = [];
 			this.minScroll = 0;
 			this.maxScroll = null;
 			this.levelResource = null;
+			this.sky = null;
+			this.speeches = [];
 		},
 	}, {
 		getClassName: function() { return "FurnishedLevel"; },

@@ -10,61 +10,82 @@ Engine.initObject("Speech", "Object2D", function() {
 		field: null,
 		textRenderers: [],
 		speechPosition: null,
-		speechWidth: null,
 	
-		constructor: function(field, text, color, position, speechWidth) {
+		constructor: function(field, text, lineSpacing, x, b, width, color) {
 			this.base("Speech");
 			this.field = field;
-			this.speechPosition = position;
-			this.speechWidth = speechWidth;
-			this.setupTextRenderers(text, color)
+			this.setup(text, lineSpacing, x, b, width, color)
 		},
 	
-		// splits up text so each line is handled by a different TextRenderer
-		setupTextRenderers: function(text, color) {
-			var words = text.split(" ");
-			for(var i in textPieces) 
+		setup: function(text, lineSpacing, x, b, width, color) {
+			var lines = this.splitTextIntoLines(text, width);
+			this.speechPosition = this.calculateSpeechPosition(lines.length, lineSpacing, x, b);
+			
+			for(var i in lines)
 			{
-				this.textRenderers[i] = TextRenderer.create(VectorText.create(), textPieces[i], 1);
+				this.textRenderers[i] = TextRenderer.create(VectorText.create(), lines[i], 1);
 		    this.textRenderers[i].setColor(color);
-				this.textRenderers[i].textBoundingBox = this.getTextBoundingBox(this.textRenderers[i]);
+				this.textRenderers[i].setPosition(this.calculateTextRendererPosition(i, lineSpacing, x, b));
+				this.textRenderers[i].setDrawMode(TextRenderer.NO_DRAW);
 				this.field.renderContext.add(this.textRenderers[i]);
-			}	
+			}
 		},
-		
-		// getTextWidth: function(text) {
-		// 	for(var i in text.split(""))
-		// 		VectorText.charSet[]
-		// },
-		
-		getGlyph: function(letter) { return VectorText.charSet[letter - 32]; },
 	
-		getTextBoundingBox: function(textRenderer) { return textRenderer.renderer.getHostObject().getBoundingBox().dims; },
-
+		calculateSpeechPosition: function(totalLines, lineSpacing, x, b) {
+			var y = b - (totalLines * (lineSpacing + TextRenderer.create(VectorText.create(), "a", 1).getBoundingBox().dims.y));
+			return Point2D.create(x, y);
+		},
+	
+		calculateTextRendererPosition: function(lineNumber, lineSpacing, x, b) {
+			var y = this.speechPosition.y + (lineNumber * (lineSpacing + TextRenderer.create(VectorText.create(), "a", 1).getBoundingBox().dims.y));
+			return Point2D.create(x, y);
+		},
+	
 		release: function() {
 			this.base();
 			this.textRenderers = [];
 			this.speechPosition = null;
-			this.speechWidth = null;
 		},
 
-		update: function(renderContext, time) {
-			if(this.isScrollComplete())
-				this.resetScroll();
-			else
-			{
-				renderContext.pushTransform();
-				for(var i in this.textRenderers)
-				{
-					this.textRenderers[i].getPosition().add(this.scrollVec);
-					this.textRenderers[i].drawMode = this.isTextVisible(this.textRenderers[i]) ? TextRenderer.DRAW_TEXT : TextRenderer.NO_DRAW;
-					if(this.textRenderers[i].drawMode == TextRenderer.DRAW_TEXT)
-						this.textRenderers[i].base(renderContext, time);
-				}
-				renderContext.popTransform();
+		// update: function(renderContext, time) {
+		// 
+		// },
 		
-				this.lastScrolled = time;
+		show: function() {
+			for(var i in this.textRenderers)
+				this.textRenderers[i].drawMode = TextRenderer.DRAW_TEXT;
+		},
+		
+		hide: function() {
+			for(var i in this.textRenderers)
+				this.textRenderers[i].drawMode = TextRenderer.NO_DRAW;
+		},
+
+		// split up each speech into lines of right width in readiness for display later
+		splitTextIntoLines: function(text, lineWidth) {
+			var lines = [];
+			var currentLine = "";
+			var cumulativeLineWidth = 0; // pixels
+			var words = text.split(" ");
+			for(var j in words)
+			{
+				var word = words[j] + " ";
+				var wordWidth = TextRenderer.create(VectorText.create(), word, 1).getBoundingBox().dims.x;
+				if(cumulativeLineWidth + wordWidth > lineWidth)
+				{
+					lines.push(currentLine);
+					currentLine = "";
+					cumulativeLineWidth = 0;
+				}
+				
+				cumulativeLineWidth += wordWidth;
+				currentLine += word;
 			}
+			
+			if(currentLine != "")
+				lines.push(currentLine);
+						
+			return lines;	
 		},
 
 		getPosition: function() { return this.getComponent("move").getPosition(); },

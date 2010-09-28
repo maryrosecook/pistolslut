@@ -3,12 +3,15 @@
 	// Animation (a): left, top, frameWidth, frameHeight, frameCount, speedMS, loop/toggle
 	bitmapImage: "level1.gif", bitmapWidth: 2000, bitmapHeight: 580, collisionMap: [],
 	objects: {
-		signs: [
-			{ text: "Pistol  Slut", x: 89, y: 460, width: 140 },
-			{ text: "Please  return  to  your  homes", x: 805, y: 172, width: 245	},
-			{ text: "Free  shop", x: 1188, y: 461, width: 140 }
-		],
-		
+		signs: {
+			color: "#fff", letterSpacing: 7,
+			items: [
+				{ text: "Pistol  Slut", x: 89, y: 460, width: 140 },
+				{ text: "Please  return  to  your  homes", x: 805, y: 172, width: 245	},
+				{ text: "Free  shop", x: 1188, y: 461, width: 140 }
+			]
+		},
+
 		furniture: [
 			{
 				name: "blockwallleft", x: 0, y: 417, 
@@ -57,6 +60,17 @@
 			{ name: "enemy2", clazz: Enemy, x: 1140, y: 500, health: 4, weaponName: "M9", canThrowGrenades: false },
 		],
 		
+		speeches: {
+			color: "#fff", letterSpacing: 7, lineSpacing: 10,
+			items: [
+				{ identifier: "speechMortarGuy", text: "Oh no she's here. Opening fire.", x: 1140, b: 480, width: 100 }
+			]
+		},
+		
+		triggers: [
+			{ identifier: "speechMortarGuy", x: 850, triggerFunctionName: "show" }
+		],
+		
 		fires: [
 			{ name: "fire1", x: 374, y: 520, width: 14 }
 		],
@@ -65,48 +79,50 @@
 			{ name: "fireworklauncher1", x: 381, y: 520, angle: 0, spread: 20, interval: 10000 }
 		],
 		
+		sky: {
+			startColor: ["32", "32", "32"],
+			transformations: [
+				{ start: 50,  end: 110, parts: [0,1,2], },
+				{ start: 110, end: 50,  parts: [0,1,2], }
+			]
+		},
+		
 		parallaxes: [
 			{ 
-				name: "farthestlight", x: 400, y: 507,
-				scrollAttenuation: 0.8,
+				name: "farthestlight", x: 400, y: 507, scrollAttenuation: 0.8,
 				sprite: {
 					bitmapImage: "farthestlight.gif",
 					sprites: { "main": { "a" : [0, 0, 40, 40, 2, 6000, "loop"] } }
 				}
 			},
 			{ 
-				name: "fartherlight", x: 480, y: 450,
-				scrollAttenuation: 0.75,
+				name: "fartherlight", x: 480, y: 450, scrollAttenuation: 0.75,
 				sprite: {
 					bitmapImage: "fartherlight.gif",
 					sprites: { "main": { "f" : [0, 0, 100, 100] } }
 				}
 			},
 			{ 
-				name: "closerlight", x: 750, y: 350,
-				scrollAttenuation: 0.60,
+				name: "closerlight", x: 750, y: 350, scrollAttenuation: 0.60,
 				sprite: {
 					bitmapImage: "closerlight.gif",
 					sprites: { "main": { "f" : [0, 0, 200, 200] } }
 				}
 			},
 			{ 
-				name: "gantry", x: 0, y: 280,
-				scrollAttenuation: 0.5,
+				name: "gantry", x: 0, y: 280, scrollAttenuation: 0.5,
 				sprite: {
 					bitmapImage: "gantry.gif",
 					sprites: { "main": { "f" : [0, 0, 700, 300] } }
 				}
 			},
 			{ 
-				name: "street", x: 0, y: 0,
-				scrollAttenuation: 0,
+				name: "street", x: 0, y: 0, scrollAttenuation: 0,
 				sprite: {
 					bitmapImage: "street.gif",
 					sprites: { "main": { "f" : [0, 0, 2000, 580] } }
 				}
 			}
 		]
-		// "It is illegal to buy or possess a gas mask", "Your trade union is your voice", "Be a good citizen: vote"]
 	}
 }
