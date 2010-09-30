@@ -250,11 +250,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 																			 Human.WALK_SPEED,
 																			 data[i].oneTime));
 		},
-		
-		// objs added can then be run by triggers in the level e.g.:
-		// trigger - { id: "speechMortarGuy", text: "Oh no she's here. Opening fire.", x: 395, b: 480, width: 100 }
-		// obj     - { id: "speechMortarGuy", x: 400, call: show }
-		// yes, you can't have more than one trigger at the same x
+
 		addToTriggerableObjects: function(obj, objData) { 
 			this.triggerableObjects[objData.identifier] = obj;
 		},
