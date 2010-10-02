@@ -30,6 +30,7 @@ Game.load("/game/m9.js");
 Game.load("/game/mac10.js");
 Game.load("/game/spas.js");
 Game.load("/game/mortar.js");
+Game.load("/game/ordinance.js");
 Game.load("/game/bullet.js");
 Game.load("/game/mortarround.js");
 Game.load("/game/shrapnel.js");

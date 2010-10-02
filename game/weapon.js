@@ -36,9 +36,6 @@ Engine.initObject("Weapon", "Base", function() {
 				this.reload(); // if just switched to this weapon, start it reloading
 		},
 		
-		muzzleFlashSpread: 15,
-		muzzleParticleCount: 10,
-		muzzleParticleTTL: 500,
 		shoot: function() {
 			if(!this.isClipEmpty())
 			{
@@ -52,30 +49,31 @@ Engine.initObject("Weapon", "Base", function() {
 					for(var x = 0; x < this.projectilesPerShot; x++)
 						this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
 
-					// generate the muzzle flash
-					var gunTipInWorld = this.getGunTip();
-					var particles = [];
-					for(var x = 0; x < this.muzzleParticleCount; x++)
-						particles[x] = BurnoutParticle.create(gunTipInWorld, this.owner.getGunAngle(), this.owner.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
-					this.field.pEngine.addParticles(particles);
+					this.muzzleFlash();
 
 					this.shotsInClip -= 1;
 					this.lastShot = new Date().getTime();
 					if(this.owner instanceof Player)
 						this.field.notifier.post(Weapon.SHOOT, this);
 				}
-				
-				if(this.isClipEmpty())
-				{
-					this.reload(); // auto reload
-					this.field.notifier.post(Human.CLIP_EMPTY, this);		
-				}
 			}
-			else
+
+			if(this.isClipEmpty())
 			{
 				this.reload(); // auto reload
 				this.field.notifier.post(Human.CLIP_EMPTY, this);		
 			}
+		},
+		
+		muzzleFlashSpread: 15,
+		muzzleParticleCount: 10,
+		muzzleParticleTTL: 500,
+		muzzleFlash: function() {
+			var gunTipInWorld = this.getGunTip();
+			var particles = [];
+			for(var x = 0; x < this.muzzleParticleCount; x++)
+				particles[x] = BurnoutParticle.create(gunTipInWorld, this.owner.getGunAngle(), this.owner.velocity, this.muzzleFlashSpread, this.muzzleParticleTTL);
+			this.field.pEngine.addParticles(particles);
 		},
 		
 		// the faster the shooter shoots, the wilder their shots go
@@ -88,7 +86,7 @@ Engine.initObject("Weapon", "Base", function() {
 				spread += (timeRequiredForDeadAim - timeSinceLastShot) / steadiness;
 				
 			var shootAngle = this.owner.getGunAngle() - (spread / 2) + (Math.random() * spread);
-			return Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, shootAngle);
+			return Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, shootAngle);
 		},
 		
 		shootKeyHasBeenUpSinceLastShot: true,
@@ -102,8 +100,8 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		shooting: "Notshooting",
-		startShooting: function(shooting) { this.shooting = Weapon.SHOOTING; },
-		stopShooting: function(shooting) {
+		startShooting: function() { this.shooting = Weapon.SHOOTING; },
+		stopShooting: function() {
 			this.owner.stoppedShooting();
 			this.shooting = Weapon.NOT_SHOOTING;
 		},

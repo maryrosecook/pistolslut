@@ -6,7 +6,7 @@ Engine.initObject("M9", "Weapon", function() {
 								M9.PROJECTILES_PER_SHOT, M9.TIME_TO_RELOAD, Bullet, M9.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
-		bulletPhysics: function() {
+		ordinancePhysics: function() {
 			return this.recoil(M9.BASE_SPREAD, M9.TIME_REQUIRED_FOR_DEAD_AIM, M9.STEADINESS);
 		},
 		

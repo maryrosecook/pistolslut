@@ -47,14 +47,6 @@ Engine.initObject("Grenade", "Mover", function() {
 			}
 			this.base();
 		},
-		
-		getVelocity: function() {
-			return this.getComponent("move").getVelocity();
-		},
-	
-		setVelocity: function(vector) {
-			return this.getComponent("move").setVelocity(vector);
-		},
 
 		update: function(renderContext, time) {
 			if (!this.field.inView(this))

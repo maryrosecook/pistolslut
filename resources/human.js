@@ -157,12 +157,17 @@
 		},
 
 		
-		// mortar
 		"RightCrouchingStillShootingMortar": {
-			"a" : [0, 907, 46, 30, 7, 150, "once"]
+			"a" : [0, 1195, 46, 31, 20, 150, "once"]
+		},
+		"RightCrouchingStillShootingMortar": {
+			"f" : [0, 1195, 46, 31]
 		},
 		"LeftCrouchingStillShootingMortar": {
-			"f" : [0, 988, 46, 30]
+			"a" : [0, 1234, 46, 31, 20, 150, "once"]
+		},
+		"LeftCrouchingStillShootingMortar": {
+			"f" : [0, 1234, 46, 31]
 		}
 	}
 }

@@ -6,7 +6,7 @@ Engine.initObject("Mortar", "Weapon", function() {
 								Mortar.PROJECTILES_PER_SHOT, Mortar.TIME_TO_RELOAD, MortarRound, Mortar.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
-		bulletPhysics: function() {
+		ordinancePhysics: function() {
 			return this.recoil(Mortar.BASE_SPREAD, Mortar.TIME_REQUIRED_FOR_DEAD_AIM, Mortar.STEADINESS);
 		},
 		

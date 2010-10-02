@@ -3,8 +3,8 @@ Engine.include("/components/component.vector2d.js");
 Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
-Engine.initObject("Shrapnel", "Object2D", function() {
-	var Shrapnel = Object2D.extend({
+Engine.initObject("Shrapnel", "Mover", function() {
+	var Shrapnel = Mover.extend({
 		field: null,
 		shooter: null,
 		
@@ -104,17 +104,6 @@ Engine.initObject("Shrapnel", "Object2D", function() {
 			if (this.ModelData.lastNode)
 				this.ModelData.lastNode.removeObject(this);
 			this.base();
-		},
-	
-		getVelocity: function() { return this.getComponent("move").getVelocity(); },
-		setVelocity: function(vector) { return this.getComponent("move").setVelocity(vector); },
-
-		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
-		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
-		getPosition: function() { return this.getComponent("move").getPosition(); },
-		setPosition: function(point) {
-			this.base(point);
-			this.getComponent("move").setPosition(point);
 		},
 
 	}, {

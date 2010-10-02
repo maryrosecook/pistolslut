@@ -16,6 +16,7 @@ Engine.initObject("Human", "Mover", function() {
 		health: -1,
 		standState: null,
 		canThrowGrenades: false,
+		direction: null,
 		//nearbyGrenades: [],
 			
 		constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
@@ -28,14 +29,14 @@ Engine.initObject("Human", "Mover", function() {
 			this.loadSprites();
 			this.setupWeapons(weaponName);
 		
-			// Add components to move and draw the player
+			// Add components to move and draw the human
 			this.add(Mover2DComponent.create("move"));
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 
 			this.setSprite(this.direction + Human.STANDING + Human.STILL + this.getShootState() + this.weapon.name);
-
-			this.velocity = Vector2D.create(0, 0);
+			this.setVelocity(Vector2D.create(0, 0));
+			
 			this.getComponent("move").setCheckLag(false);
 			this.getComponent("move").setPosition(position);
 		},
@@ -84,7 +85,7 @@ Engine.initObject("Human", "Mover", function() {
 		
 			this.handleFriction();
 		
-			this.setPosition(this.getPosition().add(this.velocity));
+			this.setPosition(this.getPosition().add(this.getVelocity()));
 		},
 		
 		getStandState: function() { return this.standState; },
@@ -212,7 +213,7 @@ Engine.initObject("Human", "Mover", function() {
 			if(!this.jumping && !this.isCrouching())
 			{
 				this.jumping = true;
-				this.velocity.setY(this.velocity.y + this.jumpSpeed);
+				this.getVelocity().setY(this.getVelocity().y + this.jumpSpeed);
 				this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
 			}
 		},
@@ -226,14 +227,14 @@ Engine.initObject("Human", "Mover", function() {
 				this.walking = true;
 				this.direction = direction;
 				if(direction == Collider.LEFT)
-					this.velocity.setX(this.velocity.x - Human.WALK_SPEED);
+					this.getVelocity().setX(this.getVelocity().x - Human.WALK_SPEED);
 				else if(direction == Collider.RIGHT)
-					this.velocity.setX(this.velocity.x + Human.WALK_SPEED);
+					this.getVelocity().setX(this.getVelocity().x + Human.WALK_SPEED);
 			}
 		},
 	
 		stopWalk: function(newX) {
-			this.velocity.setX(0);
+			this.getVelocity().setX(0);
 			this.walking = false;
 		},
 	
@@ -245,7 +246,7 @@ Engine.initObject("Human", "Mover", function() {
 	
 		endFall: function(groundObj) {
 			this.getPosition().setY(groundObj.getPosition().y - this.getBoundingBox().dims.y);
-			this.velocity.setY(0);
+			this.getVelocity().setY(0);
 			this.jumping = false;
 		},
 		
@@ -311,7 +312,7 @@ Engine.initObject("Human", "Mover", function() {
 			newX = null;
 			if(!this.isAlive())
 			{
-				var x = this.velocity.x;
+				var x = this.getVelocity().x;
 				if(x == 0)
 					return;
 				else if(x > 0)
@@ -326,7 +327,7 @@ Engine.initObject("Human", "Mover", function() {
 					if(newX < 0)
 						newX = 0;
 				}
-				this.velocity.setX(newX);
+				this.getVelocity().setX(newX);
 			}
 		},
 	

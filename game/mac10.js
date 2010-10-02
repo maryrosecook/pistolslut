@@ -6,7 +6,7 @@ Engine.initObject("Mac10", "Weapon", function() {
 								Mac10.PROJECTILES_PER_SHOT, Mac10.TIME_TO_RELOAD, Bullet, Mac10.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
-		bulletPhysics: function() {
+		ordinancePhysics: function() {
 			return this.recoil(Mac10.BASE_SPREAD, Mac10.TIME_REQUIRED_FOR_DEAD_AIM, Mac10.STEADINESS);
 		},
 		

@@ -6,7 +6,7 @@ Engine.initObject("SPAS", "Weapon", function() {
 								SPAS.PROJECTILES_PER_SHOT, SPAS.TIME_TO_RELOAD, Bullet, SPAS.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
-		bulletPhysics: function() {
+		ordinancePhysics: function() {
 			return this.recoil(SPAS.BASE_SPREAD, SPAS.TIME_REQUIRED_FOR_DEAD_AIM, SPAS.STEADINESS);
 		},
 		

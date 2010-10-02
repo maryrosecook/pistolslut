@@ -34,9 +34,9 @@ var Player = Human.extend({
 
 	update: function(renderContext, time) {
 		this.base(renderContext, time);
-		this.field.updateFramePosition(this.velocity, this); // move the render frame in response to player movement
+		this.field.updateFramePosition(this.getVelocity(), this); // move the render frame in response to player movement
 		
-		//if(this.velocity.x != 0)
+		//if(this.getVelocity().x != 0)
 			this.field.notifier.post(Player.MOVE_EVENT, this);
 	},
 
