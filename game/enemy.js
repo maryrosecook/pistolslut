@@ -8,8 +8,6 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
-	weapon: null,
-	weapons: [],
 	shootTimer: null,
 	grenadeThrowDelay: 5000,
 	shootDelay: 1001,

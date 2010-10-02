@@ -11,8 +11,9 @@ Engine.initObject("Weapon", "Base", function() {
 		timeToReload: 0,
 		lastShot: 0,
 		projectileVelocityVariability: 1,
+		projectileClazz: null,
 		
-		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload, projectileVelocityVariability) {
+		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload, projectileClazz, projectileVelocityVariability) {
 			this.owner = owner;
 			this.field = field;
 			this.name = name;
@@ -22,6 +23,7 @@ Engine.initObject("Weapon", "Base", function() {
 			this.roundsPerMinute = roundsPerMinute;
 			this.projectilesPerShot = projectilesPerShot;
 			this.timeToReload = timeToReload;
+			this.projectileClazz = projectileClazz;
 			this.projectileVelocityVariability = projectileVelocityVariability;
 			
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
@@ -48,7 +50,7 @@ Engine.initObject("Weapon", "Base", function() {
 					
 					// generate the bullets
 					for(var x = 0; x < this.projectilesPerShot; x++)
-						this.field.renderContext.add(Bullet.create(this, this.projectileVelocityVariability));
+						this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
 
 					// generate the muzzle flash
 					var gunTipInWorld = this.getGunTip();
@@ -81,11 +83,11 @@ Engine.initObject("Weapon", "Base", function() {
 			var now = new Date().getTime();
 			var timeSinceLastShot = now - this.lastShot;
 			
-			var spread = (baseSpread / 2) - (Math.random() * baseSpread); // basic inaccuracy even with very slow firing
+			var spread = baseSpread;
 			if(timeSinceLastShot < timeRequiredForDeadAim)
 				spread += (timeRequiredForDeadAim - timeSinceLastShot) / steadiness;
 				
-			var shootAngle = (this.owner.getGunAngle() - (spread / 2)) + (Math.random() * spread);
+			var shootAngle = this.owner.getGunAngle() - (spread / 2) + (Math.random() * spread);
 			return Math2D.getDirectionVector(Point2D.ZERO, Bullet.tip, shootAngle);
 		},
 		
@@ -120,7 +122,6 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		reloadBegun: 0,  // time reload was started
-		reloadDelay: 2000,
 		reload: function() {
 			if(!this.isReloading())
 			{
@@ -132,7 +133,7 @@ Engine.initObject("Weapon", "Base", function() {
 		// if reloading and the time to reload has elapsed, fill clip
 		handleReload: function() {
 			if(this.reloading)
-				if(new Date().getTime() - this.reloadBegun > this.reloadDelay) // reload period has passed
+				if(new Date().getTime() - this.reloadBegun > this.timeToReload) // reload period has passed
 				{
 					this.fillClip();
 					this.reloading = false;
@@ -167,8 +168,21 @@ Engine.initObject("Weapon", "Base", function() {
 				return null;
 		},
 		
-		getGunTip: function() {
-			return Point2D.create(this.owner.getGunTip()).add(this.owner.getPosition());
+		getGunTip: function() { return Point2D.create(this.owner.getGunTip()).add(this.owner.getPosition()); },
+		
+		release: function() {
+			this.base();
+			this.owner = null;
+			this.field = null;
+			this.clipCapacity = 0;
+			this.shotsInClip = 0;
+			this.automatic = false;
+			this.roundsPerMinute = 0;
+			this.projectilesPerShot = 0;
+			this.timeToReload = 0;
+			this.lastShot = 0;
+			this.projectileVelocityVariability = 1;
+			this.projectileClazz = null;
 		},
 		
 	}, {

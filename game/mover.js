@@ -14,12 +14,13 @@ var Mover = Object2D.extend({
 	velocity: null,
 	direction: null,
 
-	sprites: null,
+	sprites: {},
+	
+	currentSpriteKey: null,
 
 	constructor: function(name) {
 		this.base(name);
 		this.field = PistolSlut;
-		this.sprites = {};
 	},
 
 	destroy: function() {
@@ -30,9 +31,25 @@ var Mover = Object2D.extend({
 	},
 
   setSprite: function(spriteKey) {
-	  var sprite = this.sprites[spriteKey];
-	  this.setBoundingBox(sprite.getBoundingBox());
-	  this.getComponent("draw").setSprite(sprite);
+		if(spriteKey != this.currentSpriteKey)
+		{
+			var heightAdjustment = null;
+		  var newSprite = this.sprites[spriteKey];
+	
+			if(this.currentSpriteKey != null)
+			{
+				var heightAdjustment = this.getSprite().getBoundingBox().dims.y - newSprite.getBoundingBox().dims.y;
+				if(heightAdjustment != 0)
+					this.getPosition().setY(this.getPosition().y + heightAdjustment);
+			}
+			
+		  this.setBoundingBox(newSprite.getBoundingBox());
+		  this.getComponent("draw").setSprite(newSprite);
+		
+			this.currentSpriteKey = spriteKey;
+			return heightAdjustment;
+		}
+		return null;
   },
 
 	getSprite: function() {
@@ -43,82 +60,42 @@ var Mover = Object2D.extend({
 		this.sprites[name] = sprite;
 	},
 
-	/**
-	 * Get the position of the ship from the mover component.
-	 * @type Point2D
-	 */
-	getPosition: function() {
-		return this.getComponent("move").getPosition();
-	},
-
-	getRenderPosition: function() {
-		return this.getComponent("move").getRenderPosition();
-	},
-
-	/**
-	 * Get the last position the ship was at before the current move.
-	 * @type Point2D
-	 */
-	getLastPosition: function() {
-		return this.getComponent("move").getLastPosition();
-	},
-
-	/**
-	 * Set, or initialize, the position of the mover component
-	 *
-	 * @param point {Point2D} The position to draw the ship in the playfield
-	 */
+	getPosition: function() { return this.getComponent("move").getPosition(); },
 	setPosition: function(point) {
 		this.base(point);
 		this.getComponent("move").setPosition(point);
 	},
 
-	/**
-	 * Get the rotation of the ship from the mover component.
-	 * @type Number
-	 */
-	getRotation: function() {
-		return this.getComponent("move").getRotation();
-	},
+	getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
+	getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
 
-	/**
-	 * Set the rotation of the ship on the mover component.
-	 *
-	 * @param angle {Number} The rotation angle of the ship
-	 */
+	getRotation: function() { return this.getComponent("move").getRotation(); },
 	setRotation: function(angle) {
 		this.base(angle);
 		this.getComponent("move").setRotation(angle);
 	},
 
-	getScale: function() {
-		return this.getComponent("move").getScale();
-	},
-
+	getScale: function() { return this.getComponent("move").getScale(); },
 	setScale: function(scale) {
 		this.base(scale);
 		this.getComponent("move").setScale(scale);
 	},
 	
-	getVelocity: function() {
-		return this.velocity;
-	},
+	getVelocity: function() { return this.velocity; },
 
-	setVelocity: function(vector) {
-		return this.velocity = vector;
-	},
+	setVelocity: function(vector) { return this.velocity = vector; },
 	
 	release: function() {
 		this.base();
 		this.velocity = null;
 		this.direction = null;
-		this.sprites = null;
+		this.sprites = {};
+		this.currentSpriteKey = null;
 	},
 
 	}, { // Static
-		getClassName: function() {
-			return "Mover";
-		},
+		getClassName: function() { return "Mover"; },
+		
 	});
 
 	return Mover;

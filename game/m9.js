@@ -1,10 +1,9 @@
 Engine.initObject("M9", "Weapon", function() {
 	var M9 = Weapon.extend({
-		timeRequiredForDeadAim: 1000,
 		
 		constructor: function(owner) {
 			this.base(owner, owner.field, M9.getClassName(), M9.CLIP_CAPACITY, Weapon.SEMI_AUTOMATIC, M9.ROUNDS_PER_MINUTE,
-								M9.PROJECTILES_PER_SHOT, M9.TIME_TO_RELOAD, M9.PROJECTILE_VELOCITY_VARIABILITY);
+								M9.PROJECTILES_PER_SHOT, M9.TIME_TO_RELOAD, Bullet, M9.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
 		bulletPhysics: function() {

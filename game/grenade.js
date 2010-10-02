@@ -3,11 +3,10 @@ Engine.include("/components/component.vector2d.js");
 Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
-Engine.initObject("Grenade", "Object2D", function() {
-	var Grenade = Object2D.extend({
+Engine.initObject("Grenade", "Mover", function() {
+	var Grenade = Mover.extend({
 		field: null,
 		shooter: null,
-		sprites: null,
 		timeThrown: null,
 		
 		speed: 8,
@@ -25,8 +24,7 @@ Engine.initObject("Grenade", "Object2D", function() {
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 
-			this.sprites = {};
-			this.sprites["throw"] = this.field.spriteLoader.getSprite("grenade", "throw");
+			this.addSprite("throw", this.field.spriteLoader.getSprite("grenade", "throw"));
 			this.setSprite("throw");
 
 			var c_mover = this.getComponent("move");
@@ -49,15 +47,6 @@ Engine.initObject("Grenade", "Object2D", function() {
 			}
 			this.base();
 		},
-
-		getPosition: function() {
-			return this.getComponent("move").getPosition();
-		},
-
-		setPosition: function(point) {
-			this.base(point);
-			this.getComponent("move").setPosition(point);
-		},
 		
 		getVelocity: function() {
 			return this.getComponent("move").getVelocity();
@@ -65,10 +54,6 @@ Engine.initObject("Grenade", "Object2D", function() {
 	
 		setVelocity: function(vector) {
 			return this.getComponent("move").setVelocity(vector);
-		},
-
-		getLastPosition: function() {
-			return this.getComponent("move").getLastPosition();
 		},
 
 		update: function(renderContext, time) {
@@ -127,21 +112,6 @@ Engine.initObject("Grenade", "Object2D", function() {
 			//this.field.notifier.post(Grenade.EXPLODED, this);
 			this.destroy();
 		},
-		
-	  setSprite: function(spriteKey) {
-		  var sprite = this.sprites[spriteKey];
-		  this.setBoundingBox(sprite.getBoundingBox());
-		  this.getComponent("draw").setSprite(sprite);
-	  },
-
-		getVelocity: function() {
-			return this.getComponent("move").getVelocity();
-		},
-	
-		setVelocity: function(vector) {
-			return this.getComponent("move").setVelocity(vector);
-		},
-
 	}, {
 		getClassName: function() { return "Grenade"; },
 

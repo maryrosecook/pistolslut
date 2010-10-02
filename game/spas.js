@@ -1,10 +1,9 @@
 Engine.initObject("SPAS", "Weapon", function() {
 	var SPAS = Weapon.extend({
-		timeRequiredForDeadAim: 1000,
 				
 		constructor: function(owner) {
 			this.base(owner, owner.field, SPAS.getClassName(), SPAS.CLIP_CAPACITY, Weapon.SEMI_AUTOMATIC, SPAS.ROUNDS_PER_MINUTE,
-								SPAS.PROJECTILES_PER_SHOT, SPAS.TIME_TO_RELOAD, SPAS.PROJECTILE_VELOCITY_VARIABILITY);
+								SPAS.PROJECTILES_PER_SHOT, SPAS.TIME_TO_RELOAD, Bullet, SPAS.PROJECTILE_VELOCITY_VARIABILITY);
 		},
 		
 		bulletPhysics: function() {
@@ -19,7 +18,7 @@ Engine.initObject("SPAS", "Weapon", function() {
 		PROJECTILES_PER_SHOT: 5,
 		TIME_TO_RELOAD: 2000,
 		
-		BASE_SPREAD: 60,
+		BASE_SPREAD: 30,
 		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
 		STEADINESS: 30,
 		

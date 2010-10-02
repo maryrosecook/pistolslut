@@ -14,7 +14,6 @@ Engine.include("/components/component.notifier.js");
 // Load game objects
 Game.load("/game/mover.js");
 Game.load("/game/player.js");
-Game.load("/game/bullet.js");
 Game.load("/game/grenade.js");
 Game.load("/game/particle.js");
 Game.load("/game/sign.js");
@@ -30,6 +29,9 @@ Game.load("/game/weapon.js");
 Game.load("/game/m9.js");
 Game.load("/game/mac10.js");
 Game.load("/game/spas.js");
+Game.load("/game/mortar.js");
+Game.load("/game/bullet.js");
+Game.load("/game/mortarround.js");
 Game.load("/game/shrapnel.js");
 Game.load("/game/fire.js");
 Game.load("/game/firework.js");
@@ -111,7 +113,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.imageLoader.load(Caret.OFF, this.getFilePath("resources/caretoff.gif"), 3, 15);
 
 			// load sprite resources
-			this.spriteLoader.load("girl", this.getFilePath("resources/girl.js"));
+			this.spriteLoader.load("human", this.getFilePath("resources/human.js"));
 			this.spriteLoader.load("grenade", this.getFilePath("resources/grenade.js"));
 			this.spriteLoader.load("lantern", this.getFilePath("resources/lantern.js"));
 

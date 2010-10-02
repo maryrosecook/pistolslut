@@ -8,8 +8,6 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Player", "Human", function() {
 
 var Player = Human.extend({
-	weapon: null,
-	weapons: null,
 
 	constructor: function(field, groundY) {
 		var startPosition = new Point2D(50, groundY);
