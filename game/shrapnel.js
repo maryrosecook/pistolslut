@@ -27,11 +27,8 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			this.add(Vector2DComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 			
-			var mover = this.getComponent("move");
 			var drawer = this.getComponent("draw");
-
 			drawer.setPoints(Shrapnel.shape);
-			drawer.setFillStyle("#f00");
 			drawer.setFillStyle("#f00");
 			
 			var spread = 360;
@@ -39,8 +36,9 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			var vel = 1 + (Math.random() * 11);
 			
+			var mover = this.getComponent("move");
 			mover.setPosition(epicentre);
-			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Shrapnel.tip, a));
+			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, a));
 			mover.setVelocity(mover.getVelocity().mul(vel));
 			mover.setCheckLag(false);
 		},
@@ -109,7 +107,6 @@ Engine.initObject("Shrapnel", "Mover", function() {
 	}, {
 		getClassName: function() { return "Shrapnel"; },
 		shape: [new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  0), new Point2D(0,  0)],
-		tip: new Point2D(0, -1),
 	});
 
 	return Shrapnel;

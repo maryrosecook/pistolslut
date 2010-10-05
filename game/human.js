@@ -27,15 +27,18 @@ Engine.initObject("Human", "Mover", function() {
 			this.stateOfBeing = Human.ALIVE;
 			this.standState = Human.STANDING;
 			this.loadSprites();
+			
+			this.add(Mover2DComponent.create("move"));
+			this.setVelocity(Vector2D.create(0, 0));
+			this.stopWalk();
+
 			this.setupWeapons(weaponName);
 		
 			// Add components to move and draw the human
-			this.add(Mover2DComponent.create("move"));
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 
-			this.setSprite(this.direction + Human.STANDING + Human.STILL + this.getShootState() + this.weapon.name);
-			this.setVelocity(Vector2D.create(0, 0));
+			this.updateSprite();
 			
 			this.getComponent("move").setCheckLag(false);
 			this.getComponent("move").setPosition(position);
@@ -47,8 +50,9 @@ Engine.initObject("Human", "Mover", function() {
 			this.base(renderContext, time);
 			renderContext.popTransform();
 		
-			this.weapon.handleReload();
-			this.weapon.handleAutomatic();
+			this.weapon.handleReload(time);
+			this.weapon.handleAutomatic(time);
+			this.weapon.handleDischarge(time);
 		},
 
 		notifyGrenadeNearby: function(grenade) {
@@ -76,17 +80,23 @@ Engine.initObject("Human", "Mover", function() {
 		// },
 
 		move: function(time) {
-			this.updateDeathState(time);
+			if(this.getSprite().isSinglePlayOver(time) == true) // on a single play anim and it's over
+			{
+				if(this.stateOfBeing == Human.DYING)
+					this.stateOfBeing = Human.DEAD;
+					
+				if(this.weapon.isShooting() == true)
+					this.weapon.stopShooting();
+			}
+			
+			this.updateSprite();
+			
 			this.field.applyGravity(this);
-
-			// set sprite
-			if(this.isAlive())
-				this.updateSprite();
-		
 			this.handleFriction();
-		
 			this.setPosition(this.getPosition().add(this.getVelocity()));
 		},
+		
+		canStand: function() { return this.weapon.canStand(); },
 		
 		getStandState: function() { return this.standState; },
 		
@@ -97,19 +107,6 @@ Engine.initObject("Human", "Mover", function() {
 				return Human.STILL;
 		},
 	
-		// if dying, check if need to be switched to being dead
-		updateDeathState: function(time) {
-			if(this.stateOfBeing == Human.DYING) // we are playing their dying animation and might need to stop it
-			{
-				var currentSprite = this.getSprite();
-				if(currentSprite.animationPlayed(time)) // at end of anim
-				{
-					this.setSprite(this.direction + Human.DEAD + this.weapon.name);
-					this.stateOfBeing = Human.DEAD
-				}
-			}
-		},
-	
 		die: function(ordinance) {
 			this.stateOfBeing = Human.DYING;
 			this.setSprite(this.direction + Human.DYING + this.weapon.name);
@@ -117,14 +114,13 @@ Engine.initObject("Human", "Mover", function() {
 			this.throwBackwards(ordinance);
 		
 			// make uncollidable but leave human in the level
-			if (this.ModelData.lastNode) 
+			if(this.ModelData.lastNode) 
 				this.ModelData.lastNode.removeObject(this);
 		},
 	
 		shoot: function() {
-			this.weapon.startShooting();
-			this.updateSprite();
 			this.weapon.shoot();
+			this.updateSprite();
 		},
 	
 		throwBackwardsUp: -3,
@@ -140,7 +136,6 @@ Engine.initObject("Human", "Mover", function() {
 			{
 				this.standState = Human.CROUCHING;
 				this.stopWalk();
-				this.setSprite(this.direction + Human.CROUCHING + Human.STILL + this.getShootState() + this.weapon.name);
 			}
 		},
 	
@@ -148,7 +143,7 @@ Engine.initObject("Human", "Mover", function() {
 			if(this.isCrouching())
 			{
 				this.standState = Human.STANDING;
-				this.setSprite(this.direction + Human.STANDING + Human.STILL + this.getShootState() + this.weapon.name);
+				this.stopWalk();
 			}
 		},
 	
@@ -203,7 +198,10 @@ Engine.initObject("Human", "Mover", function() {
 		setWeapon: function(weaponName) {
 			for(var i in this.weapons)
 				if(this.weapons[i].name == weaponName)
+				{
 					this.weapon = this.weapons[i];
+					this.weapon.setPose();
+				}
 		},
 	
 		jumping: false,
@@ -283,10 +281,6 @@ Engine.initObject("Human", "Mover", function() {
 		},
 	
 		setupWeapons: function(weaponName) {
-			this.weapons = [];
-			this.weapons.push(new M9(this));
-			this.weapons.push(new Mac10(this));
-			this.weapons.push(new SPAS(this));
 			this.setWeapon(weaponName);
 		},
 	
@@ -333,7 +327,10 @@ Engine.initObject("Human", "Mover", function() {
 	
 		// sets sprite to reflect whatever human is doing
 		updateSprite: function() {
-			this.setSprite(this.direction + this.getStandState() + this.getMoveState() + this.getShootState() + this.weapon.name);
+			if(this.isAlive())
+				this.setSprite(this.direction + this.getStandState() + this.getMoveState() + this.getShootState() + this.weapon.name);
+			else if(this.stateOfBeing == Human.DEAD)
+				this.setSprite(this.direction + Human.DEAD + this.weapon.name);
 		},
 	
 		loadSprites: function() {
@@ -354,7 +351,7 @@ Engine.initObject("Human", "Mover", function() {
 			this.stateOfBeing = null;
 			this.health = -1;
 			this.weapon = null;
-			this.weapons = {};
+			this.weapons = [];
 		},
 
 	}, {
@@ -395,7 +392,7 @@ Engine.initObject("Human", "Mover", function() {
 					"M9": 		{ "gunTip": new Point2D(07, 05), "gunAngle": 270 },
 					"Mac10": 	{ "gunTip": new Point2D(07, 03), "gunAngle": 270 },
 					"SPAS": 	{ "gunTip": new Point2D(07, 08), "gunAngle": 270 },
-					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 330 }
+					"Mortar": { "gunTip": new Point2D(13, 08), "gunAngle": 340 }
 				}
 			},
 			"Right": {
@@ -411,7 +408,7 @@ Engine.initObject("Human", "Mover", function() {
 					"M9":     { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
 					"Mac10":  { "gunTip": new Point2D(40, 03), "gunAngle": 90 },
 					"SPAS":   { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
-					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 30 }
+					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 20 }
 				}
 			}
 		},

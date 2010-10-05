@@ -16,19 +16,21 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.field.notifier.subscribe(Human.SHOT, this, this.notifyShot);
 			//this.field.notifier.subscribe("playerMove", this, this.playerMove);
 
-			// setup grenade throw timer
+			// setup shoot timer
 			var ai = this;
-			host.shootTimer = Interval.create("shoot", host.shootDelay,
+			host.shootTimer = Interval.create("shoot", 1000,
 				function() {
 					ai.notifyTimeToShoot();
 			});
 			
 			// setup grenade throw timer
-			var ai = this;
-			host.grenadeTimer = Interval.create("shoot", host.grenadeThrowDelay,
-				function() {
-					ai.notifyTimeToThrowGrenade();
-			});
+			if(host.canThrowGrenades)
+			{
+				host.grenadeTimer = Interval.create("shoot", host.grenadeThrowDelay,
+					function() {
+						ai.notifyTimeToThrowGrenade();
+				});
+			}
 	  },
 
 		notifyShot: function() {
@@ -38,7 +40,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
 			if(this.isEnemyInSights()
-				 && !host.isCrouching() 
 				 && !this.friendliesInLineOfFire())
 				host.shoot();
 		},
@@ -79,7 +80,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		execute: function(renderContext, time) {
 			var host = this.getHostObject();
-			if(host.isCrouching() && !host.weapon.isReloading() && this.noUnsafeIncomingForAWhile())
+			if(host.isCrouching() && !host.weapon.isReloading() && this.noUnsafeIncomingForAWhile() && host.canStand())
 				host.stand();
 				
 			this.turnTowardsPlayer();

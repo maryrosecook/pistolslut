@@ -56,8 +56,8 @@
 		],
 		
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 395, y: 350, health: 4, weaponName: "M9", canThrowGrenades: false },
-			{ name: "enemy2", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
+			{ name: "enemy1", clazz: Enemy, x: 550, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			//{ name: "enemy2", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
 		],
 		
 		speeches: {

@@ -243,7 +243,15 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
 
       var s = (this.type == Sprite.TYPE_ANIMATION ? spriteObj["a"] : spriteObj["f"]);
       if (this.type == Sprite.TYPE_ANIMATION) {
-         this.mode = (s[Sprite.INDEX_TYPE] == "loop" ? Sprite.MODE_LOOP : Sprite.MODE_TOGGLE);
+         //this.mode = (s[Sprite.INDEX_TYPE] == "loop" ? Sprite.MODE_LOOP : Sprite.MODE_TOGGLE);
+				 // frame change - removed line above and added the stuff below
+				 if(s[Sprite.INDEX_TYPE] == "loop")
+				 	 this.mode = Sprite.MODE_LOOP;
+				 else if(s[Sprite.INDEX_TYPE] == "toggle")
+					 this.mode = Sprite.MODE_TOGGLE; 
+				 else if(s[Sprite.INDEX_TYPE] == "once")
+					 this.mode = Sprite.MODE_ONCE;
+				
          this.count = s[Sprite.INDEX_COUNT];
          this.speed = s[Sprite.INDEX_SPEED];
       }
@@ -291,6 +299,9 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
       return (this.isAnimation() && this.mode == Sprite.MODE_TOGGLE);
    },
 
+	 //framechange - added
+	 isOnce: function() { return (this.isAnimation() && this.mode == Sprite.MODE_ONCE); },
+
    /**
     * Get the bounding box for the sprite.
     * @return {Rectangle2D} The bounding box which contains the entire sprite
@@ -312,35 +323,27 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          return this.frame;
       } else {
          var f = Rectangle2D.create(this.frame);
-         var fn = this.getFrameNumber(time);
+         var fn = this.getFrameNumber(time); // moved code from here to getFrameNumber()
          return f.offset(f.dims.x * fn, 0);
       }
    },
 
-   // returns true if animation seems to have played through at least once
-	 // framechange - new method
-   previousFrameNumber: 0,
-   animationPlayed: function(time) {
-			var currentFrameNumber = this.getFrameNumber(time);
-			if(currentFrameNumber < this.previousFrameNumber) {
-				this.previousFrameNumber = 0;
-				return true;
-			}
-			else {
-				this.previousFrameNumber = currentFrameNumber;
-				return false;
-			}
-   },
+   // framechange - new function
+	 startTime: 0,
+	 play: function(time) {
+		 this.startTime = time;
+	 },
 
-	 // framechange - new method
+	 // framechange - new function
    getFrameNumber: function(time) {
       if (!this.isAnimation()) {
          return 0;
       } else {
+	         var absTime = time - this.startTime;
 	         if (this.isLoop()) {
-	            fn = Math.floor((time / this.speed)) % this.count;
+	            fn = Math.floor((absTime / this.speed)) % this.count;
 	         } else {
-	            fn = Math.floor((time / this.speed)) % (this.count * 2);
+	            fn = Math.floor((absTime / this.speed)) % (this.count * 2);
 	            if (fn > this.count - 1) {
 	               fn = this.count - (fn - (this.count - 1));
 	            }
@@ -348,6 +351,19 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
          return fn;
       }
    },
+
+	 // framechange - new function
+	 isSinglePlayOver: function(time) {
+		 if(this.isOnce() == true) // we are playing a once over animation
+		 {
+			 if(time - this.startTime > this.speed * (this.count - 1))
+				 return true;
+			 else
+				 return false;
+		 }
+
+		 return false;
+	 },
 
    /**
     * Set the speed, in milliseconds, that an animation runs at.  If the sprite is
@@ -398,6 +414,9 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
     */
    MODE_TOGGLE: 1,
 
+	 //framechange - added
+	 MODE_ONCE: 2,
+
    /** The sprite is a single frame
     * @type Number
     */
@@ -441,7 +460,7 @@ var Sprite = PooledObject.extend(/** @scope Sprite.prototype */{
    /** The field in the sprite definition file for the type of sprite animation
     * @private
     */
-   INDEX_TYPE: 6
+   INDEX_TYPE: 6,
 });
 
 return Sprite;

@@ -11,7 +11,7 @@ var Player = Human.extend({
 
 	constructor: function(field, groundY) {
 		var startPosition = new Point2D(50, groundY);
-		this.direction = Collider.RIGHT;
+		this.turn(Collider.RIGHT);
 		
 		this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
 		
@@ -117,12 +117,18 @@ var Player = Human.extend({
 			case EventEngine.KEYCODE_UP_ARROW:
 				break;
 			case 90: // z
-				this.weapon.stopShooting();
 				this.weapon.shootKeyUp();
 				break;
 		}
 		
 		return false;
+	},
+	
+	setupWeapons: function(weaponName) {
+		this.weapons.push(new M9(this));
+		this.weapons.push(new Mac10(this));
+		this.weapons.push(new SPAS(this));
+		this.base(weaponName);
 	},
 
 	}, {

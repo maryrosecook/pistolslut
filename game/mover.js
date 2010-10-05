@@ -10,7 +10,6 @@ Engine.initObject("Mover", "Object2D", function() {
 		field: null,
 
 		sprites: {},
-	
 		currentSpriteKey: null,
 
 		constructor: function(name) {
@@ -28,23 +27,20 @@ Engine.initObject("Mover", "Object2D", function() {
 	  setSprite: function(spriteKey) {
 			if(spriteKey != this.currentSpriteKey)
 			{
-				var heightAdjustment = null;
 			  var newSprite = this.sprites[spriteKey];
-	
 				if(this.currentSpriteKey != null)
 				{
 					var heightAdjustment = this.getSprite().getBoundingBox().dims.y - newSprite.getBoundingBox().dims.y;
 					if(heightAdjustment != 0)
 						this.getPosition().setY(this.getPosition().y + heightAdjustment);
 				}
-			
+
 			  this.setBoundingBox(newSprite.getBoundingBox());
 			  this.getComponent("draw").setSprite(newSprite);
 		
+				newSprite.play(Engine.worldTime);
 				this.currentSpriteKey = spriteKey;
-				return heightAdjustment;
 			}
-			return null;
 	  },
 
 		getSprite: function() {

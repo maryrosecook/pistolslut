@@ -30,13 +30,13 @@
 			"f" : [0, 139, 46, 41] 
 		},
 		"RightDyingM9": {
-			"a" : [0, 184, 46, 41, 7, 150, "loop"]
+			"a" : [0, 184, 46, 41, 7, 150, "once"]
 		},
 		"RightDeadM9": {
 			"f" : [276, 184, 46, 41]
 		},
 		"LeftDyingM9": {
-			"a" : [0, 230, 46, 41, 7, 150, "loop"]
+			"a" : [0, 230, 46, 41, 7, 150, "once"]
 		},
 		"LeftDeadM9": {
 			"f" : [276, 230, 46, 41]
@@ -81,13 +81,13 @@
 			"f" : [0, 536, 46, 41] 
 		},
 		"RightDyingMac10": {
-			"a" : [0, 581, 46, 41, 7, 150, "loop"]
+			"a" : [0, 581, 46, 41, 7, 150, "once"]
 		},
 		"RightDeadMac10": {
 			"f" : [276, 581, 46, 41]
 		},
 		"LeftDyingMac10": {
-			"a" : [0, 626, 46, 41, 7, 150, "loop"]
+			"a" : [0, 626, 46, 41, 7, 150, "once"]
 		},
 		"LeftDeadMac10": {
 			"f" : [276, 626, 46, 41]
@@ -132,13 +132,13 @@
 			"f" : [0, 933, 46, 41] 
 		},
 		"RightDyingSPAS": {
-			"a" : [0, 978, 46, 41, 7, 150, "loop"]
+			"a" : [0, 978, 46, 41, 7, 150, "once"]
 		},
 		"RightDeadSPAS": {
 			"f" : [276, 978, 46, 41]
 		},
 		"LeftDyingSPAS": {
-			"a" : [0, 1023, 46, 41, 7, 150, "loop"]
+			"a" : [0, 1023, 46, 41, 7, 150, "once"]
 		},
 		"LeftDeadSPAS": {
 			"f" : [276, 1023, 46, 41]
@@ -158,15 +158,15 @@
 
 		
 		"RightCrouchingStillShootingMortar": {
-			"a" : [0, 1195, 46, 31, 20, 150, "once"]
+			"a" : [0, 1195, 46, 31, 20, 100, "once"]
 		},
-		"RightCrouchingStillShootingMortar": {
+		"RightCrouchingStillNotshootingMortar": {
 			"f" : [0, 1195, 46, 31]
 		},
 		"LeftCrouchingStillShootingMortar": {
-			"a" : [0, 1234, 46, 31, 20, 150, "once"]
+			"a" : [0, 1234, 46, 31, 20, 100, "once"]
 		},
-		"LeftCrouchingStillShootingMortar": {
+		"LeftCrouchingStillNotshootingMortar": {
 			"f" : [0, 1234, 46, 31]
 		}
 	}

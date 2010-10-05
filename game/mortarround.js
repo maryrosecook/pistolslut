@@ -1,13 +1,13 @@
 Engine.initObject("MortarRound", "Ordinance", function() {
 	var MortarRound = Ordinance.extend({
-		damage: 1,
+		damage: 0,
 		
 		constructor: function(weapon, projectileVelocityVariability) {
 			this.base("MortarRound", weapon, MortarRound.BASE_SPEED, projectileVelocityVariability, MortarRound.SHAPE);
 		},
 
 		update: function(renderContext, time) {
-			
+			this.field.applyGravity(this);
 			this.base(renderContext, time);
 		},
 
@@ -15,8 +15,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 			if(obj instanceof Furniture) {
 				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 			  {
-					obj.shot(this);
-					this.destroy();
+					this.explode(obj);
 					return ColliderComponent.STOP;
 				}
 			}
@@ -26,20 +25,33 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
 				  {
 						this.field.notifier.post(Human.SHOT, this);
-						obj.shot(this);
-						this.destroy();
+						this.explode(obj);
 						return ColliderComponent.STOP;
 					}
 				}
 			}
 			return ColliderComponent.CONTINUE;
 		},
+		
+		shrapnelCount: 30,
+		shrapnelTTL: 500,
+		explode: function(objHit) {
+			var positionData = this.field.collider.pointOfImpact(this, objHit);
+			var explosionEpicenter = null;
+			if(positionData != null)
+				var explosionEpicenter = Point2D.create(positionData[0].x, positionData[0].y)
+
+			for(var x = 0; x < this.shrapnelCount; x++)
+				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, explosionEpicenter, this.shrapnelTTL));
+
+			this.destroy();
+		},
 
 	}, {
 		getClassName: function() { return "MortarRound"; },
 		
-		BASE_SPEED: 15,		
-		SHAPE: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
+		BASE_SPEED: 20,		
+		SHAPE: [ new Point2D(-1, -1), new Point2D(1, -1), new Point2D(-1,  1), new Point2D(1,  1)],
 	});
 
 	return MortarRound;

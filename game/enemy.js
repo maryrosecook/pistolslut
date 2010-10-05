@@ -13,13 +13,21 @@ var Enemy = Human.extend({
 	shootDelay: 1001,
 
 	constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
-		this.direction = Collider.LEFT;
+		this.turn(Collider.LEFT);
 		this.base(name, field, position, health, weaponName, canThrowGrenades);
 		
 		this.add(AIComponent.create("logic" + this.name, null, this.field, this));
 	},
 	
 	getLogic: function() { return this.getComponent("logic" + this.name); },
+	
+	setupWeapons: function(weaponName) {
+		this.weapons.push(new M9(this));
+		this.weapons.push(new Mac10(this));
+		this.weapons.push(new SPAS(this));
+		this.weapons.push(new Mortar(this));
+		this.base(weaponName);
+	},
 	
 	die: function(ordinance) {
 		this.base(ordinance);

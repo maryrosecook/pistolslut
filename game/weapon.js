@@ -12,8 +12,10 @@ Engine.initObject("Weapon", "Base", function() {
 		lastShot: 0,
 		projectileVelocityVariability: 1,
 		projectileClazz: null,
+		dischargeDelay: null,
+		timeRequiredForDeadAim: null,
 		
-		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload, projectileClazz, projectileVelocityVariability) {
+		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload, projectileClazz, projectileVelocityVariability, dischargeDelay, timeRequiredForDeadAim) {
 			this.owner = owner;
 			this.field = field;
 			this.name = name;
@@ -25,6 +27,8 @@ Engine.initObject("Weapon", "Base", function() {
 			this.timeToReload = timeToReload;
 			this.projectileClazz = projectileClazz;
 			this.projectileVelocityVariability = projectileVelocityVariability;
+			this.dischargeDelay = dischargeDelay;
+			this.timeRequiredForDeadAim = timeRequiredForDeadAim;
 			
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
 		},
@@ -36,25 +40,49 @@ Engine.initObject("Weapon", "Base", function() {
 				this.reload(); // if just switched to this weapon, start it reloading
 		},
 		
+		setPose: function() { },
+		canStand: function() { return true; },
+		
+		dischargeTime: null,
+		setFutureDischarge: function() { this.dischargeTime = new Date().getTime() + this.dischargeDelay; },
+			
+		handleDischarge: function(time) {
+			if(this.dischargeTime != null && this.dischargeTime < time)
+				this.discharge();
+		},
+		
+		// actually fires the weapon
+		discharge: function() {			
+			// generate the bullets
+			for(var x = 0; x < this.projectilesPerShot; x++)
+				this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
+
+			this.muzzleFlash();
+
+			this.shotsInClip -= 1;
+			this.lastShot = new Date().getTime();
+			if(this.owner instanceof Player)
+				this.field.notifier.post(Weapon.SHOOT, this);
+				
+			this.dischargeTime = null;
+		},
+		
+		// either fires weapon or sets it to fire in the future if there is a delay for this weapon
 		shoot: function() {
-			if(!this.isClipEmpty())
+			if(this.dischargeTime == null && !this.isClipEmpty())
 			{
 				if(this.passSemiAutomaticCheck())
 				{
+					this.startShooting();
+
 					// stop an in progress reload
 					if(this.isReloading())
 						this.reloading = false;
 					
-					// generate the bullets
-					for(var x = 0; x < this.projectilesPerShot; x++)
-						this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
-
-					this.muzzleFlash();
-
-					this.shotsInClip -= 1;
-					this.lastShot = new Date().getTime();
-					if(this.owner instanceof Player)
-						this.field.notifier.post(Weapon.SHOOT, this);
+					if(this.dischargeDelay == 0) // just discharge weapon immediately
+						this.discharge();
+					else
+						this.setFutureDischarge();
 				}
 			}
 
@@ -90,7 +118,10 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		shootKeyHasBeenUpSinceLastShot: true,
-		shootKeyUp: function() { this.shootKeyHasBeenUpSinceLastShot = true; },
+		shootKeyUp: function() {
+			this.stopShooting();
+			this.shootKeyHasBeenUpSinceLastShot = true;
+		},
 		shootKeyDown: function() { this.shootKeyHasBeenUpSinceLastShot = false; },
 		isShootKeyHasBeenUpSinceLastShot: function() { return this.shootKeyHasBeenUpSinceLastShot; },
 		
@@ -100,7 +131,7 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		shooting: "Notshooting",
-		startShooting: function() { this.shooting = Weapon.SHOOTING; },
+		startShooting: function() {  this.shooting = Weapon.SHOOTING; },
 		stopShooting: function() {
 			this.owner.stoppedShooting();
 			this.shooting = Weapon.NOT_SHOOTING;
@@ -108,10 +139,10 @@ Engine.initObject("Weapon", "Base", function() {
 		isShooting: function() { return this.shooting == Weapon.SHOOTING; },
 		
 		// keyboard repeat doesn't kick in right away
-		handleAutomatic: function() {
+		handleAutomatic: function(time) {
 			if(this.isShooting())
 				if(this.automatic == Weapon.AUTOMATIC)
-					if(new Date().getTime() - this.lastShot > this.timeBetweenShots())
+					if(time - this.lastShot > this.timeBetweenShots())
 						this.shoot();
 		},
 		
@@ -129,9 +160,9 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
 		// if reloading and the time to reload has elapsed, fill clip
-		handleReload: function() {
+		handleReload: function(time) {
 			if(this.reloading)
-				if(new Date().getTime() - this.reloadBegun > this.timeToReload) // reload period has passed
+				if(time - this.reloadBegun > this.timeToReload) // reload period has passed
 				{
 					this.fillClip();
 					this.reloading = false;

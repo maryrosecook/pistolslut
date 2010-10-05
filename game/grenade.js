@@ -97,7 +97,6 @@ Engine.initObject("Grenade", "Mover", function() {
 		shrapnelCount: 30,
 		shrapnelTTL: 500,
 		explode: function() {
-			var particles = [];
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
 			
