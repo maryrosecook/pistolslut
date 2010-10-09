@@ -168,6 +168,18 @@
 		},
 		"LeftCrouchingStillNotshootingMortar": {
 			"f" : [0, 1234, 46, 31]
-		}
+		},
+		"RightDyingMortar": {
+			"a" : [0, 1280, 46, 31, 5, 150, "once"]
+		},
+		"RightDeadMortar": {
+			"f" : [185, 1280, 46, 31]
+		},
+		"LeftDyingMortar": {
+			"a" : [0, 1323, 46, 31, 5, 150, "once"]
+		},
+		"LeftDeadMortar": {
+			"f" : [185, 1323, 46, 31]
+		},
 	}
 }

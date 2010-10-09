@@ -121,8 +121,11 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			var host = this.getHostObject();
 			host.shootTimer.destroy();
 			host.shootTimer = null;
-			host.grenadeTimer.destroy();
-			host.grenadeTimer = null;
+			if(host.grenadeTimer != null)
+			{
+				host.grenadeTimer.destroy();
+				host.grenadeTimer = null;
+			}
 			host.remove(this);
 		},
 

@@ -28,21 +28,35 @@
 				}
 			},
 			{
-				name: "postbox1", x: 170, y: 359,
-				sprite: {
-					bitmapImage: "postbox.gif",
-					sprites: { "main": { "f" : [0, 0, 18, 36] } }
-				}
-			},
-			{
-				name: "bin1", x: 370, y: 370,
+				name: "bin1", x: 170, y: 370,
 				sprite: {
 					bitmapImage: "bin.gif",
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
 				}
 			},
 			{
-				name: "bin2", x: 1100, y: 370,
+				name: "bin2", x: 370, y: 370,
+				sprite: {
+					bitmapImage: "bin.gif",
+					sprites: { "main": { "f" : [0, 0, 20, 25] } }
+				}
+			},
+			{
+				name: "sandbags1", x: 760, y: 370,
+				sprite: {
+					bitmapImage: "sandbags.gif",
+					sprites: { "main": { "f" : [0, 0, 18, 25] } }
+				}
+			},
+			{
+				name: "busstop", x: 614, y: 280,
+				sprite: {
+					bitmapImage: "busstop.gif",
+					sprites: { "main": { "f" : [0, 0, 154, 18] } }
+				}
+			},
+			{
+				name: "bin3", x: 1100, y: 370,
 				sprite: {
 					bitmapImage: "bin.gif",
 					sprites: { "main": { "f" : [0, 0, 20, 25] } }
@@ -56,8 +70,8 @@
 		],
 		
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 550, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
-			//{ name: "enemy2", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
+			{ name: "enemy1", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
+			{ name: "enemy2", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 		],
 		
 		speeches: {

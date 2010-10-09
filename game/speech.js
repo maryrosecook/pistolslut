@@ -46,14 +46,23 @@ Engine.initObject("Speech", "Object2D", function() {
 			this.textRenderers = [];
 			this.speechPosition = null;
 		},
-
-		// update: function(renderContext, time) {
-		// 
-		// },
 		
 		show: function() {
 			for(var i in this.textRenderers)
 				this.textRenderers[i].drawMode = TextRenderer.DRAW_TEXT;
+				
+			var speech = this;
+			this.hideTimer = Interval.create("speech", Speech.HIDE_DELAY,
+				function() {
+					speech.destroy();
+			});
+		},
+		
+		destroy: function() {
+			this.hideTimer.destroy();
+			this.hideTimer = null;
+			for(var i in this.textRenderers)
+				this.textRenderers[i].destroy();
 		},
 		
 		hide: function() {
@@ -94,6 +103,7 @@ Engine.initObject("Speech", "Object2D", function() {
 	}, {
 		getClassName: function() { return "Speech"; },
 
+		HIDE_DELAY: 3000,
 	});
 
 	return Speech;
