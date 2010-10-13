@@ -14,13 +14,16 @@ Engine.initObject("Sky", "Base", function() {
 			this.currentColor = startColor;
 			this.transformations = transformations;
 			
-			this.hue = this.transformations[this.stage].start; // get starting hue of starting stage
-			var sky = this;
-			this.dayNightCycleTimer = Interval.create("dayNightCycle", this.dayNightCycleInterval,
-				function() {
-					sky.updateSkyColor();
-					renderContext.setBackgroundColor(sky.getSkyColor());
-			});
+			if(this.transformations != null)
+			{
+				this.hue = this.transformations[this.stage].start; // get starting hue of starting stage
+				var sky = this;
+				this.dayNightCycleTimer = Interval.create("dayNightCycle", this.dayNightCycleInterval,
+					function() {
+						sky.updateSkyColor();
+						renderContext.setBackgroundColor(sky.getSkyColor());
+				});
+			}
 		},
 		
 		updateSkyColor: function() {
@@ -36,10 +39,12 @@ Engine.initObject("Sky", "Base", function() {
 			else
 			{
 				for(var i = 0; i < 3; i++)
+				{
 					if(this.transformations[this.stage].parts.indexOf(i) > -1) // this part of hex is changing
 						this.currentColor[i] = this.hue.toString(16);
 					else // this part of hex is staying the same
 						this.currentColor[i] = this.currentColor[i];
+				}
 
 				if(this.transformations[this.stage].start < this.transformations[this.stage].end)
 					this.hue += this.hueStep;

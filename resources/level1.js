@@ -71,7 +71,8 @@
 		
 		enemies: [
 			{ name: "enemy1", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
-			{ name: "enemy2", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			{ name: "enemy2", clazz: Enemy, x: 780, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
+			{ name: "enemy3", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 		],
 		
 		speeches: {
@@ -94,11 +95,8 @@
 		],
 		
 		sky: {
-			startColor: ["32", "32", "32"],
-			transformations: [
-				{ start: 50,  end: 110, parts: [0,1,2], },
-				{ start: 110, end: 50,  parts: [0,1,2], }
-			]
+			startColor: ["22", "22", "22"],
+			transformations: null
 		},
 		
 		parallaxes: [
