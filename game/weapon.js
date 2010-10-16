@@ -3,32 +3,14 @@ Engine.initObject("Weapon", "Base", function() {
 		name: null,
 		owner: null,
 		field: null,
-		clipCapacity: 0,
 		shotsInClip: 0,
-		automatic: false,
-		roundsPerMinute: 0,
-		projectilesPerShot: 0,
-		timeToReload: 0,
 		lastShot: 0,
-		projectileVelocityVariability: 1,
-		projectileClazz: null,
-		dischargeDelay: null,
-		timeRequiredForDeadAim: null,
 		
-		constructor: function(owner, field, name, clipCapacity, automatic, roundsPerMinute, projectilesPerShot, timeToReload, projectileClazz, projectileVelocityVariability, dischargeDelay, timeRequiredForDeadAim) {
+		constructor: function(owner, field, name) {
 			this.owner = owner;
 			this.field = field;
 			this.name = name;
-			this.clipCapacity = clipCapacity;
-			this.shotsInClip = clipCapacity;
-			this.automatic = automatic;
-			this.roundsPerMinute = roundsPerMinute;
-			this.projectilesPerShot = projectilesPerShot;
-			this.timeToReload = timeToReload;
-			this.projectileClazz = projectileClazz;
-			this.projectileVelocityVariability = projectileVelocityVariability;
-			this.dischargeDelay = dischargeDelay;
-			this.timeRequiredForDeadAim = timeRequiredForDeadAim;
+			this.shotsInClip = this.clipCapacity;
 			
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
 		},
@@ -56,9 +38,12 @@ Engine.initObject("Weapon", "Base", function() {
 		discharge: function() {	
 			if(this.owner.isAlive() == true)
 			{
-				// generate the bullets
+				// generate the ordinance
 				for(var x = 0; x < this.projectilesPerShot; x++)
-					this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
+				{
+					
+					this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileBaseSpeed, this.projectileVelocityVariability));
+				}
 
 				this.muzzleFlash();
 
@@ -109,8 +94,7 @@ Engine.initObject("Weapon", "Base", function() {
 		
 		// the faster the shooter shoots, the wilder their shots go
 		recoil: function(baseSpread, timeRequiredForDeadAim, steadiness) {
-			var now = new Date().getTime();
-			var timeSinceLastShot = now - this.lastShot;
+			var timeSinceLastShot = new Date().getTime() - this.lastShot;
 			
 			var spread = baseSpread;
 			if(timeSinceLastShot < timeRequiredForDeadAim)
@@ -208,7 +192,7 @@ Engine.initObject("Weapon", "Base", function() {
 			this.field = null;
 			this.clipCapacity = 0;
 			this.shotsInClip = 0;
-			this.automatic = false;
+			this.automatic = null;
 			this.roundsPerMinute = 0;
 			this.projectilesPerShot = 0;
 			this.timeToReload = 0;

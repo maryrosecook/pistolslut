@@ -392,7 +392,7 @@ Engine.initObject("Human", "Mover", function() {
 					"M9": 		{ "gunTip": new Point2D(07, 05), "gunAngle": 270 },
 					"Mac10": 	{ "gunTip": new Point2D(07, 03), "gunAngle": 270 },
 					"SPAS": 	{ "gunTip": new Point2D(07, 08), "gunAngle": 270 },
-					"Mortar": { "gunTip": new Point2D(13, 08), "gunAngle": 340 }
+					"Mortar": { "gunTip": new Point2D(13, 08), "gunAngle": 345 }
 				}
 			},
 			"Right": {
@@ -408,7 +408,7 @@ Engine.initObject("Human", "Mover", function() {
 					"M9":     { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
 					"Mac10":  { "gunTip": new Point2D(40, 03), "gunAngle": 90 },
 					"SPAS":   { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
-					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 20 }
+					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 15 }
 				}
 			}
 		},

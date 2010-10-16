@@ -48,7 +48,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyTimeToThrowGrenade: function() {
 			var host = this.getHostObject();
 			if(this.isEnemyInSights()
-				 && host.canThrowGrenades == true)
+				 && host.canThrowGrenades == true
+				 && !host.isCrouching())
 				host.throwGrenade();
 		},
 		
@@ -81,7 +82,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		execute: function(renderContext, time) {
 			var host = this.getHostObject();
-			if(host.isCrouching() && !host.weapon.isReloading() && this.noUnsafeIncomingForAWhile() && host.canStand())
+			if(host.isCrouching() && !host.weapon.isReloading() && host.canStand() && this.noUnsafeIncomingForAWhile())
 				host.stand();
 				
 			this.turnTowardsPlayer();

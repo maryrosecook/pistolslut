@@ -9,7 +9,7 @@ Engine.initObject("Ordinance", "Mover", function() {
 		weapon: null,
 		field: null,
 		
-		constructor: function(name, weapon, baseSpeed, projectileVelocityVariability, shape) {
+		constructor: function(name, weapon, baseSpeed, velocityVariability, shape) {
 			this.base(name);
 			this.field = PistolSlut;
 		
@@ -35,7 +35,7 @@ Engine.initObject("Ordinance", "Mover", function() {
 			
 			var ownerPosition = Point2D.create(p_mover.getPosition());
 			var gunTipPosition = this.weapon.getGunTip();
-			var speed = baseSpeed + (Math.random() * projectileVelocityVariability * baseSpeed);
+			var speed = baseSpeed + (Math.random() * velocityVariability * baseSpeed);
 
 			c_mover.setPosition(gunTipPosition);
 			c_mover.setVelocity(this.weapon.ordinancePhysics.call(this.weapon).mul(speed));
@@ -45,6 +45,7 @@ Engine.initObject("Ordinance", "Mover", function() {
 		release: function() {
 			this.base();
 			this.weapon = null;
+			this.shooter = null;
 		},
 		
 		destroy: function() {

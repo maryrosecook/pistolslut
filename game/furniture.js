@@ -4,16 +4,11 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Furniture", "Mover", function() {
-
-	/**
-	 * @class A piece of furniture in the level.
-	 */
 	var Furniture = Mover.extend({
-		name: null,
 		field: null,
 
-		constructor: function(name, position) {
-			this.base(name);
+		constructor: function(spriteName, position) {
+			this.base(spriteName);
 			this.field = PistolSlut;
 
 			// Add components to move and draw
@@ -21,7 +16,7 @@ Engine.initObject("Furniture", "Mover", function() {
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 			
-			this.addSprite("main", this.field.spriteLoader.getSprite(name, "main"));
+			this.addSprite("main", this.field.spriteLoader.getSprite(spriteName, "main"));
 			this.setSprite("main");
 			
 			this.setPosition(position);
@@ -35,7 +30,7 @@ Engine.initObject("Furniture", "Mover", function() {
 		
 		shot: function(projectile) {
 			this.particleRicochet(projectile);
-		},	
+		},
 		
 		ricochetFlashSpread: 50,
 		ricochetParticleCount: 10,
@@ -53,9 +48,7 @@ Engine.initObject("Furniture", "Mover", function() {
 				var sideHit = positionData[1];
 				var reversedAngle = this.field.physics.reverseAngle(projectile, sideHit);
 				for(var x = 0; x < this.ricochetParticleCount; x++)
-				{
 					particles[x] = BurnoutParticle.create(position, reversedAngle, this.ricochetFlashSpread, this.ricochetParticleTTL);
-				}
 					
 				this.field.pEngine.addParticles(particles);
 			}

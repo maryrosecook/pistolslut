@@ -1,10 +1,18 @@
 Engine.initObject("Mortar", "Weapon", function() {
 	var Mortar = Weapon.extend({
-				
+		
 		constructor: function(owner) {
-			this.base(owner, owner.field, Mortar.getClassName(), Mortar.CLIP_CAPACITY, Weapon.SEMI_AUTOMATIC, Mortar.ROUNDS_PER_MINUTE,
-								Mortar.PROJECTILES_PER_SHOT, Mortar.TIME_TO_RELOAD, MortarRound, Mortar.PROJECTILE_VELOCITY_VARIABILITY,
-								Mortar.DISCHARGE_DELAY, Mortar.TIME_REQUIRED_FOR_DEAD_AIM);
+			this.clipCapacity = 1;
+			this.base(owner, owner.field, Mortar.getClassName());
+			this.automatic = Weapon.SEMI_AUTOMATIC;
+			this.roundsPerMinute = 30;
+			this.projectilesPerShot = 1;
+			this.timeToReload = 1099;
+			this.projectileVelocityVariability = 0.3;
+			this.dischargeDelay = 900;
+			this.timeRequiredForDeadAim = 2000;
+			this.projectileBaseSpeed = 16;
+			this.projectileClazz = MortarRound;
 		},
 		
 		ordinancePhysics: function() {
@@ -22,18 +30,9 @@ Engine.initObject("Mortar", "Weapon", function() {
 	}, {
 		getClassName: function() { return "Mortar"; },
 		
-		CLIP_CAPACITY: 1,
-		ROUNDS_PER_MINUTE: 30,
-		PROJECTILES_PER_SHOT: 1,
-		TIME_TO_RELOAD: 1099,
-		
 		TIME_REQUIRED_FOR_DEAD_AIM: 2000,
 		STEADINESS: 1,
-		
 		BASE_SPREAD: 0,
-		PROJECTILE_VELOCITY_VARIABILITY: 0.1,
-		
-		DISCHARGE_DELAY: 900,
 	});
 
 	return Mortar;

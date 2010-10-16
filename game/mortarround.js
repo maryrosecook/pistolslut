@@ -2,8 +2,8 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 	var MortarRound = Ordinance.extend({
 		damage: 0,
 		
-		constructor: function(weapon, projectileVelocityVariability) {
-			this.base("MortarRound", weapon, MortarRound.BASE_SPEED, projectileVelocityVariability, MortarRound.SHAPE);
+		constructor: function(weapon, projectileBaseSpeed, projectileVelocityVariability) {
+			this.base("MortarRound", weapon, projectileBaseSpeed, projectileVelocityVariability, MortarRound.SHAPE);
 		},
 
 		update: function(renderContext, time) {
@@ -50,7 +50,6 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 	}, {
 		getClassName: function() { return "MortarRound"; },
 		
-		BASE_SPEED: 20,		
 		SHAPE: [ new Point2D(-1, -1), new Point2D(1, -1), new Point2D(-1,  1), new Point2D(1,  1)],
 	});
 

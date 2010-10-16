@@ -2,9 +2,17 @@ Engine.initObject("Mac10", "Weapon", function() {
 	var Mac10 = Weapon.extend({
 		
 		constructor: function(owner) {
-			this.base(owner, owner.field, Mac10.getClassName(), Mac10.CLIP_CAPACITY, Weapon.AUTOMATIC, Mac10.ROUNDS_PER_MINUTE,
-								Mac10.PROJECTILES_PER_SHOT, Mac10.TIME_TO_RELOAD, Bullet, Mac10.PROJECTILE_VELOCITY_VARIABILITY,
-								Mac10.DISCHARGE_DELAY, Mac10.TIME_REQUIRED_FOR_DEAD_AIM);
+			this.clipCapacity = 30;
+			this.base(owner, owner.field, Mac10.getClassName());
+			this.automatic = Weapon.AUTOMATIC;
+			this.roundsPerMinute = 700;
+			this.projectilesPerShot = 1;
+			this.timeToReload = 2000;
+			this.projectileVelocityVariability = 0.5;
+			this.dischargeDelay = 0;
+			this.timeRequiredForDeadAim = 1000;
+			this.projectileBaseSpeed = 15;
+			this.projectileClazz = Bullet;
 		},
 		
 		ordinancePhysics: function() {
@@ -13,18 +21,10 @@ Engine.initObject("Mac10", "Weapon", function() {
 		
 	}, {
 		getClassName: function() { return "Mac10"; },
-		
-		CLIP_CAPACITY: 30,
-		ROUNDS_PER_MINUTE: 700,
-		PROJECTILES_PER_SHOT: 1,
-		TIME_TO_RELOAD: 2000,
-		
+
 		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
 		STEADINESS: 70,
-		
 		BASE_SPREAD: 5,
-		PROJECTILE_VELOCITY_VARIABILITY: 0.5,
-		DISCHARGE_DELAY: 0,
 	});
 
 	return Mac10;

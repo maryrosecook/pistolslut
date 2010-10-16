@@ -2,9 +2,17 @@ Engine.initObject("M9", "Weapon", function() {
 	var M9 = Weapon.extend({
 		
 		constructor: function(owner) {
-			this.base(owner, owner.field, M9.getClassName(), M9.CLIP_CAPACITY, Weapon.SEMI_AUTOMATIC, M9.ROUNDS_PER_MINUTE,
-								M9.PROJECTILES_PER_SHOT, M9.TIME_TO_RELOAD, Bullet, M9.PROJECTILE_VELOCITY_VARIABILITY,
-								M9.DISCHARGE_DELAY, M9.TIME_REQUIRED_FOR_DEAD_AIM);
+			this.clipCapacity = 10;
+			this.base(owner, owner.field, M9.getClassName());
+			this.automatic = Weapon.SEMI_AUTOMATIC;
+			this.roundsPerMinute = 999999;
+			this.projectilesPerShot = 1;
+			this.timeToReload = 1000;
+			this.projectileVelocityVariability = 0.5;
+			this.dischargeDelay = 0;
+			this.timeRequiredForDeadAim = 1000;
+			this.projectileBaseSpeed = 15;
+			this.projectileClazz = Bullet;
 		},
 		
 		ordinancePhysics: function() {
@@ -13,18 +21,10 @@ Engine.initObject("M9", "Weapon", function() {
 		
 	}, {
 		getClassName: function() { return "M9"; },
-		
-		CLIP_CAPACITY: 10,
-		ROUNDS_PER_MINUTE: 999999,
-		PROJECTILES_PER_SHOT: 1,
-		TIME_TO_RELOAD: 1000,
-		
+
 		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
-		STEADINESS: 100,
-		
+		STEADINESS: 100,	
 		BASE_SPREAD: 2,
-		PROJECTILE_VELOCITY_VARIABILITY: 0.5,
-		DISCHARGE_DELAY: 0,
 	});
 
 	return M9;

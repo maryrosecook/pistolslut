@@ -2,12 +2,11 @@ Engine.initObject("Bullet", "Ordinance", function() {
 	var Bullet = Ordinance.extend({
 		damage: 1,
 		
-		constructor: function(weapon, projectileVelocityVariability) {
-			this.base("Bullet", weapon, Bullet.BASE_SPEED, projectileVelocityVariability, Bullet.SHAPE);
+		constructor: function(weapon, projectileBaseSpeed, projectileVelocityVariability) {
+			this.base("Bullet", weapon, projectileBaseSpeed, projectileVelocityVariability, Bullet.SHAPE);
 		},
 
 		update: function(renderContext, time) {
-			
 			this.base(renderContext, time);
 		},
 
@@ -38,7 +37,6 @@ Engine.initObject("Bullet", "Ordinance", function() {
 	}, {
 		getClassName: function() { return "Bullet"; },
 		
-		BASE_SPEED: 15,		
 		SHAPE: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
 	});
 

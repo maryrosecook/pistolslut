@@ -34,21 +34,15 @@ Engine.initObject("FurnishedLevelLoader", "LevelLoader", function() {
 			else
 			{
 				this.base(name, url, info, path); // let the super do its thing
-				
-				// now load all the sprites for the furniture
 				var levelObjects = info.objects;
-				for(var i in levelObjects.furniture)
-				{
-					var furniturePieceData = levelObjects.furniture[i];					
-					this.spriteLoader.load(furniturePieceData.name, null, furniturePieceData.sprite, path);
-				}
+								
+				// now load all the sprites for the furniture
+				for(var i in levelObjects.sprites)
+					this.spriteLoader.load(levelObjects.sprites[i].bitmapImage, null, levelObjects.sprites[i], path);
 				
-				// load parallax data
+				// load parallax sprites
 				for(var i in levelObjects.parallaxes)
-				{
-					var data = levelObjects.parallaxes[i];
-					this.spriteLoader.load(data.name, null, data.sprite, "resources/");
-				}
+					this.spriteLoader.load(levelObjects.parallaxes[i].name, null, levelObjects.parallaxes[i].sprite, path);
 			}
 		},
 
@@ -139,7 +133,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var data = this.levelResource.info.objects.furniture;
 			for(var i in data)
 			{
-				var furniturePiece = Furniture.create(data[i].name, Point2D.create(data[i].x, data[i].y));
+				var furniturePiece = Furniture.create(data[i].spriteName, Point2D.create(data[i].x, data[i].y));
 				this.furniture[i] = furniturePiece;
 				renderContext.add(furniturePiece);
 			}
@@ -237,7 +231,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 				zIndex += 1;
 			}
 		},
-		
+
 		addTriggers: function() {
 			this.field.notifier.subscribe(Player.MOVE_EVENT, this, this.checkTrigger);
 			var data = this.levelResource.info.objects.triggers;

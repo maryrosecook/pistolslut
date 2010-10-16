@@ -84,13 +84,13 @@ var Player = Human.extend({
 					
 				this.weapon.shootKeyDown();
 				break;
-			case 88: // x
+			case 67: // c
 				this.throwGrenade();
 				break;
 			// case 65: // a
 			// 	this.weapon.reload();
 			// 	break;
-			case 67: // c
+			case 88: // x
 				this.cycleWeapon();
 				break;
 		}

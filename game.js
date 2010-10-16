@@ -115,8 +115,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			// load sprite resources
 			this.spriteLoader.load("human", this.getFilePath("resources/human.js"));
-			this.spriteLoader.load("grenade", this.getFilePath("resources/grenade.js"));
-			this.spriteLoader.load("lantern", this.getFilePath("resources/lantern.js"));
 
 			// load level resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));

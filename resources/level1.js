@@ -12,67 +12,36 @@
 			]
 		},
 
+		sprites: [
+			{ bitmapImage: "blockwall.gif", sprites: { "main": { "f": [0, 0, 20, 130] } } },
+			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 25] } } },
+			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
+			{ bitmapImage: "busstop.gif", sprites: { "main": { "f": [0, 0, 154, 18] } } },
+			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 400, 34] } } },
+			{ bitmapImage: "lantern.gif", sprites: { "main": { "f": [0, 0, 14, 13] } } },
+			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } }			
+		],
+
 		furniture: [
-			{
-				name: "blockwallleft", x: 0, y: 267, 
-				sprite: {
-					bitmapImage: "blockwallleft.gif",
-					sprites: { "main": { "f" : [0, 0, 20, 130] } }
-				}
-			},
-			{
-				name: "blockwallright", x: 1980, y: 267,
-				sprite: {
-					bitmapImage: "blockwallright.gif",
-					sprites: { "main": { "f" : [0, 0, 20, 130] } }
-				}
-			},
-			{
-				name: "bin1", x: 170, y: 370,
-				sprite: {
-					bitmapImage: "bin.gif",
-					sprites: { "main": { "f" : [0, 0, 20, 25] } }
-				}
-			},
-			{
-				name: "bin2", x: 370, y: 370,
-				sprite: {
-					bitmapImage: "bin.gif",
-					sprites: { "main": { "f" : [0, 0, 20, 25] } }
-				}
-			},
-			{
-				name: "sandbags1", x: 760, y: 371,
-				sprite: {
-					bitmapImage: "sandbags.gif",
-					sprites: { "main": { "f" : [0, 0, 18, 26] } }
-				}
-			},
-			{
-				name: "busstop", x: 614, y: 280,
-				sprite: {
-					bitmapImage: "busstop.gif",
-					sprites: { "main": { "f" : [0, 0, 154, 18] } }
-				}
-			},
-			{
-				name: "bin3", x: 1100, y: 370,
-				sprite: {
-					bitmapImage: "bin.gif",
-					sprites: { "main": { "f" : [0, 0, 20, 25] } }
-				}
-			},
-			{ name: "floorpiece1", x: 0, y: 396, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece2", x: 400, y: 396, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece3", x: 800, y: 396, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece4", x: 1200, y: 396, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } },
-			{ name: "floorpiece5", x: 1600, y: 396, sprite: { bitmapImage: "floorpiece.gif", sprites: { "main": { "f" : [0, 0, 400, 34] } } } }
+			{ name: "blockwallleft", x: 0, y: 267, spriteName: "blockwall.gif" },
+			{ name: "blockwallright", x: 1980, y: 267, spriteName: "blockwall.gif" },
+			{ name: "bin1", x: 170, y: 370, spriteName: "bin.gif" },
+			{ name: "bin2", x: 370, y: 370, spriteName: "bin.gif" },
+			{ name: "sandbags1", x: 760, y: 371, spriteName: "sandbags.gif" },
+			{ name: "busstop", x: 614, y: 280, spriteName: "busstop.gif" },
+			{ name: "bin3", x: 1100, y: 370, spriteName: "bin.gif" },
+			{ name: "floorpiece1", x: 0, y: 396, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece2", x: 400, y: 396, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece3", x: 800, y: 396, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece4", x: 1200, y: 396, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece5", x: 1600, y: 396, spriteName: "floorpiece.gif" }
 		],
 		
 		enemies: [
 			{ name: "enemy1", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
 			{ name: "enemy2", clazz: Enemy, x: 780, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
-			{ name: "enemy3", clazz: Enemy, x: 1140, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			{ name: "enemy2", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
+			{ name: "enemy3", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 		],
 		
 		speeches: {
@@ -94,17 +63,14 @@
 			{ name: "fireworklauncher1", x: 381, y: 370, angle: 0, spread: 20, interval: 10000 }
 		],
 		
-		sky: {
-			startColor: ["22", "22", "22"],
-			transformations: null
-		},
+		sky: { startColor: ["26", "26", "26"], transformations: null },
 		
 		parallaxes: [
 			{ 
 				name: "farthestlight", x: 400, y: 357, scrollAttenuation: 0.8,
 				sprite: {
 					bitmapImage: "farthestlight.gif",
-					sprites: { "main": { "a" : [0, 0, 40, 40, 2, 6000, "loop"] } }
+					sprites: { "main": { "f" : [0, 0, 40, 40] } }
 				}
 			},
 			{ 

@@ -24,8 +24,8 @@ Engine.initObject("Grenade", "Mover", function() {
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 
-			this.addSprite("throw", this.field.spriteLoader.getSprite("grenade", "throw"));
-			this.setSprite("throw");
+			this.addSprite("main", this.field.spriteLoader.getSprite("grenade.gif", "main"));
+			this.setSprite("main");
 
 			var c_mover = this.getComponent("move");
 			var dir = Math2D.getDirectionVector(Point2D.ZERO, Grenade.tip, this.shooter.getArmAngle());
