@@ -42,10 +42,10 @@
 				}
 			},
 			{
-				name: "sandbags1", x: 760, y: 370,
+				name: "sandbags1", x: 760, y: 371,
 				sprite: {
 					bitmapImage: "sandbags.gif",
-					sprites: { "main": { "f" : [0, 0, 18, 25] } }
+					sprites: { "main": { "f" : [0, 0, 18, 26] } }
 				}
 			},
 			{

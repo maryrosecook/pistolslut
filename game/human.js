@@ -342,8 +342,8 @@ Engine.initObject("Human", "Mover", function() {
 		isCrouching: function() { return this.standState == Human.CROUCHING; },
 	
 		getGunAngle: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunAngle"]; },
-		getGunTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunTip"]; },
-		getArmTip: function() { return Human.COORDINATES[this.direction][this.standState]["armTip"]; },
+		getRelativeGunTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunTip"]; },
+		getRelativeArmTip: function() { return Human.COORDINATES[this.direction][this.standState]["armTip"]; },
 		getArmAngle: function() { return Human.COORDINATES[this.direction]["armAngle"]; },
 	
 		release: function() {

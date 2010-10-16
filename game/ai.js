@@ -40,7 +40,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyTimeToShoot: function() {
 			var host = this.getHostObject();
 			if(this.isEnemyInSights()
-				 && !this.friendliesInLineOfFire())
+				 && !this.friendliesInLineOfFire()
+				 && !this.furnitureInLineOfFire())
 				host.shoot();
 		},
 		
@@ -89,11 +90,25 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		friendliesInLineOfFire: function() {
 			var host = this.getHostObject();
 			var playerEnemies = this.field.level.liveEnemies();
-			for(var i in playerEnemies)
-				if(host != playerEnemies[i])
-					if(this.field.collider.inLineOfFire(host, playerEnemies[i]))
-						return true;
+			if(host.weapon.hasLineOfFire() == true)
+				for(var i in playerEnemies)
+					if(host != playerEnemies[i])
+						if(this.field.collider.inLineOfFire(host, playerEnemies[i]))
+							return true;
 			
+			return false;
+		},
+		
+		furnitureBlockRange: 100,
+		furnitureInLineOfFire: function() {
+			var furniture = this.field.level.furniture;
+			var host = this.getHostObject();
+			if(host.weapon.hasLineOfFire() == true)
+				for(var i in furniture)
+					if(!this.field.collider.objectDistanceAway(host, furniture[i], this.furnitureBlockRange))
+						if(this.field.collider.inLineOfFire(host, furniture[i]))
+							return true;
+						
 			return false;
 		},
 		

@@ -126,7 +126,6 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addSigns(renderContext);
 			this.addFires();
 			this.addFireworkLaunchers(renderContext);
-			//this.addSnow();
 			this.addSky(renderContext);
 			this.addParallaxes(renderContext);
 			this.addLanterns(renderContext);

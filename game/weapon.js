@@ -42,6 +42,7 @@ Engine.initObject("Weapon", "Base", function() {
 		
 		setPose: function() { },
 		canStand: function() { return true; },
+		hasLineOfFire: function() { return true; }, // false for weapons with indirect fire
 		
 		dischargeTime: null,
 		setFutureDischarge: function() { this.dischargeTime = new Date().getTime() + this.dischargeDelay; },
@@ -52,18 +53,20 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		// actually fires the weapon
-		discharge: function() {			
-			// generate the bullets
-			for(var x = 0; x < this.projectilesPerShot; x++)
-				this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
+		discharge: function() {	
+			if(this.owner.isAlive() == true)
+			{
+				// generate the bullets
+				for(var x = 0; x < this.projectilesPerShot; x++)
+					this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileVelocityVariability));
 
-			this.muzzleFlash();
+				this.muzzleFlash();
 
-			this.shotsInClip -= 1;
-			this.lastShot = new Date().getTime();
-			if(this.owner instanceof Player)
-				this.field.notifier.post(Weapon.SHOOT, this);
-				
+				this.shotsInClip -= 1;
+				this.lastShot = new Date().getTime();
+				if(this.owner instanceof Player)
+					this.field.notifier.post(Weapon.SHOOT, this);
+			}
 			this.dischargeTime = null;
 		},
 		
@@ -197,7 +200,7 @@ Engine.initObject("Weapon", "Base", function() {
 				return null;
 		},
 		
-		getGunTip: function() { return Point2D.create(this.owner.getGunTip()).add(this.owner.getPosition()); },
+		getGunTip: function() { return Point2D.create(this.owner.getRelativeGunTip()).add(this.owner.getPosition()); },
 		
 		release: function() {
 			this.base();

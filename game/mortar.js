@@ -17,6 +17,7 @@ Engine.initObject("Mortar", "Weapon", function() {
 		},
 		
 		canStand: function() { return false; },
+		hasLineOfFire: function() { return false; },
 		
 	}, {
 		getClassName: function() { return "Mortar"; },
