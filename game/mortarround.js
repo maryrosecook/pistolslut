@@ -13,7 +13,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+				if(new CheapRect(this).isIntersecting(obj.rect))
 			  {
 					this.explode(obj);
 					return ColliderComponent.STOP;

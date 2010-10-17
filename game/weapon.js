@@ -55,7 +55,7 @@ Engine.initObject("Weapon", "Base", function() {
 			this.dischargeTime = null;
 		},
 		
-		// either fires weapon or sets it to fire in the future if there is a delay for this weapon
+		// either fires weapon or sets it to fire in the future if there is a delay
 		shoot: function() {
 			if(this.dischargeTime == null && !this.isClipEmpty())
 			{

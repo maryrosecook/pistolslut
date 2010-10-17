@@ -14,10 +14,10 @@
 
 		sprites: [
 			{ bitmapImage: "blockwall.gif", sprites: { "main": { "f": [0, 0, 20, 130] } } },
-			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 25] } } },
+			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
 			{ bitmapImage: "busstop.gif", sprites: { "main": { "f": [0, 0, 154, 18] } } },
-			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 400, 34] } } },
+			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 420, 34] } } },
 			{ bitmapImage: "lantern.gif", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } }			
 		],
@@ -25,16 +25,16 @@
 		furniture: [
 			{ name: "blockwallleft", x: 0, y: 267, spriteName: "blockwall.gif" },
 			{ name: "blockwallright", x: 1980, y: 267, spriteName: "blockwall.gif" },
-			{ name: "bin1", x: 170, y: 370, spriteName: "bin.gif" },
-			{ name: "bin2", x: 370, y: 370, spriteName: "bin.gif" },
-			{ name: "sandbags1", x: 760, y: 371, spriteName: "sandbags.gif" },
+			{ name: "bin1", x: 170, y: 368, spriteName: "bin.gif" },
+			{ name: "bin2", x: 370, y: 368, spriteName: "bin.gif" },
+			{ name: "sandbags1", x: 760, y: 369, spriteName: "sandbags.gif" },
 			{ name: "busstop", x: 614, y: 280, spriteName: "busstop.gif" },
-			{ name: "bin3", x: 1100, y: 370, spriteName: "bin.gif" },
-			{ name: "floorpiece1", x: 0, y: 396, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece2", x: 400, y: 396, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece3", x: 800, y: 396, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece4", x: 1200, y: 396, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece5", x: 1600, y: 396, spriteName: "floorpiece.gif" }
+			{ name: "bin3", x: 1100, y: 368, spriteName: "bin.gif" },
+			{ name: "floorpiece1", x: 0, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece2", x: 400, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece3", x: 800, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece4", x: 1200, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece5", x: 1600, y: 394, spriteName: "floorpiece.gif" }
 		],
 		
 		enemies: [
@@ -56,7 +56,7 @@
 		],
 		
 		fires: [
-			{ name: "fire1", x: 374, y: 370, width: 14 }
+			{ name: "fire1", x: 374, y: 368, width: 14 }
 		],
 		
 		fireworkLaunchers: [

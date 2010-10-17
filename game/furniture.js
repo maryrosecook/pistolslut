@@ -6,6 +6,7 @@ Engine.include("/engine/engine.object2d.js");
 Engine.initObject("Furniture", "Mover", function() {
 	var Furniture = Mover.extend({
 		field: null,
+		rect: null,
 
 		constructor: function(spriteName, position) {
 			this.base(spriteName);
@@ -20,6 +21,7 @@ Engine.initObject("Furniture", "Mover", function() {
 			this.setSprite("main");
 			
 			this.setPosition(position);
+			this.rect = new CheapRect(this);
 		},
 
 		update: function(renderContext, time) {

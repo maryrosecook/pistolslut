@@ -1,9 +1,5 @@
 Engine.initObject("CheapRect", "Base", function() {
 	var CheapRect = Base.extend({
-		x: null,
-		y: null,
-		r: null,
-		b: null,
 		
 		constructor: function(obj, x, y, r, b) {
 			if(obj != null)

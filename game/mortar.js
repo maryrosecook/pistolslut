@@ -9,7 +9,7 @@ Engine.initObject("Mortar", "Weapon", function() {
 			this.projectilesPerShot = 1;
 			this.timeToReload = 1099;
 			this.projectileVelocityVariability = 0.3;
-			this.dischargeDelay = 900;
+			this.dischargeDelay = 1100;
 			this.timeRequiredForDeadAim = 2000;
 			this.projectileBaseSpeed = 16;
 			this.projectileClazz = MortarRound;

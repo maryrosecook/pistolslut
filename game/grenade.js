@@ -11,7 +11,6 @@ Engine.initObject("Grenade", "Mover", function() {
 		
 		speed: 8,
 		pinTimer: 2000, // how long the grande takes to explode
-		safeDistance: 250,
 		
 		constructor: function(shooter) {
 			this.base("Grenade");
@@ -70,15 +69,9 @@ Engine.initObject("Grenade", "Mover", function() {
 		onCollide: function(obj) {
 			if(obj instanceof Furniture)
 			{
-				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+				if(new CheapRect(this).isIntersecting(obj.rect))
 					this.bounce(obj);
 			}
-			// else if(obj instanceof Human)
-			// {
-			// 	if(obj.isAlive())
-			// 		if(obj instanceof Enemy) // tell enemy about shots being fired
-			// 			this.field.notifier.post(Human.INCOMING, this);
-			// }
 			
 			return ColliderComponent.CONTINUE;
 		},
@@ -94,21 +87,18 @@ Engine.initObject("Grenade", "Mover", function() {
 			}
 		},
 	
-		shrapnelCount: 30,
+		shrapnelCount: 25,
 		shrapnelTTL: 500,
 		explode: function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
 			
-			//this.field.notifier.post(Grenade.EXPLODED, this);
 			this.destroy();
 		},
 	}, {
 		getClassName: function() { return "Grenade"; },
 
 		tip: new Point2D(0, -1),
-		
-		EXPLODED: "exploded",
 	});
 
 	return Grenade;

@@ -8,9 +8,6 @@ Engine.initObject("Shrapnel", "Mover", function() {
 		field: null,
 		shooter: null,
 		
-		birth: 0,
-		life: 0,
-		
 		baseSpeed: 15,
 		damage: 1,
 		safeDistance: 20,
@@ -27,13 +24,10 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			this.add(Vector2DComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 			
-			var drawer = this.getComponent("draw");
-			drawer.setPoints(Shrapnel.shape);
-			drawer.setFillStyle("#f00");
+			this.getComponent("draw").setPoints(Shrapnel.shape);
 			
 			var spread = 360;
-			var rot = 0;
-			var a = (rot - (spread / 2)) + (Math.random() * spread);
+			var a = (0 - (360 / 2)) + (Math.random() * spread);
 			var vel = 1 + (Math.random() * 11);
 			
 			var mover = this.getComponent("move");
@@ -62,15 +56,13 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			if(this.color != colr)
 			{
 				this.color = colr;
-				var drawer = this.getComponent("draw");
-				drawer.setFillStyle(this.color);
-				drawer.setLineStyle(this.color);
+				this.getComponent("draw").setLineStyle(this.color);
 			}
 		},
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+				if(new CheapRect(this).isIntersecting(obj.rect))
 			  {
 					obj.shot(this);
 					this.destroy();

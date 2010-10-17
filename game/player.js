@@ -16,17 +16,7 @@ var Player = Human.extend({
 		this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
 		
 		this.add(KeyboardInputComponent.create("input"));
-		
-		//this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
-		//this.field.notifier.subscribe(Human.GRENADE_NEARBY, this, this.notifyGrenadeNearby);
-		//this.field.notifier.subscribe(Grenade.EXPLODED, this, this.notifyGrenadeExploded);
 	},
-
-	// notifyIncoming: function(ordinance) {
-	// 	if(ordinance instanceof Grenade)
-	// 		if(!this.field.collider.objectDistanceAway(this, ordinance, ordinance.safeDistance))
-	// 			this.field.notifier.post(Human.GRENADE_NEARBY, ordinance);
-	// },
 
 	release: function() {
 		this.base();
@@ -36,7 +26,7 @@ var Player = Human.extend({
 		this.base(renderContext, time);
 		this.field.updateFramePosition(this.getVelocity(), this); // move the render frame in response to player movement
 		
-		//if(this.getVelocity().x != 0)
+		if(this.getVelocity().x != 0)
 			this.field.notifier.post(Player.MOVE_EVENT, this);
 	},
 

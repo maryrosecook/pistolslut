@@ -23,7 +23,6 @@ Engine.initObject("Firework", "Object2D", function() {
 			var c_draw = this.getComponent("draw");
 			c_draw.setPoints(Firework.shape);
 			c_draw.setLineStyle("white");
-			c_draw.setFillStyle("white");
 		},
 		
 		update: function(renderContext, time) {

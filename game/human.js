@@ -17,7 +17,6 @@ Engine.initObject("Human", "Mover", function() {
 		standState: null,
 		canThrowGrenades: false,
 		direction: null,
-		//nearbyGrenades: [],
 			
 		constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
 			this.base(name);
@@ -67,17 +66,6 @@ Engine.initObject("Human", "Mover", function() {
 			if(add == true)
 				this.nearbyGrenades.push(grenade);
 		},
-	
-		// notifyGrenadeExploded: function(grenade) {
-		// 	for(var i in this.nearbyGrenades)
-		// 		if(this.nearbyGrenades[i] == grenade)
-		// 		{
-		// 			EngineSupport.arrayRemove(this.nearbyGrenades, grenade);
-		// 			if(this.nearbyGrenades.length == 0)
-		// 				this.field.notifier.post(Human.NO_NEARBY_GRENADES, this);
-		// 			break;
-		// 		}
-		// },
 
 		move: function(time) {
 			if(this.getSprite().isSinglePlayOver(time) == true) // on a single play anim and it's over
@@ -285,7 +273,7 @@ Engine.initObject("Human", "Mover", function() {
 		},
 	
 		onCollide: function(obj) {
-			if(obj instanceof Furniture && this.field.collider.colliding(this, [obj]))
+			if(obj instanceof Furniture && new CheapRect(this).isIntersecting(new CheapRect(obj)))
 			{
 				if(this.field.collider.aFallingThroughB(this, obj))
 					this.endFall(obj);

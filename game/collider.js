@@ -11,11 +11,15 @@ Engine.initObject("Collider", "Base", function() {
 			this.field = field;
 		},
 	
-		inLineOfFire: function(shooter, target) {
+		inLineOfFire: function(shooter, target, inSafetyMargin) {
+			var safetyMargin = 0;
+			if(inSafetyMargin != null)
+				safetyMargin = inSafetyMargin;
+				
 			var muzzlePosition = shooter.weapon.getGunTip();
 			var targetRect = new CheapRect(target);
 			
-			if(muzzlePosition.y <= targetRect.b && muzzlePosition.y >= targetRect.y) // intersecting on y-axis
+			if(muzzlePosition.y <= targetRect.b + safetyMargin && muzzlePosition.y >= targetRect.y - safetyMargin) // intersecting on y-axis
 			{
 				if(shooter.direction == Collider.LEFT)
 					return targetRect.x < muzzlePosition.x;

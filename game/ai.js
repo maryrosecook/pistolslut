@@ -88,13 +88,14 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.turnTowardsPlayer();
 		},
 		
+		lineOfFireSafetyMargin: 5, // add this to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var host = this.getHostObject();
 			var playerEnemies = this.field.level.liveEnemies();
 			if(host.weapon.hasLineOfFire() == true)
 				for(var i in playerEnemies)
 					if(host != playerEnemies[i])
-						if(this.field.collider.inLineOfFire(host, playerEnemies[i]))
+						if(this.field.collider.inLineOfFire(host, playerEnemies[i], this.lineOfFireSafetyMargin))
 							return true;
 			
 			return false;

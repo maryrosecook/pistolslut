@@ -12,7 +12,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+				if(new CheapRect(this).isIntersecting(obj.rect))
 			  {
 					obj.shot(this);
 					this.destroy();
