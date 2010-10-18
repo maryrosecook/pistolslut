@@ -68,6 +68,17 @@ Engine.initObject("Collider", "Base", function() {
 			return false;
 		},
 		
+		objsColliding: function(obj1, obj2) {
+			return this.getRect(obj1).isIntersecting(new CheapRect(obj2));
+		},
+		
+		getRect: function(obj) {
+			if(obj instanceof Furniture)
+				return obj.rect;
+			else
+				return new CheapRect(obj);
+		},
+		
 		objectDistanceAway: function(obj1, obj2, distance) {
 			if(obj1.getPosition().dist(obj2.getPosition()) >= distance)
 				return true;
@@ -116,12 +127,6 @@ Engine.initObject("Collider", "Base", function() {
 				return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), Collider.BOTTOM];
 		
 			return null; // no intersection
-		},
-		
-		getRect: function(obj) {
-			var pos = obj.getPosition();
-			var bBoxDims = obj.getBoundingBox().dims;
-			return Rectangle2D.create(pos.x, pos.y, bBoxDims.x, bBoxDims.y);
 		},
 		
 	}, {

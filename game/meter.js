@@ -54,8 +54,9 @@ Engine.initObject("Meter", "Base", function() {
 				this.setReading(obj.getMeterReading(), obj.getMeterMax());
 		},
 		
-		reset: function() {
-			this.setReading(this.max, this.max);
+		reset: function(obj) {
+			if(obj instanceof Player)
+				this.setReading(this.max, this.max);
 		},
 		
 		decrement: function() {

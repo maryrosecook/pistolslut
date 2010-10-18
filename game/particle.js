@@ -11,7 +11,7 @@ Engine.initObject("BloodParticle", "Particle", function() {
 		
 		constructor: function(pos, rot, spread, ttl) {
 			this.base(ttl || 2000);
-			this.pos = new Point2D(pos);
+			this.pos = Point2D.create(pos);
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BloodParticle.ref, a);
@@ -53,7 +53,7 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 		
 		constructor: function(pos, rot, spread, ttl) {
 			this.base(ttl || 2000);
-			this.pos = new Point2D(pos);
+			this.pos = Point2D.create(pos);
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BurnoutParticle.ref, a);
@@ -139,7 +139,7 @@ Engine.initObject("SnowParticle", "ColoredParticle", function() {
 				
 		constructor: function(levelWidth) {
 			var angle = Math.floor((180) + (Math.random() * 10));
-			var position = new Point2D(Math.floor(Math.random() * levelWidth), 0);
+			var position = Point2D.create(Math.floor(Math.random() * levelWidth), 0);
 			var velocity = 2 + (Math.random() * 0.5);
 			this.base("#fff", position, 8000, angle, 0, velocity);
 		},
@@ -203,12 +203,11 @@ Engine.initObject("FireParticle", "Particle", function() {
 		vec: null,
 		color: null,
 				
-		constructor: function(x, y, width, maxTTL) {
-			this.pos = new Point2D(x + Math.floor(Math.random() * width), y);
+		constructor: function(x, y, width, maxTTL, startVec) {
+			this.pos = Point2D.create(x + Math.floor(Math.random() * width), y);
 			this.base(this.getFireParticleTTL(width, maxTTL));
+			this.vec = Vector2D.create(FireParticle.UP);
 			
-			var a = 0;
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, FireParticle.UP, a);
 			var vel = 0.5 + (Math.random() * 2);
 			this.vec.mul(vel);
 		},
@@ -219,8 +218,8 @@ Engine.initObject("FireParticle", "Particle", function() {
 			var midPoint = width / 2;
 	    if (randPoint > midPoint)
 			{
-	        randPoint = 1 - randPoint;
-	        var height = 1 - ((randPoint - ((1 - randPoint) * randPoint)) * (1 / (1 - midPoint)));
+	        var rightRandPoint = 1 - randPoint;
+	        var height = 1 - ((rightRandPoint - ((1 - rightRandPoint) * rightRandPoint)) * (1 / (1 - midPoint)));
 	    } 
 			else
 	    	var height = (randPoint - ((1 - randPoint) * randPoint)) * (1 / midPoint);
@@ -232,6 +231,7 @@ Engine.initObject("FireParticle", "Particle", function() {
 			this.base();
 			this.pos = null;
 			this.vec = null;
+			this.color = null;
 		},
 
 		draw: function(renderContext, time) {
@@ -248,10 +248,10 @@ Engine.initObject("FireParticle", "Particle", function() {
 			renderContext.drawPoint(this.pos);
 		}
 
-	}, {
-		
+	}, {		
 		getClassName: function() { return "FireParticle"; },
-		UP: new Point2D(0, -1)
+		UP: new Vector2D(0, -1)
+		
 	});
 
 	return FireParticle;

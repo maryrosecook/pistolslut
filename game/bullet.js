@@ -12,7 +12,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(new CheapRect(this).isIntersecting(obj.rect))
+				if(this.field.collider.objsColliding(this, obj))
 			  {
 					obj.shot(this);
 					this.destroy();
@@ -22,7 +22,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 			else if(obj instanceof Human) {
 				if(obj.isAlive())
 				{	
-					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+					if(this.field.collider.objsColliding(this, obj))
 				  {
 						this.field.notifier.post(Human.SHOT, this);
 						obj.shot(this);

@@ -37,7 +37,7 @@ Engine.initObject("Caret", "Object2D", function() {
 		},
 		
 		generatePosition: function() {
-			var caretPosition = new Point2D(this.meter.pos);
+			var caretPosition = Point2D.create(this.meter.pos);
 			caretPosition.setX(caretPosition.x + (this.meter.caretSeparationX * this.number));
 			return caretPosition;
 		},

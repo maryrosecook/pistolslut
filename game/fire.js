@@ -5,19 +5,28 @@ Engine.initObject("Fire", "Base", function() {
 		width: 0,
 		
 		fireTimer: null,
-		sparkInterval: 5,
+		fireExtinguishTimer: null,
+		sparkInterval: 10,
 		
 		constructor: function(name, field, x, y, width) {
 			this.x = x;
 			this.y = y;
 			this.width = width;
 			var maxTTL = 250;
-			
-			var fire = this;
+						
 			this.fireTimer = Interval.create(this.name, this.sparkInterval,
 				function() {
-					if(field.inView(fire))
-						field.pEngine.addParticle(FireParticle.create(x, y, width, maxTTL));
+					field.pEngine.addParticle(FireParticle.create(x, y, width, maxTTL));
+			});
+
+			var fire = this;			
+			this.fireExtinguishTimer = Interval.create(this.name + "Extinguish", 2000,
+				function() {
+					if(!field.inView(fire))
+					{
+						fire.fireTimer.cancel();
+						fire.fireExtinguishTimer.cancel();
+					}
 			});
 		},
 		
@@ -26,6 +35,7 @@ Engine.initObject("Fire", "Base", function() {
 		
 	}, {
 		getClassName: function() { return "Fire"; },
+		
 	});
 
 	return Fire;

@@ -30,36 +30,6 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.setupTextRenderers(text, this.defaultSignColor);
 		},
 		
-		// notifyReloaded: function(weapon) {
-		// 	if(weapon.owner == this.field.playerObj)
-		// 		this.revert(Sign.RELOAD_TEXT);
-		// },
-		// 
-		// notifyWeaponEmpty: function(weapon) {
-		// 	if(weapon.owner == this.field.playerObj)
-		// 		this.hijack(Sign.RELOAD_TEXT);
-		// },
-		// 
-		// notifyWeaponSwitch: function(weapon) {
-		// 	if(weapon.owner == this.field.playerObj)
-		// 	{
-		// 		if(weapon.isClipEmpty() == true && this.hijacked == false) // switched to empty weapon and not already telling to reload
-		// 			this.hijack(Sign.RELOAD_TEXT);
-		// 		else if(weapon.isClipEmpty() == false && this.hijacked == true) // switch to non-empty weapon and hijacked so untell to reload
-		// 			this.revert(Sign.RELOAD_TEXT);
-		// 	}
-		// },
-		
-		// notifyGrenadeNearby: function(grenade) {
-		// 	if(grenade.shooter != this.field.playerObj)
-		// 		this.hijack(Sign.GRENADE_NEARBY_TEXT);
-		// },
-		// 
-		// notifyNoNearbyGrenades: function(human) {
-		// 	if(human == this.field.playerObj)
-		// 		this.revert(Sign.GRENADE_NEARBY_TEXT);
-		// },
-		
 		hijack: function(newText) {
 			this.changeText(newText, "#F7B800");
 			this.hijacked = true;
@@ -178,8 +148,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		getClassName: function() { return "Sign"; },
 		
 		HIJACK: "hijack",
-		//RELOAD_TEXT: "Reload",
-		//GRENADE_NEARBY_TEXT: "Get  down"
+
 	});
 
 	return Sign;

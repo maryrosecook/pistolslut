@@ -164,11 +164,6 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			{
 				this.signs[i] = new Sign(this.field, signs[i].text, data.color, Point2D.create(signs[i].x, signs[i].y), signs[i].width, data.letterSpacing);
 				renderContext.add(this.signs[i]);
-				// this.field.notifier.subscribe(Human.CLIP_EMPTY, this.signs[i], this.signs[i].notifyWeaponEmpty);
-				// this.field.notifier.subscribe(Human.RELOADED, this.signs[i], this.signs[i].notifyReloaded);
-				// this.field.notifier.subscribe(Weapon.SWITCH, this.signs[i], this.signs[i].notifyWeaponSwitch);
-				// this.field.notifier.subscribe(Human.GRENADE_NEARBY, this.signs[i], this.signs[i].notifyGrenadeNearby);
-				// this.field.notifier.subscribe(Human.NO_NEARBY_GRENADES, this.signs[i], this.signs[i].notifyNoNearbyGrenades);
 			}
 		},
 		

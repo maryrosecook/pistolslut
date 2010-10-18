@@ -62,7 +62,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(new CheapRect(this).isIntersecting(obj.rect))
+				if(this.field.collider.objsColliding(this, obj))
 			  {
 					obj.shot(this);
 					this.destroy();
@@ -72,10 +72,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			else if(obj instanceof Human) {
 				if(obj.isAlive())
 				{
-					if(obj instanceof Enemy) // tell enemy about shots being fired
-						this.field.notifier.post(Human.INCOMING, this);
-					
-					if(new CheapRect(this).isIntersecting(new CheapRect(obj)))
+					if(this.field.collider.objsColliding(this, obj))
 				  {
 						obj.shot(this);
 						this.destroy();
@@ -84,10 +81,6 @@ Engine.initObject("Shrapnel", "Mover", function() {
 				}
 			}
 			return ColliderComponent.CONTINUE;
-		},
-
-		release: function() {
-			this.base();
 		},
 
 		destroy: function() {

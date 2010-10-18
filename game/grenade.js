@@ -69,7 +69,7 @@ Engine.initObject("Grenade", "Mover", function() {
 		onCollide: function(obj) {
 			if(obj instanceof Furniture)
 			{
-				if(new CheapRect(this).isIntersecting(obj.rect))
+				if(this.field.collider.objsColliding(this, obj))
 					this.bounce(obj);
 			}
 			

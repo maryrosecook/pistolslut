@@ -202,7 +202,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.add(this.playerObj);
 			
 			// add meters
-			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, new Point2D(5, 5));
+			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, Point2D.create(5, 5));
 			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
 			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
 			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
@@ -236,7 +236,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		inView: function(obj) {
 			return (new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight)).isIntersecting(new CheapRect(obj));
-			//return Math2D.boxBoxCollision(this.level.getViewFrame(this.renderContext), this.collider.getRect(obj));
 		},
 	
 		// updates the position of the view frame

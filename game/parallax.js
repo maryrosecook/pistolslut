@@ -4,10 +4,7 @@ Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Parallax", "Mover", function() {
-
-	/**
-	 * @class A parallax scrolling facade in the level.
-	 */
+	// a parallax scrolling facade in the level.
 	var Parallax = Mover.extend({
 
 		name: null,

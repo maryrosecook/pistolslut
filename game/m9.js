@@ -24,7 +24,7 @@ Engine.initObject("M9", "Weapon", function() {
 
 		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
 		STEADINESS: 100,	
-		BASE_SPREAD: 2,
+		BASE_SPREAD: 1,
 	});
 
 	return M9;

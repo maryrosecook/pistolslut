@@ -72,10 +72,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		// tell AI that clip is empty
 		notifyWeaponEmpty: function(emptyGun) {
 			var host = this.getHostObject();
-			if(emptyGun.owner == host) {
-				host.weapon.reload();
+			if(emptyGun.owner == host)
 				host.crouch();
-			}
 		},
 		
 		isEnemyInSights: function() { return this.field.playerObj != null && this.field.inView(this.getHostObject()); },

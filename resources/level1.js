@@ -27,8 +27,8 @@
 			{ name: "blockwallright", x: 1980, y: 267, spriteName: "blockwall.gif" },
 			{ name: "bin1", x: 170, y: 368, spriteName: "bin.gif" },
 			{ name: "bin2", x: 370, y: 368, spriteName: "bin.gif" },
+			{ name: "busstop", x: 300, y: 280, spriteName: "busstop.gif" },
 			{ name: "sandbags1", x: 760, y: 369, spriteName: "sandbags.gif" },
-			{ name: "busstop", x: 614, y: 280, spriteName: "busstop.gif" },
 			{ name: "bin3", x: 1100, y: 368, spriteName: "bin.gif" },
 			{ name: "floorpiece1", x: 0, y: 394, spriteName: "floorpiece.gif" },
 			{ name: "floorpiece2", x: 400, y: 394, spriteName: "floorpiece.gif" },
@@ -38,10 +38,11 @@
 		],
 		
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
-			{ name: "enemy2", clazz: Enemy, x: 780, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
-			{ name: "enemy2", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
-			{ name: "enemy3", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
+			{ name: "enemy", clazz: Enemy, x: 705, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 780, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 		],
 		
 		speeches: {
@@ -56,50 +57,52 @@
 		],
 		
 		fires: [
-			{ name: "fire1", x: 374, y: 368, width: 14 }
+			{ name: "fire1", x: 174, y: 368, width: 14 }
 		],
 		
 		fireworkLaunchers: [
-			{ name: "fireworklauncher1", x: 381, y: 370, angle: 0, spread: 20, interval: 10000 }
+			{ name: "fireworklauncher1", x: 180, y: 370, angle: 0, spread: 20, interval: 10000 }
 		],
 		
 		sky: { startColor: ["26", "26", "26"], transformations: null },
 		
 		parallaxes: [
 			{ 
-				name: "farthestlight", x: 400, y: 357, scrollAttenuation: 0.8,
-				sprite: {
-					bitmapImage: "farthestlight.gif",
-					sprites: { "main": { "f" : [0, 0, 40, 40] } }
-				}
+				name: "farthestlight", x: 400, y: 367, scrollAttenuation: 0.8,
+				sprite: { bitmapImage: "farthestlight.gif", sprites: { "main": { "f" : [0, 0, 22, 30] } } }
 			},
 			{ 
-				name: "fartherlight", x: 480, y: 300, scrollAttenuation: 0.75,
-				sprite: {
-					bitmapImage: "fartherlight.gif",
-					sprites: { "main": { "f" : [0, 0, 100, 100] } }
-				}
+				name: "fartherlight", x: 480, y: 348, scrollAttenuation: 0.75,
+				sprite: { bitmapImage: "fartherlight.gif", sprites: { "main": { "f" : [0, 0, 41, 52] } } }
 			},
 			{ 
-				name: "closerlight", x: 750, y: 200, scrollAttenuation: 0.60,
-				sprite: {
-					bitmapImage: "closerlight.gif",
-					sprites: { "main": { "f" : [0, 0, 200, 200] } }
-				}
+				name: "closerlight", x: 750, y: 284, scrollAttenuation: 0.60,
+				sprite: { bitmapImage: "closerlight.gif", sprites: { "main": { "f" : [0, 0, 89, 116] } } }
 			},
 			{ 
 				name: "gantry", x: 0, y: 130, scrollAttenuation: 0.5,
-				sprite: {
-					bitmapImage: "gantry.gif",
-					sprites: { "main": { "f" : [0, 0, 640, 280] } }
-				}
+				sprite: { bitmapImage: "gantry.gif", sprites: { "main": { "f" : [0, 0, 640, 280] } } }
+			},
+			
+			{ 
+				name: "floorsign1", x: 79, y: 296, scrollAttenuation: 0,
+				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{ 
-				name: "street", x: 0, y: 0, scrollAttenuation: 0,
-				sprite: {
-					bitmapImage: "street.gif",
-					sprites: { "main": { "f" : [0, 0, 2000, 430] } }
-				}
+				name: "busstopframe", x: 300, y: 298, scrollAttenuation: 0,
+				sprite: { bitmapImage: "busstopframe.gif", sprites: { "main": { "f" : [0, 0, 154, 97] } } }
+			},
+			{ 
+				name: "building", x: 795, y: 25, scrollAttenuation: 0,
+				sprite: { bitmapImage: "building.gif", sprites: { "main": { "f" : [0, 0, 259, 370] } } }
+			},
+			{ 
+				name: "floorsign2", x: 1177, y: 297, scrollAttenuation: 0,
+				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
+			},
+			{ 
+				name: "closestlight", x: 1618, y: 91, scrollAttenuation: 0,
+				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 264, 304] } } }
 			}
 		]
 	}

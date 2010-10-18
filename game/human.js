@@ -273,7 +273,7 @@ Engine.initObject("Human", "Mover", function() {
 		},
 	
 		onCollide: function(obj) {
-			if(obj instanceof Furniture && new CheapRect(this).isIntersecting(new CheapRect(obj)))
+			if(obj instanceof Furniture && this.field.collider.objsColliding(this, obj))
 			{
 				if(this.field.collider.aFallingThroughB(this, obj))
 					this.endFall(obj);
@@ -282,7 +282,7 @@ Engine.initObject("Human", "Mover", function() {
 				else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 					this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
 			}
-			else if(this instanceof Enemy && (obj instanceof Bullet || obj instanceof Shrapnel || obj instanceof Grenade))
+			else if(this instanceof Enemy && (obj instanceof Bullet || obj instanceof Shrapnel))
 				this.field.notifier.post(Human.INCOMING, obj);
 
 			return ColliderComponent.CONTINUE;

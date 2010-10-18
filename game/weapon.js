@@ -10,7 +10,7 @@ Engine.initObject("Weapon", "Base", function() {
 			this.owner = owner;
 			this.field = field;
 			this.name = name;
-			this.shotsInClip = this.clipCapacity;
+			this.fillClip();
 			
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
 		},
@@ -153,7 +153,7 @@ Engine.initObject("Weapon", "Base", function() {
 				{
 					this.fillClip();
 					this.reloading = false;
-					this.field.notifier.post(Human.RELOADED, this);
+					this.field.notifier.post(Human.RELOADED, this.owner);
 				}
 		},
 

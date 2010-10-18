@@ -10,7 +10,7 @@ Engine.initObject("Player", "Human", function() {
 var Player = Human.extend({
 
 	constructor: function(field, groundY) {
-		var startPosition = new Point2D(50, groundY);
+		var startPosition = Point2D.create(50, groundY);
 		this.turn(Collider.RIGHT);
 		
 		this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
@@ -77,9 +77,6 @@ var Player = Human.extend({
 			case 67: // c
 				this.throwGrenade();
 				break;
-			// case 65: // a
-			// 	this.weapon.reload();
-			// 	break;
 			case 88: // x
 				this.cycleWeapon();
 				break;

@@ -1,5 +1,6 @@
 Engine.initObject("Mac10", "Weapon", function() {
 	var Mac10 = Weapon.extend({
+		shotsInClip: 0,
 		
 		constructor: function(owner) {
 			this.clipCapacity = 30;
