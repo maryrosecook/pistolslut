@@ -239,6 +239,7 @@ Engine.initObject("Human", "Mover", function() {
 		shot: function(ordinance) {
 			if(this.isAlive())
 			{
+				this.field.notifier.post(Human.SHOT, this);
 				this.bloodSpurt(ordinance);
 				this.health -= ordinance.damage;
 				if(this.health <= 0)

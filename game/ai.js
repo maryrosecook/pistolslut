@@ -33,8 +33,9 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			}
 	  },
 
-		notifyShot: function() {
-			this.reactToBeingUnderFire();
+		notifyShot: function(person) {
+			if(person == this.getHostObject())
+				this.reactToBeingUnderFire();
 		},
 
 		notifyTimeToShoot: function() {

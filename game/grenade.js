@@ -87,7 +87,7 @@ Engine.initObject("Grenade", "Mover", function() {
 			}
 		},
 	
-		shrapnelCount: 25,
+		shrapnelCount: 30,
 		shrapnelTTL: 500,
 		explode: function() {
 			for(var x = 0; x < this.shrapnelCount; x++)

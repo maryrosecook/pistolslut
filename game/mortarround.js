@@ -24,7 +24,6 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 				{	
 					if(this.field.collider.objsColliding(this, obj))
 				  {
-						this.field.notifier.post(Human.SHOT, this);
 						this.explode(obj);
 						return ColliderComponent.STOP;
 					}

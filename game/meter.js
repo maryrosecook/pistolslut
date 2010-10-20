@@ -2,12 +2,13 @@ Engine.initObject("Meter", "Base", function() {
 	var Meter = Base.extend({
 		field: null,
 		renderContext: null,
-		caretSeparationX: 7,
+		caretSeparationX: 9,
 		carets: null,
 		reading: 0,
 		max: 0,
+		pos: null,
 
-		constructor: function(field, renderContext, reading, numberOfCarets, position) {
+		constructor: function(field, renderContext, reading, numberOfCarets, position, onColor) {
 			this.field = field;
 			this.renderContext = renderContext;
 			this.pos = position;
@@ -15,8 +16,7 @@ Engine.initObject("Meter", "Base", function() {
 			this.carets = [];			
 			for(var i = 0; i < numberOfCarets; i++)
 			{
-				var caret = Caret.create(this, i, this.field.imageLoader, Caret.OFF);
-				caret.setDrawMode(RenderComponent.NO_DRAW);
+				var caret = Caret.create(this, i, onColor);
 				this.carets.push(caret);
 				this.renderContext.add(caret);
 			}
@@ -24,19 +24,24 @@ Engine.initObject("Meter", "Base", function() {
 			this.setReading(reading, reading);
 		},
 
+		updatePosition: function(newX) {
+			this.pos.setX(newX);
+			for(var i in this.carets)
+				this.carets[i].updatePosition();
+		},
+
 		setReading: function(reading, max) {
 			this.reading = reading;
-			this.max = max;
-			
+			this.max = max;			
 			for(var i = 0; i < this.carets.length; i++)
 			{
 				if(i < this.max)
 				{
 					if(i >= reading)
-						this.carets[i].setState(Caret.OFF);
+						this.carets[i].switchOff();
 					else
-						this.carets[i].setState(Caret.ON);
-						
+						this.carets[i].switchOn();
+					
 					this.carets[i].setDrawMode(RenderComponent.DRAW);
 				}
 				else
@@ -59,9 +64,13 @@ Engine.initObject("Meter", "Base", function() {
 				this.setReading(this.max, this.max);
 		},
 		
-		decrement: function() {
+		decrement: function(obj) {
 			if(this.reading > 0)
-				this.setReading(this.reading - 1, this.max);
+				if(obj instanceof Player || (obj instanceof Weapon && obj.owner instanceof Player))
+				{
+					this.reading -= 1;
+					this.carets[this.reading].switchOff();
+				}
 		},
 
 		getPosition: function() { return this.pos; },

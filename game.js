@@ -202,11 +202,15 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.add(this.playerObj);
 			
 			// add meters
-			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, Point2D.create(5, 5));
+			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, Point2D.create(5, 7), "#fff");
 			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
 			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
 			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
 			this.meters.push(this.ammoMeter);
+			
+			this.healthMeter = new Meter(this, this.renderContext, this.playerObj.health, this.playerObj.health, Point2D.create(5, 27), "#f00");
+			this.notifier.subscribe(Human.SHOT, this.healthMeter, this.healthMeter.decrement);
+			this.meters.push(this.healthMeter);
 		},
 	
 		applyGravity: function(obj) {
@@ -266,7 +270,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 				for(var i in this.meters)
 				{
 					var meter = this.meters[i];
-					meter.getPosition().setX(meter.getPosition().x + vector.x)
+					meter.updatePosition(meter.getPosition().x + vector.x);
 				}
 				
 				// move lanterns

@@ -5,9 +5,9 @@ Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Ordinance", "Mover", function() {
 	var Ordinance = Mover.extend({
-		shooter: null,
 		weapon: null,
 		field: null,
+		shooter: null,
 		
 		constructor: function(name, weapon, baseSpeed, velocityVariability, shape) {
 			this.base(name);
@@ -45,7 +45,6 @@ Engine.initObject("Ordinance", "Mover", function() {
 		release: function() {
 			this.base();
 			this.weapon = null;
-			this.shooter = null;
 		},
 		
 		destroy: function() {

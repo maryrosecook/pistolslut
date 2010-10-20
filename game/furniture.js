@@ -13,7 +13,7 @@ Engine.initObject("Furniture", "Mover", function() {
 			this.field = PistolSlut;
 
 			// Add components to move and draw
-			this.add(Transform2DComponent.create("move"));
+			this.add(Mover2DComponent.create("move"));
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 			
@@ -21,6 +21,8 @@ Engine.initObject("Furniture", "Mover", function() {
 			this.setSprite("main");
 			
 			this.setPosition(position);
+			this.getComponent("move").setCheckLag(false);
+			
 			this.rect = new CheapRect(this);
 		},
 

@@ -24,7 +24,6 @@ Engine.initObject("Bullet", "Ordinance", function() {
 				{	
 					if(this.field.collider.objsColliding(this, obj))
 				  {
-						this.field.notifier.post(Human.SHOT, this);
 						obj.shot(this);
 						this.destroy();
 						return ColliderComponent.STOP;
