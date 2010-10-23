@@ -16,14 +16,13 @@ Engine.initObject("SPAS", "Weapon", function() {
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(SPAS.BASE_SPREAD, SPAS.TIME_REQUIRED_FOR_DEAD_AIM, SPAS.STEADINESS);
+			return this.recoil(SPAS.BASE_SPREAD, SPAS.UNSTEADINESS);
 		},
 		
 	}, {
 		getClassName: function() { return "SPAS"; },
 		
-		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
-		STEADINESS: 30,
+		UNSTEADINESS: 30,
 		BASE_SPREAD: 30,
 	});
 

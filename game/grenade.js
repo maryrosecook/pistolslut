@@ -30,7 +30,7 @@ Engine.initObject("Grenade", "Mover", function() {
 			var dir = Math2D.getDirectionVector(Point2D.ZERO, Grenade.tip, this.shooter.getArmAngle());
 			
 			c_mover.setPosition(Point2D.create(this.shooter.getPosition()).add(this.shooter.getRelativeArmTip()));
-			c_mover.setVelocity(dir.mul(this.speed).add(this.shooter.getVelocity()));
+			c_mover.setVelocity(dir.mul(this.speed));
 			c_mover.setCheckLag(false);
 		},
 

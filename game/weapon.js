@@ -5,6 +5,7 @@ Engine.initObject("Weapon", "Base", function() {
 		field: null,
 		shotsInClip: 0,
 		lastShot: 0,
+		timeLastHadDeadAim: 0,
 		
 		constructor: function(owner, field, name) {
 			this.owner = owner;
@@ -40,10 +41,7 @@ Engine.initObject("Weapon", "Base", function() {
 			{
 				// generate the ordinance
 				for(var x = 0; x < this.projectilesPerShot; x++)
-				{
-					
 					this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileBaseSpeed, this.projectileVelocityVariability));
-				}
 
 				this.muzzleFlash();
 
@@ -61,7 +59,8 @@ Engine.initObject("Weapon", "Base", function() {
 			{
 				if(this.passSemiAutomaticCheck())
 				{
-					this.startShooting();
+					if(!this.isShooting())
+						this.startShooting();
 
 					// stop an in progress reload
 					if(this.isReloading())
@@ -93,13 +92,16 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		
 		// the faster the shooter shoots, the wilder their shots go
-		recoil: function(baseSpread, timeRequiredForDeadAim, steadiness) {
-			var timeSinceLastShot = new Date().getTime() - this.lastShot;
+		recoil: function(baseSpread, unsteadiness) {
+			var timeSinceLastDeadAim = new Date().getTime() - this.timeLastHadDeadAim;
 			
 			var spread = baseSpread;
-			if(timeSinceLastShot < timeRequiredForDeadAim)
-				spread += (timeRequiredForDeadAim - timeSinceLastShot) / steadiness;
+			if(new Date().getTime() - this.lastShot < this.owner.delayBeforeLoweringGun)
+				spread += Math.min((timeSinceLastDeadAim / 2000) * unsteadiness, unsteadiness);
+			else
+				this.timeLastHadDeadAim = new Date().getTime();
 				
+			console.log(spread)
 			var shootAngle = this.owner.getGunAngle() - (spread / 2) + (Math.random() * spread);
 			return Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, shootAngle);
 		},

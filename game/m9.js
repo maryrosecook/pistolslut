@@ -16,15 +16,14 @@ Engine.initObject("M9", "Weapon", function() {
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(M9.BASE_SPREAD, M9.TIME_REQUIRED_FOR_DEAD_AIM, M9.STEADINESS);
+			return this.recoil(M9.BASE_SPREAD, M9.UNSTEADINESS);
 		},
 		
 	}, {
 		getClassName: function() { return "M9"; },
 
-		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
-		STEADINESS: 100,	
-		BASE_SPREAD: 1,
+		UNSTEADINESS: 3,	
+		BASE_SPREAD: 2,
 	});
 
 	return M9;

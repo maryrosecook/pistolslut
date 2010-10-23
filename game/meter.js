@@ -2,55 +2,41 @@ Engine.initObject("Meter", "Base", function() {
 	var Meter = Base.extend({
 		field: null,
 		renderContext: null,
-		caretSeparationX: 9,
-		carets: null,
 		reading: 0,
 		max: 0,
+		fullShape: null,
+		emptyShape: null,
 		pos: null,
 
-		constructor: function(field, renderContext, reading, numberOfCarets, position, onColor) {
+		constructor: function(field, renderContext, reading, position, color) {
 			this.field = field;
 			this.renderContext = renderContext;
 			this.pos = position;
 
-			this.carets = [];			
-			for(var i = 0; i < numberOfCarets; i++)
-			{
-				var caret = Caret.create(this, i, onColor);
-				this.carets.push(caret);
-				this.renderContext.add(caret);
-			}
-			
+ 			// width, height, position will get updated in a bit
+			this.fullShape = RectangleShape.create(color, 0, 0, position, Meter.SHAPE_Z_INDEX);
+			this.emptyShape = RectangleShape.create("#000", 0, 0, position, Meter.SHAPE_Z_INDEX + 1);
+			renderContext.add(this.fullShape);
+			renderContext.add(this.emptyShape);
 			this.setReading(reading, reading);
 		},
-
-		updatePosition: function(newX) {
-			this.pos.setX(newX);
-			for(var i in this.carets)
-				this.carets[i].updatePosition();
+				
+		updatePosition: function(moveX)
+ 		{
+			this.fullShape.getPosition().setX(this.fullShape.getPosition().x + moveX);
+			this.emptyShape.getPosition().setX(this.emptyShape.getPosition().x + moveX);
 		},
-
+		
 		setReading: function(reading, max) {
 			this.reading = reading;
-			this.max = max;			
-			for(var i = 0; i < this.carets.length; i++)
-			{
-				if(i < this.max)
-				{
-					if(i >= reading)
-						this.carets[i].switchOff();
-					else
-						this.carets[i].switchOn();
-					
-					this.carets[i].setDrawMode(RenderComponent.DRAW);
-				}
-				else
-					this.carets[i].setDrawMode(RenderComponent.NO_DRAW);
-			}
-			
-			// set other carets that aren't needed for this meter to not draw
-			for(var i = this.max; i < this.carets.length; i++)
-				this.carets[i].setDrawMode(RenderComponent.NO_DRAW);
+			this.max = max;
+
+			var fullWidth = Meter.INT_WIDTH * this.reading;
+			var emptyWidth = (Meter.INT_WIDTH * this.max) - fullWidth;
+
+			this.fullShape.setDimensions(fullWidth, Meter.HEIGHT);
+			this.emptyShape.setDimensions(emptyWidth, Meter.HEIGHT);			
+			this.emptyShape.getPosition().setX(this.fullShape.getPosition().x + fullWidth);
 		},
 		
 		notifyReadingUpdate: function(obj) {
@@ -61,16 +47,14 @@ Engine.initObject("Meter", "Base", function() {
 		
 		reset: function(obj) {
 			if(obj instanceof Player)
-				this.setReading(this.max, this.max);
+				if(obj instanceof Player || (obj instanceof Weapon && obj.owner instanceof Player))
+					this.setReading(this.max, this.max);
 		},
 		
 		decrement: function(obj) {
 			if(this.reading > 0)
 				if(obj instanceof Player || (obj instanceof Weapon && obj.owner instanceof Player))
-				{
-					this.reading -= 1;
-					this.carets[this.reading].switchOff();
-				}
+					this.setReading(this.reading - 1, this.max);
 		},
 
 		getPosition: function() { return this.pos; },
@@ -80,10 +64,11 @@ Engine.initObject("Meter", "Base", function() {
 		},
 
 	}, {
-
-		getClassName: function() {
-			return "Meter";
-		},
+		getClassName: function() { return "Meter"; },
+		
+		INT_WIDTH: 9,
+		HEIGHT: 3,
+		SHAPE_Z_INDEX: 1000,
 	});
 
 	return Meter;

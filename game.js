@@ -38,12 +38,13 @@ Game.load("/game/fire.js");
 Game.load("/game/firework.js");
 Game.load("/game/fireworklauncher.js");
 Game.load("/game/parallax.js");
-Game.load("/game/caret.js");
 Game.load("/game/meter.js");
+Game.load("/game/rectangleshape.js");
 Game.load("/game/lantern.js");
 Game.load("/game/sky.js");
 Game.load("/game/speech.js");
 Game.load("/game/trigger.js");
+Game.load("/game/crosshair.js");
 
 
 Engine.initObject("PistolSlut", "Game", function() {
@@ -108,10 +109,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		  this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
-    
-			// load images
-      this.imageLoader.load(Caret.ON, this.getFilePath("resources/careton.gif"), 3, 15);
-			this.imageLoader.load(Caret.OFF, this.getFilePath("resources/caretoff.gif"), 3, 15);
 
 			// load sprite resources
 			this.spriteLoader.load("human", this.getFilePath("resources/human.js"));
@@ -132,7 +129,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		// an initial pause screen
 		startScreen: function() {
     	PistolSlut.isStartScreen = true;
-			
+
 			this.loadLevelBasics(); // just enough for a cogent start screen
 			
       EventEngine.setHandler(document, "keypress", PistolSlut.onKeyPress);
@@ -202,13 +199,13 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.add(this.playerObj);
 			
 			// add meters
-			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, 30, Point2D.create(5, 7), "#fff");
+			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(5, 7), "#fff");
 			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
 			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
 			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
 			this.meters.push(this.ammoMeter);
 			
-			this.healthMeter = new Meter(this, this.renderContext, this.playerObj.health, this.playerObj.health, Point2D.create(5, 27), "#f00");
+			this.healthMeter = new Meter(this, this.renderContext, this.playerObj.health, Point2D.create(5, 17), "#f00");
 			this.notifier.subscribe(Human.SHOT, this.healthMeter, this.healthMeter.decrement);
 			this.meters.push(this.healthMeter);
 		},
@@ -270,10 +267,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 				for(var i in this.meters)
 				{
 					var meter = this.meters[i];
-					meter.updatePosition(meter.getPosition().x + vector.x);
+					meter.updatePosition(vector.x);
 				}
 				
-				// move lanterns
+				// move lanterns (they are like little parallaxes)
 				for(var i in this.level.lanterns)
 				{
 					var lantern = this.level.lanterns[i];

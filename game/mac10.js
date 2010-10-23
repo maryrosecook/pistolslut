@@ -17,15 +17,14 @@ Engine.initObject("Mac10", "Weapon", function() {
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(Mac10.BASE_SPREAD, Mac10.TIME_REQUIRED_FOR_DEAD_AIM, Mac10.STEADINESS);
+			return this.recoil(Mac10.BASE_SPREAD, Mac10.UNSTEADINESS);
 		},
 		
 	}, {
 		getClassName: function() { return "Mac10"; },
 
-		TIME_REQUIRED_FOR_DEAD_AIM: 1000,
-		STEADINESS: 70,
-		BASE_SPREAD: 5,
+		UNSTEADINESS: 20,
+		BASE_SPREAD: 3,
 	});
 
 	return Mac10;

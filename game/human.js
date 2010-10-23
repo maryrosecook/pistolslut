@@ -136,13 +136,13 @@ Engine.initObject("Human", "Mover", function() {
 		},
 	
 		// delay on when human lowers their gun
-		delayBeforeLoweringGun: 200,
-		lastStoppedShooting: null,
+		delayBeforeLoweringGun: 400,
+		lastStoppedShooting: 0,
 		getShootState: function() {
 			if(this.weapon.shooting == Weapon.SHOOTING)
 				return Weapon.SHOOTING;
 			else
-			{
+			{		
 				if(new Date().getTime() - this.lastStoppedShooting > this.delayBeforeLoweringGun)
 					return Weapon.NOT_SHOOTING;
 				else
@@ -333,7 +333,12 @@ Engine.initObject("Human", "Mover", function() {
 		getGunAngle: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunAngle"]; },
 		getRelativeGunTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunTip"]; },
 		getRelativeArmTip: function() { return Human.COORDINATES[this.direction][this.standState]["armTip"]; },
-		getArmAngle: function() { return Human.COORDINATES[this.direction]["armAngle"]; },
+		getArmAngle: function() { 
+			// if(this instanceof Enemy)
+				return Human.COORDINATES[this.direction]["armAngle"];
+			// else
+			// 	return this.crosshair.getVectorToTarget();
+		},
 	
 		release: function() {
 			this.base();

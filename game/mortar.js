@@ -16,7 +16,7 @@ Engine.initObject("Mortar", "Weapon", function() {
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(Mortar.BASE_SPREAD, Mortar.TIME_REQUIRED_FOR_DEAD_AIM, Mortar.STEADINESS);
+			return this.recoil(Mortar.BASE_SPREAD, Mortar.STEADINESS);
 		},
 		
 		setPose: function() {
@@ -30,8 +30,7 @@ Engine.initObject("Mortar", "Weapon", function() {
 	}, {
 		getClassName: function() { return "Mortar"; },
 		
-		TIME_REQUIRED_FOR_DEAD_AIM: 2000,
-		STEADINESS: 1,
+		UNSTEADINESS: 1,
 		BASE_SPREAD: 0,
 	});
 
