@@ -101,7 +101,6 @@ Engine.initObject("Weapon", "Base", function() {
 			else
 				this.timeLastHadDeadAim = new Date().getTime();
 				
-			console.log(spread)
 			var shootAngle = this.owner.getGunAngle() - (spread / 2) + (Math.random() * spread);
 			return Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, shootAngle);
 		},
