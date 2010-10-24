@@ -54,7 +54,7 @@ Engine.initObject("Speech", "Object2D", function() {
 			var speech = this;
 			this.hideTimer = Interval.create("speech", Speech.HIDE_DELAY,
 				function() {
-					//speech.destroy();
+					speech.destroy();
 			});
 		},
 		

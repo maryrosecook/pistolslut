@@ -147,7 +147,9 @@ Engine.initObject("Sign", "Object2D", function() {
 		getClassName: function() { return "Sign"; },
 		
 		HIJACK: "hijack",
+
 	});
 
 	return Sign;
 });
+
