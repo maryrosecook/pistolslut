@@ -26,6 +26,7 @@ Engine.initObject("Weapon", "Base", function() {
 		setPose: function() { },
 		canStand: function() { return true; },
 		hasLineOfFire: function() { return true; }, // false for weapons with indirect fire
+		getCrosshairPosition: function() { return null; },
 		
 		dischargeTime: null,
 		setFutureDischarge: function() { this.dischargeTime = new Date().getTime() + this.dischargeDelay; },
@@ -41,13 +42,13 @@ Engine.initObject("Weapon", "Base", function() {
 			{
 				// generate the ordinance
 				for(var x = 0; x < this.projectilesPerShot; x++)
-					this.field.renderContext.add(eval(this.projectileClazz).create(this, this.projectileBaseSpeed, this.projectileVelocityVariability));
+					this.field.renderContext.add(this.generateOrdinance());
 
 				this.muzzleFlash();
 
 				this.shotsInClip -= 1;
 				this.lastShot = new Date().getTime();
-				if(this.owner instanceof Player)
+				if(this.owner instanceof Player && !(this instanceof GrenadeLauncher))
 					this.field.notifier.post(Weapon.SHOOT, this);
 			}
 			this.dischargeTime = null;
@@ -57,7 +58,7 @@ Engine.initObject("Weapon", "Base", function() {
 		shoot: function() {
 			if(this.dischargeTime == null && !this.isClipEmpty())
 			{
-				if(this.passSemiAutomaticCheck())
+				if(this.allowedToFire())
 				{
 					if(!this.isShooting())
 						this.startShooting();
@@ -105,6 +106,10 @@ Engine.initObject("Weapon", "Base", function() {
 			return Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, shootAngle);
 		},
 		
+		ordinanceSpeed: function(baseSpeed, ordinanceVelocityVariability) {
+			return baseSpeed + (Math.random() * ordinanceVelocityVariability * baseSpeed);
+		},
+		
 		shootKeyHasBeenUpSinceLastShot: true,
 		shootKeyUp: function() {
 			this.stopShooting();
@@ -112,11 +117,6 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		shootKeyDown: function() { this.shootKeyHasBeenUpSinceLastShot = false; },
 		isShootKeyHasBeenUpSinceLastShot: function() { return this.shootKeyHasBeenUpSinceLastShot; },
-		
-		// either not player, or automatic weapon, or player has let shoot key up since last shot
-		passSemiAutomaticCheck: function() {
-			return this.automatic == Weapon.AUTOMATIC || !(this.owner instanceof Player) || this.isShootKeyHasBeenUpSinceLastShot();
-		},
 		
 		shooting: "Notshooting",
 		startShooting: function() {  this.shooting = Weapon.SHOOTING; },
@@ -126,11 +126,24 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 		isShooting: function() { return this.shooting == Weapon.SHOOTING; },
 		
+		allowedToFire: function() {
+			if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
+				if(this.passSemiAutomaticCheck())
+					return true;
+
+			return false;
+		},
+		
+		// either not player, or automatic weapon, or player has let shoot key up since last shot
+		passSemiAutomaticCheck: function() {
+			return this.automatic == Weapon.AUTOMATIC || !(this.owner instanceof Player) || this.isShootKeyHasBeenUpSinceLastShot();
+		},
+		
 		// keyboard repeat doesn't kick in right away
 		handleAutomatic: function(time) {
 			if(this.isShooting())
 				if(this.automatic == Weapon.AUTOMATIC)
-					if(time - this.lastShot > this.timeBetweenShots())
+					if(this.allowedToFire())
 						this.shoot();
 		},
 		
@@ -199,7 +212,6 @@ Engine.initObject("Weapon", "Base", function() {
 			this.timeToReload = 0;
 			this.lastShot = 0;
 			this.projectileVelocityVariability = 1;
-			this.projectileClazz = null;
 		},
 		
 	}, {

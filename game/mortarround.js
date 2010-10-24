@@ -1,14 +1,18 @@
 Engine.initObject("MortarRound", "Ordinance", function() {
 	var MortarRound = Ordinance.extend({
 		damage: 0,
-		
-		constructor: function(weapon, projectileBaseSpeed, projectileVelocityVariability) {
-			this.base("MortarRound", weapon, projectileBaseSpeed, projectileVelocityVariability, MortarRound.SHAPE);
-		},
 
 		update: function(renderContext, time) {
 			this.field.applyGravity(this);
 			this.base(renderContext, time);
+		},
+		
+		setupGraphics: function() {
+			this.add(Vector2DComponent.create("draw"));
+			var c_draw = this.getComponent("draw");
+			c_draw.setPoints(MortarRound.SHAPE);
+			c_draw.setLineStyle("white");
+			c_draw.setFillStyle("white");
 		},
 
 		onCollide: function(obj) {

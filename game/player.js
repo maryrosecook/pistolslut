@@ -75,7 +75,7 @@ var Player = Human.extend({
 				this.weapon.shootKeyDown();
 				break;
 			case 67: // c
-				this.throwGrenade();
+				this.grenadeLauncher.startAim();
 				break;
 			case 88: // x
 				this.cycleWeapon();
@@ -101,7 +101,8 @@ var Player = Human.extend({
 				// work around lack of keyboard repeat support in engine for this case
 				this.resumeWalk();
 				break;
-			case EventEngine.KEYCODE_UP_ARROW:
+			case 67: // c
+				this.throwGrenade();
 				break;
 			case 90: // z
 				this.weapon.shootKeyUp();
@@ -115,7 +116,7 @@ var Player = Human.extend({
 		this.weapons.push(new M9(this));
 		this.weapons.push(new Mac10(this));
 		this.weapons.push(new SPAS(this));
-		this.base(weaponName);
+		this.base(weaponName);		
 	},
 
 	}, {

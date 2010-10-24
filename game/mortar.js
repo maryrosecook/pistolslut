@@ -11,13 +11,14 @@ Engine.initObject("Mortar", "Weapon", function() {
 			this.projectileVelocityVariability = 0.3;
 			this.dischargeDelay = 1100;
 			this.timeRequiredForDeadAim = 2000;
-			this.projectileBaseSpeed = 16;
-			this.projectileClazz = MortarRound;
+			this.ordinanceBaseSpeed = 16;
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(Mortar.BASE_SPREAD, Mortar.STEADINESS);
+			return this.recoil(Mortar.BASE_SPREAD, Mortar.UNSTEADINESS).mul(this.ordinanceSpeed(this.ordinanceBaseSpeed, this.projectileVelocityVariability));
 		},
+		
+		generateOrdinance: function() { return MortarRound.create(this); },
 		
 		setPose: function() {
 			this.base();

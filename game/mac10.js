@@ -1,6 +1,5 @@
 Engine.initObject("Mac10", "Weapon", function() {
 	var Mac10 = Weapon.extend({
-		shotsInClip: 0,
 		
 		constructor: function(owner) {
 			this.clipCapacity = 30;
@@ -12,13 +11,14 @@ Engine.initObject("Mac10", "Weapon", function() {
 			this.projectileVelocityVariability = 0.5;
 			this.dischargeDelay = 0;
 			this.timeRequiredForDeadAim = 1000;
-			this.projectileBaseSpeed = 15;
-			this.projectileClazz = Bullet;
+			this.ordinanceBaseSpeed = 15;
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(Mac10.BASE_SPREAD, Mac10.UNSTEADINESS);
+			return this.recoil(Mac10.BASE_SPREAD, Mac10.UNSTEADINESS).mul(this.ordinanceSpeed(this.ordinanceBaseSpeed, this.projectileVelocityVariability));
 		},
+				
+		generateOrdinance: function() { return Bullet.create(this); },
 		
 	}, {
 		getClassName: function() { return "Mac10"; },

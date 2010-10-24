@@ -11,6 +11,7 @@ Engine.initObject("Human", "Mover", function() {
 		
 		weapon: null,
 		weapons: [],
+		grenadeLauncher: null,
 		
 		stateOfBeing: null,
 		health: -1,
@@ -152,19 +153,8 @@ Engine.initObject("Human", "Mover", function() {
 	
 		stoppedShooting: function() { this.lastStoppedShooting = new Date().getTime(); },
 	
-		throwDelay: 1000,
-		lastThrow: 0,
-		throwGrenade: function() {
-			if(new Date().getTime() - this.lastThrow > this.throwDelay)
-			{
-				this.lastThrow = new Date().getTime();
-				var grenade = Grenade.create(this);
-				this.field.renderContext.add(grenade);
-			}
-		},
-	
-		isGrenadesAvailable: function() { return true; },
-	
+		throwGrenade: function() { this.grenadeLauncher.shoot(); },
+		
 		cycleWeapon: function() {
 			if(this.weapons.length == 0)
 				return;
@@ -271,6 +261,7 @@ Engine.initObject("Human", "Mover", function() {
 	
 		setupWeapons: function(weaponName) {
 			this.setWeapon(weaponName);
+			this.grenadeLauncher = new GrenadeLauncher(this);
 		},
 	
 		onCollide: function(obj) {
@@ -371,6 +362,9 @@ Engine.initObject("Human", "Mover", function() {
 		INCOMING: "incoming",
 		GRENADE_NEARBY: "grenade_nearby",
 		NO_NEARBY_GRENADES: "no_nearby_grenades",
+		
+		GRENADE_IMMEDIATE: true,
+		GRENADE_DELAYED: false,
 		
 		COORDINATES: {
 			"Left": {

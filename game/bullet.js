@@ -1,9 +1,13 @@
 Engine.initObject("Bullet", "Ordinance", function() {
 	var Bullet = Ordinance.extend({
 		damage: 1,
-		
-		constructor: function(weapon, projectileBaseSpeed, projectileVelocityVariability) {
-			this.base("Bullet", weapon, projectileBaseSpeed, projectileVelocityVariability, Bullet.SHAPE);
+
+		setupGraphics: function() {
+			this.add(Vector2DComponent.create("draw"));
+			var c_draw = this.getComponent("draw");
+			c_draw.setPoints(Bullet.SHAPE);
+			c_draw.setLineStyle("white");
+			c_draw.setFillStyle("white");
 		},
 
 		update: function(renderContext, time) {

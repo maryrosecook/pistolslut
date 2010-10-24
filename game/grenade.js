@@ -3,35 +3,20 @@ Engine.include("/components/component.vector2d.js");
 Engine.include("/components/component.collider.js");
 Engine.include("/engine/engine.object2d.js");
 
-Engine.initObject("Grenade", "Mover", function() {
-	var Grenade = Mover.extend({
-		field: null,
-		shooter: null,
+Engine.initObject("Grenade", "Ordinance", function() {
+	var Grenade = Ordinance.extend({
 		timeThrown: null,
+		pinTimer: 3000, // how long the grande takes to explode
 		
-		speed: 8,
-		pinTimer: 2000, // how long the grande takes to explode
-		
-		constructor: function(shooter) {
-			this.base("Grenade");
-
-			this.field = PistolSlut;
-			this.shooter = shooter;
+		constructor: function(weapon) {
+			this.base(weapon);
 			this.timeThrown = new Date().getTime();
-			
-			this.add(Mover2DComponent.create("move"));
+		},
+		
+		setupGraphics: function() {
 			this.add(SpriteComponent.create("draw"));
-			this.add(ColliderComponent.create("collide", this.field.collisionModel));
-
 			this.addSprite("main", this.field.spriteLoader.getSprite("grenade.gif", "main"));
 			this.setSprite("main");
-
-			var c_mover = this.getComponent("move");
-			var dir = Math2D.getDirectionVector(Point2D.ZERO, Grenade.tip, this.shooter.getArmAngle());
-			
-			c_mover.setPosition(Point2D.create(this.shooter.getPosition()).add(this.shooter.getRelativeArmTip()));
-			c_mover.setVelocity(dir.mul(this.speed));
-			c_mover.setCheckLag(false);
 		},
 
 		release: function() {
@@ -41,9 +26,9 @@ Engine.initObject("Grenade", "Mover", function() {
 		},
 
 		destroy: function() {
-			if (this.ModelData.lastNode) {
+			if (this.ModelData.lastNode)
 				this.ModelData.lastNode.removeObject(this);
-			}
+
 			this.base();
 		},
 
@@ -77,7 +62,7 @@ Engine.initObject("Grenade", "Mover", function() {
 		},
 
 		// bounce the grenade		
-		bounciness: 0.7,
+		bounciness: 0.5,
 		bounce: function(objHit) {
 			var pointOfImpactData = this.field.collider.pointOfImpact(this, objHit);
 			if(pointOfImpactData != null)

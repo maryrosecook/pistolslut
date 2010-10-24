@@ -45,7 +45,7 @@ Game.load("/game/sky.js");
 Game.load("/game/speech.js");
 Game.load("/game/trigger.js");
 Game.load("/game/crosshair.js");
-
+Game.load("/game/grenadelauncher.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -70,7 +70,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 		physics: null,		
 		notifier: null,
 	
-		groundY: 250,
+		groundY: 395,
+		playerStartPosY: 344,
 	
 		fieldWidth: 700,
 		fieldHeight: 430,
@@ -195,7 +196,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		play: function() {
 			this.destroyStartScreen();
 			
-			this.playerObj = Player.create(this, this.groundY);
+			this.playerObj = Player.create(this, this.playerStartPosY);
 			this.renderContext.add(this.playerObj);
 			
 			// add meters

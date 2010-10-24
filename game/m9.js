@@ -11,13 +11,14 @@ Engine.initObject("M9", "Weapon", function() {
 			this.projectileVelocityVariability = 0.5;
 			this.dischargeDelay = 0;
 			this.timeRequiredForDeadAim = 1000;
-			this.projectileBaseSpeed = 15;
-			this.projectileClazz = Bullet;
+			this.ordinanceBaseSpeed = 15;
 		},
 		
 		ordinancePhysics: function() {
-			return this.recoil(M9.BASE_SPREAD, M9.UNSTEADINESS);
+			return this.recoil(M9.BASE_SPREAD, M9.UNSTEADINESS).mul(this.ordinanceSpeed(this.ordinanceBaseSpeed, this.projectileVelocityVariability));
 		},
+		
+		generateOrdinance: function() { return Bullet.create(this); },
 		
 	}, {
 		getClassName: function() { return "M9"; },

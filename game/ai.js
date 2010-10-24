@@ -14,7 +14,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.field.notifier.subscribe(Human.CLIP_EMPTY, this, this.notifyWeaponEmpty);
 			this.field.notifier.subscribe(Human.RELOADED, this, this.notifyReloaded);
 			this.field.notifier.subscribe(Human.SHOT, this, this.notifyShot);
-			//this.field.notifier.subscribe("playerMove", this, this.playerMove);
 
 			// setup shoot timer
 			var ai = this;

@@ -8,7 +8,7 @@
 			items: [
 				{ text: "Pistol  Slut", x: 89, y: 310, width: 140 },
 				{ text: "Please  return  to  your  homes", x: 805, y: 44, width: 245	},
-				{ text: "Free  shop", x: 1188, y: 311, width: 140 }
+				{ text: "Free  shop  opening  soon", x: 1188, y: 311, width: 140 }
 			]
 		},
 
@@ -19,7 +19,8 @@
 			{ bitmapImage: "busstop.gif", sprites: { "main": { "f": [0, 0, 154, 18] } } },
 			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 420, 34] } } },
 			{ bitmapImage: "lantern.gif", sprites: { "main": { "f": [0, 0, 14, 13] } } },
-			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } }			
+			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },		
+			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
 		],
 
 		furniture: [
@@ -38,7 +39,7 @@
 		],
 		
 		enemies: [
-			{ name: "enemy", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: true },
+			{ name: "enemy", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 705, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 780, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
