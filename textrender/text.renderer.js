@@ -212,7 +212,7 @@ var TextRenderer = Object2D.extend(/** @scope TextRenderer.prototype */{
     */
    setPosition: function(point) {
       this.getComponent("transform").setPosition(point);
-		point.destroy();
+	  //framechange - removed this: point.destroy();
    },
 
    /**

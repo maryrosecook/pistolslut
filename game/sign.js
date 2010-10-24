@@ -6,7 +6,6 @@ Engine.include("/engine/engine.timers.js");
 
 Engine.initObject("Sign", "Object2D", function() {
 	var Sign = Object2D.extend({
-		
 		field: null,
 		defaultText: null,
 		currentText: null,
@@ -148,9 +147,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		getClassName: function() { return "Sign"; },
 		
 		HIJACK: "hijack",
-
 	});
 
 	return Sign;
 });
-
