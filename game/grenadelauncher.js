@@ -25,8 +25,9 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		
 		started: null,
 		startAim: function() {
-			if(this.started == null)
+			if(this.started == null && !this.isShooting() && this.allowedToFire())
 			{
+				this.startShooting();
 				this.started = new Date().getTime();
 				this.crosshair.show();
 			}
@@ -34,6 +35,7 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 
 		discharge: function() {
 			this.base();
+			this.stopShooting();
 			this.crosshair.hide();
 			this.started = null;
 		},
@@ -43,11 +45,12 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		},
 
 		getDistance: function() {
+			var dir = this.owner.direction;
 			var distance = null;
 			if(this.started == null) // being thrown by an enemy - they don't aim
-				var distance = GrenadeLauncher.MAX_RANGE;
+				var distance = GrenadeLauncher.RANGES[dir][GrenadeLauncher.MIN_RANGE];
 			else
-				var distance = Math.min(GrenadeLauncher.MIN_RANGE + ((new Date().getTime() - this.started) / GrenadeLauncher.RANGE_GROWTH_ATTEN), GrenadeLauncher.MAX_RANGE);
+				var distance = Math.min(GrenadeLauncher.RANGES[dir][GrenadeLauncher.MIN_RANGE] + ((new Date().getTime() - this.started) / GrenadeLauncher.RANGE_GROWTH_ATTEN), GrenadeLauncher.RANGES[dir][GrenadeLauncher.MAX_RANGE]);
 				
 			if(this.owner.direction == Collider.LEFT)
 				distance = -distance;
@@ -65,16 +68,20 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		 	velocity.setX((diff.x * 0.9) / fpsFlightTime);
 		 	velocity.setY((diff.y - (0.5 * this.field.gravityVector.y * fpsFlightTime * fpsFlightTime)) / fpsFlightTime);
 		
-			//console.log(distance, armToGroundY, velocity.x, velocity.y)
 			return velocity;
 		},
 		
 	}, {
 		getClassName: function() { return "GrenadeLauncher"; },
 		
-		MIN_RANGE: 200,
-		MAX_RANGE: 500,
-		RANGE_GROWTH_ATTEN: 6,
+		RANGES: {
+			"Left": { "min_range": 150, "max_range": 150 },
+			"Right": { "min_range": 150, "max_range": 500 },
+		},
+		
+		MIN_RANGE: "min_range",
+		MAX_RANGE: "max_range",
+		RANGE_GROWTH_ATTEN: 4,
 		FLIGHT_SECS: 2,
 	});
 

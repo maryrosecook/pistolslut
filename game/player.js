@@ -102,7 +102,8 @@ var Player = Human.extend({
 				this.resumeWalk();
 				break;
 			case 67: // c
-				this.throwGrenade();
+				if(this.grenadeLauncher.isShooting())
+					this.throwGrenade();
 				break;
 			case 90: // z
 				this.weapon.shootKeyUp();
