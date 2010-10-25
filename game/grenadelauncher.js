@@ -57,13 +57,13 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 
 		getVector: function() { // distance is pos or neg, depending on which way facing
 			var distance = this.getDistance();
-			var speedAtten = this.field.engineFPS + 4;
+			var fpsFlightTime = GrenadeLauncher.FLIGHT_SECS * (this.field.engineFPS);
 			var armToGroundY = this.field.groundY - Point2D.create(this.owner.getPosition()).add(this.owner.getRelativeArmTip()).y;
-			var diff = Vector2D.create(distance / speedAtten, armToGroundY / speedAtten); 
+			var diff = Vector2D.create(distance, armToGroundY); 
 			
 		 	var velocity = Vector2D.create(0, 0);
-		 	velocity.setX(diff.x / GrenadeLauncher.FLIGHT_SECS);
-		 	velocity.setY((diff.y - (0.5 * this.field.gravityVector.y * this.field.engineFPS * GrenadeLauncher.FLIGHT_SECS * GrenadeLauncher.FLIGHT_SECS)) / GrenadeLauncher.FLIGHT_SECS);
+		 	velocity.setX((diff.x * 0.9) / fpsFlightTime);
+		 	velocity.setY((diff.y - (0.5 * this.field.gravityVector.y * fpsFlightTime * fpsFlightTime)) / fpsFlightTime);
 		
 			//console.log(distance, armToGroundY, velocity.x, velocity.y)
 			return velocity;

@@ -8,7 +8,7 @@ Engine.initObject("M9", "Weapon", function() {
 			this.roundsPerMinute = 999999;
 			this.projectilesPerShot = 1;
 			this.timeToReload = 1000;
-			this.projectileVelocityVariability = 0.5;
+			this.projectileVelocityVariability = 0.4;
 			this.dischargeDelay = 0;
 			this.timeRequiredForDeadAim = 1000;
 			this.ordinanceBaseSpeed = 15;
