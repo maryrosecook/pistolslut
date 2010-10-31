@@ -1,7 +1,7 @@
 {
 	// Frame (f): left, top, frameWidth, frameHeight
 	// Animation (a): left, top, frameWidth, frameHeight, frameCount, speedMS, loop/toggle
-	bitmapImage: "level1.gif", bitmapWidth: 2000, bitmapHeight: 430, collisionMap: [],
+	bitmapImage: "level1.gif", bitmapWidth: 4000, bitmapHeight: 430, collisionMap: [],
 	objects: {
 		signs: {
 			color: "#fff", letterSpacing: 7,
@@ -25,7 +25,7 @@
 
 		furniture: [
 			{ name: "blockwallleft", x: 0, y: 267, spriteName: "blockwall.gif" },
-			{ name: "blockwallright", x: 1980, y: 267, spriteName: "blockwall.gif" },
+			{ name: "blockwallright", x: 3980, y: 267, spriteName: "blockwall.gif" },
 			{ name: "bin1", x: 170, y: 368, spriteName: "bin.gif" },
 			{ name: "bin2", x: 370, y: 368, spriteName: "bin.gif" },
 			{ name: "busstop", x: 300, y: 280, spriteName: "busstop.gif" },
@@ -35,7 +35,12 @@
 			{ name: "floorpiece2", x: 400, y: 394, spriteName: "floorpiece.gif" },
 			{ name: "floorpiece3", x: 800, y: 394, spriteName: "floorpiece.gif" },
 			{ name: "floorpiece4", x: 1200, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece5", x: 1600, y: 394, spriteName: "floorpiece.gif" }
+			{ name: "floorpiece5", x: 1600, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece6", x: 2000, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece7", x: 2400, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece8", x: 2800, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece9", x: 3200, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece10", x: 3600, y: 394, spriteName: "floorpiece.gif" },
 		],
 		
 		enemies: [
@@ -102,8 +107,16 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{ 
-				name: "closestlight", x: 1618, y: 91, scrollAttenuation: 0,
-				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 264, 304] } } }
+				name: "closestlightcar", x: 1600, y: 91, scrollAttenuation: 0,
+				sprite: { bitmapImage: "closestlightcar.gif", sprites: { "main": { "f" : [0, 0, 264, 304] } } }
+			},
+			{ 
+				name: "closestlight1", x: 2200, y: 91, scrollAttenuation: 0,
+				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
+			},
+			{ 
+				name: "closestlight2", x: 2800, y: 91, scrollAttenuation: 0,
+				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
 			}
 		]
 	}

@@ -1,6 +1,7 @@
 Engine.initObject("GrenadeLauncher", "Weapon", function() {
 	var GrenadeLauncher = Weapon.extend({
 		crosshair: null,
+		lastVector: null,
 		
 		constructor: function(owner) {
 			this.clipCapacity = 99999999999;
@@ -20,7 +21,7 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		ordinancePhysics: function() {
 			return this.getVector();
 		},
-		
+				
 		generateOrdinance: function() { return Grenade.create(this); },
 		
 		started: null,
@@ -55,19 +56,20 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 			if(this.owner.direction == Collider.LEFT)
 				distance = -distance;
 
+			this.lastDistance = distance;
+
 			return distance;
 		},
 
 		getVector: function() { // distance is pos or neg, depending on which way facing
-			var distance = this.getDistance();
-			var fpsFlightTime = GrenadeLauncher.FLIGHT_SECS * (this.field.engineFPS);
+			var fpsFlightTime = GrenadeLauncher.FLIGHT_SECS * this.field.engineFPS;
 			var armToGroundY = this.field.groundY - Point2D.create(this.owner.getPosition()).add(this.owner.getRelativeArmTip()).y;
-			var diff = Vector2D.create(distance, armToGroundY); 
-			
+			var diff = Vector2D.create(this.lastDistance, armToGroundY); 
+
 		 	var velocity = Vector2D.create(0, 0);
-		 	velocity.setX((diff.x * 0.9) / fpsFlightTime);
-		 	velocity.setY((diff.y - (0.5 * this.field.gravityVector.y * fpsFlightTime * fpsFlightTime)) / fpsFlightTime);
-		
+		 	velocity.setX(diff.x / fpsFlightTime * 0.8);
+		 	velocity.setY(-((diff.y / fpsFlightTime) + (0.5 * this.field.gravityVector.y * fpsFlightTime)));
+
 			return velocity;
 		},
 		
@@ -82,7 +84,7 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		MIN_RANGE: "min_range",
 		MAX_RANGE: "max_range",
 		RANGE_GROWTH_ATTEN: 4,
-		FLIGHT_SECS: 2,
+		FLIGHT_SECS: 1.5,
 	});
 
 	return GrenadeLauncher;
