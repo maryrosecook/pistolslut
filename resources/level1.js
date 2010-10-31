@@ -26,27 +26,27 @@
 		furniture: [
 			{ name: "blockwallleft", x: 0, y: 267, spriteName: "blockwall.gif" },
 			{ name: "blockwallright", x: 3980, y: 267, spriteName: "blockwall.gif" },
-			{ name: "bin1", x: 170, y: 368, spriteName: "bin.gif" },
-			{ name: "bin2", x: 370, y: 368, spriteName: "bin.gif" },
+			{ name: "bin", x: 170, y: 368, spriteName: "bin.gif" },
+			{ name: "bin", x: 370, y: 368, spriteName: "bin.gif" },
 			{ name: "busstop", x: 300, y: 280, spriteName: "busstop.gif" },
-			{ name: "sandbags1", x: 760, y: 369, spriteName: "sandbags.gif" },
-			{ name: "bin3", x: 1100, y: 368, spriteName: "bin.gif" },
-			{ name: "floorpiece1", x: 0, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece2", x: 400, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece3", x: 800, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece4", x: 1200, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece5", x: 1600, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece6", x: 2000, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece7", x: 2400, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece8", x: 2800, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece9", x: 3200, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece10", x: 3600, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "sandbags", x: 775, y: 369, spriteName: "sandbags.gif" },
+			{ name: "bin", x: 1100, y: 368, spriteName: "bin.gif" },
+			{ name: "floorpiece", x: 0, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 400, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 800, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 1200, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 1600, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 2000, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 2400, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 2800, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 3200, y: 394, spriteName: "floorpiece.gif" },
+			{ name: "floorpiece", x: 3600, y: 394, spriteName: "floorpiece.gif" },
 		],
 		
 		enemies: [
 			{ name: "enemy", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 705, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 780, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 		],
@@ -107,15 +107,15 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{ 
-				name: "closestlightcar", x: 1600, y: 91, scrollAttenuation: 0,
-				sprite: { bitmapImage: "closestlightcar.gif", sprites: { "main": { "f" : [0, 0, 264, 304] } } }
-			},
-			{ 
-				name: "closestlight1", x: 2200, y: 91, scrollAttenuation: 0,
+				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0,
 				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
 			},
 			{ 
-				name: "closestlight2", x: 2800, y: 91, scrollAttenuation: 0,
+				name: "closestlight2", x: 2200, y: 91, scrollAttenuation: 0,
+				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
+			},
+			{ 
+				name: "closestlight3", x: 2800, y: 91, scrollAttenuation: 0,
 				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
 			}
 		]
