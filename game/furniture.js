@@ -8,17 +8,13 @@ Engine.initObject("Furniture", "Mover", function() {
 		field: null,
 		rect: null,
 
-		constructor: function(spriteName, position) {
-			this.base(spriteName);
+		constructor: function(name, position) {
+			this.base(name);
 			this.field = PistolSlut;
 
 			// Add components to move and draw
 			this.add(Mover2DComponent.create("move"));
-			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
-			
-			this.addSprite("main", this.field.spriteLoader.getSprite(spriteName, "main"));
-			this.setSprite("main");
 			
 			this.setPosition(position);
 			this.getComponent("move").setCheckLag(false);

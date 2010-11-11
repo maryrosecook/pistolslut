@@ -19,6 +19,8 @@ Game.load("/game/particle.js");
 Game.load("/game/sign.js");
 Game.load("/game/loader.furnishedlevel.js");
 Game.load("/game/furniture.js");
+Game.load("/game/spritefurniture.js");
+Game.load("/game/blockfurniture.js");
 Game.load("/game/collider.js");
 Game.load("/game/physics.js");
 Game.load("/game/enemy.js");
@@ -72,6 +74,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 	
 		groundY: 395,
 		playerStartPosY: 344,
+		alwaysVisibleZIndex: 2001,
+		frontZIndex: 2000,
+		moverZIndex: 1000,
 	
 		fieldWidth: 700,
 		fieldHeight: 430,

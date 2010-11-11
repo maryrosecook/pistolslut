@@ -15,6 +15,7 @@ Engine.initObject("Mover", "Object2D", function() {
 		constructor: function(name) {
 			this.base(name);
 			this.field = PistolSlut;
+			this.setZIndex(this.field.moverZIndex);
 		},
 
 		destroy: function() {

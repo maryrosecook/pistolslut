@@ -53,6 +53,12 @@ Engine.initObject("Collider", "Base", function() {
 			var bRect = new CheapRect(b);
 			return aRect.x <= bRect.r && aRect.r > bRect.r && !this.aOnB(a, b);
 		},
+		
+		aOnBottomAndBumpingB: function(a, b) {
+			var aRect = new CheapRect(a);
+			var bRect = new CheapRect(b);
+			return a.getVelocity().y < 0 && aRect.y < bRect.b && aRect.y > bRect.b - 14;
+		},
 	
 		getPCL: function(subject) {
 			return this.field.collisionModel.getPCL(subject.getPosition());

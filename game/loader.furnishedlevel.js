@@ -115,7 +115,9 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 
 		addObjects: function(renderContext) {
-			this.addFurniture(renderContext);
+			this.addLevelBlockers(renderContext);
+			this.addSpriteFurniture(renderContext);
+			this.addBlockFurniture(renderContext);
 			this.addEnemies(renderContext);
 			this.addSigns(renderContext);
 			this.addFires();
@@ -129,14 +131,52 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		// creates Furniture render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext
-		addFurniture: function(renderContext) {
-			var data = this.levelResource.info.objects.furniture;
+		addSpriteFurniture: function(renderContext) {
+			var data = this.levelResource.info.objects.spriteFurniture;
 			for(var i in data)
 			{
-				var furniturePiece = Furniture.create(data[i].spriteName, Point2D.create(data[i].x, data[i].y));
-				this.furniture[i] = furniturePiece;
+				var furniturePiece = SpriteFurniture.create(data[i].spriteName, Point2D.create(data[i].x, data[i].y));
+				this.furniture[this.furniture.length] = furniturePiece;
 				renderContext.add(furniturePiece);
 			}
+		},
+		
+		addBlockFurniture: function(renderContext) {
+			var data = this.levelResource.info.objects.blockFurniture;
+			for(var i in data)
+				this.createPieceOfBlockFurniture(renderContext, data[i].name, data[i].shape)
+		},
+		
+		// automatically adds block furniture to cover bottom of level and add sides to stop player running outside level
+		addLevelBlockers: function(renderContext) {
+			// floor
+			var floorBlockWidth = 400;
+			var floorBlockHeight = 34;
+			var floorBlockOverlap = 10;
+			for(var i = 0; i < this.getWidth(); i += floorBlockWidth - floorBlockOverlap)
+			{
+				var shapeData = { x: i, y: this.getHeight() - floorBlockHeight, w: floorBlockWidth, h: floorBlockHeight };
+				var furniturePiece = this.createPieceOfBlockFurniture(renderContext, "floor", shapeData);
+				furniturePiece.setZIndex(this.field.frontZIndex);
+			}
+			
+			// side blockers
+			
+			var blockerWidth = 20;
+			var blockerHeight = 150;
+			
+			var shapeData = { x: -blockerWidth, y: this.getHeight() - blockerHeight, w: blockerWidth, h: blockerHeight };
+			this.createPieceOfBlockFurniture(renderContext, "blocker", shapeData);
+			
+			var shapeData = { x: this.getWidth(), y: this.getHeight() - blockerHeight, w: blockerWidth, h: blockerHeight };
+			this.createPieceOfBlockFurniture(renderContext, "blocker", shapeData);
+		},
+		
+		createPieceOfBlockFurniture: function(renderContext, name, shapeData) {
+			var furnitureBlock = BlockFurniture.create("block", shapeData);
+			this.furniture[this.furniture.length] = furnitureBlock;
+			renderContext.add(furnitureBlock);
+			return furnitureBlock;
 		},
 				
 		// creates Enemy render objects for each piece of furniture loaded from
@@ -217,13 +257,20 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var zIndex = Parallax.START_Z_INDEX;
 			for(var i in data)
 			{
-				var parallax = new Parallax(data[i].name, this.field, zIndex, data[i].scrollAttenuation, data[i].x, data[i].y);
+				var parallaxZIndex = zIndex;
+			
+				if(data[i].zIndex != null)
+					parallaxZIndex = data[i].zIndex;
+					
+				var parallax = new Parallax(data[i].name, this.field, parallaxZIndex, data[i].scrollAttenuation, data[i].x, data[i].y);
 				this.parallaxes.push(parallax);
 				if(parallax.scrollAttenuation != 0) // only want to iterate through parallaxes that actually move
 					this.parallaxesToMove.push(parallax);
 					
 				renderContext.add(this.parallaxes[i]);
-				zIndex += 1;
+				
+				if(data[i].zIndex == null)
+					zIndex += 1;
 			}
 		},
 

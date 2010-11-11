@@ -13,7 +13,6 @@
 		},
 
 		sprites: [
-			{ bitmapImage: "blockwall.gif", sprites: { "main": { "f": [0, 0, 20, 130] } } },
 			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
 			{ bitmapImage: "busstop.gif", sprites: { "main": { "f": [0, 0, 154, 18] } } },
@@ -21,26 +20,22 @@
 			{ bitmapImage: "lantern.gif", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },		
 			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
+			
 		],
 
-		furniture: [
-			{ name: "blockwallleft", x: 0, y: 267, spriteName: "blockwall.gif" },
-			{ name: "blockwallright", x: 3980, y: 267, spriteName: "blockwall.gif" },
-			{ name: "bin", x: 170, y: 368, spriteName: "bin.gif" },
-			{ name: "bin", x: 370, y: 368, spriteName: "bin.gif" },
-			{ name: "busstop", x: 300, y: 280, spriteName: "busstop.gif" },
-			{ name: "sandbags", x: 775, y: 369, spriteName: "sandbags.gif" },
-			{ name: "bin", x: 1100, y: 368, spriteName: "bin.gif" },
-			{ name: "floorpiece", x: 0, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 400, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 800, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 1200, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 1600, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 2000, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 2400, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 2800, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 3200, y: 394, spriteName: "floorpiece.gif" },
-			{ name: "floorpiece", x: 3600, y: 394, spriteName: "floorpiece.gif" },
+		spriteFurniture: [
+			{ x: 170, y: 368, spriteName: "bin.gif" },
+			{ x: 370, y: 368, spriteName: "bin.gif" },
+			{ x: 300, y: 280, spriteName: "busstop.gif" },
+			{ x: 775, y: 369, spriteName: "sandbags.gif" },
+			{ x: 1100, y: 368, spriteName: "bin.gif" },
+		],
+		
+		blockFurniture: [
+			{ name: "longbuildingbody1", shape: { x: 2300, y: 66, w: 200, h: 120 } },
+			{ name: "longbuildingbody2", shape: { x: 2500, y: 66, w: 200, h: 120 } },
+			{ name: "longbuildingbody3", shape: { x: 2300, y: 186, w: 200, h: 120 } },
+			{ name: "longbuildingbody4", shape: { x: 2500, y: 186, w: 200, h: 120 } },
 		],
 		
 		enemies: [
@@ -99,7 +94,7 @@
 				sprite: { bitmapImage: "busstopframe.gif", sprites: { "main": { "f" : [0, 0, 154, 97] } } }
 			},
 			{ 
-				name: "building", x: 795, y: 25, scrollAttenuation: 0,
+				name: "building1", x: 795, y: 25, scrollAttenuation: 0,
 				sprite: { bitmapImage: "building.gif", sprites: { "main": { "f" : [0, 0, 259, 370] } } }
 			},
 			{ 
@@ -107,16 +102,16 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{ 
-				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0,
-				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
+				name: "longbuilding", x: 2300, y: 66, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 400, 330] } } }
 			},
 			{ 
-				name: "closestlight2", x: 2200, y: 91, scrollAttenuation: 0,
-				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
+				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 340, 304] } } }
 			},
 			{ 
-				name: "closestlight3", x: 2800, y: 91, scrollAttenuation: 0,
-				sprite: { bitmapImage: "closestlight.gif", sprites: { "main": { "f" : [0, 0, 231, 304] } } }
+				name: "closestlight3", x: 2800, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 340, 304] } } }
 			}
 		]
 	}
