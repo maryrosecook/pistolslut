@@ -73,7 +73,7 @@ Engine.initObject("Firework", "Object2D", function() {
 		UP: new Point2D(0, -1),
 		TIP: new Point2D(0, -1),
 		
-		shape: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
+		shape: [ new Point2D(0, 0), new Point2D(1, 0), new Point2D(0,  1), new Point2D(1,  1)],
 	});
 
 	return Firework;

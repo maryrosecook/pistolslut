@@ -84,6 +84,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		lanterns: [],
 		sky: null,
 		speeches: [],
+		lifts: [],
 		
 		snowTimer: null,
 		snowFallInterval: 50,
@@ -127,6 +128,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addLanterns(renderContext);
 			this.addSpeeches(renderContext);
 			this.addTriggers(); // must be called last so that all the triggerable objs have been added to this.triggerableObjects
+			this.addLifts(renderContext);
 		},
 
 		// creates Furniture render objects for each piece of furniture loaded from
@@ -150,26 +152,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		// automatically adds block furniture to cover bottom of level and add sides to stop player running outside level
 		addLevelBlockers: function(renderContext) {
 			// floor
-			var floorBlockWidth = 400;
 			var floorBlockHeight = 34;
-			var floorBlockOverlap = 10;
-			for(var i = 0; i < this.getWidth(); i += floorBlockWidth - floorBlockOverlap)
-			{
-				var shapeData = { x: i, y: this.getHeight() - floorBlockHeight, w: floorBlockWidth, h: floorBlockHeight };
-				var furniturePiece = this.createPieceOfBlockFurniture(renderContext, "floor", shapeData);
-				furniturePiece.setZIndex(this.field.frontZIndex);
-			}
-			
-			// side blockers
-			
-			var blockerWidth = 20;
-			var blockerHeight = 150;
-			
-			var shapeData = { x: -blockerWidth, y: this.getHeight() - blockerHeight, w: blockerWidth, h: blockerHeight };
-			this.createPieceOfBlockFurniture(renderContext, "blocker", shapeData);
-			
-			var shapeData = { x: this.getWidth(), y: this.getHeight() - blockerHeight, w: blockerWidth, h: blockerHeight };
-			this.createPieceOfBlockFurniture(renderContext, "blocker", shapeData);
+			var shapeData = { x: 0, y: this.getHeight() - floorBlockHeight, w: this.getWidth(), h: floorBlockHeight };
+			var furniturePiece = this.createPieceOfBlockFurniture(renderContext, "floor", shapeData);
+			furniturePiece.setZIndex(this.field.frontZIndex);
 		},
 		
 		createPieceOfBlockFurniture: function(renderContext, name, shapeData) {
@@ -299,6 +285,15 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		
 		removeTrigger: function(trigger) {
 			EngineSupport.arrayRemove(this.triggers, trigger);
+		},
+		
+		addLifts: function(renderContext) {
+			var lifts = this.levelResource.info.objects.lifts;
+			for(var i in lifts)
+			{
+				this.lifts[i] = new Lift(this.field, Point2D.create(lifts[i].startX, lifts[i].startY), lifts[i].distance);
+				renderContext.add(this.lifts[i]);
+			}
 		},
 
 		inLevel: function(obj) {

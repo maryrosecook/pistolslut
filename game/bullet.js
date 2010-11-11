@@ -40,7 +40,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 	}, {
 		getClassName: function() { return "Bullet"; },
 		
-		SHAPE: [ new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  1), new Point2D(0,  1)],
+		SHAPE: [ new Point2D(0, 0), new Point2D(1, 0), new Point2D(0,  1), new Point2D(1,  1)],
 	});
 
 	return Bullet;

@@ -4,6 +4,7 @@ Engine.initObject("BlockFurniture", "Furniture", function() {
 		constructor: function(name, shapeData) {
 			this.base(name, Point2D.create(shapeData.x, shapeData.y));
 			this.setupGraphics(shapeData);
+			this.finalSetup();
 		},
 
 		setupGraphics: function(s) {
@@ -13,7 +14,6 @@ Engine.initObject("BlockFurniture", "Furniture", function() {
 			this.getComponent("draw").setLineStyle("black");
 			this.getComponent("draw").setFillStyle("black");
 		}
-
 	}, {
 		getClassName: function() { return "BlockFurniture"; },
 

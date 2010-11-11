@@ -48,6 +48,7 @@ Game.load("/game/speech.js");
 Game.load("/game/trigger.js");
 Game.load("/game/crosshair.js");
 Game.load("/game/grenadelauncher.js");
+Game.load("/game/lift.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -178,7 +179,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		
 		loadComponents: function() {
 			// We'll need something to detect collisions
-			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 5);
+			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 1);
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
 			

@@ -52,10 +52,10 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		},
 
 		onCollide: function(obj) {
-			if(obj instanceof Furniture)
+			if(obj instanceof Furniture || obj instanceof Lift)
 			{
 				if(this.field.collider.objsColliding(this, obj))
-					this.bounce(obj);
+					return this.bounce(obj);
 			}
 			
 			return ColliderComponent.CONTINUE;
@@ -69,6 +69,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 			{
 				var sideHit = pointOfImpactData[1];
 				this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
+				return ColliderComponent.STOP;
 			}
 		},
 	

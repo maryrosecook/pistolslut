@@ -18,14 +18,16 @@ Engine.initObject("Furniture", "Mover", function() {
 			
 			this.setPosition(position);
 			this.getComponent("move").setCheckLag(false);
-			
-			this.rect = new CheapRect(this);
 		},
 
 		update: function(renderContext, time) {
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();
+		},
+
+		finalSetup: function() {
+			this.rect = new CheapRect(this);
 		},
 		
 		shot: function(projectile) {

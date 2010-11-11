@@ -28,12 +28,11 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			
 			var spread = 360;
 			var a = (0 - (360 / 2)) + (Math.random() * spread);
-			var vel = 1 + (Math.random() * 11);
+			var speed = 1 + (Math.random() * 11);
 			
 			var mover = this.getComponent("move");
 			mover.setPosition(epicentre);
-			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, a));
-			mover.setVelocity(mover.getVelocity().mul(vel));
+			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, a).mul(speed));
 			mover.setCheckLag(false);
 		},
 
@@ -91,7 +90,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 
 	}, {
 		getClassName: function() { return "Shrapnel"; },
-		shape: [new Point2D(-1, 0), new Point2D(0, 0), new Point2D(0,  0), new Point2D(0,  0)],
+		shape: [new Point2D(0, 0), new Point2D(1, 0), new Point2D(1,  1), new Point2D(0,  1)],
 	});
 
 	return Shrapnel;

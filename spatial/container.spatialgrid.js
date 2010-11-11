@@ -233,6 +233,7 @@ var SpatialGrid = SpatialContainer.extend(/** @scope SpatialGrid.prototype */{
             }
          }
       }
+
       return o;
    },
    

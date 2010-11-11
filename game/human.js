@@ -18,6 +18,7 @@ Engine.initObject("Human", "Mover", function() {
 		standState: null,
 		canThrowGrenades: false,
 		direction: null,
+		lift: null,
 			
 		constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
 			this.base(name);
@@ -81,8 +82,24 @@ Engine.initObject("Human", "Mover", function() {
 			this.updateSprite();
 			
 			this.field.applyGravity(this);
+			this.handleLift();
 			this.handleFriction();
 			this.setPosition(this.getPosition().add(this.getVelocity()));
+		},
+		
+		handleLift: function() {
+			if(this.lift != null)
+				this.getPosition().setY(this.lift.getStandY(this));
+		},
+		
+		setOnLift: function(lift) {
+			this.lift = lift;
+			this.getVelocity().setY(0);
+			this.jumping = false;
+		},
+		
+		setNotOnLift: function() {
+			this.lift = null;
 		},
 		
 		canStand: function() { return this.weapon.canStand(); },
@@ -189,7 +206,14 @@ Engine.initObject("Human", "Mover", function() {
 			if(!this.jumping && !this.isCrouching())
 			{
 				this.jumping = true;
-				this.getVelocity().setY(this.getVelocity().y + this.jumpSpeed);
+
+				var newVelocityY = this.jumpSpeed;
+				if(this.lift != null)
+					newVelocityY += this.lift.getVelocity().y;
+
+				this.setNotOnLift();
+
+				this.getVelocity().setY(newVelocityY);
 				this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
 			}
 		},
@@ -198,6 +222,7 @@ Engine.initObject("Human", "Mover", function() {
 		
 		walking: false,	
 		walk: function(direction) {
+			this.setNotOnLift();
 			if(!this.walking && !this.isCrouching())
 			{
 				this.walking = true;
@@ -231,7 +256,7 @@ Engine.initObject("Human", "Mover", function() {
 			this.getVelocity().setY(0);
 			this.jumping = false;
 		},
-		
+				
 		shot: function(ordinance) {
 			if(this.isAlive())
 			{

@@ -20,7 +20,8 @@
 			{ bitmapImage: "lantern.gif", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },		
 			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
-			
+			{ bitmapImage: "fenceleft.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
+			{ bitmapImage: "fenceright.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
 		],
 
 		spriteFurniture: [
@@ -29,13 +30,12 @@
 			{ x: 300, y: 280, spriteName: "busstop.gif" },
 			{ x: 775, y: 369, spriteName: "sandbags.gif" },
 			{ x: 1100, y: 368, spriteName: "bin.gif" },
+			{ x: 0, y: 328, spriteName: "fenceleft.gif" },
+			{ x: 3989, y: 328, spriteName: "fenceright.gif" },
 		],
 		
 		blockFurniture: [
-			{ name: "longbuildingbody1", shape: { x: 2300, y: 66, w: 200, h: 120 } },
-			{ name: "longbuildingbody2", shape: { x: 2500, y: 66, w: 200, h: 120 } },
-			{ name: "longbuildingbody3", shape: { x: 2300, y: 186, w: 200, h: 120 } },
-			{ name: "longbuildingbody4", shape: { x: 2500, y: 186, w: 200, h: 120 } },
+			{ name: "longbuildingbody1", shape: { x: 2300, y: 96, w: 400, h: 212 } },
 		],
 		
 		enemies: [
@@ -66,6 +66,10 @@
 		],
 		
 		sky: { startColor: ["26", "26", "26"], transformations: null },
+		
+		lifts: [
+			{ name: "longbuildinglift", startX: 2260, startY: 400, distance: 304 },
+		],
 		
 		parallaxes: [
 			{ 
@@ -102,8 +106,8 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{ 
-				name: "longbuilding", x: 2300, y: 66, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 400, 330] } } }
+				name: "longbuilding", x: 2300, y: 96, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 400, 300] } } }
 			},
 			{ 
 				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0, zIndex: 2000,

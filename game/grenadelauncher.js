@@ -67,8 +67,8 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 			var diff = Vector2D.create(this.lastDistance, armToGroundY); 
 
 		 	var velocity = Vector2D.create(0, 0);
-		 	velocity.setX(diff.x / fpsFlightTime * 0.8);
-		 	velocity.setY(-((diff.y / fpsFlightTime) + (0.5 * this.field.gravityVector.y * fpsFlightTime)));
+		 	velocity.setX(diff.x / fpsFlightTime * 0.91);
+		 	velocity.setY(-(-(diff.y / fpsFlightTime) + (0.5 * this.field.gravityVector.y * fpsFlightTime)));
 
 			return velocity;
 		},
@@ -78,7 +78,7 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		
 		RANGES: {
 			"Left": { "min_range": 150, "max_range": 150 },
-			"Right": { "min_range": 150, "max_range": 500 },
+			"Right": { "min_range": 150, "max_range": 385 },
 		},
 		
 		MIN_RANGE: "min_range",
