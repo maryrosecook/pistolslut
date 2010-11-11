@@ -85,7 +85,7 @@ Engine.initObject("Collider", "Base", function() {
 				return new CheapRect(obj);
 		},
 		
-		objectDistanceAway: function(obj1, obj2, distance) {
+		objectAtLeastDistanceAway: function(obj1, obj2, distance) {
 			if(obj1.getPosition().dist(obj2.getPosition()) >= distance)
 				return true;
 			else

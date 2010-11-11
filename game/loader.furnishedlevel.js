@@ -176,7 +176,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 																							 Point2D.create(data[i].x, data[i].y),
 																							 data[i].health,
 																							 data[i].weaponName,
-																							 data[i].canThrowGrenades);
+																							 data[i].canThrowGrenades,
+																							 data[i].shootDelay);
 				this.enemies[i] = enemy;
 				renderContext.add(enemy);
 			}

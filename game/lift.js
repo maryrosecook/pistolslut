@@ -16,7 +16,6 @@ Engine.initObject("Lift", "Mover", function() {
 			this.base("Lift");
 			this.field = field;
 			this.startPosition = startPosition;
-			console.log(this.startPosition.x, this.startPosition.y)
 			this.distance = distance;
 
 			// Add components to move and draw

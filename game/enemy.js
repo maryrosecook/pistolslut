@@ -12,9 +12,11 @@ var Enemy = Human.extend({
 	grenadeThrowDelay: 5000,
 	shootDelay: 1001,
 
-	constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
+	constructor: function(name, field, position, health, weaponName, canThrowGrenades, shootDelay) {
 		this.turn(Collider.LEFT);
 		this.base(name, field, position, health, weaponName, canThrowGrenades);
+		if(shootDelay != null)
+			this.shootDelay = shootDelay;
 		
 		this.add(AIComponent.create("logic" + this.name, null, this.field, this));
 	},

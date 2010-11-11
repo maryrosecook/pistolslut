@@ -13,22 +13,24 @@
 		},
 
 		sprites: [
+			{ bitmapImage: "fenceleft.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
 			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
 			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 420, 34] } } },
 			{ bitmapImage: "lantern.png", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },		
 			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
-			{ bitmapImage: "fenceleft.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
 			{ bitmapImage: "fenceright.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
 		],
 
 		spriteFurniture: [
+			{ x: 0, y: 328, spriteName: "fenceleft.gif" },
 			{ x: 170, y: 368, spriteName: "bin.gif" },
 			{ x: 370, y: 368, spriteName: "bin.gif" },
 			{ x: 775, y: 369, spriteName: "sandbags.gif" },
 			{ x: 1100, y: 368, spriteName: "bin.gif" },
-			{ x: 0, y: 328, spriteName: "fenceleft.gif" },
+			{ x: 2315, y: 368, spriteName: "bin.gif" },
+			{ x: 2665, y: 368, spriteName: "bin.gif" },
 			{ x: 3989, y: 328, spriteName: "fenceright.gif" },
 		],
 		
@@ -42,6 +44,7 @@
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
+			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, health: 4, weaponName: "Mac10", canThrowGrenades: false, shootDelay: 100 },
 		],
 		
 		speeches: {

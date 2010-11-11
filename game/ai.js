@@ -17,7 +17,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 			// setup shoot timer
 			var ai = this;
-			host.shootTimer = Interval.create("shoot", 1000,
+			host.shootTimer = Interval.create("shoot", host.shootDelay,
 				function() {
 					ai.notifyTimeToShoot();
 			});
@@ -60,7 +60,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		notifyIncoming: function(ordinance) {
 			var host = this.getHostObject();
 			if(ordinance.shooter != host)
-				if(!this.field.collider.objectDistanceAway(host, ordinance, ordinance.safeDistance))
+				if(!this.field.collider.objectAtLeastDistanceAway(host, ordinance, ordinance.safeDistance))
 					this.reactToBeingUnderFire();
 		},
 		
@@ -105,7 +105,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			var host = this.getHostObject();
 			if(host.weapon.hasLineOfFire() == true)
 				for(var i in furniture)
-					if(!this.field.collider.objectDistanceAway(host, furniture[i], this.furnitureBlockRange))
+					if(!this.field.collider.objectAtLeastDistanceAway(host, furniture[i], this.furnitureBlockRange))
 						if(this.field.collider.inLineOfFire(host, furniture[i]))
 							return true;
 						

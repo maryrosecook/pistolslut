@@ -102,7 +102,7 @@ Engine.initObject("Weapon", "Base", function() {
 			else
 				this.timeLastHadDeadAim = new Date().getTime();
 				
-			var shootAngle = this.owner.getGunAngle() - (spread / 2) + (Math.random() * spread);
+			var shootAngle = this.owner.getGunAngle() - (spread / 2.0) + (Math.random() * spread);
 			return Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, shootAngle);
 		},
 		
@@ -119,7 +119,10 @@ Engine.initObject("Weapon", "Base", function() {
 		isShootKeyHasBeenUpSinceLastShot: function() { return this.shootKeyHasBeenUpSinceLastShot; },
 		
 		shooting: "Notshooting",
-		startShooting: function() {  this.shooting = Weapon.SHOOTING; },
+		startShooting: function() { 
+			this.shooting = Weapon.SHOOTING;
+			this.owner.updateSprite();
+		},
 		stopShooting: function() {
 			this.owner.stoppedShooting();
 			this.shooting = Weapon.NOT_SHOOTING;
