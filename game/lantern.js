@@ -14,7 +14,7 @@ Engine.initObject("Lantern", "Mover", function() {
 			
 			this.setZIndex(Lantern.Z_INDEX);
 			
-			this.addSprite("main", this.field.spriteLoader.getSprite("lantern.gif", "main"));
+			this.addSprite("main", this.field.spriteLoader.getSprite("lantern.png", "main"));
 			this.setSprite("main");
 			
 			var c_mover = this.getComponent("move");

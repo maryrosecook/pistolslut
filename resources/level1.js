@@ -15,9 +15,8 @@
 		sprites: [
 			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
-			{ bitmapImage: "busstop.gif", sprites: { "main": { "f": [0, 0, 154, 18] } } },
 			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 420, 34] } } },
-			{ bitmapImage: "lantern.gif", sprites: { "main": { "f": [0, 0, 14, 13] } } },
+			{ bitmapImage: "lantern.png", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },		
 			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
 			{ bitmapImage: "fenceleft.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
@@ -27,7 +26,6 @@
 		spriteFurniture: [
 			{ x: 170, y: 368, spriteName: "bin.gif" },
 			{ x: 370, y: 368, spriteName: "bin.gif" },
-			{ x: 300, y: 280, spriteName: "busstop.gif" },
 			{ x: 775, y: 369, spriteName: "sandbags.gif" },
 			{ x: 1100, y: 368, spriteName: "bin.gif" },
 			{ x: 0, y: 328, spriteName: "fenceleft.gif" },
@@ -92,10 +90,6 @@
 			{ 
 				name: "floorsign1", x: 79, y: 296, scrollAttenuation: 0,
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
-			},
-			{ 
-				name: "busstopframe", x: 300, y: 298, scrollAttenuation: 0,
-				sprite: { bitmapImage: "busstopframe.gif", sprites: { "main": { "f" : [0, 0, 154, 97] } } }
 			},
 			{ 
 				name: "building1", x: 795, y: 25, scrollAttenuation: 0,
