@@ -118,10 +118,6 @@ Engine.initObject("Human", "Mover", function() {
 			this.setSprite(this.direction + Human.DYING + this.weapon.name);
 		
 			this.throwBackwards(ordinance);
-		
-			// make uncollidable but leave human in the level
-			if(this.ModelData.lastNode) 
-				this.ModelData.lastNode.removeObject(this);
 		},
 	
 		shoot: function() {
@@ -252,9 +248,9 @@ Engine.initObject("Human", "Mover", function() {
 		},
 		
 		endRise: function(ceilingObj) {
-			this.getPosition().setY(ceilingObj.getPosition().y + ceilingObj.getBoundingBox().dims.y + 1);
-			this.getVelocity().setY(0);
-			this.jumping = false;
+			this.getPosition().setY(ceilingObj.getPosition().y + ceilingObj.getBoundingBox().dims.y + 2);
+			if(this.getVelocity().y < 0)
+				this.getVelocity().setY(0);
 		},
 				
 		shot: function(ordinance) {
@@ -307,8 +303,10 @@ Engine.initObject("Human", "Mover", function() {
 				else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 					this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
 			}
-			else if(this instanceof Enemy && (obj instanceof Bullet || obj instanceof Shrapnel))
+			else if(obj instanceof Ordinance)
+			{
 				this.field.notifier.post(Human.INCOMING, obj);
+			}
 
 			return ColliderComponent.CONTINUE;
 		},
@@ -411,7 +409,7 @@ Engine.initObject("Human", "Mover", function() {
 				"Crouching": {
 					"armTip": new Point2D(0, 2),
 					"M9": 		{ "gunTip": new Point2D(07, 05), "gunAngle": 270 },
-					"Mac10": 	{ "gunTip": new Point2D(07, 03), "gunAngle": 270 },
+					"Mac10": 	{ "gunTip": new Point2D(07, 04), "gunAngle": 270 },
 					"SPAS": 	{ "gunTip": new Point2D(07, 08), "gunAngle": 270 },
 					"Mortar": { "gunTip": new Point2D(13, 08), "gunAngle": 345 }
 				}
@@ -427,7 +425,7 @@ Engine.initObject("Human", "Mover", function() {
 				"Crouching": {
 					"armTip": new Point2D(44, 2),
 					"M9":     { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
-					"Mac10":  { "gunTip": new Point2D(40, 03), "gunAngle": 90 },
+					"Mac10":  { "gunTip": new Point2D(40, 04), "gunAngle": 90 },
 					"SPAS":   { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
 					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 15 }
 				}

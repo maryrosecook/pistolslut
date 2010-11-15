@@ -1,6 +1,7 @@
 Engine.initObject("MortarRound", "Ordinance", function() {
 	var MortarRound = Ordinance.extend({
 		damage: 0,
+		safeDistance: 40,
 
 		update: function(renderContext, time) {
 			this.field.applyGravity(this);

@@ -76,12 +76,6 @@ Engine.initObject("Lift", "Mover", function() {
 		},
 		
 		getStandY: function(obj) { return this.getPosition().y - obj.getBoundingBox().dims.y; },
-
-		destroy: function() {
-			if (this.ModelData.lastNode)
-				this.ModelData.lastNode.removeObject(this);
-			this.base();
-		},
 	}, {
 		getClassName: function() { return "Lift"; },
 		

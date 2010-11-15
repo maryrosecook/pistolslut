@@ -19,8 +19,10 @@ Engine.initObject("Mover", "Object2D", function() {
 		},
 
 		destroy: function() {
-			if (this.ModelData && this.ModelData.lastNode) {
+			if(this.ModelData && this.ModelData.lastNode)
+			{
 				this.ModelData.lastNode.removeObject(this);
+				this.ModelData.lastNode = null;
 			}
 			this.base();
 		},

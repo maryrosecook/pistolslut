@@ -38,11 +38,11 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
 		notifyTimeToShoot: function() {
-			var host = this.getHostObject();
-			if(this.isEnemyInSights()
-				 && !this.friendliesInLineOfFire()
-				 && !this.furnitureInLineOfFire())
-				host.shoot();
+			this.getHostObject().shoot();
+		},
+		
+		shouldFire: function() {
+			return this.isEnemyInSights() && !this.friendliesInLineOfFire() && !this.furnitureInLineOfFire();
 		},
 		
 		notifyTimeToThrowGrenade: function() {
@@ -80,7 +80,10 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		execute: function(renderContext, time) {
 			var host = this.getHostObject();
-			if(host.isCrouching() && !host.weapon.isReloading() && host.canStand() && this.noUnsafeIncomingForAWhile())
+			if(host.isCrouching()
+				 && !host.weapon.isReloading()
+				 && host.canStand()
+				 && this.noUnsafeIncomingForAWhile())
 				host.stand();
 				
 			this.turnTowardsPlayer();

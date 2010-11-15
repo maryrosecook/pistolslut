@@ -153,7 +153,6 @@ var ColliderComponent = BaseComponent.extend(/** @scope ColliderComponent.protot
 				// If the last node isn't specified, make sure to add it to the node
 				aNode.addObject(obj);
 			}
-			
          obj.ModelData.lastNode = aNode;
       }
    },

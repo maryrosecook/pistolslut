@@ -7,6 +7,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 	var Grenade = Ordinance.extend({
 		timeThrown: null,
 		pinTimer: 3000, // how long the grande takes to explode
+		safeDistance: 40,
 		
 		constructor: function(weapon) {
 			this.base(weapon);
@@ -23,13 +24,6 @@ Engine.initObject("Grenade", "Ordinance", function() {
 			this.base();
 			this.shooter = null;
 			this.timeThrown = null;
-		},
-
-		destroy: function() {
-			if (this.ModelData.lastNode)
-				this.ModelData.lastNode.removeObject(this);
-
-			this.base();
 		},
 
 		update: function(renderContext, time) {
@@ -69,7 +63,6 @@ Engine.initObject("Grenade", "Ordinance", function() {
 			{
 				var sideHit = pointOfImpactData[1];
 				this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
-				return ColliderComponent.STOP;
 			}
 		},
 	

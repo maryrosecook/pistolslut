@@ -1,6 +1,11 @@
 Engine.initObject("Bullet", "Ordinance", function() {
 	var Bullet = Ordinance.extend({
 		damage: 1,
+		safeDistance: 30,
+
+		constructor: function(weapon) {
+			this.base(weapon);
+		},
 
 		setupGraphics: function() {
 			this.add(Vector2DComponent.create("draw"));
@@ -36,7 +41,6 @@ Engine.initObject("Bullet", "Ordinance", function() {
 			}
 			return ColliderComponent.CONTINUE;
 		},
-
 	}, {
 		getClassName: function() { return "Bullet"; },
 		

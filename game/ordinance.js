@@ -5,12 +5,12 @@ Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Ordinance", "Mover", function() {
 	var Ordinance = Mover.extend({
-		weapon: null,
 		field: null,
+		weapon: null,
 		shooter: null,
 		
 		constructor: function(weapon) {
-			this.base();
+			this.base("yeah");
 			this.field = PistolSlut;
 		
 			// Track the shooting weapon
@@ -20,12 +20,9 @@ Engine.initObject("Ordinance", "Mover", function() {
 			// Add components to move and draw the mortar round
 			this.add(Mover2DComponent.create("move"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
-			
-			var ownerPosition = Point2D.create(this.weapon.owner.getComponent("move").getPosition());
-			var gunTipPosition = this.weapon.getGunTip();
 
 			var c_mover = this.getComponent("move");
-			c_mover.setPosition(gunTipPosition);
+			c_mover.setPosition(Point2D.create(this.weapon.getGunTip()));
 			c_mover.setVelocity(this.weapon.ordinancePhysics.call(this.weapon));
 			c_mover.setCheckLag(false);
 			this.setupGraphics();
@@ -36,13 +33,7 @@ Engine.initObject("Ordinance", "Mover", function() {
 		release: function() {
 			this.base();
 			this.weapon = null;
-		},
-		
-		destroy: function() {
-			if (this.ModelData.lastNode)
-				this.ModelData.lastNode.removeObject(this);
-				
-			this.base();
+			this.shooter = null;
 		},
 		
 		update: function(renderContext, time) {

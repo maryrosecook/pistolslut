@@ -81,13 +81,6 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			}
 			return ColliderComponent.CONTINUE;
 		},
-
-		destroy: function() {
-			if (this.ModelData.lastNode)
-				this.ModelData.lastNode.removeObject(this);
-			this.base();
-		},
-
 	}, {
 		getClassName: function() { return "Shrapnel"; },
 		shape: [new Point2D(0, 0), new Point2D(1, 0), new Point2D(1,  1), new Point2D(0,  1)],

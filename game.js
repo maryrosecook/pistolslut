@@ -89,7 +89,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		debug: true,
 		playerObj: null,
 
-		showStart: false,
+		showStartTexts: false,
 
 		pEngine: null,
 
@@ -124,7 +124,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
 		
 			// Don't start until all of the resources are loaded
-			PistolSlut.loadTimeout = Timeout.create("wait", 250, PistolSlut.waitForResources);
+			PistolSlut.loadTimeout = Timeout.create("wait", 250, this.waitForResources);
 			this.waitForResources();
 		},
 	
@@ -133,39 +133,48 @@ Engine.initObject("PistolSlut", "Game", function() {
     		PistolSlut.play();
 		},
 		
+		addStartText: function(text, x, y) {
+			this.startTexts.push(TextRenderer.create(VectorText.create(), text, 1));
+      this.startTexts[this.startTexts.length-1].setPosition(Point2D.create(x, y));
+      this.startTexts[this.startTexts.length-1].setColor("#fff");
+      this.renderContext.add(this.startTexts[this.startTexts.length-1]);
+		},
+		
 		// an initial pause screen
 		startScreen: function() {
-    	PistolSlut.isStartScreen = true;
+    	this.isStartScreen = true;
 
 			this.loadLevelBasics(); // just enough for a cogent start screen
 			
-      EventEngine.setHandler(document, "keypress", PistolSlut.onKeyPress);
+      EventEngine.setHandler(document, "keypress", this.onKeyPress);
 
-      PistolSlut.start = TextRenderer.create(VectorText.create(), "Press z to start", 1);
-      PistolSlut.start.setPosition(Point2D.create(300, 168));
-      PistolSlut.start.setColor("#fff");
-      PistolSlut.renderContext.add(PistolSlut.start);
+			this.startTexts = []
+			this.addStartText("PRESS Z", 285, 168);
+			this.addStartText("TO START", 412, 168);
 
       var flashText = function() {
-				if (!PistolSlut.showStart)
+				if (!PistolSlut.showStartTexts)
 				{
-				   PistolSlut.start.setDrawMode(TextRenderer.DRAW_TEXT);
-				   PistolSlut.showStart = true;
-				   PistolSlut.intv.restart();
+					PistolSlut.showStartTexts = true;
+					for(var i in PistolSlut.startTexts)
+				  	PistolSlut.startTexts[i].setDrawMode(TextRenderer.DRAW_TEXT);
 				}
 				else
 				{
-				   PistolSlut.start.setDrawMode(TextRenderer.NO_DRAW);
-				   PistolSlut.showStart = false;
-				   PistolSlut.intv.restart();
+					PistolSlut.showStartTexts = false;
+					for(var i in PistolSlut.startTexts)
+				  	PistolSlut.startTexts[i].setDrawMode(TextRenderer.NO_DRAW);
 				}
+				
+				PistolSlut.startTextsTimer.restart();
       };
-      PistolSlut.intv = Timeout.create("startkey", 1000, flashText);
+
+      this.startTextsTimer = Timeout.create("startkey", 1000, flashText);
 		},
 	
 		loadLevelBasics: function() {
 			// load level
-	    this.level = PistolSlut.levelLoader.getLevel("level1", PistolSlut, this.fieldWidth);
+	    this.level = this.levelLoader.getLevel("level1", this, this.fieldWidth);
 			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
 			this.renderContext.setWorldScale(this.areaScale);
 			Engine.getDefaultContext().add(this.renderContext);
@@ -194,9 +203,14 @@ Engine.initObject("PistolSlut", "Game", function() {
 	
 		destroyStartScreen: function() {
 			this.isStartScreen = false;
-			this.intv.destroy();
-			this.renderContext.remove(PistolSlut.start);
-			this.start = null;
+			this.startTextsTimer.destroy();
+			for(var i in this.startTexts)
+			{
+				var startText = this.startTexts[i];
+				this.renderContext.remove(startText);
+				this.startText = null;
+			}
+			this.startTexts = null;
 		},
 	
 		play: function() {

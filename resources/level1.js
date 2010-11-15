@@ -25,12 +25,12 @@
 
 		spriteFurniture: [
 			{ x: 0, y: 328, spriteName: "fenceleft.gif" },
-			{ x: 170, y: 368, spriteName: "bin.gif" },
-			{ x: 370, y: 368, spriteName: "bin.gif" },
-			{ x: 775, y: 369, spriteName: "sandbags.gif" },
-			{ x: 1100, y: 368, spriteName: "bin.gif" },
-			{ x: 2315, y: 368, spriteName: "bin.gif" },
-			{ x: 2665, y: 368, spriteName: "bin.gif" },
+			{ x: 170, y: 369, spriteName: "bin.gif" },
+			{ x: 370, y: 369, spriteName: "bin.gif" },
+			{ x: 775, y: 370, spriteName: "sandbags.gif" },
+			{ x: 1100, y: 369, spriteName: "bin.gif" },
+			{ x: 2315, y: 369, spriteName: "bin.gif" },
+			{ x: 2665, y: 369, spriteName: "bin.gif" },
 			{ x: 3989, y: 328, spriteName: "fenceright.gif" },
 		],
 		
@@ -39,7 +39,7 @@
 		],
 		
 		enemies: [
-			{ name: "enemy", clazz: Enemy, x: 390, y: 350, health: 4, weaponName: "M9", canThrowGrenades: false },
+			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "Mac10", canThrowGrenades: false, shootDelay: 100 },
 			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
