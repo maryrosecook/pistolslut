@@ -47,23 +47,41 @@ Engine.initObject("Grenade", "Ordinance", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture || obj instanceof Lift)
-			{
-				if(this.field.collider.objsColliding(this, obj))
-					return this.bounce(obj);
-			}
+				return this.handleBounce(obj);
 			
 			return ColliderComponent.CONTINUE;
 		},
 
+		getCenter: function(obj) {
+			var objCentre = Point2D.create(obj.getPosition());
+			objCentre.setX(objCentre.x + (obj.getBoundingBox().dims.x / 2));
+			objCentre.setY(objCentre.y + (obj.getBoundingBox().dims.y / 2));
+			return objCentre;
+		},
+
 		// bounce the grenade		
 		bounciness: 0.5,
-		bounce: function(objHit) {
-			var pointOfImpactData = this.field.collider.pointOfImpact(this, objHit);
-			if(pointOfImpactData != null)
+		handleBounce: function(obj) {
+			if(this.field.collider.objsColliding(this, obj) == true)
 			{
-				var sideHit = pointOfImpactData[1];
-				this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
+				var pointOfImpactData = this.field.collider.pointOfImpact(this, obj);
+				if(pointOfImpactData != null)
+				{
+					var sideHit = pointOfImpactData[1];
+					var collisionPoint = pointOfImpactData[0];				
+					this.field.collider.moveToEdge(this, collisionPoint, sideHit);
+					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
+
+					return ColliderComponent.STOP;
+				}
+				else
+				{
+					this.sweepPosition();
+					return this.handleBounce(obj);
+				}
 			}
+			
+			return ColliderComponent.CONTINUE;
 		},
 	
 		shrapnelCount: 30,

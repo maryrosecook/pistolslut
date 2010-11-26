@@ -13,6 +13,7 @@ Engine.initObject("Collider", "Base", function() {
 	
 		inLineOfFire: function(shooter, target, inSafetyMargin) {
 			var inLine = false;
+			
 			var safetyMargin = 0;
 			if(inSafetyMargin != null)
 				safetyMargin = inSafetyMargin;
@@ -92,6 +93,18 @@ Engine.initObject("Collider", "Base", function() {
 			else
 				return false;
 		},
+		
+		moveToEdge: function(obj, collisionPoint, sideHit) {
+			console.log(obj, collisionPoint.x, collisionPoint.y, sideHit);
+			if(sideHit == Collider.TOP)
+				obj.getPosition().setY(collisionPoint.y - obj.getBoundingBox().dims.y);
+			else if(sideHit == Collider.BOTTOM)
+				obj.getPosition().setY(collisionPoint.y);
+			else if(sideHit == Collider.LEFT)
+				obj.getPosition().setX(collisionPoint.x - obj.getBoundingBox().dims.x);
+			else if(sideHit == Collider.RIGHT)
+				obj.getPosition().setX(collisionPoint.x);
+		},
 	
 		// returns point that moving obj hit staticObj
 		pointOfImpact: function(movingObj, staticObj) {
@@ -100,7 +113,7 @@ Engine.initObject("Collider", "Base", function() {
 			var mODims = movingObj.getBoundingBox().dims;
 			var sOPos = staticObj.getPosition();
 			var sODims = staticObj.getBoundingBox().dims;
-	
+							
 			// staticobj on bottom
 			var p1 = Point2D.create(mOPrevPos.x,mOPrevPos.y + mODims.y);
 			var p2 = Point2D.create(mOCurPos.x,mOCurPos.y + mODims.y);
@@ -132,7 +145,7 @@ Engine.initObject("Collider", "Base", function() {
 			var p4 = Point2D.create(sOPos.x + sODims.x,sOPos.y + sODims.y);
 			if(Math2D.lineLineCollision(p1, p2, p3, p4))
 				return [Math2D.lineLineCollisionPoint(p1, p2, p3, p4), Collider.BOTTOM];
-		
+			
 			return null; // no intersection
 		},
 		

@@ -19,6 +19,13 @@ Engine.initObject("Physics", "Base", function() {
 			var d = vector.angleBetween(surfaceNormal);
 			return this.adjustForSide(d, sideHit);
 		},
+		
+		speed: function(velocity) {
+			if(velocity.x > 0 || velocity.y > 0)
+				return Math.sqrt((velocity.x * velocity.x) + (velocity.y * velocity.y));
+			else
+				return 0;
+		},
 
 		getSurfaceNormal: function(side) {
 			if(side == Collider.LEFT)

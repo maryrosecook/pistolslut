@@ -59,6 +59,15 @@ Engine.initObject("Mover", "Object2D", function() {
 			this.base(point);
 			this.getComponent("move").setPosition(point);
 		},
+		
+		// moves obj back along its recent path in velocity/SWEEP_DIVISIONS increments
+		sweepPosition: function() {
+			if(this.getPosition().x > 0 && this.getPosition().y > 0)
+			{
+				this.getPosition().setX(this.getPosition().x - (this.getVelocity().x / Mover.SWEEP_DIVISIONS));
+				this.getPosition().setY(this.getPosition().y - (this.getVelocity().y / Mover.SWEEP_DIVISIONS));
+			}
+		},
 
 		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
 		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
@@ -86,6 +95,7 @@ Engine.initObject("Mover", "Object2D", function() {
 	}, { // Static
 		getClassName: function() { return "Mover"; },
 		
+		SWEEP_DIVISIONS: 5.0,
 	});
 
 	return Mover;

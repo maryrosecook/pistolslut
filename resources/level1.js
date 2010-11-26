@@ -16,7 +16,6 @@
 			{ bitmapImage: "fenceleft.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
 			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
-			{ bitmapImage: "floorpiece.gif", sprites: { "main": { "f": [0, 0, 420, 34] } } },
 			{ bitmapImage: "lantern.png", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },		
 			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
@@ -39,7 +38,7 @@
 		],
 		
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "Mac10", canThrowGrenades: false, shootDelay: 100 },
+			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "M9", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
