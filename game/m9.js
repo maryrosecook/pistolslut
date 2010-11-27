@@ -1,6 +1,6 @@
 Engine.initObject("M9", "Weapon", function() {
 	var M9 = Weapon.extend({
-		
+
 		constructor: function(owner) {
 			this.clipCapacity = 10;
 			this.base(owner, owner.field, M9.getClassName());
@@ -12,18 +12,19 @@ Engine.initObject("M9", "Weapon", function() {
 			this.dischargeDelay = 0;
 			this.timeRequiredForDeadAim = 1000;
 			this.ordinanceBaseSpeed = 15;
+            this.hasMuzzleFlash = false;
 		},
-		
+
 		ordinancePhysics: function() {
 			return this.recoil(M9.BASE_SPREAD, M9.UNSTEADINESS).mul(this.ordinanceSpeed(this.ordinanceBaseSpeed, this.projectileVelocityVariability));
 		},
-		
+
 		generateOrdinance: function() { return Bullet.create(this); },
-		
+
 	}, {
 		getClassName: function() { return "M9"; },
 
-		UNSTEADINESS: 3,	
+		UNSTEADINESS: 3,
 		BASE_SPREAD: 2,
 	});
 

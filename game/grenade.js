@@ -8,12 +8,12 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		timeThrown: null,
 		pinTimer: 3000, // how long the grande takes to explode
 		safeDistance: 40,
-		
+
 		constructor: function(weapon) {
 			this.base(weapon);
 			this.timeThrown = new Date().getTime();
 		},
-		
+
 		setupGraphics: function() {
 			this.add(SpriteComponent.create("draw"));
 			this.addSprite("main", this.field.spriteLoader.getSprite("grenade.gif", "main"));
@@ -27,18 +27,12 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		},
 
 		update: function(renderContext, time) {
-			if (!this.field.inView(this))
-			{
-				this.destroy();
-				return;
-			}
-			
 			if(this.timeThrown + this.pinTimer < new Date().getTime())
 			{
 				this.explode();
 				return;
 			}
-			
+
 			this.field.applyGravity(this);
 			renderContext.pushTransform();
 			this.base(renderContext, time);
@@ -48,7 +42,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		onCollide: function(obj) {
 			if(obj instanceof Furniture || obj instanceof Lift)
 				return this.handleBounce(obj);
-			
+
 			return ColliderComponent.CONTINUE;
 		},
 
@@ -59,7 +53,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 			return objCentre;
 		},
 
-		// bounce the grenade		
+		// bounce the grenade
 		bounciness: 0.5,
 		handleBounce: function(obj) {
 			if(this.field.collider.objsColliding(this, obj) == true)
@@ -68,7 +62,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 				if(pointOfImpactData != null)
 				{
 					var sideHit = pointOfImpactData[1];
-					var collisionPoint = pointOfImpactData[0];				
+					var collisionPoint = pointOfImpactData[0];
 					this.field.collider.moveToEdge(this, collisionPoint, sideHit);
 					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
 
@@ -80,16 +74,16 @@ Engine.initObject("Grenade", "Ordinance", function() {
 					return this.handleBounce(obj);
 				}
 			}
-			
+
 			return ColliderComponent.CONTINUE;
 		},
-	
+
 		shrapnelCount: 30,
 		shrapnelTTL: 500,
 		explode: function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
-			
+
 			this.destroy();
 		},
 	}, {

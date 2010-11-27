@@ -15,7 +15,7 @@ Engine.initObject("Furniture", "Mover", function() {
 			// Add components to move and draw
 			this.add(Mover2DComponent.create("move"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
-			
+
 			this.setPosition(position);
 			this.getComponent("move").setCheckLag(false);
 		},
@@ -29,14 +29,15 @@ Engine.initObject("Furniture", "Mover", function() {
 		finalSetup: function() {
 			this.rect = new CheapRect(this);
 		},
-		
+
 		shot: function(projectile) {
 			this.particleRicochet(projectile);
 		},
-		
-		ricochetFlashSpread: 50,
+
+		ricochetFlashSpread: 10,
 		ricochetParticleCount: 10,
 		ricochetParticleTTL: 300,
+        ricochetBaseSpeed: 1,
 		particleRicochet: function(projectile) {
 			var positionData = this.field.collider.pointOfImpact(projectile, this);
 			if(positionData != null)
@@ -44,17 +45,18 @@ Engine.initObject("Furniture", "Mover", function() {
 				var particles = [];
 				for(var x = 0; x < this.ricochetParticleCount; x++)
 					particles[x] = BurnoutParticle.create(Point2D.create(positionData[0].x, positionData[0].y),
-																								this.field.physics.reverseAngle(projectile, positionData[1]), // reversed angle
-																								this.ricochetFlashSpread,
-																								this.ricochetParticleTTL);
-					
+														  this.field.physics.reverseAngle(projectile, positionData[1]), // reversed angle
+														  this.ricochetFlashSpread,
+														  this.ricochetParticleTTL,
+                                                          this.ricochetBaseSpeed);
+
 				this.field.pEngine.addParticles(particles);
 			}
 		},
 
 	}, {
 		getClassName: function() { return "Furniture"; },
-		
+
 	});
 
 	return Furniture;
