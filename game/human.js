@@ -16,7 +16,7 @@ Engine.initObject("Human", "Mover", function() {
 		stateOfBeing: null,
 		health: -1,
 		standState: null,
-		canThrowGrenades: false,
+     	canThrowGrenades: false,
 		direction: null,
 		lift: null,
 
@@ -82,7 +82,7 @@ Engine.initObject("Human", "Mover", function() {
 			this.updateSprite();
 
 			this.field.applyGravity(this);
-			this.handleLift();
+            this.handleLift();
 			this.handleFriction();
 			this.setPosition(this.getPosition().add(this.getVelocity()));
 		},
@@ -304,9 +304,7 @@ Engine.initObject("Human", "Mover", function() {
 					this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
 			}
 			else if(obj instanceof Ordinance)
-			{
 				this.field.notifier.post(Human.INCOMING, obj);
-			}
 
 			return ColliderComponent.CONTINUE;
 		},

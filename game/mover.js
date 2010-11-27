@@ -33,6 +33,7 @@ Engine.initObject("Mover", "Object2D", function() {
 			  var newSprite = this.sprites[spriteKey];
 				if(this.currentSpriteKey != null)
 				{
+                    console.log(spriteKey)
 					var heightAdjustment = this.getSprite().getBoundingBox().dims.y - newSprite.getBoundingBox().dims.y;
 					if(heightAdjustment != 0)
 						this.getPosition().setY(this.getPosition().y + heightAdjustment);
@@ -40,7 +41,7 @@ Engine.initObject("Mover", "Object2D", function() {
 
 			  this.setBoundingBox(newSprite.getBoundingBox());
 			  this.getComponent("draw").setSprite(newSprite);
-		
+
 				newSprite.play(Engine.worldTime);
 				this.currentSpriteKey = spriteKey;
 			}
@@ -49,7 +50,7 @@ Engine.initObject("Mover", "Object2D", function() {
 		getSprite: function() {
 			return this.getComponent("draw").getSprite();
 		},
-	
+
 		addSprite: function(name, sprite) {
 			this.sprites[name] = sprite;
 		},
@@ -59,7 +60,7 @@ Engine.initObject("Mover", "Object2D", function() {
 			this.base(point);
 			this.getComponent("move").setPosition(point);
 		},
-		
+
 		// moves obj back along its recent path in velocity/SWEEP_DIVISIONS increments
 		sweepPosition: function() {
 			if(this.getPosition().x > 0 && this.getPosition().y > 0)
@@ -83,10 +84,10 @@ Engine.initObject("Mover", "Object2D", function() {
 			this.base(scale);
 			this.getComponent("move").setScale(scale);
 		},
-	
+
 		getVelocity: function() { return this.getComponent("move").getVelocity(); },
 		setVelocity: function(vector) { return this.getComponent("move").setVelocity(vector); },
-	
+
 		release: function() {
 			this.base();
 			this.sprites = {};
@@ -94,7 +95,7 @@ Engine.initObject("Mover", "Object2D", function() {
 		},
 	}, { // Static
 		getClassName: function() { return "Mover"; },
-		
+
 		SWEEP_DIVISIONS: 5.0,
 	});
 

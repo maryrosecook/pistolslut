@@ -30,9 +30,9 @@ Engine.initObject("Bullet", "Ordinance", function() {
 			}
 			else if(obj instanceof Human) {
 				if(obj.isAlive())
-				{	
+				{
 					if(this.field.collider.objsColliding(this, obj))
-				  {
+				    {
 						obj.shot(this);
 						this.destroy();
 						return ColliderComponent.STOP;
@@ -43,7 +43,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 		},
 	}, {
 		getClassName: function() { return "Bullet"; },
-		
+
 		SHAPE: [ new Point2D(0, 0), new Point2D(1, 0), new Point2D(0,  1), new Point2D(1,  1)],
 	});
 
