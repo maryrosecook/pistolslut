@@ -81,10 +81,10 @@ Engine.initObject("Weapon", "Base", function() {
 			}
 		},
 
-		muzzleFlashSpread: 10,
+		muzzleFlashSpread: 5,
 		muzzleParticleCount: 10,
 		muzzleParticleTTL: 500,
-        muzzleParticleBaseSpeed: 5,
+        muzzleParticleBaseSpeed: 7,
 		muzzleFlash: function() {
             if(this.hasMuzzleFlash == true)
             {
