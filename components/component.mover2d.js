@@ -63,7 +63,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    restingVelocity: null,
    lagAdjustment: null,
    checkLag: null,
-   
+
    /**
     * @private
     */
@@ -127,7 +127,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
       if (!this.isResting()) {
          this.lPos.set(this.getPosition());
          var rot = this.getRotation();
-   
+
          // If we've just come into the world, we can short circuit with a
          // quick addition of the velocity.
          if (this.lastTime == -1)
@@ -141,12 +141,13 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
                // specified until velocity is zero, or less than zero
                var invVelocity = Vector2D.create(this.velocity).neg();
                invVelocity.mul(this.getVelocityDecay());
-   
+
                this.velocity.add(invVelocity);
 					invVelocity.destroy();
             }
-   
+
             var oldVel = Vector2D.create(this.velocity);
+
             this.velocity.add(this.getAcceleration());
             this.velocity.add(this.getGravity());
             if (this.maxVelocity != -1 && this.velocity.len() > this.maxVelocity) {
@@ -167,14 +168,14 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
             this.setRotation(rot + this.angularVelocity * (lag));
 				vz.destroy();
          }
-         
-         // Check rest state  
+
+         // Check rest state
          if (this.getCheckRestState()) {
             if (this.getVelocity().len() < this.getRestingVelocity()) {
                this.setVelocity(Point2D.ZERO);
                this.atRest = true;
             }
-         }   
+         }
       }
 
       this.lastTime = time;
@@ -190,7 +191,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    setCheckLag: function(state) {
       this.checkLag = state;
    },
-   
+
    /**
     * Returns <tt>true</tt> if calculations should determine time lag and adjust.
     * @return {Boolean}
@@ -209,7 +210,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
          this.lagAdjustment = lagAdj;
       }
    },
-   
+
    /**
     * Get the value by which calculations are adjusted for time lag.
     * @return {Number} The adjustment value
@@ -237,7 +238,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getVelocity: function() {
       return this.velocity;
    },
-   
+
    /**
     * Returns <tt>true</tt> if the component is in a resting state.
     * @return {Boolean}
@@ -245,7 +246,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    isResting: function() {
       return this.atRest;
    },
-   
+
    /**
     * Setting this to <tt>true</tt> will stop further movement calculations
     * from occuring.  Marks the object as being "at rest".
@@ -255,7 +256,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    setResting: function(state) {
       this.atRest = state;
    },
-   
+
    /**
     * Get the magnitude at which velocity is determined to be close enough to
     * zero to be "at rest".
@@ -264,7 +265,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getRestingVelocity: function() {
       return this.restingVelocity;
    },
-   
+
    /**
     * Set the magnitude of velocity which determines if the object is "at rest".
     *
@@ -273,7 +274,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    setRestingVelocity: function(mag) {
       this.restingVelocity = mag;
    },
-   
+
    /**
     * If set to <tt>true</tt>, the component will check to see if the
     * velocity magnitude has dropped below a defined rate.  When the
@@ -290,7 +291,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
          this.setResting(false);
       }
    },
-   
+
    /**
     * Determine if the component should check to see if the velocity has
     * dropped below a level which would indicate "at rest".
@@ -299,9 +300,9 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getCheckRestState: function() {
       return this.checkRest;
    },
-   
+
    /**
-    * Set the acceleration vector.  Acceleration will be constantly applied to 
+    * Set the acceleration vector.  Acceleration will be constantly applied to
     * the last position.
     *
     * @param {Vector2D} The acceleration vector
@@ -310,7 +311,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
       this.acceleration.set(vector);
       this.atRest = false;
    },
-   
+
    /**
     * Get the acceleration vector.
     * @return {Vector2D} The acceleration vector
@@ -318,7 +319,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getAcceleration: function() {
       return this.acceleration;
    },
-   
+
    /**
     * Set the vector of gravity.
     * @param vector {Vector2D} The gravity vector
@@ -327,7 +328,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
       this.gravity.set(vector);
       this.atRest = false;
    },
-   
+
    /**
     * Get the gravity vector
     * @return {Vector2D} The gravity vector
@@ -335,7 +336,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getGravity: function() {
       return this.gravity;
    },
-   
+
    /**
     * Set the mass of the object which can be subsequently used in
     * calculations like friction and energy transfer.
@@ -345,7 +346,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    setMass: function(mass) {
       this.mass = mass;
    },
-   
+
    /**
     * Get the mass of the object.
     * @return {Number} The mass of the object
@@ -353,16 +354,16 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getMass: function() {
       return this.mass;
    },
-   
+
    /**
-    * Set the maximum velocity.  Setting this value to <tt>zero</tt> indicates that 
+    * Set the maximum velocity.  Setting this value to <tt>zero</tt> indicates that
     * there is no maximum velocity.
     * @param {Number} The maximum velocity
     */
    setMaxVelocity: function(maxVel) {
       this.maxVelocity = maxVel;
    },
-   
+
    /**
     * Get the maximum velocity.
     * @return {Number} The maximum velocity
@@ -372,8 +373,8 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    },
 
    /**
-    * Set the decay rate at which the velocity will approach zero.  
-    * You can use this value to cause a moving object to eventually 
+    * Set the decay rate at which the velocity will approach zero.
+    * You can use this value to cause a moving object to eventually
     * stop moving. (e.g. friction)
     *
     * @param decay {Number} The rate at which velocity decays
@@ -406,7 +407,7 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getAngularVelocity: function() {
       return this.angularVelocity;
    }
-}, /** @scope Mover2DComponent.prototype */{ 
+}, /** @scope Mover2DComponent.prototype */{
    /**
     * Get the class name of this object
     * @return {String} "Mover2DComponent"
@@ -414,13 +415,13 @@ var Mover2DComponent = Transform2DComponent.extend(/** @scope Mover2DComponent.p
    getClassName: function() {
       return "Mover2DComponent";
    },
-   
+
    /**
     * The default velocity magnitude considered to be "at rest"
     * @type {Number}
     */
    DEFAULT_RESTING_VELOCITY: 0.2,
-   
+
    /**
     * The default adjustment made to calculations when a lag occurs between the last time
     * the component was updated and the current time.

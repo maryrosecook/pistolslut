@@ -235,12 +235,6 @@ Engine.initObject("Human", "Mover", function() {
 			this.walking = false;
 		},
 
-		// holds human at passed X
-		block: function(newX) {
-			if(newX != null)
-				this.getPosition().setX(newX);
-		},
-
 		endFall: function(groundObj) {
 			this.getPosition().setY(groundObj.getPosition().y - this.getBoundingBox().dims.y);
 			this.getVelocity().setY(0);
@@ -303,6 +297,17 @@ Engine.initObject("Human", "Mover", function() {
 				else if(this.field.collider.aOnRightAndBumpingB(this, obj))
 					this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
 			}
+            else if(obj instanceof Barrel && this.field.collider.objsColliding(this, obj))
+            {
+				if(this.field.collider.aFallingThroughB(this, obj))
+					this.endFall(obj);
+				else if(this.field.collider.aOnBottomAndBumpingB(this, obj)) // unlikely
+					this.endRise(obj);
+				else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
+					this.block(obj.getPosition().x - this.getBoundingBox().dims.x);
+				else if(this.field.collider.aOnRightAndBumpingB(this, obj))
+					this.block(obj.getPosition().x + obj.getBoundingBox().dims.x);
+            }
 			else if(obj instanceof Ordinance)
 				this.field.notifier.post(Human.INCOMING, obj);
 

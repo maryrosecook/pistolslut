@@ -17,6 +17,7 @@
 			{ bitmapImage: "bin.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "sandbags.gif", sprites: { "main": { "f": [0, 0, 18, 26] } } },
 			{ bitmapImage: "lantern.png", sprites: { "main": { "f": [0, 0, 14, 13] } } },
+			{ bitmapImage: "barrel.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },
 			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
 			{ bitmapImage: "fenceright.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
@@ -71,6 +72,10 @@
 			{ name: "longbuildinglift", startX: 2261, startY: 400, distance: 304 },
 		],
 
+        barrels: [
+            { x: 2500, y: 69 },
+        ],
+
 		parallaxes: [
 			{
 				name: "farthestlight", x: 400, y: 367, scrollAttenuation: 0.8,
@@ -103,7 +108,7 @@
 			},
 			{
 				name: "longbuilding", x: 2260, y: 96, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 440, 300] } } }
+				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 458, 300] } } }
 			},
 			{
 				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0, zIndex: 2000,

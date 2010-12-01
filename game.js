@@ -49,6 +49,7 @@ Game.load("/game/trigger.js");
 Game.load("/game/crosshair.js");
 Game.load("/game/grenadelauncher.js");
 Game.load("/game/lift.js");
+Game.load("/game/barrel.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -57,7 +58,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 	 */
 	var PistolSlut = Game.extend({
 
-		constructor: null,
+        constructor: null,
 
 		renderContext: null,
 
@@ -70,22 +71,22 @@ Engine.initObject("PistolSlut", "Game", function() {
 		collisionModel: null,
 
 		collider: null,
-		physics: null,		
+		physics: null,
 		notifier: null,
-	
+
 		groundY: 395,
 		playerStartPosY: 344,
 		alwaysVisibleZIndex: 2001,
 		frontZIndex: 2000,
 		moverZIndex: 1000,
-	
+
 		fieldWidth: 700,
 		fieldHeight: 430,
 		level: null,
-	
+
 		meters: [],
 		ammoMeter: null,
-	
+
 		debug: true,
 		playerObj: null,
 
@@ -97,9 +98,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 		spriteLoader: null,
 		levelLoader: null,
 		loadTimeout: null,
-	
+
 		gravityVector: Vector2D.create(0, 0.6),
-		
+
 		/**
 		 * Called to set up the game, download any resources, and initialize
 		 * the game to its running state.
@@ -109,11 +110,11 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			// Set the FPS of the game
 			Engine.setFPS(this.engineFPS);
-		
+
 			// Create the 2D context
 			this.playerCenterX = this.fieldWidth / 4;
-		
-		  this.imageLoader = ImageLoader.create();
+
+		    this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
 
@@ -122,37 +123,36 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			// load level resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
-		
+
 			// Don't start until all of the resources are loaded
 			PistolSlut.loadTimeout = Timeout.create("wait", 250, this.waitForResources);
 			this.waitForResources();
 		},
-	
+
 		onKeyPress: function(event) {
 			if(PistolSlut.isStartScreen == true)
     		PistolSlut.play();
 		},
-		
+
 		addStartText: function(text, x, y) {
 			this.startTexts.push(TextRenderer.create(VectorText.create(), text, 1));
-      this.startTexts[this.startTexts.length-1].setPosition(Point2D.create(x, y));
-      this.startTexts[this.startTexts.length-1].setColor("#fff");
-      this.renderContext.add(this.startTexts[this.startTexts.length-1]);
+            this.startTexts[this.startTexts.length-1].setPosition(Point2D.create(x, y));
+            this.startTexts[this.startTexts.length-1].setColor("#fff");
+            this.renderContext.add(this.startTexts[this.startTexts.length-1]);
 		},
-		
+
 		// an initial pause screen
 		startScreen: function() {
-    	this.isStartScreen = true;
-
+    	    this.isStartScreen = true;
 			this.loadLevelBasics(); // just enough for a cogent start screen
-			
-      EventEngine.setHandler(document, "keypress", this.onKeyPress);
+
+            EventEngine.setHandler(document, "keypress", this.onKeyPress);
 
 			this.startTexts = []
 			this.addStartText("PRESS Z", 285, 168);
 			this.addStartText("TO START", 412, 168);
 
-      var flashText = function() {
+            var flashText = function() {
 				if (!PistolSlut.showStartTexts)
 				{
 					PistolSlut.showStartTexts = true;
@@ -165,42 +165,42 @@ Engine.initObject("PistolSlut", "Game", function() {
 					for(var i in PistolSlut.startTexts)
 				  	PistolSlut.startTexts[i].setDrawMode(TextRenderer.NO_DRAW);
 				}
-				
-				PistolSlut.startTextsTimer.restart();
-      };
 
-      this.startTextsTimer = Timeout.create("startkey", 1000, flashText);
+				PistolSlut.startTextsTimer.restart();
+            };
+
+            this.startTextsTimer = Timeout.create("startkey", 1000, flashText);
 		},
-	
-		loadLevelBasics: function() {
-			// load level
-	    this.level = this.levelLoader.getLevel("level1", this, this.fieldWidth);
-			this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);		
-			this.renderContext.setWorldScale(this.areaScale);
-			Engine.getDefaultContext().add(this.renderContext);
-			
+
+        loadLevelBasics: function() {
+		    // load level
+	        this.level = this.levelLoader.getLevel("level1", this, this.fieldWidth);
+	        this.renderContext = ScrollingBackground.create("bkg", this.level, this.fieldWidth, this.fieldHeight);
+		    this.renderContext.setWorldScale(this.areaScale);
+		    Engine.getDefaultContext().add(this.renderContext);
+
 			this.loadComponents();
-			
+
 			// load rest of level
 			this.level.addObjects(this.renderContext);
 			this.renderContext.setBackgroundColor(this.level.sky.getSkyColor());
 		},
-		
+
 		loadComponents: function() {
 			// We'll need something to detect collisions
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 1);
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
-			
+
 			// inter object event notifier
 			this.notifier = NotifierComponent.create("notifier");
-			
+
 			// Start up the particle engine
 			this.pEngine = ParticleEngine.create();
 			this.pEngine.setMaximum(100);
 			this.renderContext.add(this.pEngine);
 		},
-	
+
 		destroyStartScreen: function() {
 			this.isStartScreen = false;
 			this.startTextsTimer.destroy();
@@ -212,40 +212,40 @@ Engine.initObject("PistolSlut", "Game", function() {
 			}
 			this.startTexts = null;
 		},
-	
+
 		play: function() {
 			this.destroyStartScreen();
-			
+
 			this.playerObj = Player.create(this, this.playerStartPosY);
 			this.renderContext.add(this.playerObj);
-			
+
 			// add meters
 			this.ammoMeter = new Meter(this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(5, 7), "#fff");
 			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
 			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
 			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
 			this.meters.push(this.ammoMeter);
-			
+
 			this.healthMeter = new Meter(this, this.renderContext, this.playerObj.health, Point2D.create(5, 17), "#f00");
 			this.notifier.subscribe(Human.SHOT, this.healthMeter, this.healthMeter.decrement);
 			this.meters.push(this.healthMeter);
 		},
-	
+
 		applyGravity: function(obj) {
 			if(!this.collider.colliding(obj, this.collider.getPCL(obj), Furniture))
 				obj.getVelocity().add(this.gravityVector);
-		},
-		
-	  waitForResources: function(){
-			if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
-			{
-				PistolSlut.loadTimeout.destroy();
+        },
+
+	    waitForResources: function() {
+	        if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
+		    {
+			    PistolSlut.loadTimeout.destroy();
 				PistolSlut.startScreen();
 				return;
-		  }
-		  else
-		  	PistolSlut.loadTimeout.restart();
-	  },
+		    }
+		    else
+		  	    PistolSlut.loadTimeout.restart();
+	    },
 
 		/**
 		 * Called when the game is being shut down to allow the game
@@ -259,7 +259,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		inView: function(obj) {
 			return (new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight)).isIntersecting(new CheapRect(obj));
 		},
-	
+
 		// updates the position of the view frame
 		updateFramePosition: function(vector, centralObj) {
 			var centralObjWindowX = centralObj.getRenderPosition().x;
@@ -269,7 +269,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 				movingPastCentrePoint = true;
 			else if(vector.x < 0 && centralObjWindowX < this.playerCenterX)
 				movingPastCentrePoint = true;
-			
+
 			var potentialNewHorizontalScroll = this.renderContext.getHorizontalScroll() + vector.x;
 			if(movingPastCentrePoint
 				 && potentialNewHorizontalScroll >= this.level.minScroll
@@ -283,14 +283,14 @@ Engine.initObject("PistolSlut", "Game", function() {
 					var parallax = this.level.parallaxes[i];
 					parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
 				}
-				
+
 				// move meters
 				for(var i in this.meters)
 				{
 					var meter = this.meters[i];
 					meter.updatePosition(vector.x);
 				}
-				
+
 				// move lanterns (they are like little parallaxes)
 				for(var i in this.level.lanterns)
 				{

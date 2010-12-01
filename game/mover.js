@@ -27,13 +27,12 @@ Engine.initObject("Mover", "Object2D", function() {
 			this.base();
 		},
 
-	  setSprite: function(spriteKey) {
+	    setSprite: function(spriteKey) {
 			if(spriteKey != this.currentSpriteKey)
 			{
 			  var newSprite = this.sprites[spriteKey];
 				if(this.currentSpriteKey != null)
 				{
-                    console.log(spriteKey)
 					var heightAdjustment = this.getSprite().getBoundingBox().dims.y - newSprite.getBoundingBox().dims.y;
 					if(heightAdjustment != 0)
 						this.getPosition().setY(this.getPosition().y + heightAdjustment);
@@ -45,7 +44,7 @@ Engine.initObject("Mover", "Object2D", function() {
 				newSprite.play(Engine.worldTime);
 				this.currentSpriteKey = spriteKey;
 			}
-	  },
+	    },
 
 		getSprite: function() {
 			return this.getComponent("draw").getSprite();
@@ -87,6 +86,12 @@ Engine.initObject("Mover", "Object2D", function() {
 
 		getVelocity: function() { return this.getComponent("move").getVelocity(); },
 		setVelocity: function(vector) { return this.getComponent("move").setVelocity(vector); },
+
+		// holds obj at passed X
+		block: function(newX) {
+			if(newX != null)
+				this.getPosition().setX(newX);
+		},
 
 		release: function() {
 			this.base();

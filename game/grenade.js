@@ -6,7 +6,7 @@ Engine.include("/engine/engine.object2d.js");
 Engine.initObject("Grenade", "Ordinance", function() {
 	var Grenade = Ordinance.extend({
 		timeThrown: null,
-		pinTimer: 3000, // how long the grande takes to explode
+		pinTimer: 3000, // how long the grenade takes to explode
 		safeDistance: 40,
 
 		constructor: function(weapon) {
