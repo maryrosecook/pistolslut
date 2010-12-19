@@ -50,6 +50,8 @@ Game.load("/game/crosshair.js");
 Game.load("/game/grenadelauncher.js");
 Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
+Game.load("/game/loader.json.js");
+Game.load("/game/machine.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -97,6 +99,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		imageLoader: null,
 		spriteLoader: null,
 		levelLoader: null,
+        jsonLoader: null,
 		loadTimeout: null,
 
 		gravityVector: Vector2D.create(0, 0.6),
@@ -117,12 +120,11 @@ Engine.initObject("PistolSlut", "Game", function() {
 		    this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
+            this.jsonLoader = JsonLoader.create();
 
-			// load sprite resources
-			this.spriteLoader.load("human", this.getFilePath("resources/human.js"));
-
-			// load level resources
-			this.levelLoader.load("level1", this.getFilePath("resources/level1.js"));
+			this.spriteLoader.load("human", this.getFilePath("resources/human.js")); // load sprite resources
+			this.levelLoader.load("level1", this.getFilePath("resources/level1.js")); // load level resources
+            this.jsonLoader.load("enemybehaviour", this.getFilePath("resources/enemybehaviourtree.js"));
 
 			// Don't start until all of the resources are loaded
 			PistolSlut.loadTimeout = Timeout.create("wait", 250, this.waitForResources);
@@ -237,7 +239,7 @@ Engine.initObject("PistolSlut", "Game", function() {
         },
 
 	    waitForResources: function() {
-	        if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
+	        if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady() && PistolSlut.jsonLoader.isReady())
 		    {
 			    PistolSlut.loadTimeout.destroy();
 				PistolSlut.startScreen();

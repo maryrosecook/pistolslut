@@ -17,12 +17,12 @@ var Enemy = Human.extend({
 		this.base(name, field, position, health, weaponName, canThrowGrenades);
 		if(shootDelay != null)
 			this.shootDelay = shootDelay;
-		
-		this.add(AIComponent.create("logic" + this.name, null, this.field, this));
+
+		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "resources/enemybehaviourtree.js"));
 	},
-	
+
 	getLogic: function() { return this.getComponent("logic" + this.name); },
-	
+
 	setupWeapons: function(weaponName) {
 		this.weapons.push(new M9(this));
 		this.weapons.push(new Mac10(this));
@@ -30,7 +30,7 @@ var Enemy = Human.extend({
 		this.weapons.push(new Mortar(this));
 		this.base(weaponName);
 	},
-	
+
 	die: function(ordinance) {
 		this.base(ordinance);
 		this.getLogic().removeFromHost();
@@ -38,14 +38,14 @@ var Enemy = Human.extend({
 		this.field.notifier.unsubscribe(Human.CLIP_EMPTY, this.getLogic());
 		this.field.notifier.unsubscribe(Human.RELOADED, this.getLogic());
 	},
-	
+
 	release: function() {
 		this.base();
 	}
 
 	}, {
 		getClassName: function() { return "Enemy"; },
-		
+
 	});
 
 	return Enemy;

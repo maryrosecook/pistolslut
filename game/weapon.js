@@ -141,12 +141,7 @@ Engine.initObject("Weapon", "Base", function() {
 		allowedToFire: function() {
 			if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
 				if(this.passSemiAutomaticCheck())
-				{
-					if(this.owner instanceof Player)
-						return true;
-					else if(this.owner.getLogic().shouldFire()) // enemy
-						return true;
-				}
+					return true;
 
 			return false;
 		},
