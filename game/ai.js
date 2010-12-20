@@ -11,7 +11,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.field = field;
 
             this.state = new Machine(this.field.jsonLoader.get("enemybehaviour")).generateTree(this);
-            console.log(this.state)
+
 			// subscribe to events the enemy cares about
 			this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
 			this.field.notifier.subscribe(Human.CLIP_EMPTY, this, this.notifyWeaponEmpty);
@@ -78,12 +78,12 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		isEnemyInSights: function() { return this.field.playerObj != null && this.field.inView(this.getHostObject()); },
 
 		execute: function(renderContext, time) {
-			var host = this.getHostObject();
             var newState = this.state.tick();
             if(newState !== null)
             {
-                //this.state = newState;
-                //this[this.state.identifier].call(this);
+                this.state = newState;
+                console.log(this.state, this.state.identifier)
+                this[this.state.identifier].call(this);
             }
 			// if(host.isCrouching()
 			// 	 && !host.weapon.isReloading()
@@ -96,7 +96,9 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		canShoot: function() {
             var host = this.getHostObject();
-			return this.host.weapon.allowedToFire() && this.isEnemyInSights() && !this.friendliesInLineOfFire() && !this.furnitureInLineOfFire();
+            //&& !this.furnitureInLineOfFire() - temporarily removed
+            console.log(this.host.weapon.allowedToFire(), this.isEnemyInSights(), !this.friendliesInLineOfFire())
+			return this.host.weapon.allowedToFire() && this.isEnemyInSights() && !this.friendliesInLineOfFire();
 		},
 
         canIdle: function() {

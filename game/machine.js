@@ -18,7 +18,7 @@ Engine.initObject("Machine", "Base", function() {
                 node = new State(subTreeJson.identifier, subTreeJson.strategy, parent, actor);
 
             for(var i in subTreeJson.children)
-                node.children.push(this.read(subTreeJson.children[i], node, actor));
+                node.children[node.children.length] = this.read(subTreeJson.children[i], node, actor);
 
             return node;
         },
@@ -35,7 +35,7 @@ Engine.initObject("Node", "Base", function() {
         identifier: null,
         strategy: null,
         parent: null,
-        children: [],
+        children: null,
         actor: null,
 
 		constructor: function(identifier, strategy, parent, actor) {
@@ -43,6 +43,7 @@ Engine.initObject("Node", "Base", function() {
             this.strategy = strategy;
             this.parent = parent;
             this.actor = actor;
+            this.children = [];
 	    },
 
         tick: function() {
@@ -50,14 +51,15 @@ Engine.initObject("Node", "Base", function() {
         },
 
         isRunnable: function() {
-            return this.actor["can" + this.identifier].call(this.actor);
+            var functionName = "can" + this.identifier[0].toUpperCase() + this.identifier.substring(1, this.identifier.length);
+            return this.actor[functionName].call(this.actor);
         },
 
         // returns first child that can run
         prioritised: function() {
             for(var i in this.children)
                 if(this.children[i].isRunnable())
-                    this.children[i].transition();
+                    return this.children[i].transition();
 
             return null;
         },
@@ -71,8 +73,8 @@ Engine.initObject("Node", "Base", function() {
 
 Engine.initObject("State", "Node", function() {
 	var State = Node.extend({
-        transition: function(newNode) {
-            return newNode;
+        transition: function() {
+            return this;
         },
 	}, {
 	  getClassName: function() { return "State"; }
