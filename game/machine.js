@@ -47,18 +47,39 @@ Engine.initObject("Node", "Base", function() {
 	    },
 
         tick: function() {
-            return this[this.strategy].call(this);
+            var nextState = this; // default is staying in same state
+
+            if(this.isAction() == true) // run an actual action
+            {
+                console.log("running action: ", this.identifier)
+                this.actor[this.identifier].call(this.actor); // run the action
+                nextState = this.parent; // hop back up the tree to continue
+            }
+            else
+            {
+                var potentialNextState = this[this.strategy].call(this); // try to get next state from children
+                if(potentialNextState !== null) // can't transfer to any children so hop up to parent
+                    nextState = potentialNextState;
+            }
+
+            console.log("transitioned to: ", this.identifier)
+            return nextState;
         },
 
-        isRunnable: function() {
+        isTransition: function() { return this.children.length > 0 || this instanceof Pointer; },
+        isAction: function() { return !this.isTransition(); },
+
+        // returns true if actor allowed to enter this state
+        can: function() {
             var functionName = "can" + this.identifier[0].toUpperCase() + this.identifier.substring(1, this.identifier.length);
+            console.log("running: ", functionName);
             return this.actor[functionName].call(this.actor);
         },
 
         // returns first child that can run
         prioritised: function() {
             for(var i in this.children)
-                if(this.children[i].isRunnable())
+                if(this.children[i].can())
                     return this.children[i].transition();
 
             return null;

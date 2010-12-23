@@ -1,7 +1,12 @@
 {
     identifier: "idle", strategy: "prioritised",
     children: [
-        { identifier: "shoot", strategy: "prioritised" },
-        { identifier: "stand", strategy: "prioritised" }.
+        {
+            identifier: "fight", strategy: "prioritised",
+            children: [
+                { identifier: "shoot", strategy: "prioritised" },
+                { identifier: "stand", strategy: "prioritised" },
+            ]
+        }
     ]
 }

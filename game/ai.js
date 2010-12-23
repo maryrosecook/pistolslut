@@ -78,13 +78,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		isEnemyInSights: function() { return this.field.playerObj != null && this.field.inView(this.getHostObject()); },
 
 		execute: function(renderContext, time) {
-            var newState = this.state.tick();
-            if(newState !== null)
-            {
-                this.state = newState;
-                console.log(this.state, this.state.identifier)
-                this[this.state.identifier].call(this);
-            }
+            this.state = this.state.tick();
+
 			// if(host.isCrouching()
 			// 	 && !host.weapon.isReloading()
 			// 	 && host.canStand()
@@ -94,24 +89,18 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			// this.turnTowardsPlayer();
 		},
 
+        //&& !this.furnitureInLineOfFire() - temporarily removed
 		canShoot: function() {
-            var host = this.getHostObject();
-            //&& !this.furnitureInLineOfFire() - temporarily removed
-            console.log(this.host.weapon.allowedToFire(), this.isEnemyInSights(), !this.friendliesInLineOfFire())
-			return this.host.weapon.allowedToFire() && this.isEnemyInSights() && !this.friendliesInLineOfFire();
+			return this.getHostObject().weapon.allowedToFire() && this.isEnemyInSights() && !this.friendliesInLineOfFire();
 		},
 
-        canIdle: function() {
-            return !this.canShoot();
-        },
+        canFight: function() { return this.isEnemyInSights(); },
+        canStand: function() { return this.getHostObject().canStand(); },
+        canIdle: function() { return !this.canFight();},
 
-        shoot: function() {
-            this.getHostObject().shoot();
-        },
-
-        idle: function() {
-
-        },
+        shoot: function() { this.getHostObject().shoot(); },
+        stand: function() { this.getHostObject().stand(); },
+        idle: function() { },
 
 		lineOfFireSafetyMargin: 5, // add this to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {

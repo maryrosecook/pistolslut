@@ -31,7 +31,7 @@ Engine.initObject("JsonLoader", "RemoteLoader", function() {
 
                 // pause for a bit and assume json loaded afterwards
                 thisObj = this;
-                OneShotTimeout.create("readyJson", 1000, function() {
+                OneShotTimeout.create("readyJson", 2000, function() {
                     thisObj.setReady(name, true);
                 });
 			}
