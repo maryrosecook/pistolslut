@@ -42,13 +42,13 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		execute: function(renderContext, time) {
             this.state = this.state.tick();
-			// this.turnTowardsPlayer();
 		},
 
         canReload: function() { return this.host.weapon.shouldReload(); },
         canFight: function() { return this.isEnemyInSights(); },
         canCrouch: function() { return !this.host.isCrouching(); },
         canIdle: function() { return !this.canFight(); },
+		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
 
 		canShoot: function() {
 			return this.host.weapon.allowedToFire()
@@ -76,6 +76,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         shoot: function() { this.host.shoot(); },
         stand: function() { this.host.stand(); },
         idle: function() { },
+        turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
 
         throwGrenade: function() {
             this.host.throwGrenade();
@@ -106,17 +107,12 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			return false;
 		},
 
-		turnTowardsPlayer: function() {
-			if(this.field.playerObj) // player might not have been created, yet
-			{
-				var dirToTurn = Collider.LEFT;
-				if(this.host.getPosition().x < this.field.playerObj.getPosition().x) // host on left
-					dirToTurn = Collider.RIGHT;
-
-				if(this.host.direction != dirToTurn)
-					this.host.turn(dirToTurn);
-			}
-		},
+        directionOfPlayer: function() {
+			if(this.host.getPosition().x < this.field.playerObj.getPosition().x) // host on left
+				return Collider.RIGHT;
+            else
+                return Collider.LEFT;
+        },
 
 		lastUnderFire: 0,
 		safeIntervalAfterUnsafe: 2000,

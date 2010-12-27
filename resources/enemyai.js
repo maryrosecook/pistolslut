@@ -14,6 +14,7 @@
                     ]
                 },
                 { identifier: "stand" },
+                { identifier: "turnTowardsPlayer" },
             ]
         }
     ]
