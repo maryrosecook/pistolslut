@@ -108,7 +108,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
         directionOfPlayer: function() {
-			if(this.host.getPosition().x < this.field.playerObj.getPosition().x) // host on left
+			if(this.host.getPosition().x < this.field.playerObj.getPosition().x)
 				return Collider.RIGHT;
             else
                 return Collider.LEFT;

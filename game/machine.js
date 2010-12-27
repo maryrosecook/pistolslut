@@ -47,7 +47,7 @@ Engine.initObject("Node", "Base", function() {
 	    },
 
         tick: function() {
-            console.log(this.identifier)
+            //console.log(this.identifier)
             if(this.isAction()) // run an actual action
                 this.run();
 
