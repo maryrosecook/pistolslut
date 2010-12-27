@@ -166,7 +166,7 @@ Engine.initObject("Human", "Mover", function() {
 
 		stoppedShooting: function() { this.lastStoppedShooting = new Date().getTime(); },
 
-		throwGrenade: function() { this.grenadeLauncher.shoot(); },
+		throwGrenade: function(distance) { this.grenadeLauncher.shoot(distance); },
 
 		cycleWeapon: function() {
 			if(this.weapons.length == 0)
@@ -377,6 +377,9 @@ Engine.initObject("Human", "Mover", function() {
 		getClassName: function() { return "Human"; },
 
 		WALK_SPEED: 3,
+
+        PLAYER: "Player",
+        ENEMY: "Enemy",
 
 		// states of being
 		ALIVE: "Alive",

@@ -10,11 +10,11 @@ Engine.initObject("Player", "Human", function() {
 var Player = Human.extend({
 
 	constructor: function(field, groundY) {
-		var startPosition = Point2D.create(50, groundY);
+		var startPosition = Point2D.create(75, groundY);
 		this.turn(Collider.RIGHT);
-		
+
 		this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
-		
+
 		this.add(KeyboardInputComponent.create("input"));
 	},
 
@@ -25,7 +25,7 @@ var Player = Human.extend({
 	update: function(renderContext, time) {
 		this.base(renderContext, time);
 		this.field.updateFramePosition(this.getVelocity(), this); // move the render frame in response to player movement
-		
+
 		if(this.getVelocity().x != 0)
 			this.field.notifier.post(Player.MOVE_EVENT, this);
 	},
@@ -39,7 +39,7 @@ var Player = Human.extend({
 			this.walkPaused = false;
 		}
 	},
-	
+
 	// if walking when pressed crouch, save direction of walk
 	// for future resuption.  A workaround for weird keyboard handling.
 	walkPaused: false,
@@ -52,7 +52,7 @@ var Player = Human.extend({
 	onKeyDown: function(keyCode) {
 		if(!this.isAlive())
 			return;
-			
+
 		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 				this.walk(Collider.LEFT);
@@ -71,7 +71,7 @@ var Player = Human.extend({
 				// deal with an initial shot on semi-automatic
 				if(!this.weapon.isShooting()) // got to block delayed keyboard auto-repeat
 					this.shoot();
-					
+
 				this.weapon.shootKeyDown();
 				break;
 			case 67: // c
@@ -81,14 +81,14 @@ var Player = Human.extend({
 				this.cycleWeapon();
 				break;
 		}
-		
+
 		return false;
 	},
 
 	onKeyUp: function(keyCode) {
 		if(!this.isAlive())
 			return;
-			
+
 		switch (keyCode) {
 			case EventEngine.KEYCODE_LEFT_ARROW:
 			case EventEngine.KEYCODE_RIGHT_ARROW:
@@ -109,24 +109,24 @@ var Player = Human.extend({
 				this.weapon.shootKeyUp();
 				break;
 		}
-		
+
 		return false;
 	},
-	
+
 	setupWeapons: function(weaponName) {
 		this.weapons.push(new M9(this));
 		this.weapons.push(new Mac10(this));
 		this.weapons.push(new SPAS(this));
-		this.base(weaponName);		
+		this.base(weaponName);
 	},
 
 	}, {
 		getClassName: function() { return "Player"; },
-		
+
 		STARTING_HEALTH: 10,
 		STARTING_WEAPON: "M9",
 		CAN_THROW_GRENADES: true,
-		
+
 		MOVE_EVENT: "playerMove"
 	});
 

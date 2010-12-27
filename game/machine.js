@@ -13,9 +13,9 @@ Engine.initObject("Machine", "Base", function() {
         read: function(subTreeJson, parent, actor) {
             var node = null;
             if(subTreeJson.pointer == true)
-                node = new Pointer(subTreeJson.identifier, subTreeJson.strategy, parent, actor);
+                node = new Pointer(subTreeJson.identifier, subTreeJson.test, subTreeJson.strategy, parent, actor);
             else
-                node = new State(subTreeJson.identifier, subTreeJson.strategy, parent, actor);
+                node = new State(subTreeJson.identifier, subTreeJson.test, subTreeJson.strategy, parent, actor);
 
             for(var i in subTreeJson.children)
                 node.children[node.children.length] = this.read(subTreeJson.children[i], node, actor);
@@ -33,13 +33,15 @@ Engine.initObject("Machine", "Base", function() {
 Engine.initObject("Node", "Base", function() {
 	var Node = Base.extend({
         identifier: null,
+        test: null,
         strategy: null,
         parent: null,
         children: null,
         actor: null,
 
-		constructor: function(identifier, strategy, parent, actor) {
+		constructor: function(identifier, test, strategy, parent, actor) {
             this.identifier = identifier;
+            this.test = test;
             this.strategy = strategy;
             this.parent = parent;
             this.actor = actor;
@@ -73,7 +75,10 @@ Engine.initObject("Node", "Base", function() {
 
         // returns true if actor allowed to enter this state
         can: function() {
-            var functionName = "can" + this.identifier[0].toUpperCase() + this.identifier.substring(1, this.identifier.length);
+            var functionName = this.test; // can specify custom test function name
+            if(functionName === undefined) // no override so go with default function name
+                functionName = "can" + this.identifier[0].toUpperCase() + this.identifier.substring(1, this.identifier.length);
+
             return this.actor[functionName].call(this.actor);
         },
 

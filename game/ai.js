@@ -78,7 +78,24 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         idle: function() { },
         turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
 
-        throwGrenade: function() {
+        throwGrenadeShort: function() {
+            var x = GrenadeLauncher.RANGES[Human.ENEMY][GrenadeLauncher.MIN_RANGE];
+            this.throwGrenadeWithX(x);
+        },
+
+        throwGrenadeRandom: function() {
+            var min = GrenadeLauncher.RANGES[Human.ENEMY][GrenadeLauncher.MIN_RANGE];
+            var max = Math.random() * GrenadeLauncher.RANGES[Human.ENEMY][GrenadeLauncher.MAX_RANGE];
+            this.throwGrenadeWithX(Math.max(min, max));
+        },
+
+        throwAccurateGrenade: function() {
+            var x = this.host.getPosition().x - this.field.playerObj.getPosition().x;
+            this.throwGrenadeWithX(x);
+        },
+
+        throwGrenadeWithX: function(x) {
+            this.host.grenadeLauncher.setX(x);
             this.host.throwGrenade();
             this.lastThrewGrenade = new Date().getTime();
         },

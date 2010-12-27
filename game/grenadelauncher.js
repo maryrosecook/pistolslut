@@ -19,7 +19,6 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		},
 
 		ordinancePhysics: function() {
-            this.startAim();
 			return this.getVector();
 		},
 
@@ -39,31 +38,39 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 			this.base();
 			this.stopShooting();
 			this.crosshair.hide();
-			this.started = null;
+		    this.resetRange();
 		},
+
+        resetRange: function() {
+            this.started = null;
+            this.specialX = null;
+        },
 
 		getCrosshairPosition: function() {
-			return Point2D.create(this.owner.getPosition().x + this.getDistance(), this.field.groundY);
+			return Point2D.create(this.owner.getPosition().x + this.getX(), this.field.groundY);
 		},
 
-		getDistance: function() {
+        specialX: null,
+        setX: function(x) { this.specialX = x; },
+		getX: function() {
 			var dir = this.owner.direction;
-            var distance = null;
-            if(this.started == null) // enemies don't aim
-                distance = Math.min(GrenadeLauncher.RANGES[dir][GrenadeLauncher.MIN_RANGE]);
+
+            var x = null;
+            if(this.specialX != null) // have set special x - for enemies
+                x = this.specialX;
             else
-			    distance = Math.min(GrenadeLauncher.RANGES[dir][GrenadeLauncher.MIN_RANGE] + ((new Date().getTime() - this.started) / GrenadeLauncher.RANGE_GROWTH_ATTEN), GrenadeLauncher.RANGES[dir][GrenadeLauncher.MAX_RANGE]);
+			    x = Math.min(GrenadeLauncher.RANGES[Human.PLAYER][dir][GrenadeLauncher.MIN_RANGE] + ((new Date().getTime() - this.started) / GrenadeLauncher.RANGE_GROWTH_ATTEN), GrenadeLauncher.RANGES[Human.PLAYER][dir][GrenadeLauncher.MAX_RANGE]);
 
 			if(this.owner.direction == Collider.LEFT)
-				distance = -distance;
+				x = -x;
 
-			return distance;
+			return x;
 		},
 
-		getVector: function() { // distance is pos or neg, depending on which way facing
+		getVector: function() { // x is pos or neg, depending on which way facing
 			var fpsFlightTime = GrenadeLauncher.FLIGHT_SECS * this.field.engineFPS;
 			var armToGroundY = this.field.groundY - Point2D.create(this.owner.getPosition()).add(this.owner.getRelativeArmTip()).y;
-			var diff = Vector2D.create(this.getDistance(), armToGroundY);
+			var diff = Vector2D.create(this.getX(), armToGroundY);
 
 		 	var velocity = Vector2D.create(0, 0);
 		 	velocity.setX(diff.x / fpsFlightTime * 0.91);
@@ -76,8 +83,14 @@ Engine.initObject("GrenadeLauncher", "Weapon", function() {
 		getClassName: function() { return "GrenadeLauncher"; },
 
 		RANGES: {
-			"Left": { "min_range": 150, "max_range": 150 },
-			"Right": { "min_range": 150, "max_range": 385 },
+            "Player": {
+			    "Left": { "min_range": 150, "max_range": 150 },
+			    "Right": { "min_range": 150, "max_range": 385 },
+            },
+            "Enemy": {
+                "min_range": 150,
+                "max_range": 400,
+            }
 		},
 
 		MIN_RANGE: "min_range",
