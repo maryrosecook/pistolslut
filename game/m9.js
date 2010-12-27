@@ -5,7 +5,7 @@ Engine.initObject("M9", "Weapon", function() {
 			this.clipCapacity = 10;
 			this.base(owner, owner.field, M9.getClassName());
 			this.automatic = Weapon.SEMI_AUTOMATIC;
-			this.roundsPerMinute = 999999;
+			this.roundsPerMinute = 180;
 			this.projectilesPerShot = 1;
 			this.timeToReload = 1000;
 			this.projectileVelocityVariability = 0.4;

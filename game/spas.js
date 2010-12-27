@@ -5,7 +5,7 @@ Engine.initObject("SPAS", "Weapon", function() {
 			this.clipCapacity = 6;
 			this.base(owner, owner.field, SPAS.getClassName());
 			this.automatic = Weapon.SEMI_AUTOMATIC;
-			this.roundsPerMinute = 999999;
+			this.roundsPerMinute = 180;
 			this.projectilesPerShot = 5;
 			this.timeToReload = 2000;
 			this.projectileVelocityVariability = 0.5;

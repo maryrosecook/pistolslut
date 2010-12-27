@@ -171,12 +171,11 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			for(var i in data)
 			{
 				var enemy = eval(data[i].clazz).create(data[i].name,
-																							 this.field,
-																							 Point2D.create(data[i].x, data[i].y),
-																							 data[i].health,
-																							 data[i].weaponName,
-																							 data[i].canThrowGrenades,
-																							 data[i].shootDelay);
+													   this.field,
+												       Point2D.create(data[i].x, data[i].y),
+													   data[i].health,
+											           data[i].weaponName,
+													   data[i].grenadeThrower);
 				this.enemies[i] = enemy;
 				renderContext.add(enemy);
 			}

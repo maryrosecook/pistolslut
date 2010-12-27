@@ -19,7 +19,7 @@ Engine.initObject("Weapon", "Base", function() {
 		notifyWeaponSwitch: function(weapon) {
 			if(this != weapon) // if not switched to this weapon, stop an in progress reload
 				this.reloading = false;
-			else
+			else if(this.shouldReload() && this.owner instanceof Player)
 				this.reload(); // if just switched to this weapon, start it reloading
 		},
 
@@ -63,10 +63,6 @@ Engine.initObject("Weapon", "Base", function() {
 					if(!this.isShooting())
 						this.startShooting();
 
-					// stop an in progress reload
-					if(this.isReloading())
-						this.reloading = false;
-
 					if(this.dischargeDelay == 0) // just discharge weapon immediately
 						this.discharge();
 					else
@@ -74,11 +70,8 @@ Engine.initObject("Weapon", "Base", function() {
 				}
 			}
 
-			if(this.isClipEmpty())
-			{
+			if(this.shouldReload() && this.owner instanceof Player)
 				this.reload(); // auto reload
-				this.field.notifier.post(Human.CLIP_EMPTY, this);
-			}
 		},
 
 		muzzleFlashSpread: 5,
@@ -139,9 +132,10 @@ Engine.initObject("Weapon", "Base", function() {
 		isShooting: function() { return this.shooting == Weapon.SHOOTING; },
 
 		allowedToFire: function() {
-			if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
-				if(this.passSemiAutomaticCheck())
-					return true;
+            if(!this.isClipEmpty())
+			    if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
+				    if(this.passSemiAutomaticCheck())
+					    return true;
 
 			return false;
 		},
@@ -161,6 +155,8 @@ Engine.initObject("Weapon", "Base", function() {
 		timeBetweenShots: function() {
 			return (60 * 1000) / this.roundsPerMinute;
 		},
+
+        shouldReload: function() { return this.isClipEmpty() && !this.isReloading(); },
 
 		reloadBegun: 0,  // time reload was started
 		reload: function() {

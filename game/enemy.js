@@ -8,17 +8,11 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
-	shootTimer: null,
-	grenadeThrowDelay: 5000,
-	shootDelay: 1001,
 
-	constructor: function(name, field, position, health, weaponName, canThrowGrenades, shootDelay) {
+	constructor: function(name, field, position, health, weaponName, grenadeThrower) {
 		this.turn(Collider.LEFT);
-		this.base(name, field, position, health, weaponName, canThrowGrenades);
-		if(shootDelay != null)
-			this.shootDelay = shootDelay;
-
-		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "resources/enemybehaviourtree.js"));
+		this.base(name, field, position, health, weaponName, grenadeThrower);
+		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "resources/enemyai.js"));
 	},
 
 	getLogic: function() { return this.getComponent("logic" + this.name); },
@@ -35,7 +29,6 @@ var Enemy = Human.extend({
 		this.base(ordinance);
 		this.getLogic().removeFromHost();
 		this.field.notifier.unsubscribe(Human.INCOMING, this.getLogic());
-		this.field.notifier.unsubscribe(Human.CLIP_EMPTY, this.getLogic());
 		this.field.notifier.unsubscribe(Human.RELOADED, this.getLogic());
 	},
 

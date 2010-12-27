@@ -47,23 +47,25 @@ Engine.initObject("Node", "Base", function() {
 	    },
 
         tick: function() {
-            var nextState = this; // default is staying in same state
+            console.log(this.identifier)
+            if(this.isAction()) // run an actual action
+                this.run();
 
-            if(this.isAction() == true) // run an actual action
-            {
-                console.log("running action: ", this.identifier)
-                this.actor[this.identifier].call(this.actor); // run the action
-                nextState = this.parent; // hop back up the tree to continue
-            }
-            else
-            {
-                var potentialNextState = this[this.strategy].call(this); // try to get next state from children
-                if(potentialNextState !== null) // can't transfer to any children so hop up to parent
-                    nextState = potentialNextState;
-            }
+            var potentialNextState = this.nextState();
+            if(potentialNextState !== null)
+                return potentialNextState.transition();
+            else if(this.can()) // no child state, try and stay in this one
+                return this;
+            else // can't stay in this one, so back up the tree
+                return this.nearestAncestor().transition();
+        },
 
-            console.log("transitioned to: ", this.identifier)
-            return nextState;
+        nextState: function() {
+            var strategy = this.strategy;
+            if(strategy === undefined)
+                strategy = this.parent.strategy;
+
+            return this[strategy].call(this);
         },
 
         isTransition: function() { return this.children.length > 0 || this instanceof Pointer; },
@@ -72,17 +74,55 @@ Engine.initObject("Node", "Base", function() {
         // returns true if actor allowed to enter this state
         can: function() {
             var functionName = "can" + this.identifier[0].toUpperCase() + this.identifier.substring(1, this.identifier.length);
-            console.log("running: ", functionName);
             return this.actor[functionName].call(this.actor);
+        },
+
+        // returns nearest ancestor that can run
+        nearestAncestor: function() {
+            if(this.parent.can())
+                return this.parent;
+            else if(this.parent !== null)
+                return this.parent.nearestAncestor();
+            else
+                return null;
         },
 
         // returns first child that can run
         prioritised: function() {
-            for(var i in this.children)
-                if(this.children[i].can())
-                    return this.children[i].transition();
+            return this.nextRunnable(this.children);
+        },
+
+        nextRunnable: function(nodes) {
+            for(var i in nodes)
+                if(nodes[i].can())
+                    return nodes[i];
 
             return null;
+        },
+
+        // runs all runnable children in order, then kicks up to children's grandparent
+        sequential: function() {
+            var nextState = null;
+            if(this.isAction()) // want to get next runnable child or go back up to grandparent
+            {
+                var foundThis = false;
+                for(var i in this.parent.children)
+                {
+                    var sibling = this.parent.children[i];
+                    if(this.identifier == sibling.identifier)
+                        foundThis = true;
+                    else if(foundThis && sibling.can())
+                        return sibling;
+                }
+            }
+            else // at a sequential parent so try to run first runnable child
+            {
+                var firstRunnableChild = this.nextRunnable(this.children);
+                if(firstRunnableChild !== null)
+                    return firstRunnableChild;
+            }
+
+            return this.parent.nearestAncestor(); // no more runnable children in the sequence so return parent's first runnable ancestor
         },
 	}, {
 	    getClassName: function() { return "Node"; },
@@ -96,6 +136,10 @@ Engine.initObject("State", "Node", function() {
 	var State = Node.extend({
         transition: function() {
             return this;
+        },
+
+        run: function() {
+            this.actor[this.identifier].call(this.actor); // run the action
         },
 	}, {
 	  getClassName: function() { return "State"; }

@@ -122,9 +122,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
             this.jsonLoader = JsonLoader.create();
 
+            this.jsonLoader.load("enemybehaviour", this.getFilePath("resources/enemyai.js"));
 			this.spriteLoader.load("human", this.getFilePath("resources/human.js")); // load sprite resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js")); // load level resources
-            this.jsonLoader.load("enemybehaviour", this.getFilePath("resources/enemybehaviourtree.js"));
 
 			// Don't start until all of the resources are loaded
 			PistolSlut.loadTimeout = Timeout.create("wait", 250, this.waitForResources);

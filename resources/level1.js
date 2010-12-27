@@ -39,12 +39,12 @@
 		],
 
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "M9", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", canThrowGrenades: false },
-			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, health: 4, weaponName: "Mac10", canThrowGrenades: false, shootDelay: 100 },
+			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "M9", grenadeThrower: true },
+			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false },
+			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", grenadeThrower: false },
+			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", grenadeThrower: false },
+			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false },
+			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, health: 4, weaponName: "Mac10", grenadeThrower: false },
 		],
 
 		speeches: {

@@ -16,15 +16,15 @@ Engine.initObject("Human", "Mover", function() {
 		stateOfBeing: null,
 		health: -1,
 		standState: null,
-     	canThrowGrenades: false,
+     	grenadeThrower: false,
 		direction: null,
 		lift: null,
 
-		constructor: function(name, field, position, health, weaponName, canThrowGrenades) {
+		constructor: function(name, field, position, health, weaponName, grenadeThrower) {
 			this.base(name);
 			this.field = field;
 			this.health = health;
-			this.canThrowGrenades = canThrowGrenades;
+			this.grenadeThrower = grenadeThrower;
 			this.stateOfBeing = Human.ALIVE;
 			this.standState = Human.STANDING;
 			this.loadSprites();
@@ -390,7 +390,6 @@ Engine.initObject("Human", "Mover", function() {
 		RUNNING: "Running",
 		STILL: "Still",
 
-		CLIP_EMPTY: "Clipempty",
 		RELOADED: "Reloaded",
 		SHOT: "shot",
 		INCOMING: "incoming",
