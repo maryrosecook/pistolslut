@@ -64,9 +64,8 @@ Engine.initObject("Grenade", "Ordinance", function() {
 					var sideHit = pointOfImpactData[1];
 					var collisionPoint = pointOfImpactData[0];
 					this.field.collider.moveToEdge(this, collisionPoint, sideHit);
-					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
 
-					return ColliderComponent.STOP;
+					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
 				}
 				else
 				{

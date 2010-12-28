@@ -62,10 +62,11 @@ Engine.initObject("Mover", "Object2D", function() {
 
 		// moves obj back along its recent path in velocity/SWEEP_DIVISIONS increments
 		sweepPosition: function() {
-			if(this.getPosition().x > 0 && this.getPosition().y > 0)
+            var position = this.getPosition();
+			if(position.x > 0 && position.y > 0)
 			{
-				this.getPosition().setX(this.getPosition().x - (this.getVelocity().x / Mover.SWEEP_DIVISIONS));
-				this.getPosition().setY(this.getPosition().y - (this.getVelocity().y / Mover.SWEEP_DIVISIONS));
+				this.getPosition().setX(position.x - (this.getVelocity().x / Mover.SWEEP_DIVISIONS));
+				this.getPosition().setY(position.y - (this.getVelocity().y / Mover.SWEEP_DIVISIONS));
 			}
 		},
 
