@@ -6,11 +6,11 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         state: null,
 
 		// I know it's insane to pass the host in the constructer, but it doesn't seem to be available at this point
-		constructor: function(name, priority, field, host, behaviourTreeUrl) {
+		constructor: function(name, priority, field, host, behaviourTreeName) {
 	  	    this.base(name, priority || 1.0);
 			this.field = field;
 
-            this.state = new Machine(this.field.jsonLoader.get("enemybehaviour")).generateTree(this);
+            this.state = new Machine(this.field.remoteFileLoader.getData(behaviourTreeName)).generateTree(this);
 
 			// subscribe to events the enemy cares about
 			this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);

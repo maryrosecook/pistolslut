@@ -12,7 +12,7 @@ var Enemy = Human.extend({
 	constructor: function(name, field, position, health, weaponName, grenadeThrower) {
 		this.turn(Collider.LEFT);
 		this.base(name, field, position, health, weaponName, grenadeThrower);
-		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "resources/enemyai.js"));
+		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "enemyai"));
 	},
 
 	getLogic: function() { return this.getComponent("logic" + this.name); },

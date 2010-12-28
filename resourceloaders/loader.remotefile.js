@@ -1,7 +1,7 @@
 /**
  * The Render Engine
  * RemoteFileLoader
- * 
+ *
  * The RemoteFileLoader resource loader provides functionality
  * that will allow a remote server to act like a filesystem.  You can
  * check for the existence of a file, plus blocking and non-blocking
@@ -13,17 +13,17 @@
  * @version: $Revision$
  *
  * Copyright (c) 2010 Brett Fattori (brettf@renderengine.com)
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -57,7 +57,7 @@ var RemoteFileLoader = ResourceLoader.extend(/** @scope RemoteFileLoader.prototy
       this.base(name || "RemoteFileLoader");
 		this.pending = null;
    },
-	
+
 	release: function() {
 		this.base();
 		this.pending = null;
@@ -72,8 +72,8 @@ var RemoteFileLoader = ResourceLoader.extend(/** @scope RemoteFileLoader.prototy
 	 * @private
 	 */
 	getFile: function(cacheRec, sync) {
-		Assert(remoteURL.indexOf("http") == -1, "URL must exist relative to this server");
-		
+		//Assert(remoteURL.indexOf("http") == -1, "URL must exist relative to this server");
+
 		// Make the request. We'll handle the result ourselves
 		var self = this;
 		var xhr = $.ajax({
@@ -93,20 +93,20 @@ var RemoteFileLoader = ResourceLoader.extend(/** @scope RemoteFileLoader.prototy
 					},
 					dataType: cacheRec.type
 				});
-				
+
 		return cacheRec;
 	},
-	
+
 	/**
 	 * Check for the existence of a file at the url provided in a
 	 * synchronous manner.  This will cause the program's execution to
 	 * wait until the file can be verified.
-	 * 
+	 *
 	 * @param remoteUrl {String} The URL where the file is located.
 	 * @param type {String} The type of data to check
 	 * @return <tt>true</tt> if the file exists
 	 */
-	exists: function(remoteUrl, type) {
+	exists: function(remoteURL, type) { // framechange - remoteUrl changed to remoteURL
 		this.pending = this.getCacheRecord(remoteURL, type);
 		var r = this.getFile(this.pending, true);
 		return (r.status == RemoteFileLoader.STATUS_OK);
@@ -121,7 +121,7 @@ var RemoteFileLoader = ResourceLoader.extend(/** @scope RemoteFileLoader.prototy
 			cacheRec = this.getCacheRecord(remoteURL, remoteType);
 		}
 		cacheRec.name = name;
-		
+
 		this.base(name, cacheRec, false);
 		this.getFile(cacheRec, sync);
 	},
@@ -132,7 +132,7 @@ var RemoteFileLoader = ResourceLoader.extend(/** @scope RemoteFileLoader.prototy
 			this.setReady(name, true);
 		}
 	},
-	
+
 	getCacheRecord: function(remoteURL, remoteType) {
 		return {
 	  		url: remoteURL,
@@ -164,16 +164,16 @@ var RemoteFileLoader = ResourceLoader.extend(/** @scope RemoteFileLoader.prototy
    getClassName: function() {
       return "RemoteFileLoader";
    },
-	
+
 	/** Request initializating **/
 	STATUS_INIT: -1,
-	
+
 	/** Request succeeded **/
 	STATUS_OK: 1,
-	
+
 	/** There was some sort of error while loading the file **/
 	STATUS_FAIL: 0
-	
+
 });
 
 return RemoteFileLoader;

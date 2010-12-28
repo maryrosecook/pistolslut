@@ -6,6 +6,7 @@ Engine.include("/engine/engine.timers.js");
 Engine.include("/resourceloaders/loader.bitmapfont.js");
 Engine.include("/textrender/text.renderer.js");
 Engine.include("/resourceloaders/loader.sprite.js");
+Engine.include("/resourceloaders/loader.remotefile.js");
 Engine.include("/resourceloaders/loader.level.js");
 Engine.include("/resourceloaders/loader.image.js");
 Engine.include("/components/component.image.js");
@@ -50,7 +51,6 @@ Game.load("/game/crosshair.js");
 Game.load("/game/grenadelauncher.js");
 Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
-Game.load("/game/loader.json.js");
 Game.load("/game/machine.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
@@ -99,7 +99,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		imageLoader: null,
 		spriteLoader: null,
 		levelLoader: null,
-        jsonLoader: null,
+        remoteFileLoader: null,
 		loadTimeout: null,
 
 		gravityVector: Vector2D.create(0, 0.6),
@@ -120,9 +120,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 		    this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
-            this.jsonLoader = JsonLoader.create();
+            this.remoteFileLoader = RemoteFileLoader.create();
 
-            this.jsonLoader.load("enemybehaviour", this.getFilePath("resources/enemyai.js"));
+            this.remoteFileLoader.exists(this.getFilePath("resources/enemyai.js"), "json");
+            this.remoteFileLoader.load("enemyai", this.getFilePath("resources/enemyai.js"), "json", true);
 			this.spriteLoader.load("human", this.getFilePath("resources/human.js")); // load sprite resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js")); // load level resources
 
@@ -239,7 +240,7 @@ Engine.initObject("PistolSlut", "Game", function() {
         },
 
 	    waitForResources: function() {
-	        if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady() && PistolSlut.jsonLoader.isReady())
+	        if (PistolSlut.imageLoader.isReady() && PistolSlut.spriteLoader.isReady() && PistolSlut.levelLoader.isReady())
 		    {
 			    PistolSlut.loadTimeout.destroy();
 				PistolSlut.startScreen();
