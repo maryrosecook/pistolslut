@@ -150,7 +150,6 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		// automatically adds block furniture to cover bottom of level and add sides to stop player running outside level
 		addLevelBlockers: function(renderContext) {
-			// floor
 			var floorBlockHeight = 34;
 			var shapeData = { x: 0, y: this.getHeight() - floorBlockHeight, w: this.getWidth(), h: floorBlockHeight };
 			var furniturePiece = this.createPieceOfBlockFurniture(renderContext, "floor", shapeData);
@@ -167,16 +166,15 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		// creates Enemy render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext
 		addEnemies: function(renderContext) {
-			data = this.levelResource.info.objects.enemies;
+			var data = this.levelResource.info.objects.enemies;
+            var enemyTypes = this.field.remoteFileLoader.getData(this.field.enemyTypesDataIdentifier);
 			for(var i in data)
 			{
 				var enemy = eval(data[i].clazz).create(data[i].name,
 													   this.field,
 												       Point2D.create(data[i].x, data[i].y),
-													   data[i].health,
-											           data[i].weaponName,
-													   data[i].grenadeThrower,
-                                                       data[i].improvement);
+													   enemyTypes[data[i].type]);
+
 				this.enemies[i] = enemy;
 				renderContext.add(enemy);
 			}

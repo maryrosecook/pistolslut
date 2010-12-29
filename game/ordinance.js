@@ -10,7 +10,7 @@ Engine.initObject("Ordinance", "Mover", function() {
 		shooter: null,
 
 		constructor: function(weapon) {
-			this.base("yeah");
+			this.base("Ordinance");
 			this.field = PistolSlut;
 
 			// Track the shooting weapon

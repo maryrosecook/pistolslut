@@ -123,7 +123,7 @@ Engine.initObject("Player", "Human", function() {
 	}, {
 		getClassName: function() { return "Player"; },
 
-		STARTING_HEALTH: 1010000,
+		STARTING_HEALTH: 10,
 		STARTING_WEAPON: "M9",
 		CAN_THROW_GRENADES: true,
 

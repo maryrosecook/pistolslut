@@ -39,12 +39,12 @@
 		],
 
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "M9", grenadeThrower: true, improvement: 1.1 },
-			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false, improvement: 1.1 },
-			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", grenadeThrower: false },
-			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", grenadeThrower: false },
-			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false },
-			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, health: 4, weaponName: "Mac10", grenadeThrower: false },
+			{ name: "enemy", clazz: Enemy, x: 410, y: 350, type: "cannonfodder" },
+			{ name: "enemy", clazz: Enemy, x: 720, y: 350, type: "mortarer" },
+			{ name: "enemy", clazz: Enemy, x: 795, y: 350, type: "grunt" },
+			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grunt" },
+			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
+			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, type: "captain" },
 		],
 
 		speeches: {

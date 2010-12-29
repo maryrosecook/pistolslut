@@ -60,7 +60,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 	 * @class The game.
 	 */
 	var PistolSlut = Game.extend({
-
         constructor: null,
 
 		renderContext: null,
@@ -102,6 +101,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		levelLoader: null,
         remoteFileLoader: null,
 		loadTimeout: null,
+        enemyTypesDataIdentifier: "enemytypes",
 
 		gravityVector: Vector2D.create(0, 0.6),
 
@@ -125,6 +125,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 
             this.remoteFileLoader.exists(this.getFilePath("resources/enemyai.js"), "json");
             this.remoteFileLoader.load("enemyai", this.getFilePath("resources/enemyai.js"), "json", true);
+            this.remoteFileLoader.exists(this.getFilePath("resources/enemytypes.js"), "json");
+            this.remoteFileLoader.load(this.enemyTypesDataIdentifier, this.getFilePath("resources/enemytypes.js"), "json", true);
+
 			this.spriteLoader.load("human", this.getFilePath("resources/human.js")); // load sprite resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js")); // load level resources
 

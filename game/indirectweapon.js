@@ -70,7 +70,7 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
             {
                 var perfectShotX = this.owner.getPosition().x - this.field.playerObj.getPosition().x;
                 var lastMissedBy = Math.abs(perfectShotX - this.lastX);
-                var steadiness = ((this.shotsSinceTargetMoved + 1) * this.owner.improvement) / Math.random();
+                var steadiness = ((this.shotsSinceTargetMoved + 1) * this.owner.accuracy) / Math.random();
                 var missBy = lastMissedBy / steadiness;
                 if(this.lastX > perfectShotX)
                     x = perfectShotX - missBy;

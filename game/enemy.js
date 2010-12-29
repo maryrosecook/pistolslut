@@ -8,12 +8,12 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
-    improvement: 0,
+    accuracy: 1.0,
 
-	constructor: function(name, field, position, health, weaponName, grenadeThrower, improvement) {
+	constructor: function(name, field, position, typeData) {
 		this.turn(Collider.LEFT);
-		this.base(name, field, position, health, weaponName, grenadeThrower);
-        this.improvement = improvement;
+		this.base(name, field, position, typeData.health, typeData.weapons[0], typeData.grenadeThrower);
+        this.accuracy = typeData.accuracy;
 
 		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "enemyai"));
 	},
