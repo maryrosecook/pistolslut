@@ -8,10 +8,13 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
+    improvement: 0,
 
-	constructor: function(name, field, position, health, weaponName, grenadeThrower) {
+	constructor: function(name, field, position, health, weaponName, grenadeThrower, improvement) {
 		this.turn(Collider.LEFT);
 		this.base(name, field, position, health, weaponName, grenadeThrower);
+        this.improvement = improvement;
+
 		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "enemyai"));
 	},
 
@@ -31,6 +34,8 @@ var Enemy = Human.extend({
 		this.field.notifier.unsubscribe(Human.INCOMING, this.getLogic());
 		this.field.notifier.unsubscribe(Human.RELOADED, this.getLogic());
 	},
+
+    who: function() { return Human.ENEMY },
 
 	release: function() {
 		this.base();

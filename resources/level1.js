@@ -39,8 +39,8 @@
 		],
 
 		enemies: [
-			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "M9", grenadeThrower: true },
-			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false },
+			{ name: "enemy1", clazz: Enemy, x: 410, y: 350, health: 4, weaponName: "M9", grenadeThrower: true, improvement: 1.1 },
+			{ name: "enemy", clazz: Enemy, x: 720, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false, improvement: 1.1 },
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, health: 4, weaponName: "SPAS", grenadeThrower: false },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, health: 4, weaponName: "SPAS", grenadeThrower: false },
 			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, health: 4, weaponName: "Mortar", grenadeThrower: false },
@@ -107,8 +107,12 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{
-				name: "longbuilding", x: 2260, y: 96, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 458, 300] } } }
+				name: "longbuilding", x: 2300, y: 96, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 400, 300] } } }
+			},
+            {
+				name: "longbuildingfence", x: 2300, y: 76, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "longbuildingfence.png", sprites: { "main": { "f" : [0, 0, 400, 20] } } }
 			},
 			{
 				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0, zIndex: 2000,

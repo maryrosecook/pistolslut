@@ -29,6 +29,7 @@ Game.load("/game/human.js");
 Game.load("/game/cheaprect.js");
 Game.load("/game/ai.js");
 Game.load("/game/weapon.js");
+Game.load("/game/indirectweapon.js");
 Game.load("/game/m9.js");
 Game.load("/game/mac10.js");
 Game.load("/game/spas.js");

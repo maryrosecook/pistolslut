@@ -7,10 +7,10 @@ Engine.initObject("Weapon", "Base", function() {
 		lastShot: 0,
 		timeLastHadDeadAim: 0,
 
-		constructor: function(owner, field, name) {
+		constructor: function(name, owner, field) {
+            this.name = name;
 			this.owner = owner;
 			this.field = field;
-			this.name = name;
 			this.fillClip();
 
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);

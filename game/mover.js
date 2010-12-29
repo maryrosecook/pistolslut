@@ -30,7 +30,7 @@ Engine.initObject("Mover", "Object2D", function() {
 	    setSprite: function(spriteKey) {
 			if(spriteKey != this.currentSpriteKey)
 			{
-			  var newSprite = this.sprites[spriteKey];
+			    var newSprite = this.sprites[spriteKey];
 				if(this.currentSpriteKey != null)
 				{
 					var heightAdjustment = this.getSprite().getBoundingBox().dims.y - newSprite.getBoundingBox().dims.y;
@@ -38,8 +38,8 @@ Engine.initObject("Mover", "Object2D", function() {
 						this.getPosition().setY(this.getPosition().y + heightAdjustment);
 				}
 
-			  this.setBoundingBox(newSprite.getBoundingBox());
-			  this.getComponent("draw").setSprite(newSprite);
+			    this.setBoundingBox(newSprite.getBoundingBox());
+			    this.getComponent("draw").setSprite(newSprite);
 
 				newSprite.play(Engine.worldTime);
 				this.currentSpriteKey = spriteKey;

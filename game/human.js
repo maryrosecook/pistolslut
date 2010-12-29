@@ -378,13 +378,13 @@ Engine.initObject("Human", "Mover", function() {
 
 		WALK_SPEED: 3,
 
-        PLAYER: "Player",
-        ENEMY: "Enemy",
-
 		// states of being
 		ALIVE: "Alive",
 		DYING: "Dying",
 		DEAD: "Dead",
+
+        HUMAN: "Human",
+        ENEMY: "Enemy",
 
 		// standing state
 		STANDING: "Standing",
@@ -407,15 +407,15 @@ Engine.initObject("Human", "Mover", function() {
 				"armAngle": 330,
 			 	"Standing": {
 					"armTip": new Point2D(0, 2),
-					"M9": 		{ "gunTip": new Point2D(07, 06), "gunAngle": 270 },
-					"Mac10": 	{	"gunTip": new Point2D(07, 04), "gunAngle": 270 },
-					"SPAS": 	{ "gunTip": new Point2D(07, 09), "gunAngle": 270 }
+					"M9": 	  { "gunTip": new Point2D(07, 06), "gunAngle": 270 },
+					"Mac10":  { "gunTip": new Point2D(07, 04), "gunAngle": 270 },
+					"SPAS":   { "gunTip": new Point2D(07, 09), "gunAngle": 270 }
 				},
 				"Crouching": {
 					"armTip": new Point2D(0, 2),
-					"M9": 		{ "gunTip": new Point2D(07, 05), "gunAngle": 270 },
-					"Mac10": 	{ "gunTip": new Point2D(07, 04), "gunAngle": 270 },
-					"SPAS": 	{ "gunTip": new Point2D(07, 08), "gunAngle": 270 },
+					"M9": 	  { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
+					"Mac10":  { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
+					"SPAS":   { "gunTip": new Point2D(07, 08), "gunAngle": 270 },
 					"Mortar": { "gunTip": new Point2D(11, 08), "gunAngle": 345 }
 				}
 			},
@@ -423,14 +423,14 @@ Engine.initObject("Human", "Mover", function() {
 				"armAngle": 30,
 				"Standing": {
 					"armTip": new Point2D(44, 2),
-					"M9": 		{ "gunTip": new Point2D(40, 06), "gunAngle": 90 },
-					"Mac10": 	{ "gunTip": new Point2D(40, 04), "gunAngle": 90 },
+					"M9": 	  { "gunTip": new Point2D(40, 06), "gunAngle": 90 },
+					"Mac10":  { "gunTip": new Point2D(40, 04), "gunAngle": 90 },
 					"SPAS":   { "gunTip": new Point2D(40, 09), "gunAngle": 90 }
 				},
 				"Crouching": {
 					"armTip": new Point2D(44, 2),
 					"M9":     { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
-					"Mac10":  { "gunTip": new Point2D(40, 04), "gunAngle": 90 },
+					"Mac10":  { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
 					"SPAS":   { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
 					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 15 }
 				}

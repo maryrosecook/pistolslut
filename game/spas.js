@@ -3,7 +3,8 @@ Engine.initObject("SPAS", "Weapon", function() {
 
 		constructor: function(owner) {
 			this.clipCapacity = 6;
-			this.base(owner, owner.field, SPAS.getClassName());
+            this.base(SPAS.getClassName(), owner, owner.field);
+
 			this.automatic = Weapon.SEMI_AUTOMATIC;
 			this.roundsPerMinute = 180;
 			this.projectilesPerShot = 5;

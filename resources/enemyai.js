@@ -4,7 +4,7 @@
         {
             identifier: "fight", strategy: "prioritised",
             children: [
-                { identifier: "throwAccurateGrenade", test: "canThrowGrenade" },
+                { identifier: "throwGrenade", test: "canThrowGrenade" },
                 { identifier: "shoot" },
                 {
                     identifier: "reload", strategy: "sequential",

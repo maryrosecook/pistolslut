@@ -3,7 +3,8 @@ Engine.initObject("Mac10", "Weapon", function() {
 
 		constructor: function(owner) {
 			this.clipCapacity = 30;
-			this.base(owner, owner.field, Mac10.getClassName());
+            this.base(Mac10.getClassName(), owner, owner.field);
+
 			this.automatic = Weapon.AUTOMATIC;
 			this.roundsPerMinute = 700;
 			this.projectilesPerShot = 1;
