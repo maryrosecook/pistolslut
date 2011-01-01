@@ -4,6 +4,7 @@ Engine.initObject("Weapon", "Base", function() {
 		owner: null,
 		field: null,
 		shotsInClip: 0,
+        spareClips: 0,
 		lastShot: 0,
 		timeLastHadDeadAim: 0,
 
@@ -12,6 +13,7 @@ Engine.initObject("Weapon", "Base", function() {
 			this.owner = owner;
 			this.field = field;
 			this.fillClip();
+            this.spareClips = 2;
 
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
 		},
@@ -159,9 +161,9 @@ Engine.initObject("Weapon", "Base", function() {
 
         shouldReload: function() { return this.isClipEmpty() && !this.isReloading(); },
 
-		reloadBegun: 0,  // time reload was started
+		reloadBegun: 0,
 		reload: function() {
-			if(!this.isReloading())
+			if(this.spareClips > 0 && !this.isReloading())
 			{
 				this.reloadBegun = new Date().getTime();
 				this.reloading = true;
@@ -183,6 +185,7 @@ Engine.initObject("Weapon", "Base", function() {
 		isReloading: function() { return this.reloading; },
 
 		fillClip: function() {
+            this.spareClips -= 1;
 			this.shotsInClip = this.clipCapacity;
 		},
 
@@ -206,6 +209,7 @@ Engine.initObject("Weapon", "Base", function() {
 				return null;
 		},
 
+        hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },
 		getGunTip: function() { return Point2D.create(this.owner.getRelativeGunTip()).add(this.owner.getPosition()); },
 
 		release: function() {

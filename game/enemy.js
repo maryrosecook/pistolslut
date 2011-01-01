@@ -12,7 +12,7 @@ var Enemy = Human.extend({
 
 	constructor: function(name, field, position, typeData) {
 		this.turn(Collider.LEFT);
-		this.base(name, field, position, typeData.health, typeData.weapons[0], typeData.grenadeThrower);
+		this.base(name, field, position, typeData.health, typeData.weapons, typeData.grenadeThrower);
         this.accuracy = typeData.accuracy;
 
 		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "enemyai"));
@@ -20,17 +20,7 @@ var Enemy = Human.extend({
 
 	getLogic: function() { return this.getComponent("logic" + this.name); },
 
-	setupWeapons: function(weaponName) {
-		this.weapons.push(new M9(this));
-		this.weapons.push(new Mac10(this));
-		this.weapons.push(new SPAS(this));
-		this.weapons.push(new Mortar(this));
-		this.base(weaponName);
-	},
-
-    getAllies: function() {
-        return this.field.level.liveEnemies();
-    },
+    getAllies: function() { return this.field.level.liveEnemies(); },
 
 	die: function(ordinance) {
 		this.base(ordinance);

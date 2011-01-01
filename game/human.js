@@ -10,7 +10,6 @@ Engine.initObject("Human", "Mover", function() {
 		field: null,
 
 		weapon: null,
-		weapons: [],
 		grenadeLauncher: null,
 
 		stateOfBeing: null,
@@ -22,9 +21,9 @@ Engine.initObject("Human", "Mover", function() {
         spotter: null,
         shooter: null,
 
-		constructor: function(name, field, position, health, weaponName, grenadeThrower) {
+		constructor: function(name, field, position, health, weapons, grenadeThrower) {
 			this.base(name);
-			this.field = field;
+            this.field = field;
 			this.health = health;
 			this.grenadeThrower = grenadeThrower;
 			this.stateOfBeing = Human.ALIVE;
@@ -35,16 +34,16 @@ Engine.initObject("Human", "Mover", function() {
 			this.setVelocity(Vector2D.create(0, 0));
 			this.stopWalk();
 
-			this.setupWeapons(weaponName);
+            this.setupWeapons(weapons);
 
 			// Add components to move and draw the human
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 
+            this.getComponent("move").setPosition(position);
 			this.updateSprite();
 
 			this.getComponent("move").setCheckLag(false);
-			this.getComponent("move").setPosition(position);
 		},
 
 		update: function(renderContext, time) {
@@ -283,9 +282,15 @@ Engine.initObject("Human", "Mover", function() {
 			}
 		},
 
-		setupWeapons: function(weaponName) {
-			this.setWeapon(weaponName);
-			this.grenadeLauncher = new GrenadeLauncher(this);
+		setupWeapons: function(weapons) {
+            this.weapons = [];
+            for(var i in weapons)
+                this.weapons.push(eval("new " + weapons[i] + "(this)"));
+
+            this.setWeapon(this.weapons[0].name);
+
+            if(this.grenadeThrower)
+			    this.grenadeLauncher = new GrenadeLauncher(this);
 		},
 
 		onCollide: function(obj) {

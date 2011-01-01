@@ -4,6 +4,8 @@ Engine.initObject("M9", "Weapon", function() {
 		constructor: function(owner) {
 			this.clipCapacity = 10;
 			this.base(M9.getClassName(), owner, owner.field);
+            this.spareClips = 9999999999999999;
+
 			this.automatic = Weapon.SEMI_AUTOMATIC;
 			this.roundsPerMinute = 180;
 			this.projectilesPerShot = 1;

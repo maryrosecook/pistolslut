@@ -44,12 +44,15 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             this.state = this.state.tick();
 		},
 
-        canReload: function() { return this.isFreeAgent() && this.host.weapon.shouldReload(); },
+        canReload: function() { return this.isFreeAgent() && this.host.weapon.hasAmmoLeft() && this.host.weapon.shouldReload(); },
         canFight: function() { return this.isFreeAgent() && this.isEnemyInSights(); },
         canCrouch: function() { return !this.host.isCrouching(); },
         canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
+        canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
+
+        switchWeapon: function() { this.host.cycleWeapon(); },
 
         lastCalledRange: 0,
         canCallRange: function() {
@@ -103,7 +106,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         speechShowTime: 2000,
         callRange: function() {
             var x = this.field.collider.xDistance(this.host.shooter, this.field.playerObj);
-            var text = "Range " + x + " feet.";
+            var text = "Range " + x + " feet";
             new Speech(this.field,
                        this.host,
                        text,

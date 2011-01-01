@@ -11,8 +11,7 @@ Engine.initObject("Player", "Human", function() {
 	    constructor: function(field, groundY) {
 		    var startPosition = Point2D.create(50, groundY);
 		    this.turn(Collider.RIGHT);
-
-		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.STARTING_WEAPON, Player.CAN_THROW_GRENADES);
+		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, ["M9", "Mac10", "SPAS"], Player.CAN_THROW_GRENADES);
 
 		    this.add(KeyboardInputComponent.create("input"));
 	    },
@@ -110,13 +109,6 @@ Engine.initObject("Player", "Human", function() {
 		    }
 
 		    return false;
-	    },
-
-	    setupWeapons: function(weaponName) {
-		    this.weapons.push(new M9(this));
-		    this.weapons.push(new Mac10(this));
-		    this.weapons.push(new SPAS(this));
-		    this.base(weaponName);
 	    },
 
         who: function() { return Human.PLAYER; },
