@@ -44,11 +44,20 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             this.state = this.state.tick();
 		},
 
-        canReload: function() { return this.host.weapon.shouldReload(); },
-        canFight: function() { return this.isEnemyInSights(); },
+        canReload: function() { return this.isFreeAgent() && this.host.weapon.shouldReload(); },
+        canFight: function() { return this.isFreeAgent() && this.isEnemyInSights(); },
         canCrouch: function() { return !this.host.isCrouching(); },
-        canIdle: function() { return !this.canFight(); },
+        canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
+        canSpot: function() { return this.host.isSpotter(); },
+
+        lastCalledRange: 0,
+        canCallRange: function() {
+            return this.field.playerObj
+                && this.host.isSpotter()
+                && this.lastCalledRange < this.host.shooter.weapon.lastShot
+                && this.host.shooter.weapon.lastShot + (this.speechShowTime * 0.7) < new Date().getTime();
+        },
 
 		canShoot: function() {
 			return this.host.weapon.allowedToFire()
@@ -71,16 +80,62 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 && this.noUnsafeIncomingForAWhile();
         },
 
+        maxSpotterDistance: 200,
+        canEnlistSpotter: function() {
+            if(this.needSpotter())
+            {
+                var nearestAlly = this.getNearestAlly();
+                if(nearestAlly !== null && this.field.collider.xDistance(nearestAlly, this.host) < this.maxSpotterDistance)
+                    return true;
+            }
+
+            return false;
+        },
+
         reload: function() { this.host.weapon.reload(); },
         crouch: function() { this.host.crouch() },
         shoot: function() { this.host.shoot(); },
         stand: function() { this.host.stand(); },
         idle: function() { },
         turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
+        enlistSpotter: function() { this.host.setSpotter(this.getNearestAlly()); },
+
+        speechShowTime: 2000,
+        callRange: function() {
+            var x = this.field.collider.xDistance(this.host.shooter, this.field.playerObj);
+            var text = "Range " + x + " feet.";
+            new Speech(this.field,
+                       this.host,
+                       text,
+                       this.host.getPosition().x,
+                       this.host.getPosition().y - 20,
+                       75,
+                       this.speechShowTime).show();
+
+            this.lastCalledRange = new Date().getTime();
+        },
 
         throwGrenade: function() {
             this.host.throwGrenade();
             this.lastThrewGrenade = new Date().getTime();
+        },
+
+        needSpotter: function() {
+            if(this.host.weapon.isSpotterCompatible())
+                if(!this.host.hasSpotter())
+                    return true;
+        },
+
+        getNearestAlly: function() {
+            var nearestAlly = null;
+            var allies = this.host.getAllies();
+            for(var i in allies)
+                if(this.field.inView(this.host) && this.field.inView(allies[i]))
+                    if(this.host.id != allies[i].id)
+                        if(nearestAlly === null || this.field.collider.xDistance(allies[i], this.host) < this.field.collider.xDistance(nearestAlly, this.host))
+                            nearestAlly = allies[i];
+
+            return nearestAlly;
         },
 
 		lineOfFireSafetyMargin: 5, // add this to top and bottom of potential target to be on safer side
@@ -106,6 +161,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 			return false;
 		},
+
+        isFreeAgent: function() { return !this.host.isSpotter(); },
 
         directionOfPlayer: function() {
 			if(this.host.getPosition().x < this.field.playerObj.getPosition().x)

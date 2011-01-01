@@ -84,12 +84,15 @@ Engine.initObject("Node", "Base", function() {
 
         // returns nearest ancestor that can run
         nearestAncestor: function() {
-            if(this.parent.can())
-                return this.parent;
-            else if(this.parent !== null)
-                return this.parent.nearestAncestor();
-            else
-                return null;
+            if(this.parent !== null)
+            {
+                if(this.parent.can())
+                    return this.parent;
+                else
+                    return this.parent.nearestAncestor();
+            }
+
+            return null;
         },
 
         // returns first child that can run

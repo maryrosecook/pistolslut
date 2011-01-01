@@ -9,25 +9,25 @@
 			"a" : [0, 4, 46, 41, 11, 70, "loop"]
 		},
 		"RightStandingStillNotshootingM9": {
-			"f" : [0, 4, 46, 41] 
+			"f" : [0, 4, 46, 41]
 		},
 		"LeftStandingRunningNotshootingM9": {
 			"a" : [0, 49, 46, 41, 11, 70, "loop"]
 		},
 		"LeftStandingStillNotshootingM9": {
-			"f" : [0, 49, 46, 41] 
+			"f" : [0, 49, 46, 41]
 		},
 		"RightStandingRunningShootingM9": {
 			"a" : [0, 94, 46, 41, 11, 70, "loop"]
 		},
 		"RightStandingStillShootingM9": {
-			"f" : [0, 94, 46, 41] 
+			"f" : [0, 94, 46, 41]
 		},
 		"LeftStandingRunningShootingM9": {
 			"a" : [0, 139, 46, 41, 11, 70, "loop"]
 		},
 		"LeftStandingStillShootingM9": {
-			"f" : [0, 139, 46, 41] 
+			"f" : [0, 139, 46, 41]
 		},
 		"RightDyingM9": {
 			"a" : [0, 184, 46, 41, 7, 150, "once"]
@@ -53,32 +53,32 @@
 		"LeftCrouchingStillNotshootingM9": {
 			"f" : [0, 373, 46, 24]
 		},
-		
-		
-		
+
+
+
 		"RightStandingRunningNotshootingMac10": {
 			"a" : [0, 401, 46, 41, 11, 70, "loop"]
 		},
 		"RightStandingStillNotshootingMac10": {
-			"f" : [0, 401, 46, 41] 
+			"f" : [0, 401, 46, 41]
 		},
 		"LeftStandingRunningNotshootingMac10": {
 			"a" : [0, 446, 46, 41, 11, 70, "loop"]
 		},
 		"LeftStandingStillNotshootingMac10": {
-			"f" : [0, 446, 46, 41] 
+			"f" : [0, 446, 46, 41]
 		},
 		"RightStandingRunningShootingMac10": {
 			"a" : [0, 491, 46, 41, 11, 70, "loop"]
 		},
 		"RightStandingStillShootingMac10": {
-			"f" : [0, 491, 46, 41] 
+			"f" : [0, 491, 46, 41]
 		},
 		"LeftStandingRunningShootingMac10": {
 			"a" : [0, 536, 46, 41, 11, 70, "loop"]
 		},
 		"LeftStandingStillShootingMac10": {
-			"f" : [0, 536, 46, 41] 
+			"f" : [0, 536, 46, 41]
 		},
 		"RightDyingMac10": {
 			"a" : [0, 581, 46, 41, 7, 150, "once"]
@@ -104,32 +104,32 @@
 		"LeftCrouchingStillNotshootingMac10": {
 			"f" : [0, 770, 46, 24]
 		},
-		
-		
-		
+
+
+
 		"RightStandingRunningNotshootingSPAS": {
 			"a" : [0, 798, 46, 41, 11, 70, "loop"]
 		},
 		"RightStandingStillNotshootingSPAS": {
-			"f" : [0, 798, 46, 41] 
+			"f" : [0, 798, 46, 41]
 		},
 		"LeftStandingRunningNotshootingSPAS": {
 			"a" : [0, 843, 46, 41, 11, 70, "loop"]
 		},
 		"LeftStandingStillNotshootingSPAS": {
-			"f" : [0, 843, 46, 41] 
+			"f" : [0, 843, 46, 41]
 		},
 		"RightStandingRunningShootingSPAS": {
 			"a" : [0, 888, 46, 41, 11, 70, "loop"]
 		},
 		"RightStandingStillShootingSPAS": {
-			"f" : [0, 888, 46, 41] 
+			"f" : [0, 888, 46, 41]
 		},
 		"LeftStandingRunningShootingSPAS": {
 			"a" : [0, 933, 46, 41, 11, 70, "loop"]
 		},
 		"LeftStandingStillShootingSPAS": {
-			"f" : [0, 933, 46, 41] 
+			"f" : [0, 933, 46, 41]
 		},
 		"RightDyingSPAS": {
 			"a" : [0, 978, 46, 41, 7, 150, "once"]
@@ -156,7 +156,7 @@
 			"f" : [0, 1167, 46, 24]
 		},
 
-		
+
 		"RightCrouchingStillShootingMortar": {
 			"a" : [0, 1195, 46, 31, 20, 100, "once"]
 		},
@@ -180,6 +180,14 @@
 		},
 		"LeftDeadMortar": {
 			"f" : [185, 1323, 46, 31]
+		},
+
+
+        "RightSpotting": {
+			"f" : [0, 1358, 46, 41]
+		},
+        "LeftSpotting": {
+			"f" : [0, 1404, 46, 41]
 		},
 	}
 }

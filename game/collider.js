@@ -94,6 +94,8 @@ Engine.initObject("Collider", "Base", function() {
 				return false;
 		},
 
+        xDistance: function(obj1, obj2) { return Math.abs(obj1.getPosition().x - obj2.getPosition().x); },
+
 		moveToEdge: function(obj, collisionPoint, sideHit) {
 			if(sideHit == Collider.TOP)
 				obj.getPosition().setY(collisionPoint.y - obj.getBoundingBox().dims.y);

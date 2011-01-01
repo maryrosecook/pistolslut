@@ -28,6 +28,10 @@ var Enemy = Human.extend({
 		this.base(weaponName);
 	},
 
+    getAllies: function() {
+        return this.field.level.liveEnemies();
+    },
+
 	die: function(ordinance) {
 		this.base(ordinance);
 		this.getLogic().removeFromHost();

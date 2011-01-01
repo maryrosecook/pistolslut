@@ -1,9 +1,15 @@
 {
     identifier: "idle", strategy: "prioritised",
     children: [
+        { identifier: "spot", strategy: "sequential",
+            children: [
+                { identifier: "callRange" },
+            ]
+        },
         {
             identifier: "fight", strategy: "prioritised",
             children: [
+                { identifier: "enlistSpotter" },
                 { identifier: "throwGrenade", test: "canThrowGrenade" },
                 { identifier: "shoot" },
                 {

@@ -3,7 +3,7 @@
         weapons: ["M9"],
         accuracy: 1.0,
         health: 4,
-        grenadeThrower: true
+        grenadeThrower: false
     },
     "mortarer": {
         weapons: ["Mortar"],
@@ -16,6 +16,12 @@
         accuracy: 1.0,
         health: 4,
         grenadeThrower: false,
+    },
+    "grenadier": {
+        weapons: ["M9"],
+        accuracy: 1.0,
+        health: 4,
+        grenadeThrower: true,
     },
     "captain": {
         weapons: ["Mac10", "M9"],

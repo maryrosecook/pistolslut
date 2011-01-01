@@ -26,6 +26,7 @@ Engine.initObject("Weapon", "Base", function() {
 		setPose: function() { },
 		canStand: function() { return true; },
 		hasLineOfFire: function() { return true; }, // false for weapons with indirect fire
+        isSpotterCompatible: function() { return false; },
 		getCrosshairPosition: function() { return null; },
 
 		dischargeTime: null,

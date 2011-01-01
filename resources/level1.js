@@ -42,20 +42,20 @@
 			{ name: "enemy", clazz: Enemy, x: 410, y: 350, type: "cannonfodder" },
 			{ name: "enemy", clazz: Enemy, x: 720, y: 350, type: "mortarer" },
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, type: "grunt" },
-			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grunt" },
+			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
 			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
 			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, type: "captain" },
 		],
 
 		speeches: {
-			color: "#fff", letterSpacing: 7, lineSpacing: 10,
+			color: "#fff",
 			items: [
-				{ identifier: "speechMortarGuy", text: "Oh no she's here. Opening fire.", x: 1070, b: 320, width: 100 }
+				//{ identifier: "speechMortarGuy", text: "Oh no she's here. Opening fire.", x: 1070, b: 320, width: 100 },
 			]
 		},
 
 		triggers: [
-			{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true }
+			//{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true },
 		],
 
 		fires: [
@@ -69,7 +69,7 @@
 		sky: { startColor: ["26", "26", "26"], transformations: null },
 
 		lifts: [
-			{ name: "longbuildinglift", startX: 2261, startY: 400, distance: 304 },
+			{ name: "longbuildinglift", startX: 2259, startY: 400, distance: 304 },
 		],
 
         barrels: [

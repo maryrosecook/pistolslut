@@ -19,6 +19,8 @@ Engine.initObject("Human", "Mover", function() {
      	grenadeThrower: false,
 		direction: null,
 		lift: null,
+        spotter: null,
+        shooter: null,
 
 		constructor: function(name, field, position, health, weaponName, grenadeThrower) {
 			this.base(name);
@@ -114,6 +116,7 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		die: function(ordinance) {
+            this.unsetSpotter();
 			this.stateOfBeing = Human.DYING;
 			this.setSprite(this.direction + Human.DYING + this.weapon.name);
 
@@ -314,6 +317,27 @@ Engine.initObject("Human", "Mover", function() {
 			return ColliderComponent.CONTINUE;
 		},
 
+
+        isSpotter: function() { return this.shooter !== null; },
+        hasSpotter: function() { return this.spotter !== null; },
+        setSpotter: function(spotter) {
+            this.spotter = spotter;
+            spotter.shooter = this;
+        },
+
+        unsetSpotter: function() {
+            if(this.hasSpotter())
+            {
+                this.spotter.shooter = null;
+                this.spotter = null;
+            }
+            else if(this.isSpotter())
+            {
+                this.shooter.spotter = null;
+                this.shooter = null;
+            }
+        },
+
 		// if dead, carry on moving. A bit.
 		friction: 0.1,
 		handleFriction: function() {
@@ -341,7 +365,9 @@ Engine.initObject("Human", "Mover", function() {
 
 		// sets sprite to reflect whatever human is doing
 		updateSprite: function() {
-			if(this.isAlive())
+			if(this.isSpotter())
+                this.setSprite(this.direction + Human.SPOTTING);
+            else if(this.isAlive())
 				this.setSprite(this.direction + this.getStandState() + this.getMoveState() + this.getShootState() + this.weapon.name);
 			else if(this.stateOfBeing == Human.DEAD)
 				this.setSprite(this.direction + Human.DEAD + this.weapon.name);
@@ -359,10 +385,7 @@ Engine.initObject("Human", "Mover", function() {
 		getRelativeGunTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunTip"]; },
 		getRelativeArmTip: function() { return Human.COORDINATES[this.direction][this.standState]["armTip"]; },
 		getArmAngle: function() {
-			// if(this instanceof Enemy)
-				return Human.COORDINATES[this.direction]["armAngle"];
-			// else
-			// 	return this.crosshair.getVectorToTarget();
+			return Human.COORDINATES[this.direction]["armAngle"];
 		},
 
 		release: function() {
@@ -385,6 +408,8 @@ Engine.initObject("Human", "Mover", function() {
 
         HUMAN: "Human",
         ENEMY: "Enemy",
+
+        SPOTTING: "Spotting",
 
 		// standing state
 		STANDING: "Standing",

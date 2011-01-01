@@ -18,6 +18,7 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
 		generateOrdinance: function() { return MortarRound.create(this); },
 
         hasLineOfFire: function() { return false; },
+        isSpotterCompatible: function() { return true; },
 
         canStand: function() { return false; },
         setPose: function() {

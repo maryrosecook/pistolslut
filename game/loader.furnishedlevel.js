@@ -217,7 +217,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var speeches = data.items;
 			for(var i in speeches)
 			{
-				this.speeches[i] = new Speech(this.field, speeches[i].text, data.lineSpacing, speeches[i].x, speeches[i].b, speeches[i].width, data.color);
+				this.speeches[i] = new Speech(this.field, null, speeches[i].text, speeches[i].x, speeches[i].b, speeches[i].width, Speech.DEFAULT_HIDE_DELAY);
 				this.addToTriggerableObjects(this.speeches[i], speeches[i]);
 				renderContext.add(this.speeches[i]);
 			}

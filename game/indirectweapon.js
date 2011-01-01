@@ -70,8 +70,12 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
             {
                 var perfectShotX = this.owner.getPosition().x - this.field.playerObj.getPosition().x;
                 var lastMissedBy = Math.abs(perfectShotX - this.lastX);
-                var steadiness = ((this.shotsSinceTargetMoved + 1) * this.owner.accuracy) / Math.random();
-                var missBy = lastMissedBy / steadiness;
+
+                var steadiness = this.owner.accuracy;
+                if(this instanceof GrenadeLauncher || this.owner.spotter !== null) // if grenade or have a spotter, improve with each shot
+                    steadiness += this.shotsSinceTargetMoved;
+
+                var missBy = lastMissedBy / (steadiness / Math.random());
                 if(this.lastX > perfectShotX)
                     x = perfectShotX - missBy;
                 else
