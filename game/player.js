@@ -100,7 +100,7 @@ Engine.initObject("Player", "Human", function() {
 				    this.resumeWalk();
 				    break;
 			    case 67: // c
-				    if(this.grenadeLauncher.isShooting())
+				    if(this.grenadeLauncher.isAiming())
 					    this.throwGrenade();
 				    break;
 			    case 90: // z

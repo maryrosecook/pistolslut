@@ -6,7 +6,7 @@
         grenadeThrower: false
     },
     "mortarer": {
-        weapons: ["Mortar"],
+        weapons: ["Mortar", "M9"],
         accuracy: 1.0,
         health: 4,
         grenadeThrower: false,

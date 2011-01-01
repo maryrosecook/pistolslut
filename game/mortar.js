@@ -9,6 +9,7 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
 			this.projectilesPerShot = 1;
 			this.timeToReload = 1099;
             this.dischargeDelay = 1100;
+            this.animationTime = 2000;
 			this.timeRequiredForDeadAim = 2000;
             this.playerRanges = Mortar.PLAYER_RANGES;
             this.flightSecs = 2.0;

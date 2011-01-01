@@ -7,7 +7,8 @@ Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 			this.roundsPerMinute = 60;
 			this.projectilesPerShot = 1;
 			this.timeToReload = 1000;
-            this.dischargeDelay = 0;
+            this.dischargeDelay = 300;
+            this.animationTime = 600;
 			this.timeRequiredForDeadAim = 1000;
             this.playerRanges = GrenadeLauncher.PLAYER_RANGES;
             this.flightSecs = 1.5
@@ -16,7 +17,7 @@ Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 		},
 
 		generateOrdinance: function() { return Grenade.create(this); },
-
+        hasLineOfFire: function() { return false; },
 	}, {
 		getClassName: function() { return "GrenadeLauncher"; },
 

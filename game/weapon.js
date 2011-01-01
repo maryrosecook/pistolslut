@@ -35,7 +35,7 @@ Engine.initObject("Weapon", "Base", function() {
 		setFutureDischarge: function() { this.dischargeTime = new Date().getTime() + this.dischargeDelay; },
 
 		handleDischarge: function(time) {
-			if(this.dischargeTime != null && this.dischargeTime < time)
+			if(this.dischargeTime !== null && this.dischargeTime < time)
 				this.discharge();
 		},
 
@@ -123,8 +123,13 @@ Engine.initObject("Weapon", "Base", function() {
 		shootKeyDown: function() { this.shootKeyHasBeenUpSinceLastShot = false; },
 		isShootKeyHasBeenUpSinceLastShot: function() { return this.shootKeyHasBeenUpSinceLastShot; },
 
+        isAnimating: function() { return this.hasShootAnimation() && this.startedShooting + this.animationTime > new Date().getTime(); },
+        hasShootAnimation: function() { return this.animationTime !== undefined; },
+
+        startedShooting: null,
 		shooting: "Notshooting",
 		startShooting: function() {
+            this.startedShooting = new Date().getTime();
 			this.shooting = Weapon.SHOOTING;
 			this.owner.updateSprite();
 		},
@@ -210,7 +215,7 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
         hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },
-		getGunTip: function() { return Point2D.create(this.owner.getRelativeGunTip()).add(this.owner.getPosition()); },
+		getGunTip: function() { return Point2D.create(this.owner.getRelativeGunTip(this.name)).add(this.owner.getPosition()); },
 
 		release: function() {
 			this.base();
@@ -229,7 +234,7 @@ Engine.initObject("Weapon", "Base", function() {
 	}, {
 		getClassName: function() { return "Weapon"; },
 
-		tip: new Point2D(0, -1), // The tip of the owner at zero rotation (up)
+		tip: new Point2D(0, -1),
 
 		SEMI_AUTOMATIC: "semi_automatic",
 		AUTOMATIC: "automatic",

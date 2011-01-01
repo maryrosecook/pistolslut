@@ -16,10 +16,10 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 		},
 
 		started: null,
+        isAiming: function() { return this.started !== null; },
 		startAim: function() {
 			if(this.started == null && !this.isShooting() && this.allowedToFire())
 			{
-				this.startShooting();
 				this.started = new Date().getTime();
 				this.crosshair.show();
 			}
@@ -97,11 +97,11 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 
 		getVector: function() { // x is pos or neg, depending on which way facing
 			var fpsFlightTime = this.flightSecs * this.field.engineFPS;
-			var armToGroundY = this.field.groundY - Point2D.create(this.owner.getPosition()).add(this.owner.getRelativeArmTip()).y;
-			var diff = Vector2D.create(this.getX(), armToGroundY);
+			var gunToGroundY = this.field.groundY - Point2D.create(this.getGunTip()).y;
+			var diff = Vector2D.create(this.getX(), gunToGroundY);
 
 		 	var velocity = Vector2D.create(0, 0);
-		 	velocity.setX(diff.x / fpsFlightTime * 0.91);
+		 	velocity.setX(diff.x / fpsFlightTime);
 		 	velocity.setY(-(-(diff.y / fpsFlightTime) + (0.5 * this.field.gravityVector.y * fpsFlightTime)));
 
 			return velocity;

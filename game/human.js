@@ -55,6 +55,7 @@ Engine.initObject("Human", "Mover", function() {
 			this.weapon.handleReload(time);
 			this.weapon.handleAutomatic(time);
 			this.weapon.handleDischarge(time);
+            this.grenadeLauncher.handleDischarge(time);
 		},
 
 		notifyGrenadeNearby: function(grenade) {
@@ -76,7 +77,7 @@ Engine.initObject("Human", "Mover", function() {
 				if(this.stateOfBeing == Human.DYING)
 					this.stateOfBeing = Human.DEAD;
 
-				if(this.weapon.isShooting() == true)
+				if(this.weapon.isShooting())
 					this.weapon.stopShooting();
 			}
 
@@ -168,7 +169,11 @@ Engine.initObject("Human", "Mover", function() {
 
 		stoppedShooting: function() { this.lastStoppedShooting = new Date().getTime(); },
 
-		throwGrenade: function(distance) { this.grenadeLauncher.shoot(distance); },
+		throwGrenade: function(distance) {
+            this.grenadeLauncher.shoot(distance);
+        },
+
+        isThrowingGrenade: function() { return this.startedThrowingGrenade !== null; },
 
 		cycleWeapon: function() {
 			if(this.weapons.length == 0)
@@ -288,9 +293,7 @@ Engine.initObject("Human", "Mover", function() {
                 this.weapons.push(eval("new " + weapons[i] + "(this)"));
 
             this.setWeapon(this.weapons[0].name);
-
-            if(this.grenadeThrower)
-			    this.grenadeLauncher = new GrenadeLauncher(this);
+			this.grenadeLauncher = new GrenadeLauncher(this);
 		},
 
 		onCollide: function(obj) {
@@ -372,6 +375,8 @@ Engine.initObject("Human", "Mover", function() {
 		updateSprite: function() {
 			if(this.isSpotter())
                 this.setSprite(this.direction + Human.SPOTTING);
+            else if(this.isAlive() && (this.grenadeLauncher.isShooting() || this.grenadeLauncher.isAnimating()))
+                this.setSprite(this.direction + this.getStandState() + this.grenadeLauncher.name);
             else if(this.isAlive())
 				this.setSprite(this.direction + this.getStandState() + this.getMoveState() + this.getShootState() + this.weapon.name);
 			else if(this.stateOfBeing == Human.DEAD)
@@ -387,20 +392,15 @@ Engine.initObject("Human", "Mover", function() {
 		isCrouching: function() { return this.standState == Human.CROUCHING; },
 
 		getGunAngle: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunAngle"]; },
-		getRelativeGunTip: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunTip"]; },
-		getRelativeArmTip: function() { return Human.COORDINATES[this.direction][this.standState]["armTip"]; },
-		getArmAngle: function() {
-			return Human.COORDINATES[this.direction]["armAngle"];
-		},
+		getRelativeGunTip: function(weaponName) { return Human.COORDINATES[this.direction][this.standState][weaponName]["gunTip"]; },
 
 		release: function() {
 			this.base();
 			this.stateOfBeing = null;
 			this.health = -1;
 			this.weapon = null;
-			this.weapons = [];
+			this.weapons = null;
 		},
-
 	}, {
 		getClassName: function() { return "Human"; },
 
@@ -434,35 +434,33 @@ Engine.initObject("Human", "Mover", function() {
 
 		COORDINATES: {
 			"Left": {
-				"armAngle": 330,
 			 	"Standing": {
-					"armTip": new Point2D(0, 2),
-					"M9": 	  { "gunTip": new Point2D(07, 06), "gunAngle": 270 },
-					"Mac10":  { "gunTip": new Point2D(07, 04), "gunAngle": 270 },
-					"SPAS":   { "gunTip": new Point2D(07, 09), "gunAngle": 270 }
+					"GrenadeLauncher": { "gunTip": new Point2D(23, 2),  "gunAngle": 330 },
+					"M9": 	           { "gunTip": new Point2D(07, 06), "gunAngle": 270 },
+					"Mac10":           { "gunTip": new Point2D(07, 04), "gunAngle": 270 },
+					"SPAS":            { "gunTip": new Point2D(07, 09), "gunAngle": 270 }
 				},
 				"Crouching": {
-					"armTip": new Point2D(0, 2),
-					"M9": 	  { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
-					"Mac10":  { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
-					"SPAS":   { "gunTip": new Point2D(07, 08), "gunAngle": 270 },
-					"Mortar": { "gunTip": new Point2D(11, 08), "gunAngle": 345 }
+					"GrenadeLauncher": { "gunTip": new Point2D(10, 0),  "gunAngle": 330 },
+					"M9": 	           { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
+					"Mac10":           { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
+					"SPAS":            { "gunTip": new Point2D(07, 08), "gunAngle": 270 },
+					"Mortar":          { "gunTip": new Point2D(11, 08), "gunAngle": 345 },
 				}
 			},
 			"Right": {
-				"armAngle": 30,
 				"Standing": {
-					"armTip": new Point2D(44, 2),
-					"M9": 	  { "gunTip": new Point2D(40, 06), "gunAngle": 90 },
-					"Mac10":  { "gunTip": new Point2D(40, 04), "gunAngle": 90 },
-					"SPAS":   { "gunTip": new Point2D(40, 09), "gunAngle": 90 }
+					"GrenadeLauncher": { "gunTip": new Point2D(10, 2),  "gunAngle": 30 },
+					"M9": 	           { "gunTip": new Point2D(40, 06), "gunAngle": 90 },
+					"Mac10":           { "gunTip": new Point2D(40, 04), "gunAngle": 90 },
+					"SPAS":            { "gunTip": new Point2D(40, 09), "gunAngle": 90 },
 				},
 				"Crouching": {
-					"armTip": new Point2D(44, 2),
-					"M9":     { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
-					"Mac10":  { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
-					"SPAS":   { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
-					"Mortar": { "gunTip": new Point2D(40, 08), "gunAngle": 15 }
+					"GrenadeLauncher": { "gunTip": new Point2D(23, 0),  "gunAngle": 30 },
+					"M9":              { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
+					"Mac10":           { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
+					"SPAS":            { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
+					"Mortar":          { "gunTip": new Point2D(40, 08), "gunAngle": 15 },
 				}
 			}
 		},
