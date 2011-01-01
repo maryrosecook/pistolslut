@@ -16,6 +16,7 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 		},
 
 		started: null,
+        stopped: null,
         isAiming: function() { return this.started !== null; },
 		startAim: function() {
 			if(this.started == null && !this.isShooting() && this.allowedToFire())
@@ -24,10 +25,18 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 				this.crosshair.show();
 			}
 		},
+        stopAim: function() {
+            this.stopped = new Date().getTime();
+        },
 
 		ordinancePhysics: function() {
 			return this.getVector();
 		},
+
+        shoot: function() {
+            this.base();
+            this.stopAim();
+        },
 
 		discharge: function() {
             this.handleZeroingIn();
@@ -54,6 +63,7 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 
         resetRange: function() {
             this.started = null;
+            this.stopped = null;
             this.x = null;
         },
 
@@ -84,7 +94,15 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
                 this.lastX = x;
             }
             else // human so use aiming crosshair
-			    x = Math.min(this.getMinPlayerRange() + ((new Date().getTime() - this.started) / Crosshair.RANGE_GROWTH_ATTENUATION), this.getMaxPlayerRange());
+            {
+                var timeDelta = null;
+                if(this.stopped)
+                    timeDelta = this.stopped - this.started;
+                else
+                    timeDelta = new Date().getTime() - this.started;
+
+			    x = Math.min(this.getMinPlayerRange() + (timeDelta / Crosshair.RANGE_GROWTH_ATTENUATION), this.getMaxPlayerRange());
+            }
 
 			if(this.owner.direction == Collider.LEFT)
 				x = -x;

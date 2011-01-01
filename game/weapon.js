@@ -137,13 +137,14 @@ Engine.initObject("Weapon", "Base", function() {
 			this.owner.stoppedShooting();
 			this.shooting = Weapon.NOT_SHOOTING;
 		},
-		isShooting: function() { return this.shooting == Weapon.SHOOTING; },
+		isShooting: function() { return this.shooting == Weapon.SHOOTING || this.isAnimating(); },
 
 		allowedToFire: function() {
-            if(!this.isClipEmpty())
-			    if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
-				    if(this.passSemiAutomaticCheck())
-					    return true;
+            if(!this.owner.firingAnotherWeapon(this))
+                if(!this.isClipEmpty())
+			        if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
+				        if(this.passSemiAutomaticCheck())
+					        return true;
 
 			return false;
 		},

@@ -169,11 +169,20 @@ Engine.initObject("Human", "Mover", function() {
 
 		stoppedShooting: function() { this.lastStoppedShooting = new Date().getTime(); },
 
-		throwGrenade: function(distance) {
-            this.grenadeLauncher.shoot(distance);
-        },
+		throwGrenade: function(distance) { this.grenadeLauncher.shoot(distance); },
 
-        isThrowingGrenade: function() { return this.startedThrowingGrenade !== null; },
+        firingAnotherWeapon: function(weapon) {
+            if(this.grenadeLauncher.isShooting() && weapon.id != this.grenadeLauncher.id)
+                return true;
+            else
+            {
+                for(var i in this.weapons)
+                    if(this.weapons[i].isShooting() && this.weapons[i].id != weapon.id)
+                        return true;
+            }
+
+            return false;
+        },
 
 		cycleWeapon: function() {
 			if(this.weapons.length == 0)

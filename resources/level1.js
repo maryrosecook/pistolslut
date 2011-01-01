@@ -39,7 +39,7 @@
 		],
 
 		enemies: [
-			{ name: "enemy", clazz: Enemy, x: 410, y: 350, type: "cannonfodder" },
+			{ name: "enemy", clazz: Enemy, x: 410, y: 350, type: "grenadier" },
 			{ name: "enemy", clazz: Enemy, x: 720, y: 350, type: "mortarer" },
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, type: "grunt" },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
