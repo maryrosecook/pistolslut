@@ -254,11 +254,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 		  	    PistolSlut.loadTimeout.restart();
 	    },
 
-		/**
-		 * Called when the game is being shut down to allow the game
-		 * the chance to clean up any objects, remove event handlers, and
-		 * destroy the rendering context.
-		 */
+        isPlayerAlive: function() { return this.playerObj && this.playerObj.isAlive(); },
+
 		teardown: function() {
 			this.renderContext.destroy();
 		},

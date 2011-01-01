@@ -38,7 +38,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.host.crouch();
 		},
 
-		isEnemyInSights: function() { return this.field.playerObj != null && this.field.inView(this.host); },
+		isEnemyInSights: function() { return this.field.isPlayerAlive() && this.field.inView(this.host); },
 
 		execute: function(renderContext, time) {
             this.state = this.state.tick();
@@ -56,7 +56,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
         lastCalledRange: 0,
         canCallRange: function() {
-            return this.field.playerObj
+            return this.field.isPlayerAlive()
                 && this.host.isSpotter()
                 && this.lastCalledRange < this.host.shooter.weapon.lastShot
                 && this.host.shooter.weapon.lastShot + (this.speechShowTime * 0.7) < new Date().getTime();
