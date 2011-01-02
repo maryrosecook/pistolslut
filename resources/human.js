@@ -191,17 +191,17 @@
 		},
 
 		"RightStandingGrenadeLauncher": {
-			"a" : [0, 1449, 46, 49, 4, 150, "once"]
+			"a" : [0, 1449, 46, 49, 4, 100, "once"]
 		},
 		"LeftStandingGrenadeLauncher": {
-			"a" : [0, 1502, 46, 49, 4, 150, "once"]
+			"a" : [0, 1502, 46, 49, 4, 100, "once"]
 		},
 
         "RightCrouchingGrenadeLauncher": {
-			"a" : [0, 1555, 46, 31, 4, 150, "once"]
+			"a" : [0, 1555, 46, 31, 4, 100, "once"]
 		},
 		"LeftCrouchingGrenadeLauncher": {
-			"a" : [0, 1590, 46, 31, 4, 150, "once"]
+			"a" : [0, 1590, 46, 31, 4, 100, "once"]
 		},
 	}
 }

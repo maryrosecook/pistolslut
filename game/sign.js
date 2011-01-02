@@ -15,7 +15,7 @@ Engine.initObject("Sign", "Object2D", function() {
 		signPosition: null,
 		signWidth: null,
 		defaultSignColor: null,
-	
+
 		constructor: function(field, text, color, position, signWidth, letterSpacing) {
 			this.base("Sign");
 			this.field = field;
@@ -28,12 +28,12 @@ Engine.initObject("Sign", "Object2D", function() {
 
 			this.setupTextRenderers(text, this.defaultSignColor);
 		},
-		
+
 		hijack: function(newText) {
 			this.changeText(newText, "#F7B800");
 			this.hijacked = true;
 		},
-		
+
 		revert: function(expectedTextRevertingFrom) {
 			if(this.currentText == expectedTextRevertingFrom) // only revert if text is still the same
 			{
@@ -41,7 +41,7 @@ Engine.initObject("Sign", "Object2D", function() {
 				this.hijacked = false;
 			}
 		},
-		
+
 		// switches sign to display passed text
 		changeText: function(newText, color) {
 			if(newText != this.currentText)
@@ -57,25 +57,25 @@ Engine.initObject("Sign", "Object2D", function() {
 				this.setupTextRenderers(newText, color);
 			}
 		},
-	
+
 		// splits up text so each letter is handled by a different TextRenderer
 		setupTextRenderers: function(text, color) {
 			this.currentText = text;
 			var textPieces = text.split(""); // set each letter in its own renderer
-			for(var i in textPieces) 
+			for(var i in textPieces)
 			{
 				this.textRenderers[i] = TextRenderer.create(VectorText.create(), textPieces[i], 1);
 				this.textRenderers[i].setDrawMode(TextRenderer.NO_DRAW); // turn off drawing so no flashes
-		    this.textRenderers[i].setTextWeight(1);
-		    this.textRenderers[i].setColor(color);
+		        this.textRenderers[i].setTextWeight(1);
+		        this.textRenderers[i].setColor(color);
 				this.textRenderers[i].scrollStartPosition = this.getScrollStartPosition();
 				this.textRenderers[i].textBoundingBox = this.getTextBoundingBox(this.textRenderers[i]);
 				this.field.renderContext.add(this.textRenderers[i]);
-			}	
-		
+			}
+
 			this.resetScroll();
 		},
-	
+
 		// puts all letters at start pos
 		resetScroll: function() {
 			var prevTextRenderer = null;
@@ -94,7 +94,7 @@ Engine.initObject("Sign", "Object2D", function() {
 				prevTextRenderer = this.textRenderers[i];
 			}
 		},
-	
+
 		getScrollStartPosition: function() {
 			var scrollStartPos = Point2D.create(this.signPosition);
 			scrollStartPos.setX(scrollStartPos.x + this.signWidth);
@@ -104,12 +104,12 @@ Engine.initObject("Sign", "Object2D", function() {
 		isScrollComplete: function() {
 			return this.textRenderers[this.textRenderers.length - 1].getPosition().x < this.signPosition.x;
 		},
-	
+
 		isTextVisible: function(textRenderer) {
 			var textRendererPositionX = textRenderer.getPosition().x;
 			return textRendererPositionX > this.signPosition.x && textRendererPositionX + textRenderer.textBoundingBox.x < textRenderer.scrollStartPosition.x;
 		},
-	
+
 		getTextBoundingBox: function(textRenderer) { return textRenderer.renderer.getHostObject().getBoundingBox().dims; },
 
 		release: function() {
@@ -135,7 +135,7 @@ Engine.initObject("Sign", "Object2D", function() {
 						this.textRenderers[i].base(renderContext, time);
 				}
 				renderContext.popTransform();
-		
+
 				this.lastScrolled = time;
 			}
 		},
@@ -145,7 +145,7 @@ Engine.initObject("Sign", "Object2D", function() {
 
 	}, {
 		getClassName: function() { return "Sign"; },
-		
+
 		HIJACK: "hijack",
 
 	});

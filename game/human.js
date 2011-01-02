@@ -25,6 +25,7 @@ Engine.initObject("Human", "Mover", function() {
 			this.base(name);
             this.field = field;
 			this.health = health;
+            this.maxHealth = health;
 			this.grenadeThrower = grenadeThrower;
 			this.stateOfBeing = Human.ALIVE;
 			this.standState = Human.STANDING;
@@ -57,6 +58,7 @@ Engine.initObject("Human", "Mover", function() {
 			this.weapon.handleDischarge(time);
             this.grenadeLauncher.handleDischarge(time);
 		},
+
 
 		notifyGrenadeNearby: function(grenade) {
 			var add = true;
@@ -437,9 +439,6 @@ Engine.initObject("Human", "Mover", function() {
 		INCOMING: "incoming",
 		GRENADE_NEARBY: "grenade_nearby",
 		NO_NEARBY_GRENADES: "no_nearby_grenades",
-
-		GRENADE_IMMEDIATE: true,
-		GRENADE_DELAYED: false,
 
 		COORDINATES: {
 			"Left": {

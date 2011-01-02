@@ -26,7 +26,25 @@ Engine.initObject("Player", "Human", function() {
 
 		    if(this.getVelocity().x != 0)
 			    this.field.notifier.post(Player.MOVE_EVENT, this);
+
+            this.handleHealthReload(time);
 	    },
+
+        handleHealthReload: function(time) {
+            if(this.isAlive() && this.health != this.maxHealth)
+                if(this.lastShot + Player.HEALTH_RELOAD_DELAY < new Date().getTime())
+                {
+                    this.field.notifier.post(Player.HEALTH_RELOAD, this);
+                    this.health = this.maxHealth;
+                }
+        },
+
+        lastShot: 0,
+        shot: function(ordinance) {
+            this.base(ordinance);
+            if(this.isAlive())
+                this.lastShot = new Date().getTime();
+        },
 
 	    // if walking when pressed crouch, have now stood up
 	    // and want to resume walk.  A workaround for weird keyboard handling.
@@ -115,9 +133,11 @@ Engine.initObject("Player", "Human", function() {
 	}, {
 		getClassName: function() { return "Player"; },
 
-		STARTING_HEALTH: 10,
-		STARTING_WEAPON: "M9",
+		STARTING_HEALTH: 5,
 		CAN_THROW_GRENADES: true,
+
+        HEALTH_RELOAD_DELAY: 5000,
+        HEALTH_RELOAD: "health_reload",
 
 		MOVE_EVENT: "playerMove"
 	});
