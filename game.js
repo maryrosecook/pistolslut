@@ -88,6 +88,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		meters: [],
 		ammoMeter: null,
+        spareClipsMeter: null,
 
 		debug: true,
 		playerObj: null,
@@ -227,13 +228,18 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.add(this.playerObj);
 
 			// add meters
-			this.ammoMeter = new BarMeter(this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(5, 7), "#fff");
+			this.spareClipsMeter = new BarMeter("SpareClipsMeter", this, this.renderContext, Weapon.MAX_SPARE_CLIPS, Point2D.create(5, 7), "#fff");
+			this.notifier.subscribe(Human.RELOADED, this.spareClipsMeter, this.spareClipsMeter.decrement);
+			this.notifier.subscribe(Weapon.SWITCH, this.spareClipsMeter, this.spareClipsMeter.notifyReadingUpdate);
+			this.meters.push(this.spareClipsMeter);
+
+			this.ammoMeter = new BarMeter("AmmoMeter", this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(39, 7), "#fff");
 			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
 			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
 			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
 			this.meters.push(this.ammoMeter);
 
-			this.healthMeter = new BarMeter(this, this.renderContext, this.playerObj.health, Point2D.create(5, 17), "#f00");
+			this.healthMeter = new BarMeter("HealthMeter", this, this.renderContext, this.playerObj.health, Point2D.create(5, 17), "#f00");
 			this.notifier.subscribe(Human.SHOT, this.healthMeter, this.healthMeter.decrement);
 			this.notifier.subscribe(Player.HEALTH_RELOAD, this.healthMeter, this.healthMeter.reset);
 			this.meters.push(this.healthMeter);

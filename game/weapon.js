@@ -4,7 +4,7 @@ Engine.initObject("Weapon", "Base", function() {
 		owner: null,
 		field: null,
 		shotsInClip: 0,
-        spareClips: 0,
+        spareClips: 3,
 		lastShot: 0,
 		timeLastHadDeadAim: 0,
 
@@ -12,8 +12,7 @@ Engine.initObject("Weapon", "Base", function() {
             this.name = name;
 			this.owner = owner;
 			this.field = field;
-			this.fillClip();
-            this.spareClips = 2;
+			this.shotsInClip = this.clipCapacity;
 
 			this.field.notifier.subscribe(Weapon.SWITCH, this, this.notifyWeaponSwitch);
 		},
@@ -180,7 +179,7 @@ Engine.initObject("Weapon", "Base", function() {
 		handleReload: function(time) {
 			if(this.reloading)
 				if(time - this.reloadBegun > this.timeToReload) // reload period has passed
-				{
+			    {
 					this.fillClip();
 					this.reloading = false;
 					this.field.notifier.post(Human.RELOADED, this.owner);
@@ -200,19 +199,29 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
 		// if weapon owner is the player, returns number of shots in clip for the ammo meter
-		getMeterReading: function() {
+		getMeterReading: function(meter) {
 			if(this.owner instanceof Player)
-				return this.shotsInClip;
-			else
-				return null;
+            {
+                if(meter.name == "AmmoMeter")
+				    return this.shotsInClip;
+                else if(meter.name == "SpareClipsMeter")
+                    return this.spareClips;
+            }
+
+		    return null;
 		},
 
 		// if weapon owner is the player, returns number of shots in clip for the ammo meter
-		getMeterMax: function() {
+		getMeterMax: function(meter) {
 			if(this.owner instanceof Player)
-				return this.clipCapacity;
-			else
-				return null;
+            {
+                if(meter.name == "AmmoMeter")
+				    return this.clipCapacity;
+                else if(meter.name == "SpareClipsMeter")
+                    return Weapon.MAX_SPARE_CLIPS;
+            }
+
+			return null;
 		},
 
         hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },
@@ -236,6 +245,8 @@ Engine.initObject("Weapon", "Base", function() {
 		getClassName: function() { return "Weapon"; },
 
 		tip: new Point2D(0, -1),
+
+        MAX_SPARE_CLIPS: 3,
 
 		SEMI_AUTOMATIC: "semi_automatic",
 		AUTOMATIC: "automatic",

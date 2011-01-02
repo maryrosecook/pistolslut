@@ -2,8 +2,8 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
 	var Mortar = IndirectWeapon.extend({
 		constructor: function(owner) {
             this.clipCapacity = 1;
-			this.base(Mortar.getClassName(), owner);
             this.spareClips = 6;
+			this.base(Mortar.getClassName(), owner);
 
 			this.roundsPerMinute = 30;
 			this.projectilesPerShot = 1;

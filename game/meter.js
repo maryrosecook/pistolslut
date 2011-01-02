@@ -8,7 +8,8 @@ Engine.initObject("Meter", "Base", function() {
 		pos: null,
         color: null,
 
-		constructor: function(field, renderContext, reading, position, color) {
+		constructor: function(name, field, renderContext, reading, position, color) {
+            this.name = name;
 			this.field = field;
 			this.renderContext = renderContext;
             this.parts = {};
@@ -38,9 +39,9 @@ Engine.initObject("Meter", "Base", function() {
 		},
 
 		notifyReadingUpdate: function(obj) {
-			var meterReading = obj.getMeterReading();
+			var meterReading = obj.getMeterReading(this);
 			if(meterReading != null)
-				this.setReading(obj.getMeterReading(), obj.getMeterMax());
+				this.setReading(obj.getMeterReading(this), obj.getMeterMax(this));
 		},
 
 		reset: function(obj) {
@@ -86,11 +87,6 @@ Engine.initObject("BarMeter", "Meter", function() {
 			this.parts["emptyShape"].setDimensions(emptyWidth, BarMeter.HEIGHT);
 			this.parts["emptyShape"].getPosition().setX(this.parts["fullShape"].getPosition().x + fullWidth);
         },
-
-		release: function() {
-			this.base();
-		},
-
 	}, {
 		getClassName: function() { return "BarMeter"; },
 
@@ -130,11 +126,6 @@ Engine.initObject("NumberMeter", "Meter", function() {
         updateLastWidth: function() {
             this.lastWidth = this.getTextBoundingBox(this.parts["number"]).x;
         },
-
-		release: function() {
-			this.base();
-		},
-
 	}, {
 		getClassName: function() { return "NumberMeter"; },
 
@@ -169,11 +160,6 @@ Engine.initObject("ImageMeter", "Meter", function() {
             this.parts["number"].setPosition(this.pos);
             this.updateLastWidth();
         },
-
-		release: function() {
-			this.base();
-		},
-
 	}, {
 		getClassName: function() { return "NumberMeter"; },
 
