@@ -161,9 +161,9 @@ Engine.initObject("ImageMeter", "Meter", function() {
             this.updateLastWidth();
         },
 	}, {
-		getClassName: function() { return "NumberMeter"; },
+		getClassName: function() { return "ImageMeter"; },
 
 	});
 
-	return NumberMeter;
+	return ImageMeter;
 });
