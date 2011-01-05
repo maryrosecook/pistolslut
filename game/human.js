@@ -171,7 +171,10 @@ Engine.initObject("Human", "Mover", function() {
 
 		stoppedShooting: function() { this.lastStoppedShooting = new Date().getTime(); },
 
-		throwGrenade: function(distance) { this.grenadeLauncher.shoot(distance); },
+		throwGrenade: function(distance) {
+            this.grenadeLauncher.shoot(distance);
+			this.field.notifier.post(GrenadeLauncher.THROW, this.grenadeLauncher);
+        },
 
         firingAnotherWeapon: function(weapon) {
             if(this.grenadeLauncher.isShooting() && weapon.id != this.grenadeLauncher.id)

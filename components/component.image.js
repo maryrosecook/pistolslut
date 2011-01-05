@@ -2,7 +2,7 @@
  * The Render Engine
  * ImageComponent
  *
- * @fileoverview An extension of the render component which handles 
+ * @fileoverview An extension of the render component which handles
  *               image resource rendering.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
@@ -129,7 +129,7 @@ var ImageComponent = RenderComponent.extend(/** @scope ImageComponent.prototype 
          renderContext.drawImage(this.bbox, this.currentImage, null, this.getHostObject());
       }
    }
-}, /** @scope ImageComponent.prototype */{ 
+}, /** @scope ImageComponent.prototype */{
    /**
     * Get the class name of this object
     * @return {String} "ImageComponent"

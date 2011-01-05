@@ -8,13 +8,12 @@ Engine.initObject("Meter", "Base", function() {
 		pos: null,
         color: null,
 
-		constructor: function(name, field, renderContext, reading, position, color) {
+		constructor: function(name, field, renderContext, reading, position) {
             this.name = name;
 			this.field = field;
 			this.renderContext = renderContext;
             this.parts = {};
 			this.pos = position;
-            this.color = color;
 
             this.reading = reading;
             this.max = reading;
@@ -72,6 +71,11 @@ Engine.initObject("Meter", "Base", function() {
 
 Engine.initObject("BarMeter", "Meter", function() {
 	BarMeter = Meter.extend({
+		constructor: function(name, field, renderContext, reading, position, color) {
+            this.color = color;
+            this.base(name, field, renderContext, reading, position);
+		},
+
         setupVisuals: function() {
 			this.parts["fullShape"] = RectangleShape.create(this.color, 0, 0, this.pos, Meter.Z_INDEX);
 			this.parts["emptyShape"] = RectangleShape.create("#000", 0, 0, this.pos, Meter.Z_INDEX + 1);
@@ -97,68 +101,53 @@ Engine.initObject("BarMeter", "Meter", function() {
 	return BarMeter;
 });
 
-Engine.initObject("NumberMeter", "Meter", function() {
-	var NumberMeter = Meter.extend({
-        lastWidth: 0,
-
-        setupVisuals: function() {
-			this.parts["number"] = TextRenderer.create(VectorText.create(), this.reading, 1);
-            this.parts["number"].setPosition(this.pos);
-			this.parts["number"].setDrawMode(TextRenderer.DRAW_TEXT);
-		    this.parts["number"].setTextWeight(1);
-		    this.parts["number"].setColor(this.color);
-            this.parts["number"].setText(this.reading);
-			this.renderContext.add(this.parts["number"]);
-            this.updateLastWidth();
-            this.updateVisuals();
-        },
-
-        getTextBoundingBox: function(textRenderer) { return textRenderer.renderer.getHostObject().getBoundingBox().dims; },
-
-        updateVisuals: function() {
-            this.parts["number"].setText(this.reading);
-            this.pos.setX(this.pos.x + this.lastWidth - this.getTextBoundingBox(this.parts["number"]).x);
-
-            this.parts["number"].setPosition(this.pos);
-            this.updateLastWidth();
-        },
-
-        updateLastWidth: function() {
-            this.lastWidth = this.getTextBoundingBox(this.parts["number"]).x;
-        },
-	}, {
-		getClassName: function() { return "NumberMeter"; },
-
-	});
-
-	return NumberMeter;
-});
-
 Engine.initObject("ImageMeter", "Meter", function() {
 	var ImageMeter = Meter.extend({
-        lastWidth: 0,
+        imageName: null,
+        caretSpacing: null,
+        onCarets: null,
+        offCarets: null,
 
-		constructor: function(field, renderContext, reading, position, color, onImage, offImage) {
-            this.base(field, renderContext, reading, position, color);
-
-            this.reading = reading;
-            this.max = reading;
-            this.setupVisuals();
-			this.setReading(reading, reading);
+		constructor: function(name, field, renderContext, reading, position, imageName, caretSpacing) {
+            this.imageName = imageName;
+            this.caretSpacing = caretSpacing;
+            this.base(name, field, renderContext, reading, position);
 		},
 
         setupVisuals: function() {
+            this.onCarets = [];
+            this.offCarets = [];
+
             for(var i = 0; i < this.max; i++)
-                this.parts.push();
-            this.updateVisuals();
+            {
+                this.onCarets[i] = this.createCaret("on", i);
+                this.offCarets[i] = this.createCaret("off", i);
+                this.parts[i] = this.onCarets[i];
+                this.parts[i].getDrawComponent().setDrawMode(RenderComponent.DRAW);
+            }
+        },
+
+        createCaret: function(onState, i) {
+            var position = Point2D.create(this.pos.x + (i * this.caretSpacing), this.pos.y);
+            var imageCaret = ImageCaret.create(this.field, position, this.imageName + onState);
+            this.renderContext.add(imageCaret);
+            return imageCaret;
         },
 
         updateVisuals: function() {
-            this.parts["number"].setText(this.reading);
-            this.pos.setX(this.pos.x + this.lastWidth - this.getTextBoundingBox(this.parts["number"]).x);
+            for(var i = 0; i < this.max; i++)
+            {
+                var requiredImage = this.onCarets[i];
+                if(i >= this.reading)
+                    requiredImage = this.offCarets[i];
 
-            this.parts["number"].setPosition(this.pos);
-            this.updateLastWidth();
+                if(this.parts[i].id != requiredImage.id)
+                {
+                    this.parts[i].getDrawComponent().setDrawMode(RenderComponent.NO_DRAW);
+                    this.parts[i] = requiredImage;
+                    this.parts[i].getDrawComponent().setDrawMode(RenderComponent.DRAW);
+                }
+            }
         },
 	}, {
 		getClassName: function() { return "ImageMeter"; },
@@ -166,4 +155,57 @@ Engine.initObject("ImageMeter", "Meter", function() {
 	});
 
 	return ImageMeter;
+});
+
+Engine.initObject("Caret", "Mover", function() {
+	var Caret = Mover.extend({
+		field: null,
+
+		constructor: function(field, position) {
+			this.base("Caret");
+			this.field = field;
+
+			this.add(Mover2DComponent.create("move"));
+			this.setZIndex(Meter.Z_INDEX);
+
+			var c_mover = this.getComponent("move");
+			c_mover.setPosition(position);
+			c_mover.setCheckLag(false);
+		},
+
+		update: function(renderContext, time) {
+			renderContext.pushTransform();
+			this.base(renderContext, time);
+			renderContext.popTransform();
+		},
+
+        getDrawComponent: function() { return this.getComponent("draw"); },
+
+	}, {
+		getClassName: function() { return "Caret"; },
+
+	});
+
+	return Caret;
+});
+
+Engine.initObject("ImageCaret", "Caret", function() {
+	var ImageCaret = Caret.extend({
+		field: null,
+        imageName: null,
+
+		constructor: function(field, position, imageName) {
+            this.imageName = imageName;
+			this.base(field, position);
+
+            this.add(ImageComponent.create("draw", null, this.field.imageLoader, imageName));
+            this.getDrawComponent().setImage(imageName);
+            this.getDrawComponent().setDrawMode(RenderComponent.NO_DRAW);
+		},
+	}, {
+		getClassName: function() { return "ImageCaret"; },
+
+	});
+
+	return ImageCaret;
 });

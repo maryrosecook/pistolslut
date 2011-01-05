@@ -1,7 +1,7 @@
 Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 	var GrenadeLauncher = IndirectWeapon.extend({
 		constructor: function(owner) {
-            this.clipCapacity = 999999999999999; // not reloaded
+            this.clipCapacity = 3;
 			this.base(GrenadeLauncher.getClassName(), owner);
 
 			this.roundsPerMinute = 60;
@@ -19,7 +19,6 @@ Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 		generateOrdinance: function() { return Grenade.create(this); },
         hasLineOfFire: function() { return false; },
 
-
 	}, {
 		getClassName: function() { return "GrenadeLauncher"; },
 
@@ -27,6 +26,10 @@ Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 	        "Left": { "min_range": 150, "max_range": 150 },
 			"Right": { "min_range": 150, "max_range": 385 },
 		},
+
+        THROW: "throw",
+        MAX_GRENADES: 3,
+        METER_CARET_SPACING: 14,
 	});
 
 	return GrenadeLauncher;

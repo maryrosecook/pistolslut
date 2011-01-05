@@ -124,6 +124,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
             this.remoteFileLoader = RemoteFileLoader.create();
 
+			this.imageLoader.load("grenadeon", this.getFilePath("resources/grenadeon.gif"), 7, 13);
+			this.imageLoader.load("grenadeoff", this.getFilePath("resources/grenadeoff.gif"), 7, 13);
+
             this.remoteFileLoader.exists(this.getFilePath("resources/enemyai.js"), "json");
             this.remoteFileLoader.load("enemyai", this.getFilePath("resources/enemyai.js"), "json", true);
             this.remoteFileLoader.exists(this.getFilePath("resources/enemytypes.js"), "json");
@@ -139,7 +142,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		onKeyPress: function(event) {
 			if(PistolSlut.isStartScreen == true)
-    		PistolSlut.play();
+    		    PistolSlut.play();
 		},
 
 		addStartText: function(text, x, y) {
@@ -226,7 +229,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			this.playerObj = Player.create(this, this.playerStartPosY);
 			this.renderContext.add(this.playerObj);
+            this.addMeters();
+		},
 
+        addMeters: function() {
 			// add meters
 			this.spareClipsMeter = new BarMeter("SpareClipsMeter", this, this.renderContext, Weapon.MAX_SPARE_CLIPS, Point2D.create(5, 7), "#fff");
 			this.notifier.subscribe(Human.RELOADED, this.spareClipsMeter, this.spareClipsMeter.decrement);
@@ -243,7 +249,17 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.notifier.subscribe(Human.SHOT, this.healthMeter, this.healthMeter.decrement);
 			this.notifier.subscribe(Player.HEALTH_RELOAD, this.healthMeter, this.healthMeter.reset);
 			this.meters.push(this.healthMeter);
-		},
+
+			this.grenadeMeter = new ImageMeter("GrenadeMeter",
+                                               this,
+                                               this.renderContext,
+                                               GrenadeLauncher.MAX_GRENADES,
+                                               Point2D.create(5, 27),
+                                               "grenade",
+                                               GrenadeLauncher.METER_CARET_SPACING);
+			this.notifier.subscribe(GrenadeLauncher.THROW, this.grenadeMeter, this.grenadeMeter.decrement);
+			this.meters.push(this.grenadeMeter);
+        },
 
 		applyGravity: function(obj) {
 			if(!this.collider.colliding(obj, this.collider.getPCL(obj), Furniture))
