@@ -198,26 +198,26 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
 		setAmmoMeterReading: function() {
-			if(this.owner instanceof Player)
-            {
-                var meter = null;
-                if(this instanceof GrenadeLauncher)
-                    meter = this.field.grenadeMeter;
-                else
-                    meter = this.field.ammoMeter;
+            var meter = null;
+            if(this instanceof GrenadeLauncher)
+                meter = this.field.grenadeMeter;
+            else
+                meter = this.field.ammoMeter;
 
-                meter.setReading(this.shotsInClip, this.clipCapacity);
-            }
-		},
+            meter.setReading(this.shotsInClip, this.clipCapacity);
+   		},
 
 		setSpareClipsMeterReading: function() {
-			if(this.owner instanceof Player && !(this instanceof GrenadeLauncher))
+			if(!(this instanceof GrenadeLauncher))
                 this.field.spareClipsMeter.setReading(this.spareClips, Weapon.MAX_SPARE_CLIPS);
 		},
 
         updateMeters: function() {
-            this.setAmmoMeterReading();
-            this.setSpareClipsMeterReading();
+            if(this.owner instanceof Player)
+            {
+                this.setAmmoMeterReading();
+                this.setSpareClipsMeterReading();
+            }
         },
 
         hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },

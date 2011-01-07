@@ -24,13 +24,15 @@ Engine.initObject("Meter", "Base", function() {
         },
 
 		setReading: function(reading, max) {
+            var oldReading = this.reading;
+
             if(reading !== null)
 			    this.reading = reading;
 
             if(max !== null)
 			    this.max = max;
 
-            this.updateCarets();
+            this.updateVisuals(oldReading);
 		},
 
 		reset: function() {
@@ -121,27 +123,40 @@ Engine.initObject("CaretMeter", "Meter", function() {
             }
         },
 
-        updateCarets: function() {
-            for(var i = 0; i < this.highestMax; i++)
-            {
-                var requiredCaret = this.onCarets[i];
-                if(i >= this.reading)
-                    requiredCaret = this.offCarets[i];
+        updateVisuals: function(oldReading) {
+            if(this.reading + 1 == oldReading) // only need to update one caret
+                this.changeIfNecessary(this.reading, this.offCarets[this.reading]); // will be necessary
+            else
+                this.completelyUpdateCarets();
+        },
 
-                if(this.parts[i].id != requiredCaret.id)
-                {
-                    this.parts[i].getDrawComponent().setDrawMode(RenderComponent.NO_DRAW);
-                    this.parts[i] = requiredCaret;
-                    this.parts[i].getDrawComponent().setDrawMode(RenderComponent.DRAW);
-                }
+        completelyUpdateCarets: function() {
+            for(var i = 0; i < this.reading; i++)
+                this.changeIfNecessary(i, this.onCarets[i]);
+
+            for(var i = this.reading; i < this.highestMax; i++)
+                if(!this.changeIfNecessary(i, this.offCarets[i]))
+                    break;
+        },
+
+        changeIfNecessary: function(i, requiredCaret) {
+            if(this.parts[i].id != requiredCaret.id)
+            {
+                this.parts[i].getDrawComponent().setDrawMode(RenderComponent.NO_DRAW);
+                this.parts[i] = requiredCaret;
+                this.parts[i].getDrawComponent().setDrawMode(RenderComponent.DRAW);
+                return true;
             }
+
+            return false;
         },
 
         updatePosition: function(moveX) {
             for(var i in this.onCarets)
             {
-			    this.onCarets[i].getPosition().setX(this.onCarets[i].getPosition().x + moveX);
-                this.offCarets[i].getPosition().setX(this.offCarets[i].getPosition().x + moveX);
+                var newX = this.onCarets[i].getPosition().x + moveX;
+			    this.onCarets[i].getPosition().setX(newX);
+                this.offCarets[i].getPosition().setX(newX);
             }
         },
 	}, {
@@ -282,7 +297,7 @@ Engine.initObject("VectorCaret", "Caret", function() {
 		getClassName: function() { return "VectorCaret"; },
 
         WIDTH: 3,
-        HEIGHT: 20,
+        HEIGHT: 15,
 	});
 
 	return VectorCaret;

@@ -245,7 +245,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.grenadeMeter = new ImageCaretMeter(this,
                                                     this.renderContext,
                                                     GrenadeLauncher.MAX_GRENADES,
-                                                    Point2D.create(275, 8),
+                                                    Point2D.create(275, 6),
                                                     "grenade",
                                                     GrenadeLauncher.METER_CARET_SPACING,
                                                     GrenadeLauncher.MAX_GRENADES);
