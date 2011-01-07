@@ -116,11 +116,11 @@
 			},
 			{
 				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 340, 304] } } }
+				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{
-				name: "closestlight3", x: 2800, y: 91, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 340, 304] } } }
+				name: "closestlight2", x: 2800, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			}
 		]
 	}
