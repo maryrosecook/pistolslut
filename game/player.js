@@ -34,13 +34,16 @@ Engine.initObject("Player", "Human", function() {
             if(this.isAlive() && this.health != this.maxHealth)
                 if(this.lastShot + Player.HEALTH_RELOAD_DELAY < new Date().getTime())
                 {
-                    this.field.notifier.post(Player.HEALTH_RELOAD, this);
+                    this.field.healthMeter.reset();
                     this.health = this.maxHealth;
                 }
         },
 
         lastShot: 0,
         shot: function(ordinance) {
+            if(this.isAlive())
+                this.field.healthMeter.decrement();
+
             this.base(ordinance);
             if(this.isAlive())
                 this.lastShot = new Date().getTime();

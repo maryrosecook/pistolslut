@@ -50,8 +50,7 @@ Engine.initObject("Weapon", "Base", function() {
 
 				this.shotsInClip -= 1;
 				this.lastShot = new Date().getTime();
-				if(this.owner instanceof Player && !(this instanceof GrenadeLauncher))
-					this.field.notifier.post(Weapon.SHOOT, this);
+				this.updateMeters();
 			}
 			this.dischargeTime = null;
 		},
@@ -182,7 +181,7 @@ Engine.initObject("Weapon", "Base", function() {
 			    {
 					this.fillClip();
 					this.reloading = false;
-					this.field.notifier.post(Human.RELOADED, this.owner);
+                    this.updateMeters();
 				}
 		},
 
@@ -198,31 +197,28 @@ Engine.initObject("Weapon", "Base", function() {
 			return this.shotsInClip == 0;
 		},
 
-		// if weapon owner is the player, returns number of shots in clip for the ammo meter
-		getMeterReading: function(meter) {
+		setAmmoMeterReading: function() {
 			if(this.owner instanceof Player)
             {
-                if(meter.name == "AmmoMeter")
-				    return this.shotsInClip;
-                else if(meter.name == "SpareClipsMeter")
-                    return this.spareClips;
-            }
+                var meter = null;
+                if(this instanceof GrenadeLauncher)
+                    meter = this.field.grenadeMeter;
+                else
+                    meter = this.field.ammoMeter;
 
-		    return null;
+                meter.setReading(this.shotsInClip, this.clipCapacity);
+            }
 		},
 
-		// if weapon owner is the player, returns number of shots in clip for the ammo meter
-		getMeterMax: function(meter) {
-			if(this.owner instanceof Player)
-            {
-                if(meter.name == "AmmoMeter")
-				    return this.clipCapacity;
-                else if(meter.name == "SpareClipsMeter")
-                    return Weapon.MAX_SPARE_CLIPS;
-            }
-
-			return null;
+		setSpareClipsMeterReading: function() {
+			if(this.owner instanceof Player && !(this instanceof GrenadeLauncher))
+                this.field.spareClipsMeter.setReading(this.spareClips, Weapon.MAX_SPARE_CLIPS);
 		},
+
+        updateMeters: function() {
+            this.setAmmoMeterReading();
+            this.setSpareClipsMeterReading();
+        },
 
         hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },
 		getGunTip: function() { return Point2D.create(this.owner.getRelativeGunTip(this.name)).add(this.owner.getPosition()); },

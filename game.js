@@ -233,31 +233,22 @@ Engine.initObject("PistolSlut", "Game", function() {
 		},
 
         addMeters: function() {
-			// add meters
-			this.spareClipsMeter = new BarMeter("SpareClipsMeter", this, this.renderContext, Weapon.MAX_SPARE_CLIPS, Point2D.create(5, 7), "#fff");
-			this.notifier.subscribe(Human.RELOADED, this.spareClipsMeter, this.spareClipsMeter.decrement);
-			this.notifier.subscribe(Weapon.SWITCH, this.spareClipsMeter, this.spareClipsMeter.notifyReadingUpdate);
-			this.meters.push(this.spareClipsMeter);
-
-			this.ammoMeter = new BarMeter("AmmoMeter", this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(39, 7), "#fff");
-			this.notifier.subscribe(Weapon.SHOOT, this.ammoMeter, this.ammoMeter.decrement);
-			this.notifier.subscribe(Human.RELOADED, this.ammoMeter, this.ammoMeter.reset);
-			this.notifier.subscribe(Weapon.SWITCH, this.ammoMeter, this.ammoMeter.notifyReadingUpdate);
+			this.ammoMeter = new VectorCaretMeter(this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(85, 5), VectorCaret.WIDTH * 2, 30, "white", "black");
 			this.meters.push(this.ammoMeter);
 
-			this.healthMeter = new BarMeter("HealthMeter", this, this.renderContext, this.playerObj.health, Point2D.create(5, 17), "#f00");
-			this.notifier.subscribe(Human.SHOT, this.healthMeter, this.healthMeter.decrement);
-			this.notifier.subscribe(Player.HEALTH_RELOAD, this.healthMeter, this.healthMeter.reset);
+			this.spareClipsMeter = new VectorCaretMeter(this, this.renderContext, Weapon.MAX_SPARE_CLIPS, Point2D.create(50, 5), VectorCaret.WIDTH * 2, Weapon.MAX_SPARE_CLIPS, "white", "black");
+			this.meters.push(this.spareClipsMeter);
+
+			this.healthMeter = new VectorCaretMeter(this, this.renderContext, this.playerObj.health, Point2D.create(5, 5), VectorCaret.WIDTH * 2, this.playerObj.health, "red", "black");
 			this.meters.push(this.healthMeter);
 
-			this.grenadeMeter = new ImageMeter("GrenadeMeter",
-                                               this,
-                                               this.renderContext,
-                                               GrenadeLauncher.MAX_GRENADES,
-                                               Point2D.create(5, 27),
-                                               "grenade",
-                                               GrenadeLauncher.METER_CARET_SPACING);
-			this.notifier.subscribe(GrenadeLauncher.THROW, this.grenadeMeter, this.grenadeMeter.decrement);
+			this.grenadeMeter = new ImageCaretMeter(this,
+                                                    this.renderContext,
+                                                    GrenadeLauncher.MAX_GRENADES,
+                                                    Point2D.create(275, 8),
+                                                    "grenade",
+                                                    GrenadeLauncher.METER_CARET_SPACING,
+                                                    GrenadeLauncher.MAX_GRENADES);
 			this.meters.push(this.grenadeMeter);
         },
 

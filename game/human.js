@@ -203,7 +203,7 @@ Engine.initObject("Human", "Mover", function() {
 				}
 
 			this.field.notifier.post(Weapon.SWITCH, this.weapon);
-
+            this.weapon.updateMeters();
 			this.updateSprite();
 		},
 
