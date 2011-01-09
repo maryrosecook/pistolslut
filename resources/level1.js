@@ -8,7 +8,7 @@
 			items: [
 				{ text: "Pistol  Slut", x: 89, y: 310, width: 140 },
 				{ text: "Please  return  to  your  homes", x: 805, y: 44, width: 245	},
-				{ text: "Free  shop  opening  soon", x: 1188, y: 311, width: 140 }
+				{ text: "Free  shop  opening  soon", x: 1188, y: 311, width: 140 },
 			]
 		},
 
@@ -39,7 +39,7 @@
 		],
 
 		enemies: [
-			{ name: "enemy", clazz: Enemy, x: 410, y: 350, type: "cannonfodder" },
+			{ name: "enemy", clazz: Enemy, x: 610, y: 350, type: "cannonfodder" },
 			{ name: "enemy", clazz: Enemy, x: 720, y: 350, type: "mortarer" },
 			{ name: "enemy", clazz: Enemy, x: 795, y: 350, type: "grunt" },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
@@ -99,7 +99,7 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{
-				name: "building1", x: 795, y: 25, scrollAttenuation: 0,
+				name: "building1", x: 795, y: 26, scrollAttenuation: 0,
 				sprite: { bitmapImage: "building.gif", sprites: { "main": { "f" : [0, 0, 259, 370] } } }
 			},
 			{
@@ -119,8 +119,16 @@
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{
-				name: "closestlight2", x: 2800, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				name: "closestlight2", x: 3000, y: 91, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
+			},
+			{
+				name: "closestlight2", x: 3500, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
+			},
+			{
+				name: "signpistol", x: 5000, y: 95, scrollAttenuation: -0.8, zIndex: 2001,
+				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }
 			}
 		]
 	}

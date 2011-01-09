@@ -23,7 +23,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
 		notifyTimeToThrowGrenade: function() {
-			if(this.isEnemyInSights() && this.host.grenadeThrower == true && this.host.isCrouching())
+			if(this.isEnemyInSight() && this.host.grenadeThrower == true && this.host.isCrouching())
 		        this.host.throwGrenade();
 		},
 
@@ -38,21 +38,29 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.host.crouch();
 		},
 
-		isEnemyInSights: function() { return this.field.isPlayerAlive() && this.field.inView(this.host); },
+		isEnemyInSight: function() {
+            return this.field.isPlayerAlive()
+                && this.field.inView(this.host)
+                && this.isTurnedTowardsEnemy();
+        },
+
+        isTurnedTowardsEnemy: function() { return this.host.direction == this.directionOfPlayer(); },
 
 		execute: function(renderContext, time) {
             this.state = this.state.tick();
 		},
 
         canReload: function() { return this.isFreeAgent() && this.host.weapon.hasAmmoLeft() && this.host.weapon.shouldReload(); },
-        canFight: function() { return this.isFreeAgent() && this.isEnemyInSights(); },
+        canFight: function() { return this.isFreeAgent() && this.isEnemyInSight(); },
         canCrouch: function() { return !this.host.isCrouching(); },
         canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
         canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
-
-        switchWeapon: function() { this.host.cycleWeapon(); },
+        //canPatrol: function() { return !this.isEnemyInSight(); },
+        canFindCover: function() { return !this.isInCover() && this.host.weapon.isMobile(); },
+        canRunForCover: function() { return !this.isInCover(); },
+        canStop: function() { return this.host.walking; },
 
         lastCalledRange: 0,
         canCallRange: function() {
@@ -64,7 +72,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		canShoot: function() {
 			return this.host.weapon.allowedToFire()
-                && this.isEnemyInSights()
+                && this.isEnemyInSight()
                 && !this.friendliesInLineOfFire()
                 && !this.furnitureInLineOfFire();
 		},
@@ -102,6 +110,24 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         idle: function() { },
         turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
         enlistSpotter: function() { this.host.setSpotter(this.getNearestAlly()); },
+        switchWeapon: function() { this.host.cycleWeapon(); },
+        stop: function() { this.host.stopWalk(); },
+
+        runForCover: function() {
+            var nearestCover = this.getNearestCover();
+            if(nearestCover !== null)
+                this.host.walk(this.directionOfPlayer());
+        },
+
+        // patrol: function() {
+        //     if(this.isPathBlocked())
+        //     {
+        //         var nearestFurnitureInDirectionFacing = this.field.collider.getNearest(this.host.direction, this.host, this.field.level.furniture);
+        //         this.host.turn(this.field.collider.getDirectionOf(this.host, nearestFurnitureInDirectionFacing));
+        //     }
+
+        //     this.host.walk(this.host.direction);
+        // },
 
         speechShowTime: 2000,
         callRange: function() {
@@ -129,18 +155,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                     return true;
         },
 
-        getNearestAlly: function() {
-            var nearestAlly = null;
-            var allies = this.host.getAllies();
-            for(var i in allies)
-                if(this.field.inView(this.host) && this.field.inView(allies[i]))
-                    if(this.host.id != allies[i].id)
-                        if(nearestAlly === null || this.field.collider.xDistance(allies[i], this.host) < this.field.collider.xDistance(nearestAlly, this.host))
-                            nearestAlly = allies[i];
-
-            return nearestAlly;
-        },
-
 		lineOfFireSafetyMargin: 5, // add this to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var playerEnemies = this.field.level.liveEnemies();
@@ -165,13 +179,34 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			return false;
 		},
 
+        getNearestAlly: function() { return this.field.collider.getNearest(null, this.host, this.host.getAllies()); },
+        getNearestCover: function() { return this.field.collider.getNearest(this.directionOfPlayer(), this.host, this.field.level.furniture); },
+        directionOfPlayer: function() { return this.field.collider.getDirectionOf(this.host, this.field.playerObj); },
         isFreeAgent: function() { return !this.host.isSpotter(); },
 
-        directionOfPlayer: function() {
-			if(this.host.getPosition().x < this.field.playerObj.getPosition().x)
-				return Collider.RIGHT;
+        coverDistance: 20,
+        isInCover: function() {
+            var nearestCover = this.getNearestCover();
+            if(nearestCover !== null)
+                return this.field.collider.xDistance(this.getNearestCover(), this.host) <= this.coverDistance;
             else
-                return Collider.LEFT;
+                return false;
+        },
+
+        isPathBlocked: function() {
+            var nearestFurnitureInDirectionFacing = this.field.collider.getNearest(this.host.direction, this.host, this.field.level.furniture);
+            if(nearestFurnitureInDirectionFacing === null)
+                return false
+            else if(this.field.collider.xDistance(nearestFurnitureInDirectionFacing, this.host) > this.coverDistance)
+                return false;
+            else
+                return true;
+        },
+
+        turnTo: function(obj) {
+            var dir = this.field.collider.getDirectionOf(this.host, obj);
+            if(dir != this.host.direction)
+                this.host.turn(dir);
         },
 
 		lastUnderFire: 0,

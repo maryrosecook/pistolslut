@@ -30,6 +30,7 @@ Engine.initObject("Mover", "Object2D", function() {
 	    setSprite: function(spriteKey) {
 			if(spriteKey != this.currentSpriteKey)
 			{
+                //console.log(spriteKey)
 			    var newSprite = this.sprites[spriteKey];
 				if(this.currentSpriteKey != null)
 				{

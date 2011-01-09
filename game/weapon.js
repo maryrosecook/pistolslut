@@ -26,6 +26,8 @@ Engine.initObject("Weapon", "Base", function() {
 
 		setPose: function() { },
 		canStand: function() { return true; },
+        isMobile: function() { return this.canStand(); },
+
 		hasLineOfFire: function() { return true; }, // false for weapons with indirect fire
         isSpotterCompatible: function() { return false; },
 		getCrosshairPosition: function() { return null; },
@@ -213,11 +215,11 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
         updateMeters: function() {
-            if(this.owner instanceof Player)
-            {
-                this.setAmmoMeterReading();
-                this.setSpareClipsMeterReading();
-            }
+            // if(this.owner instanceof Player)
+            // {
+            //     this.setAmmoMeterReading();
+            //     this.setSpareClipsMeterReading();
+            // }
         },
 
         hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },

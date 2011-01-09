@@ -234,8 +234,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			for(var i in data)
 			{
 				var parallaxZIndex = zIndex;
-
-				if(data[i].zIndex != null)
+				if(data[i].zIndex !== undefined)
 					parallaxZIndex = data[i].zIndex;
 
 				var parallax = new Parallax(data[i].name, this.field, parallaxZIndex, data[i].scrollAttenuation, data[i].x, data[i].y);

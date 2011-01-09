@@ -229,7 +229,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			this.playerObj = Player.create(this, this.playerStartPosY);
 			this.renderContext.add(this.playerObj);
-            this.addMeters();
+            //this.addMeters();
 		},
 
         addMeters: function() {
@@ -298,7 +298,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 				// move parallaxes
 				for(var i in this.level.parallaxesToMove)
 				{
-					var parallax = this.level.parallaxes[i];
+                    var parallax = this.level.parallaxesToMove[i];
 					parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
 				}
 

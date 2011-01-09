@@ -94,7 +94,39 @@ Engine.initObject("Collider", "Base", function() {
 				return false;
 		},
 
-        xDistance: function(obj1, obj2) { return Math.abs(obj1.getPosition().x - obj2.getPosition().x); },
+        getNearest: function(direction, object, objects) {
+            var nearest = null;
+            for(var i in objects)
+                if(object.id != objects[i].id)
+                    if(nearest === null || this.xDistance(objects[i], object) < this.xDistance(nearest, object))
+                    {
+                        if(direction === null)
+                            nearest = objects[i];
+                        else
+                        {
+                            if(direction == Collider.LEFT && object.getPosition().x >= objects[i].getPosition().x)
+                                nearest = objects[i];
+                            else if(direction == Collider.RIGHT && object.getPosition().x <= objects[i].getPosition().x)
+                                nearest = objects[i];
+                        }
+                    }
+
+            return nearest;
+        },
+
+        getDirectionOf: function(fromObj, toObj) {
+			if(fromObj.getPosition().x < toObj.getPosition().x)
+				return Collider.RIGHT;
+            else
+                return Collider.LEFT;
+        },
+
+        xDistance: function(obj1, obj2) {
+            if(this.getDirectionOf(obj1, obj2) == Collider.RIGHT)
+                return Math.abs((obj1.getPosition().x + obj1.getBoundingBox().dims.x) - obj2.getPosition().x);
+            else
+                return Math.abs(obj1.getPosition().x - (obj2.getPosition().x + obj2.getBoundingBox().dims.x));
+        },
 
 		moveToEdge: function(obj, collisionPoint, sideHit) {
 			if(sideHit == Collider.TOP)

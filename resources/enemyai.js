@@ -10,6 +10,15 @@
             identifier: "fight", strategy: "prioritised",
             children: [
                 { identifier: "enlistSpotter" },
+                {
+                    identifier: "findCover", strategy: "sequential",
+                    children: [
+                        { identifier: "turnTowardsPlayer" },
+                        { identifier: "runForCover" },
+                        { identifier: "shoot" },
+                    ]
+                },
+                { identifier: "stop" },
                 { identifier: "throwGrenade", test: "canThrowGrenade" },
                 { identifier: "shoot" },
                 {
