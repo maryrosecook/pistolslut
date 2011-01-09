@@ -62,14 +62,30 @@ Engine.initObject("Mover", "Object2D", function() {
 		},
 
 		// moves obj back along its recent path in velocity/SWEEP_DIVISIONS increments
+        oldVelocity: null,
 		sweepPosition: function() {
             var position = this.getPosition();
 			if(position.x > 0 && position.y > 0)
 			{
-				this.getPosition().setX(position.x - (this.getVelocity().x / Mover.SWEEP_DIVISIONS));
-				this.getPosition().setY(position.y - (this.getVelocity().y / Mover.SWEEP_DIVISIONS));
+                if(!this.isSweeping())
+                {
+                    this.oldVelocity = Vector2D.create(this.getVelocity());
+                    this.setVelocity(Vector2D.create(0,0));
+                }
+
+				this.getPosition().setX(position.x - (this.oldVelocity.x / Mover.SWEEP_DIVISIONS));
+				this.getPosition().setY(position.y - (this.oldVelocity.y / Mover.SWEEP_DIVISIONS));
 			}
 		},
+
+        isSweeping: function() { return this.oldVelocity !== null; },
+        stopSweeping: function() {
+            if(this.isSweeping())
+            {
+                this.setVelocity(this.oldVelocity);
+                this.oldVelocity = null;
+            }
+        },
 
 		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
 		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
@@ -103,7 +119,7 @@ Engine.initObject("Mover", "Object2D", function() {
 	}, { // Static
 		getClassName: function() { return "Mover"; },
 
-		SWEEP_DIVISIONS: 5.0,
+		SWEEP_DIVISIONS: 20,
 	});
 
 	return Mover;

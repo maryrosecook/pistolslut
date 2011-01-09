@@ -1,7 +1,7 @@
 Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 	var GrenadeLauncher = IndirectWeapon.extend({
 		constructor: function(owner) {
-            this.clipCapacity = 3;
+            this.clipCapacity = 200;
 			this.base(GrenadeLauncher.getClassName(), owner);
 
 			this.roundsPerMinute = 60;

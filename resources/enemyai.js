@@ -14,6 +14,7 @@
                     identifier: "findCover", strategy: "sequential",
                     children: [
                         { identifier: "turnTowardsPlayer" },
+                        { identifier: "stand" },
                         { identifier: "runForCover" },
                         { identifier: "shoot" },
                     ]
