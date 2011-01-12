@@ -132,11 +132,11 @@ Engine.initObject("Collider", "Base", function() {
 			if(sideHit == Collider.TOP)
 				obj.getPosition().setY(objHit.getPosition().y - obj.getBoundingBox().dims.y);
 			else if(sideHit == Collider.BOTTOM)
-				obj.getPosition().setY(objHit.getPosition().y);
+				obj.getPosition().setY(objHit.getPosition().y + objHit.getBoundingBox().dims.y);
 			else if(sideHit == Collider.LEFT)
 				obj.getPosition().setX(objHit.getPosition().x - obj.getBoundingBox().dims.x);
 			else if(sideHit == Collider.RIGHT)
-				obj.getPosition().setX(objHit.getPosition().x);
+				obj.getPosition().setX(objHit.getPosition().x + objHit.getBoundingBox().dims.x);
 		},
 
         sideHit: function(movingObj, staticObj) {
