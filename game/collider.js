@@ -128,16 +128,48 @@ Engine.initObject("Collider", "Base", function() {
                 return Math.abs(obj1.getPosition().x - (obj2.getPosition().x + obj2.getBoundingBox().dims.x));
         },
 
-		moveToEdge: function(obj, collisionPoint, sideHit) {
+		moveToEdge: function(obj, objHit, sideHit) {
 			if(sideHit == Collider.TOP)
-				obj.getPosition().setY(collisionPoint.y - obj.getBoundingBox().dims.y);
+				obj.getPosition().setY(objHit.getPosition().y - obj.getBoundingBox().dims.y);
 			else if(sideHit == Collider.BOTTOM)
-				obj.getPosition().setY(collisionPoint.y);
+				obj.getPosition().setY(objHit.getPosition().y);
 			else if(sideHit == Collider.LEFT)
-				obj.getPosition().setX(collisionPoint.x - obj.getBoundingBox().dims.x);
+				obj.getPosition().setX(objHit.getPosition().x - obj.getBoundingBox().dims.x);
 			else if(sideHit == Collider.RIGHT)
-				obj.getPosition().setX(collisionPoint.x);
+				obj.getPosition().setX(objHit.getPosition().x);
 		},
+
+        sideHit: function(movingObj, staticObj) {
+          	var mORect = new CheapRect(movingObj);
+			var sOPos = staticObj.getPosition();
+			var sODims = staticObj.getBoundingBox().dims;
+
+			// staticobj on bottom
+			var p1 = Point2D.create(sOPos.x, sOPos.y);
+			var p2 = Point2D.create(sOPos.x + sODims.x, sOPos.y);
+			if(Math2D.lineBoxCollision(p1, p2, mORect))
+				return Collider.TOP;
+
+			// staticobj on right
+			var p1 = Point2D.create(sOPos.x, sOPos.y);
+			var p2 = Point2D.create(sOPos.x, sOPos.y + sODims.y);
+			if(Math2D.lineBoxCollision(p1, p2, mORect))
+				return Collider.LEFT;
+
+			// staticobj on left
+			var p1 = Point2D.create(sOPos.x + sODims.x, sOPos.y);
+			var p2 = Point2D.create(sOPos.x + sODims.x, sOPos.y + sODims.y);
+			if(Math2D.lineBoxCollision(p1, p2, mORect))
+				return Collider.RIGHT;
+
+			// staticobj on top
+			var p1 = Point2D.create(sOPos.x, sOPos.y + sODims.y);
+			var p2 = Point2D.create(sOPos.x + sODims.x, sOPos.y + sODims.y);
+			if(Math2D.lineBoxCollision(p1, p2, mORect))
+				return Collider.BOTTOM;
+
+            return null;
+        },
 
 		// returns point that moving obj hit staticObj
 		pointOfImpact: function(movingObj, staticObj) {

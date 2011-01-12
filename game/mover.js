@@ -25,6 +25,7 @@ Engine.initObject("Mover", "Object2D", function() {
 				this.ModelData.lastNode = null;
 			}
 			this.base();
+            this.oldVelocity = null;
 		},
 
 	    setSprite: function(spriteKey) {
@@ -89,6 +90,7 @@ Engine.initObject("Mover", "Object2D", function() {
 
 		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
 		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },
+        setLastPosition: function(point) { this.getComponent("move").lastPosition.set(point); },
 
 		getRotation: function() { return this.getComponent("move").getRotation(); },
 		setRotation: function(angle) {
@@ -119,7 +121,7 @@ Engine.initObject("Mover", "Object2D", function() {
 	}, { // Static
 		getClassName: function() { return "Mover"; },
 
-		SWEEP_DIVISIONS: 20,
+		SWEEP_DIVISIONS: 5,
 	});
 
 	return Mover;

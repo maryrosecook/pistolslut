@@ -1,6 +1,6 @@
 Engine.initObject("CheapRect", "Base", function() {
 	var CheapRect = Base.extend({
-		
+
 		constructor: function(obj, x, y, r, b) {
 			if(obj != null)
 			{
@@ -19,7 +19,7 @@ Engine.initObject("CheapRect", "Base", function() {
 				this.b = b;
 			}
 		},
-	
+
 		isIntersecting: function(rect) {
 			return !(this.r < rect.x ||
 						this.x > rect.r ||
@@ -27,9 +27,11 @@ Engine.initObject("CheapRect", "Base", function() {
 						this.b < rect.y);
 		},
 
+        get: function() { return this; },
+
 	}, {
 		getClassName: function() { return "CheapRect"; },
-		
+
 	});
 
 	return CheapRect;

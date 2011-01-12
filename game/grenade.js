@@ -33,7 +33,9 @@ Engine.initObject("Grenade", "Ordinance", function() {
 				return;
 			}
 
-			this.field.applyGravity(this);
+            if(!this.isSweeping())
+			    this.field.applyGravity(this);
+
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();
@@ -58,12 +60,10 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		handleBounce: function(obj) {
 			if(this.field.collider.objsColliding(this, obj) == true)
 			{
-				var pointOfImpactData = this.field.collider.pointOfImpact(this, obj);
-				if(pointOfImpactData != null)
+                var sideHit = this.field.collider.sideHit(this, obj);
+				if(sideHit !== null)
 				{
-					var sideHit = pointOfImpactData[1];
-					var collisionPoint = pointOfImpactData[0];
-					this.field.collider.moveToEdge(this, collisionPoint, sideHit);
+                    this.field.collider.moveToEdge(this, obj, sideHit);
 
                     this.stopSweeping();
 					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
