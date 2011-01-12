@@ -229,7 +229,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			this.playerObj = Player.create(this, this.playerStartPosY);
 			this.renderContext.add(this.playerObj);
-            //this.addMeters();
+            this.addMeters();
 		},
 
         addMeters: function() {

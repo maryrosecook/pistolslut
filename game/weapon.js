@@ -215,11 +215,11 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
         updateMeters: function() {
-            // if(this.owner instanceof Player)
-            // {
-            //     this.setAmmoMeterReading();
-            //     this.setSpareClipsMeterReading();
-            // }
+            if(this.owner instanceof Player)
+            {
+                this.setAmmoMeterReading();
+                this.setSpareClipsMeterReading();
+            }
         },
 
         hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },
