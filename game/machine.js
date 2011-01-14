@@ -147,6 +147,7 @@ Engine.initObject("State", "Node", function() {
         },
 
         run: function() {
+            console.log(this.identifier);
             this.actor[this.identifier].call(this.actor); // run the action
         },
 	}, {

@@ -156,16 +156,17 @@ Engine.initObject("Weapon", "Base", function() {
 
 		// keyboard repeat doesn't kick in right away
 		handleAutomatic: function(time) {
-			if(this.isShooting())
-				if(this.automatic == Weapon.AUTOMATIC)
-					this.shoot();
+            if(this.owner instanceof Player)
+			    if(this.isShooting())
+				    if(this.automatic == Weapon.AUTOMATIC)
+					    this.shoot();
 		},
 
 		timeBetweenShots: function() {
 			return (60 * 1000) / this.roundsPerMinute;
 		},
 
-        shouldReload: function() { return this.isClipEmpty() && !this.isReloading(); },
+        shouldReload: function() { return this.isClipEmpty() && !this.isReloading() && this.owner.isAlive(); },
 
 		reloadBegun: 0,
 		reload: function() {

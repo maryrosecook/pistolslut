@@ -51,7 +51,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
         canReload: function() { return this.isFreeAgent() && this.host.weapon.hasAmmoLeft() && this.host.weapon.shouldReload(); },
-        canFight: function() { return this.isFreeAgent() && this.isEnemyInSight(); },
+        canFight: function() { return this.isFreeAgent() && this.isEnemyInSight() && this.hasOperationalWeapon(); },
         canCrouch: function() { return !this.host.isCrouching(); },
         canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
@@ -155,7 +155,15 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                     return true;
         },
 
-		lineOfFireSafetyMargin: 5, // add this to top and bottom of potential target to be on safer side
+        hasOperationalWeapon: function() {
+            for(var i in this.host.weapons)
+                if(this.host.weapons[i].hasAmmoLeft())
+                    return true;
+
+            return false;
+        },
+
+		lineOfFireSafetyMargin: 5, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var playerEnemies = this.field.level.liveEnemies();
 			if(this.host.weapon.hasLineOfFire() == true)

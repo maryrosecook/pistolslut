@@ -6,7 +6,7 @@ Engine.initObject("Mac10", "Weapon", function() {
             this.base(Mac10.getClassName(), owner, owner.field);
 
 			this.automatic = Weapon.AUTOMATIC;
-			this.roundsPerMinute = 700;
+			this.roundsPerMinute = 1000;
 			this.projectilesPerShot = 1;
 			this.timeToReload = 2000;
 			this.projectileVelocityVariability = 0.5;

@@ -454,7 +454,7 @@ Engine.initObject("Human", "Mover", function() {
 				"Crouching": {
 					"GrenadeLauncher": { "gunTip": new Point2D(10, 0),  "gunAngle": 330 },
 					"M9": 	           { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
-					"Mac10":           { "gunTip": new Point2D(07, 05), "gunAngle": 270 },
+					"Mac10":           { "gunTip": new Point2D(07, 04), "gunAngle": 270 },
 					"SPAS":            { "gunTip": new Point2D(07, 08), "gunAngle": 270 },
 					"Mortar":          { "gunTip": new Point2D(11, 08), "gunAngle": 345 },
 				}
@@ -469,7 +469,7 @@ Engine.initObject("Human", "Mover", function() {
 				"Crouching": {
 					"GrenadeLauncher": { "gunTip": new Point2D(23, 0),  "gunAngle": 30 },
 					"M9":              { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
-					"Mac10":           { "gunTip": new Point2D(40, 05), "gunAngle": 90 },
+					"Mac10":           { "gunTip": new Point2D(40, 04), "gunAngle": 90 },
 					"SPAS":            { "gunTip": new Point2D(40, 08), "gunAngle": 90 },
 					"Mortar":          { "gunTip": new Point2D(40, 08), "gunAngle": 15 },
 				}
