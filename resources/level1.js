@@ -131,7 +131,7 @@
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{
-				name: "signpistol", x: 5000, y: 95, scrollAttenuation: -0.8, zIndex: 2001,
+				name: "signpistol", x: 7500, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
 				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }
 			}
 		]
