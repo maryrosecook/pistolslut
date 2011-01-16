@@ -90,8 +90,12 @@
 				sprite: { bitmapImage: "closerlight.gif", sprites: { "main": { "f" : [0, 0, 89, 116] } } }
 			},
 			{
-				name: "gantry", x: 0, y: 130, scrollAttenuation: 0.5,
-				sprite: { bitmapImage: "gantry.gif", sprites: { "main": { "f" : [0, 0, 640, 280] } } }
+				name: "gantrya", x: 0, y: 130, scrollAttenuation: 0.5,
+				sprite: { bitmapImage: "gantrya.gif", sprites: { "main": { "f" : [0, 0, 640, 82] } } }
+			},
+			{
+				name: "gantryb", x: 606, y: 212, scrollAttenuation: 0.5,
+				sprite: { bitmapImage: "gantryb.gif", sprites: { "main": { "f" : [0, 0, 34, 198] } } }
 			},
 
 			{

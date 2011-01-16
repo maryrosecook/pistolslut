@@ -290,7 +290,7 @@ Engine.initObject("VectorCaret", "Caret", function() {
 			var shape = [ new Point2D(0, 0), new Point2D(0, VectorCaret.HEIGHT), new Point2D(VectorCaret.WIDTH, VectorCaret.HEIGHT), new Point2D(VectorCaret.WIDTH, 0)];
 			this.getComponent("draw").setPoints(shape);
 
-			this.getComponent("draw").setLineStyle("black");
+			this.getComponent("draw").setLineStyle("#000000");
 			this.getComponent("draw").setFillStyle(this.color);
         },
 	}, {
