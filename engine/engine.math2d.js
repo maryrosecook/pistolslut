@@ -2,7 +2,7 @@
  * The Render Engine
  * Math2D
  *
- * @fileoverview A 2D math library with static methods, plus objects to represent 
+ * @fileoverview A 2D math library with static methods, plus objects to represent
  *               points, rectangles and circles.
  *
  * @author: Brett Fattori (brettf@renderengine.com)
@@ -311,7 +311,7 @@ var Point2D = MathObject.extend(/** @scope Point2D.prototype */{
       this.upd();
       return this;
    },
-   
+
    /**
     * Get the elements of this point as an object with elements X and Y.
     * @return {Object}
@@ -386,7 +386,7 @@ var Point2D = MathObject.extend(/** @scope Point2D.prototype */{
    },
 
    /**
-    * A mutator method that divides the components of this point by another.  The point 
+    * A mutator method that divides the components of this point by another.  The point
     * cannot contain zeros for its components.
     * @param point {Point2D} A point
     * @return {Point2D} This point
@@ -439,7 +439,7 @@ var Point2D = MathObject.extend(/** @scope Point2D.prototype */{
    isZero: function() {
       return this._vec.eql(Vector.Zero);
    },
-   
+
    /**
     * Returns the distance between this and another point.
     * @param point {Point2D} The point to compare against
@@ -481,7 +481,7 @@ Engine.initObject("Vector2D", "Point2D", function() {
 
 /**
  * @class A 2D vector class with helpful manipulation methods.
- * 
+ *
  * @param x {Point2D|Number} If this arg is a Vector2D, its values will be
  *                           copied into the new vector.  If a number,
  *                           the X length of the vector.
@@ -532,7 +532,7 @@ var Vector2D = Point2D.extend(/** @scope Vector2D.prototype */{
    /**
     * A mutator method that gets the cross product of this vector and another.
     * @param vector {Vector2D} The vector to perform the operation against.
-    * @return {Vector2D} This vector 
+    * @return {Vector2D} This vector
     */
    cross: function(vector) {
       this._vec = this._vec.cross(vector._vec);
@@ -553,7 +553,7 @@ var Vector2D = Point2D.extend(/** @scope Vector2D.prototype */{
    }
 
 }, { /** @scope Vector2D.prototype */
-   
+
    /**
     * Return the classname of the this object
     * @return {String} "Vector2D"
@@ -640,7 +640,7 @@ var Rectangle2D = MathObject.extend(/** @scope Rectangle2D.prototype */{
 
    /**
     * Get an object with the elements containing left, top, width, height, right
-    * and bottom as the elements x, y, w, h, r, and b. 
+    * and bottom as the elements x, y, w, h, r, and b.
     *
     * @return {Object} An object with the specified elements
     */
@@ -661,8 +661,8 @@ var Rectangle2D = MathObject.extend(/** @scope Rectangle2D.prototype */{
    },
 
    /**
-    * A mutator method that offsets this rectangle by the given amount in the X and Y axis.  
-    * The first parameter can be either a point, or the value for the X axis.  If the X axis is 
+    * A mutator method that offsets this rectangle by the given amount in the X and Y axis.
+    * The first parameter can be either a point, or the value for the X axis.  If the X axis is
     * specified, the second parameter should be the amount to offset in the Y axis.
     *
     * @param offsetPtOrX {Point2D|int} Either a {@link Point} which contains the offset in X and Y, or an integer
@@ -895,7 +895,7 @@ var Rectangle2D = MathObject.extend(/** @scope Rectangle2D.prototype */{
       return (this.topLeft + " [" + this.dims + "]");
    }
 }, { /** @scope Rectangle2D.prototype */
-   
+
    /**
     * Return the classname of the this object
     * @return {String} "Rectangle2D"
@@ -918,9 +918,9 @@ Engine.initObject("Circle2D", "MathObject", function() {
 var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
 
    center: null,
-   
+
    radius: 0,
-   
+
    /**
     * Create a circle object specifying the X and Y center position and
     * the radius.
@@ -934,7 +934,7 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
       this.radius = 0;
       this.set(x,y,radius);
    },
-	
+
 	destroy: function() {
 		this.center.destroy();
 		this.base();
@@ -972,7 +972,7 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
 
    /**
     * Get an object with the elements containing centerX, centerY, and radius
-    * as the elements x, y, and r. 
+    * as the elements x, y, and r.
     *
     * @return {Object} An object with the specified elements
     */
@@ -1014,7 +1014,7 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
 		offs.destroy();
       return this;
    },
-   
+
    /**
     * Get the center point of this circle.
     * @return {Point2D} The center point
@@ -1022,7 +1022,7 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
    getCenter: function() {
       return this.center;
    },
-   
+
    /**
     * Get the radius of this circle
     * @return {Number} The radius
@@ -1030,7 +1030,7 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
    getRadius: function() {
       return this.radius;
    },
-   
+
    /**
     * Determine if this circle intersects another circle.
     *
@@ -1040,15 +1040,15 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
    isIntersecting: function(circle) {
       // Square root is slow...
       //var d = this.getCenter().dist(circle.getCenter());
-      //return (d <= (this.getRadius() + circle.getRadius())); 
-      
+      //return (d <= (this.getRadius() + circle.getRadius()));
+
       // Faster
       var c1 = this.getCenter();
       var c2 = circle.getCenter();
       var dX = Math.pow(c1.x - c2.x, 2);
       var dY = Math.pow(c1.y - c2.y, 2);
       var r2 = Math.pow(this.getRadius() + circle.getRadius(), 2);
-      return (dX + dY <= r2);    
+      return (dX + dY <= r2);
    },
 
    /**
@@ -1093,10 +1093,10 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
     */
    toString: function() {
       return this.center.toString() + " r" + Number(this.radius).toFixed(2);
-   }  
+   }
 
 },{ /** @scope Circle2D.prototype */
-   
+
    /**
     * Return the classname of the this object
     * @return {String} "Circle2D"
@@ -1104,7 +1104,7 @@ var Circle2D = MathObject.extend(/** @scope Circle2D.prototype */{
    getClassName: function() {
       return "Circle2D";
    }
-   
+
 });
 
 return Circle2D;

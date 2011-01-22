@@ -22,11 +22,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 				this.reactToBeingUnderFire();
 		},
 
-		notifyTimeToThrowGrenade: function() {
-			if(this.isEnemyInSight() && this.host.grenadeThrower == true && this.host.isCrouching())
-		        this.host.throwGrenade();
-		},
-
 		notifyIncoming: function(ordinance) {
 			if(ordinance.shooter != this.host)
 				if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
@@ -38,12 +33,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.host.crouch();
 		},
 
-		isEnemyInSight: function() {
-            return this.field.isPlayerAlive()
-                && this.field.inView(this.host)
-                && this.isTurnedTowardsEnemy();
-        },
-
         isTurnedTowardsEnemy: function() { return this.host.direction == this.directionOfPlayer(); },
 
 		execute: function(renderContext, time) {
@@ -51,7 +40,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
         canReload: function() { return this.isFreeAgent() && this.host.weapon.hasAmmoLeft() && this.host.weapon.shouldReload(); },
-        canFight: function() { return this.isFreeAgent() && this.isEnemyInSight() && this.hasOperationalWeapon(); },
+        canFight: function() { return this.isFreeAgent() && this.isInDanger() && this.hasOperationalWeapon(); },
         canCrouch: function() { return !this.host.isCrouching(); },
         canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
@@ -59,8 +48,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
         //canPatrol: function() { return !this.isEnemyInSight(); },
         canFindCover: function() { return !this.isInCover() && this.host.weapon.isMobile(); },
-        canRunForCover: function() { return !this.isInCover(); },
         canStop: function() { return this.host.walking; },
+        canRunForCover: function() { !this.isInCover(); },
 
         lastCalledRange: 0,
         canCallRange: function() {
@@ -72,7 +61,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		canShoot: function() {
 			return this.host.weapon.allowedToFire()
-                && this.isEnemyInSight()
                 && !this.friendliesInLineOfFire()
                 && !this.furnitureInLineOfFire();
 		},
@@ -163,7 +151,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return false;
         },
 
-		lineOfFireSafetyMargin: 5, // added to top and bottom of potential target to be on safer side
+		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var playerEnemies = this.field.level.liveEnemies();
 			if(this.host.weapon.hasLineOfFire() == true)
@@ -199,6 +187,11 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 return this.field.collider.xDistance(this.getNearestCover(), this.host) <= this.coverDistance;
             else
                 return false;
+        },
+
+        isInDanger: function() {
+            return this.field.isPlayerAlive()
+                && this.field.collider.inLineOfFire(this.host, this.field.playerObj, this.lineOfFireSafetyMargin);
         },
 
         isPathBlocked: function() {

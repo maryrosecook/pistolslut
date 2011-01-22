@@ -35,7 +35,7 @@ Engine.initObject("Collider", "Base", function() {
 		aFallingThroughB: function(a, b) {
 			var aRect = new CheapRect(a);
 			var bRect = new CheapRect(b);
-			return a.getVelocity().y >= 0 && aRect.b > bRect.y && aRect.b < bRect.y + 14;
+			return a.getVelocity().y >= 0 && aRect.b > bRect.y && aRect.b < bRect.y + 16;
 		},
 
 		aOnB: function(a, b) {
@@ -59,7 +59,7 @@ Engine.initObject("Collider", "Base", function() {
 		aOnBottomAndBumpingB: function(a, b) {
 			var aRect = new CheapRect(a);
 			var bRect = new CheapRect(b);
-			return a.getVelocity().y <= 0 && aRect.y < bRect.b && aRect.y > bRect.b - 14;
+			return a.getVelocity().y <= 0 && aRect.y < bRect.b && aRect.y > bRect.b - 16;
 		},
 
 		getPCL: function(subject) {

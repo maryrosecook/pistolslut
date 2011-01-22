@@ -17,7 +17,7 @@ Engine.initObject("Crosshair", "Mover", function() {
 
 			this.setZIndex(this.field.alwaysVisibleZIndex);
 
-			this.addSprite("main", this.field.spriteLoader.getSprite("crosshair.gif", "main"));
+			this.addSprite("main", this.field.spriteLoader.getSprite("crosshair.png", "main"));
 			this.setSprite("main");
 
 			this.getComponent("move").setCheckLag(false);

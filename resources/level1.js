@@ -1,7 +1,7 @@
 {
 	// Frame (f): left, top, frameWidth, frameHeight
 	// Animation (a): left, top, frameWidth, frameHeight, frameCount, speedMS, loop/toggle
-	bitmapImage: "level1.gif", bitmapWidth: 4000, bitmapHeight: 430, collisionMap: [],
+	bitmapImage: "level1.gif", bitmapWidth: 6000, bitmapHeight: 430, collisionMap: [],
 	objects: {
 		signs: {
 			color: "#fff", letterSpacing: 7,
@@ -19,7 +19,9 @@
 			{ bitmapImage: "lantern.png", sprites: { "main": { "f": [0, 0, 14, 13] } } },
 			{ bitmapImage: "barrel.gif", sprites: { "main": { "f": [0, 0, 20, 27] } } },
 			{ bitmapImage: "grenade.gif", sprites: { "main": { "a": [0, 0, 11, 11, 4, 100, "loop"] } } },
-			{ bitmapImage: "crosshair.gif", sprites: { "main": { "f": [0, 0, 3, 3] } } },
+			{ bitmapImage: "crosshair.png", sprites: { "main": { "f": [0, 0, 3, 3] } } },
+			{ bitmapImage: "drystonewall1.gif", sprites: { "main": { "f": [0, 0, 15, 27] } } },
+			{ bitmapImage: "drystonewall2.gif", sprites: { "main": { "f": [0, 0, 15, 27] } } },
 			{ bitmapImage: "fenceright.gif", sprites: { "main": { "f": [0, 0, 11, 67] } } },
 		],
 
@@ -29,9 +31,12 @@
 			{ x: 370, y: 369, spriteName: "bin.gif" },
 			{ x: 775, y: 370, spriteName: "sandbags.gif" },
 			{ x: 1100, y: 369, spriteName: "bin.gif" },
+			{ x: 2000, y: 370, spriteName: "sandbags.gif" },
 			{ x: 2315, y: 369, spriteName: "bin.gif" },
 			{ x: 2665, y: 369, spriteName: "bin.gif" },
-			{ x: 3989, y: 328, spriteName: "fenceright.gif" },
+            { x: 4000, y: 369, spriteName: "drystonewall1.gif" },
+            { x: 4400, y: 369, spriteName: "drystonewall2.gif" },
+			{ x: 5989, y: 328, spriteName: "fenceright.gif" },
 		],
 
 		blockFurniture: [
@@ -39,12 +44,14 @@
 		],
 
 		enemies: [
-			{ name: "enemy", clazz: Enemy, x: 610, y: 350, type: "cannonfodder" },
-			{ name: "enemy", clazz: Enemy, x: 720, y: 350, type: "mortarer" },
-			{ name: "enemy", clazz: Enemy, x: 795, y: 350, type: "grunt" },
+			{ name: "enemy", clazz: Enemy, x: 795, y: 350, type: "cannonfodder" },
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
 			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
+			{ name: "enemy", clazz: Enemy, x: 2400, y: 350, type: "cannonfodder" },
 			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, type: "captain" },
+			{ name: "enemy", clazz: Enemy, x: 4020, y: 350, type: "cannonfodder" },
+			{ name: "enemy", clazz: Enemy, x: 4340, y: 350, type: "mortarer" },
+			{ name: "enemy", clazz: Enemy, x: 4420, y: 350, type: "captain" },
 		],
 
 		speeches: {
@@ -119,21 +126,25 @@
 				sprite: { bitmapImage: "longbuildingfence.png", sprites: { "main": { "f" : [0, 0, 400, 20] } } }
 			},
 			{
-				name: "closestlight1", x: 1600, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				name: "closestlight1", x: 1600, y: 92, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{
-				name: "closestlight2", x: 3000, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				name: "closestlight2", x: 3000, y: 92, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{
-				name: "closestlight2", x: 3500, y: 91, scrollAttenuation: 0, zIndex: 2000,
+				name: "closestlight2", x: 3500, y: 92, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{
 				name: "signpistol", x: 7500, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
 				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }
-			}
+			},
+			{
+				name: "tree", x: 3928, y: 1, scrollAttenuation: 0,
+				sprite: { bitmapImage: "tree.gif", sprites: { "main": { "f" : [0, 0, 544, 395] } } }
+			},
 		]
 	}
 }

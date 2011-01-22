@@ -235,7 +235,12 @@ Engine.initObject("Human", "Mover", function() {
 			}
 		},
 
-		turn: function(direction) { this.direction = direction; },
+		turn: function(direction) {
+            if(this.walking == true)
+                this.stopWalk();
+
+            this.direction = direction;
+        },
 
 		walking: false,
 		walk: function(direction) {
@@ -251,7 +256,7 @@ Engine.initObject("Human", "Mover", function() {
 			}
 		},
 
-		stopWalk: function(newX) {
+		stopWalk: function() {
 			this.getVelocity().setX(0);
 			this.walking = false;
 		},
