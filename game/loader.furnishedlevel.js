@@ -86,6 +86,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		speeches: [],
 		lifts: [],
         barrels: [],
+        playerData: null,
 
 		wind: 0,
 
@@ -128,7 +129,12 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addLifts(renderContext);
             this.addBarrels(renderContext);
 			this.addTriggers(); // must be called last so that all the triggerable objs have been added to this.triggerableObjects
+            this.setPlayerData();
 		},
+
+        setPlayerData: function() {
+            this.playerData = this.levelResource.info.player;
+        },
 
 		// creates Furniture render objects for each piece of furniture loaded from
 		// level def file and adds them to the renderContext

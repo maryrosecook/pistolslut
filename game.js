@@ -77,7 +77,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		notifier: null,
 
 		groundY: 395,
-		playerStartPosY: 344,
 		alwaysVisibleZIndex: 2001,
 		frontZIndex: 2000,
 		moverZIndex: 1000,
@@ -227,9 +226,10 @@ Engine.initObject("PistolSlut", "Game", function() {
 		play: function() {
 			this.destroyStartScreen();
 
-			this.playerObj = Player.create(this, this.playerStartPosY);
+			this.playerObj = Player.create(this, this.level.playerData);
 			this.renderContext.add(this.playerObj);
             this.addMeters();
+            this.updateFramePosition(null, this.playerObj);
 		},
 
         addMeters: function() {
@@ -281,6 +281,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 		// updates the position of the view frame
 		updateFramePosition: function(vector, centralObj) {
 			var centralObjWindowX = centralObj.getRenderPosition().x;
+
+            if(vector === null) // just want to zip straight to a place - used if player is warped to start position
+                vector = Point2D.create(centralObjWindowX, 0);
 
 			var movingPastCentrePoint = false;
 			if(vector.x > 0 && centralObjWindowX > this.playerCenterX)

@@ -8,8 +8,8 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Player", "Human", function() {
     var Player = Human.extend({
 
-	    constructor: function(field, groundY) {
-		    var startPosition = Point2D.create(50, groundY);
+	    constructor: function(field, playerData) {
+		    var startPosition = Point2D.create(playerData.startPosition.x, playerData.startPosition.y);
 		    this.turn(Collider.RIGHT);
 		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, ["M9", "Mac10", "SPAS"], Player.CAN_THROW_GRENADES);
 
