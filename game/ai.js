@@ -46,10 +46,9 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
         canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
-        //canPatrol: function() { return !this.isEnemyInSight(); },
         canFindCover: function() { return !this.isInCover() && this.host.weapon.isMobile(); },
-        canStop: function() { return this.host.walking; },
-        canRunForCover: function() { !this.isInCover(); },
+        canStop: function() { return this.isInCover() && this.host.walking; },
+        canRunForCover: function() { return !this.isInCover(); },
 
         lastCalledRange: 0,
         canCallRange: function() {
@@ -107,16 +106,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 this.host.walk(this.directionOfPlayer());
         },
 
-        // patrol: function() {
-        //     if(this.isPathBlocked())
-        //     {
-        //         var nearestFurnitureInDirectionFacing = this.field.collider.getNearest(this.host.direction, this.host, this.field.level.furniture);
-        //         this.host.turn(this.field.collider.getDirectionOf(this.host, nearestFurnitureInDirectionFacing));
-        //     }
-
-        //     this.host.walk(this.host.direction);
-        // },
-
         speechShowTime: 2000,
         callRange: function() {
             var x = this.field.collider.xDistance(this.host.shooter, this.field.playerObj);
@@ -151,14 +140,15 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return false;
         },
 
-		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
+		lineOfFireSafetyMargin: 5, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var playerEnemies = this.field.level.liveEnemies();
 			if(this.host.weapon.hasLineOfFire() == true)
 				for(var i in playerEnemies)
 					if(this.host != playerEnemies[i])
-						if(this.field.collider.inLineOfFire(this.host, playerEnemies[i], this.lineOfFireSafetyMargin))
-							return true;
+                        if(this.field.inView(playerEnemies[i]))
+						    if(this.field.collider.inLineOfFire(this.host, playerEnemies[i], this.lineOfFireSafetyMargin))
+							    return true;
 
 			return false;
 		},
@@ -189,9 +179,11 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 return false;
         },
 
+        verticalFieldOfFireAdditions: 20,
         isInDanger: function() {
-            return this.field.isPlayerAlive()
-                && this.field.collider.inLineOfFire(this.host, this.field.playerObj, this.lineOfFireSafetyMargin);
+            return this.field.inView(this.host)
+                && this.field.isPlayerAlive()
+                && this.field.collider.inLineOfFire(this.host, this.field.playerObj, this.verticalFieldOfFireAdditions);
         },
 
         isPathBlocked: function() {

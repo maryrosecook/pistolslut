@@ -17,6 +17,8 @@ Engine.initObject("Machine", "Base", function() {
             else
                 node = new State(subTreeJson.identifier, subTreeJson.test, subTreeJson.strategy, parent, actor);
 
+            node.report = subTreeJson.report;
+
             for(var i in subTreeJson.children)
                 node.children[node.children.length] = this.read(subTreeJson.children[i], node, actor);
 
@@ -38,6 +40,7 @@ Engine.initObject("Node", "Base", function() {
         parent: null,
         children: null,
         actor: null,
+        report: null,
 
 		constructor: function(identifier, test, strategy, parent, actor) {
             this.identifier = identifier;
@@ -49,7 +52,8 @@ Engine.initObject("Node", "Base", function() {
 	    },
 
         tick: function() {
-            //console.log(this.identifier)
+            //if(PistolSlut.inView(this.actor.host)) console.log(this.identifier);
+
             if(this.isAction()) // run an actual action
                 this.run();
 
@@ -78,6 +82,8 @@ Engine.initObject("Node", "Base", function() {
             var functionName = this.test; // can specify custom test function name
             if(functionName === undefined) // no override so go with default function name
                 functionName = "can" + this.identifier[0].toUpperCase() + this.identifier.substring(1, this.identifier.length);
+
+            //if(PistolSlut.inView(this.actor.host)) console.log(functionName, this.actor[functionName].call(this.actor));
 
             return this.actor[functionName].call(this.actor);
         },
@@ -147,7 +153,7 @@ Engine.initObject("State", "Node", function() {
         },
 
         run: function() {
-            console.log(this.identifier);
+            //console.log(this.identifier);
             this.actor[this.identifier].call(this.actor); // run the action
         },
 	}, {

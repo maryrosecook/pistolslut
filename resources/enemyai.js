@@ -30,7 +30,6 @@
                     ]
                 },
                 { identifier: "stand" },
-                { identifier: "turnTowardsPlayer" },
                 { identifier: "switchWeapon" },
             ]
         }
