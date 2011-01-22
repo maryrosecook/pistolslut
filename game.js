@@ -283,7 +283,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			var centralObjWindowX = centralObj.getRenderPosition().x;
 
             if(vector === null) // just want to zip straight to a place - used if player is warped to start position
-                vector = Point2D.create(centralObjWindowX, 0);
+                vector = Point2D.create(centralObjWindowX - this.playerCenterX, 0);
 
 			var movingPastCentrePoint = false;
 			if(vector.x > 0 && centralObjWindowX > this.playerCenterX)
