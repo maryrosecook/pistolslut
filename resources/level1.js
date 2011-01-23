@@ -147,8 +147,20 @@
 				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }
 			},
 			{
-				name: "tree", x: 3928, y: 1, scrollAttenuation: 0,
-				sprite: { bitmapImage: "tree.gif", sprites: { "main": { "f" : [0, 0, 544, 395] } } }
+				name: "treea", x: 3937, y: 2, scrollAttenuation: 0,
+				sprite: { bitmapImage: "treea.png", sprites: { "main": { "f" : [0, 0, 535, 336] } } }
+			},
+			{
+				name: "treeb", x: 4192, y: 337, scrollAttenuation: 0,
+				sprite: { bitmapImage: "treeb.png", sprites: { "main": { "f" : [0, 0, 72, 59] } } }
+			},
+			{
+				name: "daffsingles", x: 4100, y: 387, scrollAttenuation: 0,
+				sprite: { bitmapImage: "daffsingles.png", sprites: { "main": { "f" : [0, 0, 30, 8] } } }
+			},
+			{
+				name: "daffsingles", x: 4300, y: 387, scrollAttenuation: 0,
+				sprite: { bitmapImage: "daffsingles.png", sprites: { "main": { "f" : [0, 0, 30, 8] } } }
 			},
 		]
 	}
