@@ -274,13 +274,16 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		shot: function(ordinance) {
-			if(this.isAlive())
+			if(this.isAlive() || this.isDying())
 			{
-				this.field.notifier.post(Human.SHOT, this);
 				this.bloodSpurt(ordinance);
-				this.health -= ordinance.damage;
-				if(this.health <= 0)
-					this.die(ordinance);
+                if(this.isAlive())
+                {
+                    this.field.notifier.post(Human.SHOT, this);
+				    this.health -= ordinance.damage;
+				    if(this.health <= 0)
+					    this.die(ordinance);
+                }
 			}
 		},
 
@@ -369,7 +372,7 @@ Engine.initObject("Human", "Mover", function() {
 		friction: 0.1,
 		handleFriction: function() {
 			newX = null;
-			if(!this.isAlive())
+			if(this.isDying())
 			{
 				var x = this.getVelocity().x;
 				if(x == 0)
@@ -408,6 +411,7 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		isAlive: function() { return this.stateOfBeing == Human.ALIVE; },
+        isDying: function() { return this.stateOfBeing == Human.DYING; },
 		isCrouching: function() { return this.standState == Human.CROUCHING; },
 
 		getGunAngle: function() { return Human.COORDINATES[this.direction][this.standState][this.weapon.name]["gunAngle"]; },

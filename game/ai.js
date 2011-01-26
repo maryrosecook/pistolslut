@@ -140,7 +140,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return false;
         },
 
-		lineOfFireSafetyMargin: 5, // added to top and bottom of potential target to be on safer side
+		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var playerEnemies = this.field.level.liveEnemies();
 			if(this.host.weapon.hasLineOfFire() == true)

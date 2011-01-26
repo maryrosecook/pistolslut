@@ -29,7 +29,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 				}
 			}
 			else if(obj instanceof Human) {
-				if(obj.isAlive())
+				if(obj.isAlive() || obj.isDying())
 				{
 					if(this.field.collider.objsColliding(this, obj))
 				    {
