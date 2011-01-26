@@ -45,7 +45,7 @@
 		],
 
 		blockFurniture: [
-			{ name: "longbuildingbody1", shape: { x: 2300, y: 96, w: 400, h: 212 } },
+			{ name: "longbuildingbody1", shape: { x: 2300, y: 196, w: 400, h: 112 } },
 		],
 
 		enemies: [
@@ -81,24 +81,24 @@
 		sky: { startColor: ["26", "26", "26"], transformations: null },
 
 		lifts: [
-			{ name: "longbuildinglift", startX: 2259, startY: 400, distance: 304 },
+			{ name: "longbuildinglift", startX: 2259, startY: 400, distance: 204 },
 		],
 
         barrels: [
-            { x: 2500, y: 69 },
+            { x: 2500, y: 169 },
         ],
 
 		parallaxes: [
 			{
-				name: "farthestlight", x: 400, y: 367, scrollAttenuation: 0.8,
+				name: "farthestlight", x: 584, y: 367, scrollAttenuation: 0.8,
 				sprite: { bitmapImage: "farthestlight.gif", sprites: { "main": { "f" : [0, 0, 22, 30] } } }
 			},
 			{
-				name: "fartherlight", x: 480, y: 348, scrollAttenuation: 0.75,
+				name: "fartherlight", x: 630, y: 348, scrollAttenuation: 0.75,
 				sprite: { bitmapImage: "fartherlight.gif", sprites: { "main": { "f" : [0, 0, 41, 52] } } }
 			},
 			{
-				name: "closerlight", x: 750, y: 284, scrollAttenuation: 0.60,
+				name: "closerlight", x: 870, y: 284, scrollAttenuation: 0.60,
 				sprite: { bitmapImage: "closerlight.gif", sprites: { "main": { "f" : [0, 0, 89, 116] } } }
 			},
 			{
@@ -123,15 +123,15 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{
-				name: "longbuilding", x: 2300, y: 96, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 400, 300] } } }
+				name: "longbuilding", x: 2300, y: 196, scrollAttenuation: 0, zIndex: 2000,
+				sprite: { bitmapImage: "longbuilding.png", sprites: { "main": { "f" : [0, 0, 400, 200] } } }
 			},
             {
-				name: "longbuildingfence", x: 2300, y: 76, scrollAttenuation: 0, zIndex: 2000,
+				name: "longbuildingfence", x: 2300, y: 176, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "longbuildingfence.png", sprites: { "main": { "f" : [0, 0, 400, 20] } } }
 			},
 			{
-				name: "closestlight1", x: 1600, y: 92, scrollAttenuation: 0, zIndex: 2000,
+				name: "closestlight1", x: 1350, y: 92, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
 			{

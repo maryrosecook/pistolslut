@@ -302,7 +302,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 				for(var i in this.level.parallaxesToMove)
 				{
                     var parallax = this.level.parallaxesToMove[i];
-					parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
+                    if(this.inView(parallax))
+					   parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
 				}
 
 				// move meters
