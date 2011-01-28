@@ -3,11 +3,16 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 		damage: 0,
 		safeDistance: 40,
 
+		constructor: function(weapon) {
+			this.base(weapon);
+            this.field.notifier.post(AIComponent.SOUND, this);
+		},
+
 		update: function(renderContext, time) {
 			this.field.applyGravity(this);
 			this.base(renderContext, time);
 		},
-		
+
 		setupGraphics: function() {
 			this.add(Vector2DComponent.create("draw"));
 			var c_draw = this.getComponent("draw");
@@ -26,7 +31,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 			}
 			else if(obj instanceof Human) {
 				if(obj.isAlive())
-				{	
+				{
 					if(this.field.collider.objsColliding(this, obj))
 				  {
 						this.explode(obj);
@@ -36,7 +41,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 			}
 			return ColliderComponent.CONTINUE;
 		},
-		
+
 		shrapnelCount: 30,
 		shrapnelTTL: 500,
 		explode: function(objHit) {
@@ -53,7 +58,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 
 	}, {
 		getClassName: function() { return "MortarRound"; },
-		
+
 		SHAPE: [ new Point2D(0, 0), new Point2D(1, 0), new Point2D(1,  1), new Point2D(0,  1)],
 	});
 

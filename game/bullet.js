@@ -5,6 +5,7 @@ Engine.initObject("Bullet", "Ordinance", function() {
 
 		constructor: function(weapon) {
 			this.base(weapon);
+            this.field.notifier.post(AIComponent.SOUND, this);
 		},
 
 		setupGraphics: function() {

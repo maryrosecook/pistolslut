@@ -86,6 +86,7 @@ Engine.initObject("Barrel", "Mover", function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));
 
+            this.field.notifier.post(AIComponent.SOUND, this);
 			this.destroy();
 		},
 

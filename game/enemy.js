@@ -10,10 +10,13 @@ Engine.initObject("Enemy", "Human", function() {
 var Enemy = Human.extend({
     accuracy: 1.0,
 
-	constructor: function(name, field, position, typeData) {
+	constructor: function(name, field, position, typeData, direction) {
 		this.turn(Collider.LEFT);
 		this.base(name, field, position, typeData.health, typeData.weapons, typeData.grenadeThrower);
         this.accuracy = typeData.accuracy;
+
+        if(direction !== undefined)
+            this.turn(direction);
 
 		this.add(AIComponent.create("logic" + this.name, null, this.field, this, "enemyai"));
 	},

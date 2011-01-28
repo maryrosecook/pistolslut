@@ -67,6 +67,9 @@ Engine.initObject("Grenade", "Ordinance", function() {
 
                     this.stopSweeping();
 					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
+
+                    this.field.notifier.post(AIComponent.SOUND, this);
+
                     return ColliderComponent.STOP;
 				}
 				else

@@ -15,6 +15,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			// subscribe to events the enemy cares about
 			this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
 			this.field.notifier.subscribe(Human.SHOT, this, this.notifyShot);
+            this.field.notifier.subscribe(AIComponent.SOUND, this, this.notifySound);
 	    },
 
 		notifyShot: function(person) {
@@ -27,6 +28,13 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 				if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
 					this.reactToBeingUnderFire();
 		},
+
+        notifySound: function(soundMaker) {
+            if(this.field.inView(this.host))
+                if(!this.isTurnedTowardsEnemy())
+                    if(this.field.inView(soundMaker))
+                        this.host.turn(this.field.collider.getDirectionOf(this.host, soundMaker));
+        },
 
 		reactToBeingUnderFire: function() {
 			this.lastUnderFire = new Date().getTime();
@@ -212,8 +220,9 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.host.remove(this);
 		},
 	}, {
-	  getClassName: function() { return "AIComponent"; }
+	    getClassName: function() { return "AIComponent"; },
 
+        SOUND: "sound",
 	});
 
 	return AIComponent;
