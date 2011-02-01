@@ -62,10 +62,9 @@ Engine.initObject("Lift", "Mover", function() {
 		stopMoving: function() { this.moving = false; },
 
 		onCollide: function(obj) {
-			if(obj instanceof Human) {
-				if(obj.isAlive())
+			if(obj instanceof Human || obj instanceof Barrel) {
 					if(this.field.collider.objsColliding(this, obj))
-				  {
+				    {
 						if(this.field.collider.aFallingThroughB(obj, this))
 							obj.setOnLift(this);
 

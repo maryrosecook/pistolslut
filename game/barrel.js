@@ -4,7 +4,6 @@ Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Barrel", "Mover", function() {
 	var Barrel = Mover.extend({
-
 		constructor: function(position) {
 			this.base("Barrel");
 
@@ -26,7 +25,11 @@ Engine.initObject("Barrel", "Mover", function() {
 		},
 
 		update: function(renderContext, time) {
-			this.field.applyGravity(this);
+            if(!this.isOnLift())
+			    this.field.applyGravity(this);
+
+            this.handleLift();
+
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();

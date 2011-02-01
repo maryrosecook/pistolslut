@@ -8,6 +8,7 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Mover", "Object2D", function() {
 	var Mover = Object2D.extend({
 		field: null,
+        lift: null,
 
 		sprites: {},
 		currentSpriteKey: null,
@@ -87,6 +88,21 @@ Engine.initObject("Mover", "Object2D", function() {
                 this.oldVelocity = null;
             }
         },
+
+        isOnLift: function() { return this.lift != null; },
+		setOnLift: function(lift) {
+			this.lift = lift;
+			this.getVelocity().setY(0);
+		},
+
+		setNotOnLift: function() {
+			this.lift = null;
+		},
+
+		handleLift: function() {
+			if(this.isOnLift())
+				this.getPosition().setY(this.lift.getStandY(this));
+		},
 
 		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
 		getLastPosition: function() { return this.getComponent("move").getLastPosition(); },

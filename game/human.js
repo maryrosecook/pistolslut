@@ -17,7 +17,6 @@ Engine.initObject("Human", "Mover", function() {
 		standState: null,
      	grenadeThrower: false,
 		direction: null,
-		lift: null,
         spotter: null,
         shooter: null,
 
@@ -91,19 +90,9 @@ Engine.initObject("Human", "Mover", function() {
 			this.setPosition(this.getPosition().add(this.getVelocity()));
 		},
 
-		handleLift: function() {
-			if(this.lift != null)
-				this.getPosition().setY(this.lift.getStandY(this));
-		},
-
 		setOnLift: function(lift) {
-			this.lift = lift;
-			this.getVelocity().setY(0);
+            this.base(lift);
 			this.jumping = false;
-		},
-
-		setNotOnLift: function() {
-			this.lift = null;
 		},
 
 		canStand: function() { return this.weapon.canStand(); },
@@ -225,7 +214,7 @@ Engine.initObject("Human", "Mover", function() {
 				this.jumping = true;
 
 				var newVelocityY = this.jumpSpeed;
-				if(this.lift != null)
+				if(this.isOnLift())
 					newVelocityY += this.lift.getVelocity().y;
 
 				this.setNotOnLift();
