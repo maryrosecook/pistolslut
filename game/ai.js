@@ -53,6 +53,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
+        canStopSpotting: function() { return this.host.isSpotter() && !this.host.shooter.spotterCompatible(); },
         canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
         canFindCover: function() { return !this.isInCover() && this.host.weapon.isMobile(); },
         canStop: function() { return this.isInCover() && this.host.walking; },
@@ -88,7 +89,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
         maxSpotterDistance: 200,
         canEnlistSpotter: function() {
-            if(this.needSpotter())
+            if(this.host.spotterCompatible() && !this.host.hasSpotter())
             {
                 var nearestAlly = this.getNearestAlly();
                 if(nearestAlly !== null && this.field.collider.xDistance(nearestAlly, this.host) < this.maxSpotterDistance)
@@ -105,6 +106,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         idle: function() { },
         turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
         enlistSpotter: function() { this.host.setSpotter(this.getNearestAlly()); },
+        stopSpotting: function() { this.host.shooter.unsetSpotter(); },
         switchWeapon: function() { this.host.cycleWeapon(); },
         stop: function() { this.host.stopWalk(); },
 
@@ -132,12 +134,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         throwGrenade: function() {
             this.host.throwGrenade();
             this.lastThrewGrenade = new Date().getTime();
-        },
-
-        needSpotter: function() {
-            if(this.host.weapon.isSpotterCompatible())
-                if(!this.host.hasSpotter())
-                    return true;
         },
 
         hasOperationalWeapon: function() {
@@ -191,7 +187,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         isInDanger: function() {
             return this.field.inView(this.host)
                 && this.field.isPlayerAlive()
-                && this.field.collider.inLineOfFire(this.host, this.field.playerObj, this.verticalFieldOfFireAdditions);
+                && (this.field.collider.inLineOfFire(this.host, this.field.playerObj, this.verticalFieldOfFireAdditions)
+                    || !this.host.weapon.hasLineOfFire());
         },
 
         isPathBlocked: function() {

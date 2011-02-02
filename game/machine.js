@@ -138,6 +138,16 @@ Engine.initObject("Node", "Base", function() {
 
             return this.parent.nearestAncestor(); // no more runnable children in the sequence so return parent's first runnable ancestor
         },
+
+        // returns first namesake forebear encountered when going directly up tree
+        nearestNamesakeAncestor: function(identifier) {
+            if(this.parent === null)
+                return null;
+            else if(this.parent.identifier == identifier)
+                return this.parent;
+            else
+                return this.parent.nearestNamesakeAncestor(identifier);
+        },
 	}, {
 	    getClassName: function() { return "Node"; },
 
@@ -170,14 +180,8 @@ Engine.initObject("Pointer", "Node", function() {
             return this[this.strategy].call(this);
         },
 
-        // returns first forebear encountered when going directly up tree
-        hereditory: function(pointer) {
-            if(this.parent === null)
-                return null;
-            else if(this.parent.identifier == pointer.identifier)
-                return this.parent;
-            else
-                return this.parent.hereditory(pointer);
+        hereditory: function() {
+            return this.nearestNamesakeAncestor(this.identifier);
         },
 	}, {
 	  getClassName: function() { return "Pointer"; }

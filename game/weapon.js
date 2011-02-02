@@ -223,7 +223,7 @@ Engine.initObject("Weapon", "Base", function() {
             }
         },
 
-        hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0; },
+        hasAmmoLeft: function() { return this.shotsInClip > 0 || this.spareClips > 0 || this.isReloading(); },
 		getGunTip: function() { return Point2D.create(this.owner.getRelativeGunTip(this.name)).add(this.owner.getPosition()); },
 
 		release: function() {

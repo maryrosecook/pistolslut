@@ -25,6 +25,14 @@ var Enemy = Human.extend({
 
     getAllies: function() { return this.field.level.liveEnemies(); },
 
+    spotterCompatible: function() {
+        if(this.weapon.isSpotterCompatible())
+            if(this.weapon.hasAmmoLeft())
+                return true;
+
+        return false;
+    },
+
 	die: function(ordinance) {
 		this.base(ordinance);
 		this.getLogic().removeFromHost();

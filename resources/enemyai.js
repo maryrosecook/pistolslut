@@ -1,9 +1,11 @@
 {
     identifier: "idle", strategy: "prioritised",
     children: [
-        { identifier: "spot", strategy: "sequential",
+        {
+            identifier: "spot", strategy: "sequential",
             children: [
                 { identifier: "callRange" },
+                { identifier: "stopSpotting" },
             ]
         },
         {
@@ -30,7 +32,13 @@
                     ]
                 },
                 { identifier: "stand" },
-                { identifier: "switchWeapon" },
+                {
+                    identifier: "switchWeapon", strategy: "sequential",
+                    children: [
+                        { identifier: "switchWeapon" },
+                        { identifier: "idle", pointer: true, strategy: "hereditory" },
+                    ]
+                },
             ]
         }
     ]

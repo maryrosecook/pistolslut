@@ -53,6 +53,8 @@
 			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
 			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
 			{ name: "enemy", clazz: Enemy, x: 2400, y: 350, type: "cannonfodder" },
+			{ name: "enemy", clazz: Enemy, x: 2350, y: 130, type: "cannonfodder" },
+			{ name: "enemy", clazz: Enemy, x: 2400, y: 130, type: "mortarer" },
 			{ name: "enemy", clazz: Enemy, x: 2700, y: 350, type: "captain" },
 			{ name: "enemy", clazz: Enemy, x: 4020, y: 350, type: "cannonfodder" },
 			{ name: "enemy", clazz: Enemy, x: 4340, y: 350, type: "mortarer" },
