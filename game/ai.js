@@ -25,8 +25,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		notifyIncoming: function(ordinance) {
 			if(ordinance.shooter != this.host)
-				if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
-					this.reactToBeingUnderFire();
+			    if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
+				    this.reactToBeingUnderFire();
 		},
 
         notifySound: function(soundMaker) {
