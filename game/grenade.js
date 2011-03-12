@@ -8,6 +8,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		timeThrown: null,
 		pinTimer: 3000, // how long the grenade takes to explode
 		safeDistance: 40,
+        bounciness: 0.5,
 
 		constructor: function(weapon) {
 			this.base(weapon);
@@ -43,7 +44,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 
 		onCollide: function(obj) {
 			if(obj instanceof Furniture || obj instanceof Lift)
-				return this.handleBounce(obj);
+				return this.field.physics.handleBounce(this, obj);
 
 			return ColliderComponent.CONTINUE;
 		},
@@ -55,35 +56,8 @@ Engine.initObject("Grenade", "Ordinance", function() {
 			return objCentre;
 		},
 
-		// bounce the grenade
-		bounciness: 0.5,
-		handleBounce: function(obj) {
-			if(this.field.collider.objsColliding(this, obj) == true)
-			{
-                var sideHit = this.field.collider.sideHit(this, obj);
-				if(sideHit !== null)
-				{
-                    this.field.collider.moveToEdge(this, obj, sideHit);
-
-                    this.stopSweeping();
-					this.setVelocity(this.field.physics.bounce(this.getVelocity(), this.bounciness, sideHit));
-
-                    this.field.notifier.post(AIComponent.SOUND, this);
-
-                    return ColliderComponent.STOP;
-				}
-				else
-				{
-					this.sweepPosition();
-					return this.handleBounce(obj);
-				}
-			}
-
-			return ColliderComponent.CONTINUE;
-		},
-
-		shrapnelCount: 30,
-		shrapnelTTL: 500,
+		shrapnelCount: 15,
+		shrapnelTTL: 700,
 		explode: function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
 				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, this.getPosition(), this.shrapnelTTL));

@@ -34,8 +34,9 @@
 			{ x: 775, y: 370, spriteName: "sandbags.gif" },
 			{ x: 1100, y: 369, spriteName: "bin.gif" },
 			{ x: 2000, y: 370, spriteName: "sandbags.gif" },
-            { x: 4000, y: 369, spriteName: "drystonewall1.gif" },
-            { x: 4400, y: 369, spriteName: "drystonewall2.gif" },
+			{ x: 3050, y: 369, spriteName: "bin.gif" },
+            { x: 3930, y: 369, spriteName: "drystonewall1.gif" },
+            { x: 4330, y: 369, spriteName: "drystonewall2.gif" },
 			{ x: 5989, y: 328, spriteName: "fenceright.gif" },
 		],
 
@@ -44,20 +45,30 @@
 			{ name: "bridgebollard1", shape: { x: 2400, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard2", shape: { x: 2600, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard3", shape: { x: 2800, y: 369, w: 20, h: 27 }, visible: true },
+
+			{ name: "scaffoldingafterbridge", shape: { x: 2950, y: 270, w: 280, h: 10 }, visible: true },
+
+			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 34 }, visible: true },
+			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 65 }, visible: true },
+			{ name: "bunkerbackblock", shape: { x: 3515, y: 362, w: 20, h: 34 }, visible: true },
+			{ name: "bunkerbackwall", shape: { x: 3515, y: 284, w: 20, h: 30 }, visible: true },
+			{ name: "bunkerceilingleft", shape: { x: 3320, y: 284, w: 35, h: 20 }, visible: true },
+			{ name: "bunkerceilingright", shape: { x: 3415, y: 284, w: 100, h: 20 }, visible: true },
 		],
 
 		enemies: [
-			{ name: "enemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
-			{ name: "enemy", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
-			{ name: "enemy", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
+			{ name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
+			{ name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
+			{ name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
 			{ name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
 			{ name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
 			{ name: "underbridge1", clazz: Enemy, x: 2510, y: 350, type: "cannonfodder" },
 			{ name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
 			{ name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
-			{ name: "enemy", clazz: Enemy, x: 4020, y: 350, type: "cannonfodder" },
-			{ name: "enemy", clazz: Enemy, x: 4340, y: 350, type: "mortarer" },
-			{ name: "enemy", clazz: Enemy, x: 4420, y: 350, type: "captain" },
+			{ name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
+			{ name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
+			{ name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
+			{ name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
 		],
 
 		speeches: {
@@ -86,7 +97,12 @@
 		],
 
         barrels: [
-            { x: 2600, y: 169 },
+            { name: "bridge", x: 2600, y: 180 },
+            { name: "bridge", x: 3400, y: 369 },
+        ],
+
+        windows: [
+            { name: "skylight", x: 3355, y: 284, width: 60, height: 2 },
         ],
 
 		parallaxes: [
@@ -131,24 +147,19 @@
 				name: "closestlight1", x: 1350, y: 92, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
+
+
+
 			{
-				name: "closestlight2", x: 3000, y: 92, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
-			},
-			{
-				name: "closestlight2", x: 3500, y: 92, scrollAttenuation: 0, zIndex: 2000,
-				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
-			},
-			{
-				name: "signpistol", x: 3400, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
+				name: "signpistol", x: 4600, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
 				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }
 			},
 			{
-				name: "treea", x: 3937, y: 2, scrollAttenuation: 0,
+				name: "treea", x: 3867, y: 2, scrollAttenuation: 0,
 				sprite: { bitmapImage: "treea.png", sprites: { "main": { "f" : [0, 0, 535, 336] } } }
 			},
 			{
-				name: "treeb", x: 4192, y: 337, scrollAttenuation: 0,
+				name: "treeb", x: 4122, y: 337, scrollAttenuation: 0,
 				sprite: { bitmapImage: "treeb.png", sprites: { "main": { "f" : [0, 0, 72, 59] } } }
 			},
 		]

@@ -51,6 +51,7 @@ Game.load("/game/crosshair.js");
 Game.load("/game/grenadelauncher.js");
 Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
+Game.load("/game/window.js");
 Game.load("/game/machine.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
@@ -76,7 +77,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		notifier: null,
 
 		groundY: 395,
-		alwaysVisibleZIndex: 2002,
+		alwaysVisibleZIndex: 2005,
 		frontZIndex: 2000,
 		moverZIndex: 1000,
 
@@ -209,7 +210,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			// Start up the particle engine
 			this.pEngine = ParticleEngine.create();
-			this.pEngine.setMaximum(100);
+			this.pEngine.setMaximum(120);
 			this.renderContext.add(this.pEngine);
 		},
 

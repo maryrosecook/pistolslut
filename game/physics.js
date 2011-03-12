@@ -5,7 +5,37 @@ Engine.include("/engine/engine.object2d.js");
 Engine.initObject("Physics", "Base", function() {
 	var Physics = Base.extend({
 		field: null,
-	
+
+		constructor: function(field) {
+			this.field = field;
+		},
+
+		handleBounce: function(bouncer, obj, count) {
+            if(count == null)
+                count = 0;
+			if(this.field.collider.objsColliding(bouncer, obj) == true)
+			{
+                var sideHit = this.field.collider.sideHit(bouncer, obj);
+				if(sideHit !== null)
+				{
+                    this.field.collider.moveToEdge(bouncer, obj, sideHit);
+                    bouncer.stopSweeping();
+					bouncer.setVelocity(this.bounce(bouncer.getVelocity(), bouncer.bounciness, sideHit));
+                    return ColliderComponent.STOP;
+				}
+				else if(count > 100)
+                    return ColliderComponent.CONTINUE;
+                else
+				{
+                    count += 1;
+					bouncer.sweepPosition();
+					return this.handleBounce(bouncer, obj);
+				}
+			}
+
+			return ColliderComponent.CONTINUE;
+		},
+
 		// bounce a grenade
 		bounce: function(vector, bounciness, sideHit) {
 			if(sideHit == Collider.TOP || sideHit == Collider.BOTTOM) return Vector2D.create(vector.x * bounciness, -vector.y * bounciness);
@@ -19,7 +49,7 @@ Engine.initObject("Physics", "Base", function() {
 			var d = vector.angleBetween(surfaceNormal);
 			return this.adjustForSide(d, sideHit);
 		},
-		
+
 		speed: function(velocity) {
 			if(velocity.x > 0 || velocity.y > 0)
 				return Math.sqrt((velocity.x * velocity.x) + (velocity.y * velocity.y));
@@ -48,7 +78,7 @@ Engine.initObject("Physics", "Base", function() {
 			else if(sideHit == Collider.BOTTOM)
 				return angleBetween;
 		},
-		
+
 	}, {
 
 		getClassName: function() { return "Physics"; },

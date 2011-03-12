@@ -4,7 +4,6 @@ Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Collider", "Base", function() {
 	var Collider = Base.extend({
-
 		field: null,
 
 		constructor: function(field) {
@@ -240,6 +239,9 @@ Engine.initObject("Collider", "Base", function() {
 
         AT_SIMILAR_HEIGHT: true,
         SIMILAR_HEIGHT_THRESHOLD: 50,
+
+        UP: new Point2D(0, -1),
+        DOWN: new Point2D(0, 1),
 	});
 
 	return Collider;

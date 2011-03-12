@@ -87,6 +87,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		speeches: [],
 		lifts: [],
         barrels: [],
+        windows: [],
         playerData: null,
 
 		wind: 0,
@@ -129,6 +130,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.addSpeeches(renderContext);
 			this.addLifts(renderContext);
             this.addBarrels(renderContext);
+            this.addWindows(renderContext);
 			this.addTriggers(); // must be called last so that all the triggerable objs have been added to this.triggerableObjects
             this.setPlayerData();
 		},
@@ -169,10 +171,10 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 
 		createPieceOfBlockFurniture: function(renderContext, name, shapeData, visible) {
             var createdBlocks = [];
-            var x = shapeData.x;
             var y = shapeData.y;
             while(y < shapeData.y + shapeData.h)
             {
+                var x = shapeData.x;
                 var curBlockH = Math.min((shapeData.y + shapeData.h) - y, this.field.maxBlockDimension);
                 while(x < shapeData.x + shapeData.w)
                 {
@@ -322,8 +324,17 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var barrels = this.levelResource.info.objects.barrels;
 			for(var i in barrels)
 			{
-				this.barrels[i] = new Barrel(Point2D.create(barrels[i].x, barrels[i].y));
+				this.barrels[i] = new Barrel(barrels[i].name, Point2D.create(barrels[i].x, barrels[i].y));
 				renderContext.add(this.barrels[i]);
+			}
+		},
+
+		addWindows: function(renderContext) {
+			var windows = this.levelResource.info.objects.windows;
+			for(var i in windows)
+			{
+				this.windows.push(new Window(windows[i].name, Point2D.create(windows[i].x, windows[i].y), windows[i].width, windows[i].height));
+				renderContext.add(this.windows[i]);
 			}
 		},
 
@@ -349,6 +360,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.sky = null;
 			this.speeches = [];
             this.barrels = [];
+            this.windows = [];
 		},
 	}, {
 		getClassName: function() { return "FurnishedLevel"; },

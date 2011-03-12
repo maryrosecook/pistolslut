@@ -99,7 +99,7 @@ Engine.initObject("ColoredParticle", "Particle", function() {
 			this.color = color;
 
 			var a = (angle - (spread / 2)) + (Math.random() * spread);
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, ColoredParticle.UP, a);
+			this.vec = Math2D.getDirectionVector(Point2D.ZERO, Collider.UP, a);
 			this.vec.mul(velocity);
 		},
 
@@ -119,8 +119,6 @@ Engine.initObject("ColoredParticle", "Particle", function() {
 
 	}, {
 		getClassName: function() { return "ColoredParticle"; },
-
-		UP: new Point2D(0, -1)
 	});
 
 	return ColoredParticle;
@@ -139,6 +137,26 @@ Engine.initObject("ContrailParticle", "ColoredParticle", function() {
 	});
 
 	return ContrailParticle;
+});
+
+Engine.initObject("WindowShardParticle", "ColoredParticle", function() {
+	var WindowShardParticle = ColoredParticle.extend({
+		constructor: function(window, spread) {
+			var position = Point2D.create(window.getPosition().x + Math.floor(Math.random() * window.getBoundingBox().dims.x), window.getPosition().y);
+			var velocity = 4 + (Math.random() * 2);
+
+			this.base("#fff", position, WindowShardParticle.TTL, WindowShardParticle.ANGLE, WindowShardParticle.SPREAD, velocity);
+		},
+
+	}, {
+		getClassName: function() { return "WindowShardParticle"; },
+
+        SPREAD: 5,
+        ANGLE: 180,
+        TTL: 1500,
+	});
+
+	return WindowShardParticle;
 });
 
 Engine.initObject("FireworkExplosionParticle", "ColoredParticle", function() {
@@ -181,7 +199,7 @@ Engine.initObject("FireParticle", "Particle", function() {
 			this.base(this.getFireParticleTTL(width, maxTTL));
 
 			this.pos = Point2D.create(x + Math.floor(Math.random() * width), y);
-			this.vec = Vector2D.create(FireParticle.UP);
+			this.vec = Vector2D.create(Collider.UP);
 
 			var vel = 0.5 + (Math.random() * 2);
 			this.vec.mul(vel);
@@ -225,8 +243,6 @@ Engine.initObject("FireParticle", "Particle", function() {
 
 	}, {
 		getClassName: function() { return "FireParticle"; },
-		UP: new Vector2D(0, -1)
-
 	});
 
 	return FireParticle;

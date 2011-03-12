@@ -15,7 +15,7 @@ Engine.initObject("Firework", "Object2D", function() {
 			this.add(Vector2DComponent.create("draw"));
 
 			this.setPosition(new Point2D(x, y));
-			this.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Firework.TIP, angle));
+			this.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Collider.UP, angle));
 			var speed = 17 + (Math.random() * 4);
 			this.setVelocity(this.getVelocity().mul(speed));
 			this.getComponent("move").setCheckLag(false);
@@ -70,9 +70,6 @@ Engine.initObject("Firework", "Object2D", function() {
 
 	}, {
 		getClassName: function() { return "Firework"; },
-
-		UP: new Point2D(0, -1),
-		TIP: new Point2D(0, -1),
 
 		shape: [ new Point2D(0, 0), new Point2D(1, 0), new Point2D(0,  1), new Point2D(1,  1)],
 	});

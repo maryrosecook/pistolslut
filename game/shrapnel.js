@@ -11,6 +11,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 		baseSpeed: 15,
 		damage: 1,
 		safeDistance: 20,
+        bounciness: 10,
 
 		constructor: function(field, shooter, epicentre, ttl) {
 			this.base("Shrapnel");
@@ -32,7 +33,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 
 			var mover = this.getComponent("move");
 			mover.setPosition(epicentre);
-			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, a).mul(speed));
+			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Collider.UP, a).mul(speed));
 			mover.setCheckLag(false);
 		},
 
@@ -44,7 +45,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			}
 
 			this.updateColor(renderContext, time);
-
+            //console.log(this.getVelocity().x, this.getVelocity().y)
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();
@@ -62,17 +63,16 @@ Engine.initObject("Shrapnel", "Mover", function() {
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
 				if(this.field.collider.objsColliding(this, obj))
-			  {
-					obj.shot(this);
-					this.destroy();
-					return ColliderComponent.STOP;
-				}
+                {
+				    obj.shot(this);
+                    return this.field.physics.handleBounce(this, obj);
+                }
 			}
 			else if(obj instanceof Human) {
 				if(obj.isAlive())
 				{
 					if(this.field.collider.objsColliding(this, obj))
-				  {
+				    {
 						obj.shot(this);
 						this.destroy();
 						return ColliderComponent.STOP;

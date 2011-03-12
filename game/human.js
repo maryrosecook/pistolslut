@@ -98,6 +98,7 @@ Engine.initObject("Human", "Mover", function() {
 		die: function(ordinance) {
             this.unsetSpotter();
 			this.stateOfBeing = Human.DYING;
+            this.stopWalk();
 			this.setSprite(this.direction + Human.DYING + this.weapon.name);
 		},
 
@@ -310,6 +311,23 @@ Engine.initObject("Human", "Mover", function() {
             }
 			else if(obj instanceof Ordinance)
 				this.field.notifier.post(Human.INCOMING, obj);
+            else if(obj instanceof Window)
+            {
+                if(this.field.collider.objsColliding(this, obj))
+                {
+                    if(obj.shouldSmash(obj))
+                        return obj.smash();
+                    else if(this.field.collider.aFallingThroughB(this, obj))
+                    {
+					    this.endFall(obj);
+                        return ColliderComponent.CONTINUE;
+                    }
+                    else if(this.field.collider.aOnLeftAndBumpingB(this, obj))
+					    this.block(obj.getPosition().x - this.getBoundingBox().dims.x - 1);
+				    else if(this.field.collider.aOnRightAndBumpingB(this, obj))
+					    this.block(obj.getPosition().x + obj.getBoundingBox().dims.x + 1);
+                }
+            }
 
 			return ColliderComponent.CONTINUE;
 		},

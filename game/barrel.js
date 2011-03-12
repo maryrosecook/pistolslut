@@ -4,8 +4,8 @@ Engine.include("/engine/engine.object2d.js");
 
 Engine.initObject("Barrel", "Mover", function() {
 	var Barrel = Mover.extend({
-		constructor: function(position) {
-			this.base("Barrel");
+		constructor: function(name, position) {
+			this.base(name);
 
 			// Add components to move and draw the mortar round
 			this.add(Mover2DComponent.create("move"));
@@ -86,7 +86,7 @@ Engine.initObject("Barrel", "Mover", function() {
 		    this.setPosition(Point2D.create(this.getPosition().x + pusher.getVelocity().x, this.getPosition().y));
         },
 
-		shrapnelCount: 40,
+		shrapnelCount: 20,
 		shrapnelTTL: 700,
 		explode: function() {
 			for(var x = 0; x < this.shrapnelCount; x++)
