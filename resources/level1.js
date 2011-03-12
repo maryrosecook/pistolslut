@@ -151,14 +151,6 @@
 				name: "treeb", x: 4192, y: 337, scrollAttenuation: 0,
 				sprite: { bitmapImage: "treeb.png", sprites: { "main": { "f" : [0, 0, 72, 59] } } }
 			},
-			{
-				name: "daffsingles", x: 4100, y: 387, scrollAttenuation: 0, zIndex: 2001,
-				sprite: { bitmapImage: "daffsingles.png", sprites: { "main": { "f" : [0, 0, 60, 8] } } }
-			},
-			{
-				name: "daffsingles", x: 4300, y: 387, scrollAttenuation: 0, zIndex: 2001,
-				sprite: { bitmapImage: "daffsingles.png", sprites: { "main": { "f" : [0, 0, 60, 8] } } }
-			},
 		]
 	}
 }
