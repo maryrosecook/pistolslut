@@ -7,11 +7,11 @@ Engine.initObject("Shrapnel", "Mover", function() {
 	var Shrapnel = Mover.extend({
 		field: null,
 		shooter: null,
-		
+
 		baseSpeed: 15,
 		damage: 1,
 		safeDistance: 20,
-		
+
 		constructor: function(field, shooter, epicentre, ttl) {
 			this.base("Shrapnel");
 			this.field = field;
@@ -23,13 +23,13 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			this.add(Mover2DComponent.create("move"));
 			this.add(Vector2DComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
-			
+
 			this.getComponent("draw").setPoints(Shrapnel.shape);
-			
+
 			var spread = 360;
 			var a = (0 - (360 / 2)) + (Math.random() * spread);
-			var speed = 1 + (Math.random() * 11);
-			
+			var speed = 5 + (Math.random() * 17);
+
 			var mover = this.getComponent("move");
 			mover.setPosition(epicentre);
 			mover.setVelocity(Math2D.getDirectionVector(Point2D.ZERO, Ordinance.tip, a).mul(speed));
@@ -49,7 +49,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 			this.base(renderContext, time);
 			renderContext.popTransform();
 		},
-		
+
 		updateColor: function(renderContext, time) {
 			var colr = ParticleColorChanger.explosion(time, this.birth, this.life);
 			if(this.color != colr)
