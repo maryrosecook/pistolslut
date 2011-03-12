@@ -34,7 +34,8 @@ Engine.initObject("Player", "Human", function() {
             if(this.isAlive() && this.health != this.maxHealth)
                 if(this.lastShot + Player.HEALTH_RELOAD_DELAY < new Date().getTime())
                 {
-                    this.field.healthMeter.reset();
+                    if(this.field.healthMeter !== null)
+                        this.field.healthMeter.reset();
                     this.health = this.maxHealth;
                 }
         },
@@ -42,7 +43,8 @@ Engine.initObject("Player", "Human", function() {
         lastShot: 0,
         shot: function(ordinance) {
             if(this.isAlive())
-                this.field.healthMeter.decrement();
+                if(this.field.healthMeter !== null)
+                    this.field.healthMeter.decrement();
 
             this.base(ordinance);
             if(this.isAlive())
@@ -60,7 +62,7 @@ Engine.initObject("Player", "Human", function() {
 	    },
 
 	    // if walking when pressed crouch, save direction of walk
-	    // for future resuption.  A workaround for weird keyboard handling.
+	    // for future resumption.  A workaround for weird keyboard handling.
 	    walkPaused: false,
 	    handlePausedWalk: function() {
 		    if(this.walking)

@@ -4,7 +4,7 @@ Engine.initObject("CheapRect", "Base", function() {
 		constructor: function(obj, x, y, r, b) {
 			if(obj != null)
 			{
-				var pos = obj.getPosition();
+                var pos = obj.getPosition();
 				var bboxDims = obj.getBoundingBox().dims;
 				this.x = pos.x;
 				this.y = pos.y;
@@ -32,6 +32,13 @@ Engine.initObject("CheapRect", "Base", function() {
 	}, {
 		getClassName: function() { return "CheapRect"; },
 
+
+        gen: function(obj) {
+            if(obj.staticRect)
+                return obj.staticRect;
+            else
+                return new CheapRect(obj);
+        },
 	});
 
 	return CheapRect;

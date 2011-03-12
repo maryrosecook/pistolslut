@@ -1,12 +1,12 @@
 Engine.initObject("SpriteFurniture", "Furniture", function() {
 	var SpriteFurniture = Furniture.extend({
-		
+
 		constructor: function(spriteName, position) {
 			this.base(spriteName, position);
 			this.setupGraphics(spriteName);
-			this.finalSetup();
+            this.setRectBecauseStatic();
 		},
-		
+
 		setupGraphics: function(spriteName) {
 			this.add(SpriteComponent.create("draw"));
 			this.addSprite("main", this.field.spriteLoader.getSprite(spriteName, "main"));
@@ -14,7 +14,7 @@ Engine.initObject("SpriteFurniture", "Furniture", function() {
 		},
 	}, {
 		getClassName: function() { return "SpriteFurniture"; },
-		
+
 	});
 
 	return SpriteFurniture;

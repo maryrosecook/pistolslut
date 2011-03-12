@@ -75,6 +75,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		triggers: [],
 		triggerableObjects: {},
 		signs: [],
+        cover: [],
 		furniture: [],
 		enemies: [],
 		fires: [],
@@ -143,7 +144,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			for(var i in data)
 			{
 				var furniturePiece = SpriteFurniture.create(data[i].spriteName, Point2D.create(data[i].x, data[i].y));
-				this.furniture[this.furniture.length] = furniturePiece;
+				this.furniture.push(furniturePiece);
+                this.cover.push(furniturePiece);
 				renderContext.add(furniturePiece);
 			}
 		},
@@ -151,22 +153,46 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		addBlockFurniture: function(renderContext) {
 			var data = this.levelResource.info.objects.blockFurniture;
 			for(var i in data)
-				this.createPieceOfBlockFurniture(renderContext, data[i].name, data[i].shape)
+            {
+				var createdBlocks = this.createPieceOfBlockFurniture(renderContext, data[i].name, data[i].shape, data[i].visible);
+                for(var j in createdBlocks)
+                    this.cover.push(createdBlocks[j]);
+            }
 		},
 
 		// automatically adds block furniture to cover bottom of level and add sides to stop player running outside level
 		addLevelBlockers: function(renderContext) {
 			var floorBlockHeight = 34;
 			var shapeData = { x: 0, y: this.getHeight() - floorBlockHeight, w: this.getWidth(), h: floorBlockHeight };
-			var furniturePiece = this.createPieceOfBlockFurniture(renderContext, "floor", shapeData);
-			furniturePiece.setZIndex(this.field.frontZIndex);
+			this.createPieceOfBlockFurniture(renderContext, "floor", shapeData, true, this.field.frontZIndex);
 		},
 
-		createPieceOfBlockFurniture: function(renderContext, name, shapeData) {
-			var furnitureBlock = BlockFurniture.create("block", shapeData);
-			this.furniture[this.furniture.length] = furnitureBlock;
-			renderContext.add(furnitureBlock);
-			return furnitureBlock;
+		createPieceOfBlockFurniture: function(renderContext, name, shapeData, visible) {
+            var createdBlocks = [];
+            var x = shapeData.x;
+            var y = shapeData.y;
+            while(y < shapeData.y + shapeData.h)
+            {
+                var curBlockH = Math.min((shapeData.y + shapeData.h) - y, this.field.maxBlockDimension);
+                while(x < shapeData.x + shapeData.w)
+                {
+                    var curBlockW = Math.min((shapeData.x + shapeData.w) - x, this.field.maxBlockDimension);
+                    var curShapeData = { x: x, y: y, w: curBlockW, h: curBlockH };
+
+			        var furnitureBlock = BlockFurniture.create(name + x + "x" + y, curShapeData, visible);
+			        this.furniture.push(furnitureBlock);
+                    createdBlocks.push(furnitureBlock);
+			        renderContext.add(furnitureBlock);
+                    if(this.field.frontZIndex)
+			            furnitureBlock.setZIndex(this.field.frontZIndex);
+
+                    x += curBlockW;
+                }
+
+                y += curBlockH;
+            }
+
+            return createdBlocks;
 		},
 
 		// creates Enemy render objects for each piece of furniture loaded from
@@ -287,7 +313,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var lifts = this.levelResource.info.objects.lifts;
 			for(var i in lifts)
 			{
-				this.lifts[i] = new Lift(this.field, Point2D.create(lifts[i].startX, lifts[i].startY), lifts[i].distance);
+				this.lifts[i] = new Lift(this.field, Point2D.create(lifts[i].startX, lifts[i].startY), lifts[i].distance, lifts[i].width);
 				renderContext.add(this.lifts[i]);
 			}
 		},
@@ -312,6 +338,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.triggerableObjects = {};
 			this.signs = [];
 			this.furniture = [];
+            this.cover = [];
 			this.enemies = [];
 			this.fires = [];
 			this.fireworkLaunchers = [];

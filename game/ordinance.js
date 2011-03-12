@@ -37,7 +37,7 @@ Engine.initObject("Ordinance", "Mover", function() {
 		},
 
 		update: function(renderContext, time) {
-			if (!this.field.inView(this)) // remove if not in field
+			if(!this.field.inView(this)) // remove if not in field
 			{
 				this.destroy();
 				return;

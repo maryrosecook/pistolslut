@@ -25,8 +25,9 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		notifyIncoming: function(ordinance) {
 			if(ordinance.shooter != this.host)
-			    if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
-				    this.reactToBeingUnderFire();
+                if(!this.host.isCrouching())
+			        if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
+				        this.reactToBeingUnderFire();
 		},
 
         notifySound: function(soundMaker) {
@@ -48,15 +49,15 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		},
 
         canReload: function() { return this.isFreeAgent() && this.host.weapon.hasAmmoLeft() && this.host.weapon.shouldReload(); },
-        canFight: function() { return this.isFreeAgent() && this.isInDanger() && this.hasOperationalWeapon(); },
+        canFight: function() { return this.field.inView(this.host) && this.isFreeAgent() && this.isInDanger() && this.hasOperationalWeapon(); },
         canCrouch: function() { return !this.host.isCrouching(); },
         canIdle: function() { return true; },
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
         canStopSpotting: function() { return this.host.isSpotter() && !this.host.shooter.spotterCompatible(); },
         canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
-        canFindCover: function() { return !this.isInCover() && this.host.weapon.isMobile(); },
-        canStop: function() { return this.isInCover() && this.host.walking; },
+        canFindCover: function() { return this.host.isMobile() && !this.isInCover(); },
+        canStop: function() { return this.host.walking && this.isInCover(); },
         canRunForCover: function() { return !this.isInCover(); },
 
         lastCalledRange: 0,
@@ -91,7 +92,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         canEnlistSpotter: function() {
             if(this.host.spotterCompatible() && !this.host.hasSpotter())
             {
-                var nearestAlly = this.getNearestAlly();
+                var nearestAlly = this.getNearestAlly(Collider.AT_SIMILAR_HEIGHT);
                 if(nearestAlly !== null && this.field.collider.xDistance(nearestAlly, this.host) < this.maxSpotterDistance)
                     return true;
             }
@@ -105,7 +106,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         stand: function() { this.host.stand(); },
         idle: function() { },
         turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
-        enlistSpotter: function() { this.host.setSpotter(this.getNearestAlly()); },
+        enlistSpotter: function() { this.host.setSpotter(this.getNearestAlly(Collider.AT_SIMILAR_HEIGHT)); },
         stopSpotting: function() { this.host.shooter.unsetSpotter(); },
         switchWeapon: function() { this.host.cycleWeapon(); },
         stop: function() { this.host.stopWalk(); },
@@ -159,7 +160,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
 		furnitureBlockRange: 100,
 		furnitureInLineOfFire: function() {
-			var furniture = this.field.level.furniture;
+			var furniture = this.field.level.cover;
 			if(this.host.weapon.hasLineOfFire() == true)
 				for(var i in furniture)
 					if(!this.field.collider.objectAtLeastDistanceAway(this.host, furniture[i], this.furnitureBlockRange))
@@ -169,18 +170,22 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			return false;
 		},
 
-        getNearestAlly: function() { return this.field.collider.getNearest(null, this.host, this.host.getAllies()); },
-        getNearestCover: function() { return this.field.collider.getNearest(this.directionOfPlayer(), this.host, this.field.level.furniture); },
+        getNearestAlly: function(atSimilarHeight) { return this.field.collider.getNearest(null, atSimilarHeight, this.host, this.host.getAllies()); },
+        getNearestCover: function() { return this.field.collider.getNearest(this.directionOfPlayer(), Collider.AT_SIMILAR_HEIGHT, this.host, this.field.level.cover); },
         directionOfPlayer: function() { return this.field.collider.getDirectionOf(this.host, this.field.playerObj); },
         isFreeAgent: function() { return !this.host.isSpotter(); },
 
-        coverDistance: 20,
+        coverDistance: 5,
+        alreadyFoundCover: false,
         isInCover: function() {
+            if(this.alreadyFoundCover === true)
+                return true;
+
             var nearestCover = this.getNearestCover();
             if(nearestCover !== null)
-                return this.field.collider.xDistance(this.getNearestCover(), this.host) <= this.coverDistance;
-            else
-                return false;
+                this.alreadyFoundCover = this.field.collider.xDistance(nearestCover, this.host) <= this.coverDistance;
+
+            return this.alreadyFoundCover;
         },
 
         verticalFieldOfFireAdditions: 20,
@@ -192,7 +197,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         },
 
         isPathBlocked: function() {
-            var nearestFurnitureInDirectionFacing = this.field.collider.getNearest(this.host.direction, this.host, this.field.level.furniture);
+            var nearestFurnitureInDirectionFacing = this.field.collider.getNearest(this.host.direction, Collider.AT_SIMILAR_HEIGHT, this.host, this.field.level.cover);
             if(nearestFurnitureInDirectionFacing === null)
                 return false
             else if(this.field.collider.xDistance(nearestFurnitureInDirectionFacing, this.host) > this.coverDistance)

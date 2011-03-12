@@ -6,7 +6,6 @@ Engine.include("/engine/engine.object2d.js");
 Engine.initObject("Furniture", "Mover", function() {
 	var Furniture = Mover.extend({
 		field: null,
-		rect: null,
 
 		constructor: function(name, position) {
 			this.base(name);
@@ -21,13 +20,12 @@ Engine.initObject("Furniture", "Mover", function() {
 		},
 
 		update: function(renderContext, time) {
+            if(!this.field.inView(this))
+                return;
+
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();
-		},
-
-		finalSetup: function() {
-			this.rect = new CheapRect(this);
 		},
 
 		shot: function(projectile) {

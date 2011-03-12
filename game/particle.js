@@ -2,8 +2,7 @@ Engine.include("/engine/engine.math2d.js");
 Engine.include("/engine/engine.particles.js");
 
 Engine.initObject("BloodParticle", "Particle", function() {
-
-	var BloodParticle = Particle.extend(/** @scope BloodParticle.prototype */{
+	var BloodParticle = Particle.extend({
 
 		pos: null,
 		vec: null,
@@ -11,7 +10,7 @@ Engine.initObject("BloodParticle", "Particle", function() {
 
 		constructor: function(pos, rot, spread, ttl) {
 			this.base(ttl || 2000);
-			this.pos = Point2D.create(pos);
+			this.pos = pos;
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BloodParticle.ref, a);
@@ -33,9 +32,7 @@ Engine.initObject("BloodParticle", "Particle", function() {
 		}
 
 	}, {
-		getClassName: function() {
-			return "BloodParticle";
-		},
+		getClassName: function() { return "BloodParticle"; },
 
 		ref: new Point2D(0, -1) // A simple reference point for the "up" vector
 	});
@@ -44,21 +41,17 @@ Engine.initObject("BloodParticle", "Particle", function() {
 });
 
 Engine.initObject("BurnoutParticle", "Particle", function() {
-
-	var BurnoutParticle = Particle.extend(/** @scope BurnoutParticle.prototype */{
-
+	var BurnoutParticle = Particle.extend({
 		pos: null,
 		vec: null,
 		color: null,
 
 		constructor: function(pos, rot, spread, ttl, baseSpeed) {
 			this.base(ttl || 2000);
-			this.pos = Point2D.create(pos);
+			this.pos = pos;
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BurnoutParticle.ref, a);
-			//if(baseVelocity !== undefined)
-            //    this.vec.add(baseVelocity);
 			var vel = baseSpeed + (Math.random() * 2);
             this.vec.mul(vel);
 		},
@@ -80,14 +73,11 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 				this.color = newColor;
 				renderContext.setFillStyle(this.color);
 			}
-
 			renderContext.drawPoint(this.pos);
 		}
 
 	}, {
-		getClassName: function() {
-			return "BurnoutParticle";
-		},
+		getClassName: function() { return "BurnoutParticle"; },
 
 		ref: new Point2D(0, -1) // A simple reference point for the "up" vector
 	});
@@ -103,10 +93,10 @@ Engine.initObject("ColoredParticle", "Particle", function() {
 		color: null,
 
 		constructor: function(color, pos, ttl, angle, spread, velocity) {
+			this.base(ttl);
+
 			this.pos = pos;
 			this.color = color;
-
-			this.base(ttl);
 
 			var a = (angle - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, ColoredParticle.UP, a);
@@ -134,23 +124,6 @@ Engine.initObject("ColoredParticle", "Particle", function() {
 	});
 
 	return ColoredParticle;
-});
-
-Engine.initObject("SnowParticle", "ColoredParticle", function() {
-	var SnowParticle = ColoredParticle.extend({
-
-		constructor: function(levelWidth) {
-			var angle = Math.floor((180) + (Math.random() * 10));
-			var position = Point2D.create(Math.floor(Math.random() * levelWidth), 0);
-			var velocity = 2 + (Math.random() * 0.5);
-			this.base("#fff", position, 8000, angle, 0, velocity);
-		},
-
-	}, {
-		getClassName: function() { return "SnowParticle"; },
-	});
-
-	return SnowParticle;
 });
 
 Engine.initObject("ContrailParticle", "ColoredParticle", function() {
@@ -198,7 +171,6 @@ Engine.initObject("FireworkExplosionParticle", "ColoredParticle", function() {
 });
 
 Engine.initObject("FireParticle", "Particle", function() {
-
 	var FireParticle = Particle.extend({
 
 		pos: null,
@@ -206,8 +178,9 @@ Engine.initObject("FireParticle", "Particle", function() {
 		color: null,
 
 		constructor: function(x, y, width, maxTTL, startVec) {
-			this.pos = Point2D.create(x + Math.floor(Math.random() * width), y);
 			this.base(this.getFireParticleTTL(width, maxTTL));
+
+			this.pos = Point2D.create(x + Math.floor(Math.random() * width), y);
 			this.vec = Vector2D.create(FireParticle.UP);
 
 			var vel = 0.5 + (Math.random() * 2);
@@ -218,13 +191,13 @@ Engine.initObject("FireParticle", "Particle", function() {
 		{
 			var randPoint = Math.random() * width;
 			var midPoint = width / 2;
-	    if (randPoint > midPoint)
+	        if (randPoint > midPoint)
 			{
-	        var rightRandPoint = 1 - randPoint;
-	        var height = 1 - ((rightRandPoint - ((1 - rightRandPoint) * rightRandPoint)) * (1 / (1 - midPoint)));
-	    }
+	            var rightRandPoint = 1 - randPoint;
+	            var height = 1 - ((rightRandPoint - ((1 - rightRandPoint) * rightRandPoint)) * (1 / (1 - midPoint)));
+	        }
 			else
-	    	var height = (randPoint - ((1 - randPoint) * randPoint)) * (1 / midPoint);
+	    	    var height = (randPoint - ((1 - randPoint) * randPoint)) * (1 / midPoint);
 
 			return ((height*height) / (width*width)) * maxTTL;
 		},

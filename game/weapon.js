@@ -42,7 +42,7 @@ Engine.initObject("Weapon", "Base", function() {
 
 		// actually fires the weapon
 		discharge: function() {
-			if(this.owner.isAlive() == true)
+			if(this.owner.isAlive() === true)
 			{
 				// generate the ordinance
 				for(var x = 0; x < this.projectilesPerShot; x++)
@@ -179,7 +179,7 @@ Engine.initObject("Weapon", "Base", function() {
 
 		// if reloading and the time to reload has elapsed, fill clip
 		handleReload: function(time) {
-			if(this.reloading)
+			if(this.reloading === true)
 				if(time - this.reloadBegun > this.timeToReload) // reload period has passed
 			    {
 					this.fillClip();
@@ -207,12 +207,14 @@ Engine.initObject("Weapon", "Base", function() {
             else
                 meter = this.field.ammoMeter;
 
-            meter.setReading(this.shotsInClip, this.clipCapacity);
+            if(meter !== null)
+                meter.setReading(this.shotsInClip, this.clipCapacity);
    		},
 
 		setSpareClipsMeterReading: function() {
-			if(!(this instanceof GrenadeLauncher))
-                this.field.spareClipsMeter.setReading(this.spareClips, Weapon.MAX_SPARE_CLIPS);
+            if(this.field.spareClipsMeter !== null)
+			    if(!(this instanceof GrenadeLauncher))
+                    this.field.spareClipsMeter.setReading(this.spareClips, Weapon.MAX_SPARE_CLIPS);
 		},
 
         updateMeters: function() {

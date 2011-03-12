@@ -10,7 +10,7 @@ Engine.initObject("Parallax", "Mover", function() {
 		name: null,
 		field: null,
 		scrollAttenuation: null,
-		
+
 		constructor: function(name, field, zIndex, scrollAttenuation, x, y) {
 			this.base(name);
 			this.field = field;
@@ -20,14 +20,19 @@ Engine.initObject("Parallax", "Mover", function() {
 			// Add components to move and draw
 			this.add(Transform2DComponent.create("move"));
 			this.add(SpriteComponent.create("draw"));
-			
+
 			this.addSprite("main", this.field.spriteLoader.getSprite(name, "main"));
 			this.setSprite("main");
-			
+
 			this.setPosition(Point2D.create(x,y));
+            if(this.scrollAttenuation == 0)
+                this.setRectBecauseStatic();
 		},
 
 		update: function(renderContext, time) {
+            if(!this.field.inView(this))
+                return;
+
 			renderContext.pushTransform();
 			this.base(renderContext, time);
 			renderContext.popTransform();
@@ -35,7 +40,7 @@ Engine.initObject("Parallax", "Mover", function() {
 
 	}, {
 		getClassName: function() { return "Parallax"; },
-		
+
 		START_Z_INDEX: 3,
 	});
 

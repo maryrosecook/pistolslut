@@ -16,14 +16,10 @@ Engine.initObject("Bullet", "Ordinance", function() {
 			c_draw.setFillStyle("white");
 		},
 
-		update: function(renderContext, time) {
-			this.base(renderContext, time);
-		},
-
 		onCollide: function(obj) {
 			if(obj instanceof Furniture) {
-				if(this.field.collider.objsColliding(this, obj))
-			  {
+			    if(this.field.collider.objsColliding(this, obj))
+			    {
 					obj.shot(this);
 					this.destroy();
 					return ColliderComponent.STOP;

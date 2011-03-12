@@ -31,8 +31,8 @@ Engine.initObject("Human", "Mover", function() {
 			this.loadSprites();
 
 			this.add(Mover2DComponent.create("move"));
-			this.setVelocity(Vector2D.create(0, 0));
 			this.stopWalk();
+            this.getVelocity().setY(-0.5);
 
             this.setupWeapons(weapons);
 
@@ -47,6 +47,9 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		update: function(renderContext, time) {
+            if(!(this instanceof Player) && !this.field.inView(this))
+                return;
+
 			this.move(time);
 			renderContext.pushTransform();
 			this.base(renderContext, time);
@@ -54,22 +57,9 @@ Engine.initObject("Human", "Mover", function() {
 
 			this.weapon.handleReload(time);
 			this.weapon.handleAutomatic(time);
+
 			this.weapon.handleDischarge(time);
             this.grenadeLauncher.handleDischarge(time);
-		},
-
-
-		notifyGrenadeNearby: function(grenade) {
-			var add = true;
-			for(var i in this.nearbyGrenades)
-				if(this.nearbyGrenades[i] == grenade)
-				{
-					add = false;
-					break;
-				}
-
-			if(add == true)
-				this.nearbyGrenades.push(grenade);
 		},
 
 		move: function(time) {
@@ -86,8 +76,7 @@ Engine.initObject("Human", "Mover", function() {
 
 			this.field.applyGravity(this);
             this.handleLift();
-			this.handleFriction();
-			this.setPosition(this.getPosition().add(this.getVelocity()));
+			this.getPosition().add(this.getVelocity());
 		},
 
 		setOnLift: function(lift) {
@@ -110,21 +99,11 @@ Engine.initObject("Human", "Mover", function() {
             this.unsetSpotter();
 			this.stateOfBeing = Human.DYING;
 			this.setSprite(this.direction + Human.DYING + this.weapon.name);
-
-			this.throwBackwards(ordinance);
 		},
 
 		shoot: function() {
 			this.weapon.shoot();
 			this.updateSprite();
-		},
-
-		throwBackwardsUp: -3,
-		throwBackwardsTempering: 6,
-		throwBackwards: function(bullet) {
-			this.getVelocity().setX(bullet.getVelocity().x / this.throwBackwardsTempering);
-			this.getPosition().setY(this.getPosition().y - 5);
-			this.getVelocity().setY(this.throwBackwardsUp);
 		},
 
 		crouch: function() {
@@ -142,6 +121,8 @@ Engine.initObject("Human", "Mover", function() {
 				this.stopWalk();
 			}
 		},
+
+        isMobile: function() { return this.weapon.isMobile() && !this.isSpotter(); },
 
 		// delay on when human lowers their gun
 		delayBeforeLoweringGun: 400,
@@ -206,21 +187,18 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		jumping: false,
-		jumpSpeed: -6.0,
-		postJumpAdjustmentVector: Vector2D.create(0, -1),
 		jump: function() {
 			if(!this.jumping && !this.isCrouching())
 			{
 				this.jumping = true;
 
-				var newVelocityY = this.jumpSpeed;
+				var newVelocityY = Human.JUMP_SPEED;
 				if(this.isOnLift())
 					newVelocityY += this.lift.getVelocity().y;
 
 				this.setNotOnLift();
 
 				this.getVelocity().setY(newVelocityY);
-				this.setPosition(this.getPosition().add(this.postJumpAdjustmentVector));
 			}
 		},
 
@@ -239,9 +217,9 @@ Engine.initObject("Human", "Mover", function() {
 				this.walking = true;
 				this.direction = direction;
 				if(direction == Collider.LEFT)
-					this.getVelocity().setX(this.getVelocity().x - Human.WALK_SPEED);
+					this.getVelocity().setX(-Human.WALK_SPEED);
 				else if(direction == Collider.RIGHT)
-					this.getVelocity().setX(this.getVelocity().x + Human.WALK_SPEED);
+					this.getVelocity().setX(Human.WALK_SPEED);
 			}
 		},
 
@@ -357,31 +335,6 @@ Engine.initObject("Human", "Mover", function() {
             }
         },
 
-		// if dead, carry on moving. A bit.
-		friction: 0.1,
-		handleFriction: function() {
-			newX = null;
-			if(this.isDying())
-			{
-				var x = this.getVelocity().x;
-				if(x == 0)
-					return;
-				else if(x > 0)
-				{
-					newX = x - this.friction;
-					if(newX < 0)
-						newX = 0;
-				}
-				else // x < 0
-				{
-					newX = x + this.friction;
-					if(newX < 0)
-						newX = 0;
-				}
-				this.getVelocity().setX(newX);
-			}
-		},
-
 		// sets sprite to reflect whatever human is doing
 		updateSprite: function() {
 			if(this.isSpotter())
@@ -417,6 +370,7 @@ Engine.initObject("Human", "Mover", function() {
 		getClassName: function() { return "Human"; },
 
 		WALK_SPEED: 3,
+		JUMP_SPEED: -6,
 
 		// states of being
 		ALIVE: "Alive",

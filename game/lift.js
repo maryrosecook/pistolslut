@@ -12,7 +12,7 @@ Engine.initObject("Lift", "Mover", function() {
 		distance: null,
 		moving: false,
 
-		constructor: function(field, startPosition, distance) {
+		constructor: function(field, startPosition, distance, width) {
 			this.base("Lift");
 			this.field = field;
 			this.startPosition = startPosition;
@@ -24,7 +24,8 @@ Engine.initObject("Lift", "Mover", function() {
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
 
 			var drawer = this.getComponent("draw");
-			drawer.setPoints(Lift.PLATFORM_SHAPE);
+		    var shape = [new Point2D(0, 0), new Point2D(width, 0), new Point2D(width, 10), new Point2D(0, 10)];
+			drawer.setPoints(shape);
 			drawer.setFillStyle("#000");
 			drawer.setLineStyle("#000");
 
@@ -37,8 +38,11 @@ Engine.initObject("Lift", "Mover", function() {
 		},
 
 		update: function(renderContext, time) {
-			if(this.moving == true)
-				this.handlePossibleChangeOfDirection();
+            if(!this.field.inView(this))
+                return;
+
+		    if(this.moving == true)
+			    this.handlePossibleChangeOfDirection();
 
 			renderContext.pushTransform();
 			this.base(renderContext, time);
@@ -78,7 +82,6 @@ Engine.initObject("Lift", "Mover", function() {
 	}, {
 		getClassName: function() { return "Lift"; },
 
-		PLATFORM_SHAPE: [new Point2D(0, 0), new Point2D(40, 0), new Point2D(40, 10), new Point2D(0, 10)],
 		SPEED: 3,
 	});
 

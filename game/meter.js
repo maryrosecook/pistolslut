@@ -59,40 +59,6 @@ Engine.initObject("Meter", "Base", function() {
 	return Meter;
 });
 
-// Engine.initObject("BarMeter", "Meter", function() {
-// 	BarMeter = Meter.extend({
-//         color: null,
-
-// 		constructor: function(field, renderContext, reading, position, color) {
-//             this.color = color;
-//             this.base(field, renderContext, reading, position);
-// 		},
-
-//         setupVisuals: function() {
-// 			this.parts["fullShape"] = RectangleShape.create(this.color, 0, 0, this.pos, Meter.Z_INDEX);
-// 			this.parts["emptyShape"] = RectangleShape.create("#000", 0, 0, this.pos, Meter.Z_INDEX + 1);
-// 			this.renderContext.add(this.parts["fullShape"]);
-// 			this.renderContext.add(this.parts["emptyShape"]);
-//         },
-
-//         updateVisuals: function() {
-// 			var fullWidth = BarMeter.INT_WIDTH * this.reading;
-// 			var emptyWidth = (BarMeter.INT_WIDTH * this.max) - fullWidth;
-
-// 			this.parts["fullShape"].setDimensions(fullWidth, BarMeter.HEIGHT);
-// 			this.parts["emptyShape"].setDimensions(emptyWidth, BarMeter.HEIGHT);
-// 			this.parts["emptyShape"].getPosition().setX(this.parts["fullShape"].getPosition().x + fullWidth);
-//         },
-// 	}, {
-// 		getClassName: function() { return "BarMeter"; },
-
-//         HEIGHT: 3,
-//         INT_WIDTH: 9,
-// 	});
-
-// 	return BarMeter;
-// });
-
 Engine.initObject("CaretMeter", "Meter", function() {
 	var CaretMeter = Meter.extend({
 		field: null,
@@ -135,7 +101,7 @@ Engine.initObject("CaretMeter", "Meter", function() {
                 this.changeIfNecessary(i, this.onCarets[i]);
 
             for(var i = this.reading; i < this.highestMax; i++)
-                if(!this.changeIfNecessary(i, this.offCarets[i]))
+                if(this.changeIfNecessary(i, this.offCarets[i]) == false)
                     break;
         },
 

@@ -16,6 +16,8 @@ Engine.initObject("Sign", "Object2D", function() {
 		signWidth: null,
 		defaultSignColor: null,
 
+        staticRect: null,
+
 		constructor: function(field, text, color, position, signWidth, letterSpacing) {
 			this.base("Sign");
 			this.field = field;
@@ -27,7 +29,13 @@ Engine.initObject("Sign", "Object2D", function() {
 			this.letterSpacing = letterSpacing;
 
 			this.setupTextRenderers(text, this.defaultSignColor);
+
+            this.setSpecialStaticRect(); // not a Mover, so do custom
 		},
+
+        setSpecialStaticRect: function() {
+            this.staticRect = new CheapRect(null, this.signPosition.x, this.signPosition.y, this.signPosition.x + this.signWidth, this.signPosition.y + 30);
+        },
 
 		hijack: function(newText) {
 			this.changeText(newText, "#F7B800");
@@ -122,6 +130,9 @@ Engine.initObject("Sign", "Object2D", function() {
 		},
 
 		update: function(renderContext, time) {
+            if(!this.field.inView(this))
+                return;
+
 			if(this.isScrollComplete())
 				this.resetScroll();
 			else
@@ -140,8 +151,8 @@ Engine.initObject("Sign", "Object2D", function() {
 			}
 		},
 
-		getPosition: function() { return this.getComponent("move").getPosition(); },
-		getRenderPosition: function() { return this.getComponent("move").getRenderPosition(); },
+		getPosition: function() { return this.signPosition },
+		getRenderPosition: function() { return this.signPosition },
 
 	}, {
 		getClassName: function() { return "Sign"; },

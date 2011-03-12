@@ -43,7 +43,6 @@ Game.load("/game/firework.js");
 Game.load("/game/fireworklauncher.js");
 Game.load("/game/parallax.js");
 Game.load("/game/meter.js");
-Game.load("/game/rectangleshape.js");
 Game.load("/game/lantern.js");
 Game.load("/game/sky.js");
 Game.load("/game/speech.js");
@@ -77,9 +76,11 @@ Engine.initObject("PistolSlut", "Game", function() {
 		notifier: null,
 
 		groundY: 395,
-		alwaysVisibleZIndex: 2001,
+		alwaysVisibleZIndex: 2002,
 		frontZIndex: 2000,
 		moverZIndex: 1000,
+
+        maxBlockDimension: 50,
 
 		fieldWidth: 700,
 		fieldHeight: 430,
@@ -194,11 +195,12 @@ Engine.initObject("PistolSlut", "Game", function() {
 			// load rest of level
 			this.level.addObjects(this.renderContext);
 			this.renderContext.setBackgroundColor(this.level.sky.getSkyColor());
+
+            this.viewBoxCheapRect = new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight);
 		},
 
 		loadComponents: function() {
-			// We'll need something to detect collisions
-			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 1);
+			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
 
@@ -232,6 +234,10 @@ Engine.initObject("PistolSlut", "Game", function() {
             this.updateFramePosition(null, this.playerObj);
 		},
 
+        ammoMeter: null,
+        spareClipsMeter: null,
+        healthMeter: null,
+        grenadeMeter: null,
         addMeters: function() {
 			this.ammoMeter = new VectorCaretMeter(this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(85, 5), VectorCaret.WIDTH * 2, 30, "white", "black");
 			this.meters.push(this.ammoMeter);
@@ -253,7 +259,7 @@ Engine.initObject("PistolSlut", "Game", function() {
         },
 
 		applyGravity: function(obj) {
-			if(!this.collider.colliding(obj, this.collider.getPCL(obj), Furniture))
+			if(!this.collider.colliding(obj, this.level.furniture))
 				obj.getVelocity().add(this.gravityVector);
         },
 
@@ -274,12 +280,16 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.destroy();
 		},
 
+        viewBoxCheapRect: null,
 		inView: function(obj) {
-			return (new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight)).isIntersecting(new CheapRect(obj));
+			return this.viewBoxCheapRect.isIntersecting(CheapRect.gen(obj));
 		},
 
 		// updates the position of the view frame
 		updateFramePosition: function(vector, centralObj) {
+            if(vector !== null && vector.x == 0)
+                return;
+
 			var centralObjWindowX = centralObj.getRenderPosition().x;
 
             if(vector === null) // just want to zip straight to a place - used if player is warped to start position
@@ -297,6 +307,9 @@ Engine.initObject("PistolSlut", "Game", function() {
 				 && potentialNewHorizontalScroll <= this.level.maxScroll)
 			{
 				this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
+
+                // update viewbox
+                this.viewBoxCheapRect = new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight)
 
 				// move parallaxes
 				for(var i in this.level.parallaxesToMove)

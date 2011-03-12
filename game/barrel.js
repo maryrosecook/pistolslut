@@ -25,6 +25,9 @@ Engine.initObject("Barrel", "Mover", function() {
 		},
 
 		update: function(renderContext, time) {
+            if(!this.field.inView(this))
+                return;
+
             if(!this.isOnLift())
 			    this.field.applyGravity(this);
 
