@@ -42,7 +42,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 			return ColliderComponent.CONTINUE;
 		},
 
-		shrapnelCount: 15,
+		shrapnelCount: 25,
 		shrapnelTTL: 500,
 		explode: function(objHit) {
 			var positionData = this.field.collider.pointOfImpact(this, objHit);
@@ -51,7 +51,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 				var explosionEpicenter = Point2D.create(positionData[0].x, positionData[0].y)
 
 			for(var x = 0; x < this.shrapnelCount; x++)
-				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, explosionEpicenter, this.shrapnelTTL));
+				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, explosionEpicenter, this.shrapnelTTL, Shrapnel.NO_BOUNCE));
 
 			this.destroy();
 		},

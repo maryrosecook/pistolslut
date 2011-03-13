@@ -2,7 +2,7 @@
 	bitmapImage: "level1.gif", bitmapWidth: 6000, bitmapHeight: 430, collisionMap: [],
 
     player: {
-        startPosition: { x: 50, y: 344 },
+        startPosition: { x: 3000, y: 344 },
     },
 
 	objects: {
@@ -46,11 +46,11 @@
 			{ name: "bridgebollard2", shape: { x: 2600, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard3", shape: { x: 2800, y: 369, w: 20, h: 27 }, visible: true },
 
-			{ name: "scaffoldingafterbridge", shape: { x: 2950, y: 270, w: 280, h: 10 }, visible: true },
+			{ name: "scaffoldingafterbridge", shape: { x: 2950, y: 270, w: 280, h: 10 }, visible: false },
 
 			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 34 }, visible: true },
 			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 65 }, visible: true },
-			{ name: "bunkerbackblock", shape: { x: 3515, y: 362, w: 20, h: 34 }, visible: true },
+			{ name: "bunkerbackblock", shape: { x: 3515, y: 364, w: 20, h: 32 }, visible: true },
 			{ name: "bunkerbackwall", shape: { x: 3515, y: 284, w: 20, h: 30 }, visible: true },
 			{ name: "bunkerceilingleft", shape: { x: 3320, y: 284, w: 35, h: 20 }, visible: true },
 			{ name: "bunkerceilingright", shape: { x: 3415, y: 284, w: 100, h: 20 }, visible: true },
@@ -103,6 +103,7 @@
 
         windows: [
             { name: "skylight", x: 3355, y: 284, width: 60, height: 2 },
+            { name: "bunkerbackwall", x: 3533, y: 314, width: 2, height: 50 },
         ],
 
 		parallaxes: [
@@ -140,8 +141,16 @@
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
 			{
-				name: "bridge", x: 2300, y: 30, scrollAttenuation: 0, zIndex: 2001,
-				sprite: { bitmapImage: "bridge.png", sprites: { "main": { "f" : [0, 0, 613, 400] } } }
+				name: "bridge", x: 2300, y: 144, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "bridge.png", sprites: { "main": { "f" : [0, 0, 613, 286] } } }
+			},
+			{
+				name: "scaffolding", x: 2950, y: 222, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "scaffolding.gif", sprites: { "main": { "f" : [0, 0, 280, 51] } } }
+			},
+			{
+				name: "craneline", x: 3090, y: 0, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "craneline.gif", sprites: { "main": { "f" : [0, 0, 1, 222] } } }
 			},
 			{
 				name: "closestlight1", x: 1350, y: 92, scrollAttenuation: 0, zIndex: 2000,
@@ -151,7 +160,7 @@
 
 
 			{
-				name: "signpistol", x: 4600, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
+				name: "signpistol", x: 4800, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
 				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }
 			},
 			{
