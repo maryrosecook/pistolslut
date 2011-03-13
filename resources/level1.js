@@ -2,7 +2,7 @@
 	bitmapImage: "level1.gif", bitmapWidth: 6000, bitmapHeight: 430, collisionMap: [],
 
     player: {
-        startPosition: { x: 3000, y: 344 },
+        startPosition: { x: 50, y: 344 },
     },
 
 	objects: {
@@ -41,12 +41,12 @@
 		],
 
 		blockFurniture: [
-			{ name: "bridgebody", shape: { x: 2364, y: 207, w: 487, h: 20 }, visible: false },
+			{ name: "bridgebody", shape: { x: 2364, y: 207, w: 551, h: 20 }, visible: false },
 			{ name: "bridgebollard1", shape: { x: 2400, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard2", shape: { x: 2600, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard3", shape: { x: 2800, y: 369, w: 20, h: 27 }, visible: true },
 
-			{ name: "scaffoldingafterbridge", shape: { x: 2950, y: 270, w: 280, h: 10 }, visible: false },
+			{ name: "scaffoldingafterbridge", shape: { x: 2970, y: 270, w: 280, h: 10 }, visible: false },
 
 			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 34 }, visible: true },
 			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 65 }, visible: true },
@@ -97,13 +97,13 @@
 		],
 
         barrels: [
-            { name: "bridge", x: 2600, y: 180 },
-            { name: "bridge", x: 3400, y: 369 },
+            { name: "bridgebarrel", x: 2600, y: 180 },
+            { name: "bridgebarrel", x: 3450, y: 369 },
         ],
 
         windows: [
-            { name: "skylight", x: 3355, y: 284, width: 60, height: 2 },
-            { name: "bunkerbackwall", x: 3533, y: 314, width: 2, height: 50 },
+            { name: "skylightwindow", x: 3355, y: 284, width: 60, height: 2 },
+            { name: "bunkerbackwallwindow", x: 3532, y: 314, width: 3, height: 50 },
         ],
 
 		parallaxes: [
@@ -145,7 +145,7 @@
 				sprite: { bitmapImage: "bridge.png", sprites: { "main": { "f" : [0, 0, 613, 286] } } }
 			},
 			{
-				name: "scaffolding", x: 2950, y: 222, scrollAttenuation: 0, zIndex: 2001,
+				name: "scaffolding", x: 2970, y: 222, scrollAttenuation: 0, zIndex: 2001,
 				sprite: { bitmapImage: "scaffolding.gif", sprites: { "main": { "f" : [0, 0, 280, 51] } } }
 			},
 			{

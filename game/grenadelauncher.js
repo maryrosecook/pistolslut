@@ -28,7 +28,7 @@ Engine.initObject("GrenadeLauncher", "IndirectWeapon", function() {
 		},
 
         THROW: "throw",
-        MAX_GRENADES: 20,
+        MAX_GRENADES: 3,
         METER_CARET_SPACING: 14,
 	});
 
