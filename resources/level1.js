@@ -46,7 +46,7 @@
 			{ name: "bridgebollard2", shape: { x: 2600, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard3", shape: { x: 2800, y: 369, w: 20, h: 27 }, visible: true },
 
-			{ name: "scaffoldingafterbridge", shape: { x: 2970, y: 270, w: 280, h: 10 }, visible: false },
+			{ name: "scaffoldingafterbridge", shape: { x: 2960, y: 270, w: 280, h: 10 }, visible: false },
 
 			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 34 }, visible: true },
 			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 65 }, visible: true },
@@ -128,6 +128,7 @@
 				sprite: { bitmapImage: "gantryb.gif", sprites: { "main": { "f" : [0, 0, 34, 198] } } }
 			},
 
+
 			{
 				name: "floorsign1", x: 79, y: 296, scrollAttenuation: 0,
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
@@ -140,25 +141,40 @@
 				name: "floorsign2", x: 1177, y: 297, scrollAttenuation: 0,
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
+			// {
+			// 	name: "bridge", x: 2300, y: 144, scrollAttenuation: 0, zIndex: 2001,
+			// 	sprite: { bitmapImage: "bridge.png", sprites: { "main": { "f" : [0, 0, 613, 286] } } }
+			// },
+
 			{
-				name: "bridge", x: 2300, y: 144, scrollAttenuation: 0, zIndex: 2001,
-				sprite: { bitmapImage: "bridge.png", sprites: { "main": { "f" : [0, 0, 613, 286] } } }
+				name: "bridgea", x: 2300, y: 144, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "bridgea.png", sprites: { "main": { "f" : [0, 0, 613, 66] } } }
 			},
 			{
-				name: "scaffolding", x: 2970, y: 222, scrollAttenuation: 0, zIndex: 2001,
+				name: "bridgeb", x: 2300, y: 210, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "bridgeb.png", sprites: { "main": { "f" : [0, 0, 66, 119] } } }
+			},
+			{
+				name: "bridgec", x: 2848, y: 210, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "bridgec.png", sprites: { "main": { "f" : [0, 0, 64, 119] } } }
+			},
+			{
+				name: "bridged", x: 2300, y: 329, scrollAttenuation: 0, zIndex: 2001,
+				sprite: { bitmapImage: "bridged.png", sprites: { "main": { "f" : [0, 0, 613, 101] } } }
+			},
+
+			{
+				name: "scaffolding", x: 2960, y: 222, scrollAttenuation: 0, zIndex: 2001,
 				sprite: { bitmapImage: "scaffolding.gif", sprites: { "main": { "f" : [0, 0, 280, 51] } } }
 			},
 			{
-				name: "craneline", x: 3090, y: 0, scrollAttenuation: 0, zIndex: 2001,
+				name: "craneline", x: 3099, y: 0, scrollAttenuation: 0, zIndex: 2001,
 				sprite: { bitmapImage: "craneline.gif", sprites: { "main": { "f" : [0, 0, 1, 222] } } }
 			},
 			{
 				name: "closestlight1", x: 1350, y: 92, scrollAttenuation: 0, zIndex: 2000,
 				sprite: { bitmapImage: "closestlight.png", sprites: { "main": { "f" : [0, 0, 227, 304] } } }
 			},
-
-
-
 			{
 				name: "signpistol", x: 4800, y: 95, scrollAttenuation: -1.6, zIndex: 2001,
 				sprite: { bitmapImage: "signpistol.png", sprites: { "main": { "f" : [0, 0, 380, 394] } } }

@@ -11,8 +11,9 @@ Engine.initObject("Physics", "Base", function() {
 		},
 
 		handleBounce: function(bouncer, obj, count) {
-            if(count == null)
+            if(count === undefined)
                 count = 0;
+
 			if(this.field.collider.objsColliding(bouncer, obj) == true)
 			{
                 var sideHit = this.field.collider.sideHit(bouncer, obj);
@@ -23,13 +24,13 @@ Engine.initObject("Physics", "Base", function() {
 					bouncer.setVelocity(this.bounce(bouncer.getVelocity(), bouncer.bounciness, sideHit));
                     return ColliderComponent.STOP;
 				}
-				else if(count > 100)
+				else if(count > 40) // something has gone wrong - bail on this sweep
                     return ColliderComponent.CONTINUE;
                 else
 				{
                     count += 1;
 					bouncer.sweepPosition();
-					return this.handleBounce(bouncer, obj);
+					return this.handleBounce(bouncer, obj, count);
 				}
 			}
 
