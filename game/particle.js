@@ -1,45 +1,6 @@
 Engine.include("/engine/engine.math2d.js");
 Engine.include("/engine/engine.particles.js");
 
-Engine.initObject("BloodParticle", "Particle", function() {
-	var BloodParticle = Particle.extend({
-
-		pos: null,
-		vec: null,
-		color: "#a00",
-
-		constructor: function(pos, rot, spread, ttl) {
-			this.base(ttl || 2000);
-			this.pos = pos;
-
-			var a = (rot - (spread / 2)) + (Math.random() * spread);
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BloodParticle.ref, a);
-			var vel = 2 + (Math.random() * 4);
-			this.vec.mul(vel)
-		},
-
-		release: function() {
-			this.base();
-			this.pos = null;
-			this.vec = null;
-		},
-
-		draw: function(renderContext, time) {
-			this.pos.add(this.vec);
-			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
-			renderContext.setFillStyle(this.color);
-			renderContext.drawPoint(this.pos);
-		}
-
-	}, {
-		getClassName: function() { return "BloodParticle"; },
-
-		ref: new Point2D(0, -1) // A simple reference point for the "up" vector
-	});
-
-	return BloodParticle;
-});
-
 Engine.initObject("BurnoutParticle", "Particle", function() {
 	var BurnoutParticle = Particle.extend({
 		pos: null,
@@ -51,7 +12,7 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 			this.pos = pos;
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
-			this.vec = Math2D.getDirectionVector(Point2D.ZERO, BurnoutParticle.ref, a);
+			this.vec = Math2D.getDirectionVector(Point2D.ZERO, Collider.UP, a);
 			var vel = baseSpeed + (Math.random() * 2);
             this.vec.mul(vel);
 		},
@@ -78,8 +39,6 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 
 	}, {
 		getClassName: function() { return "BurnoutParticle"; },
-
-		ref: new Point2D(0, -1) // A simple reference point for the "up" vector
 	});
 
 	return BurnoutParticle;

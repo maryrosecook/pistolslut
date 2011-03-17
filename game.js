@@ -256,6 +256,7 @@ Engine.initObject("PistolSlut", "Game", function() {
                                                     "grenade",
                                                     GrenadeLauncher.METER_CARET_SPACING,
                                                     GrenadeLauncher.MAX_GRENADES);
+
 			this.meters.push(this.grenadeMeter);
         },
 

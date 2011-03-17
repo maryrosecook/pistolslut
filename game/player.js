@@ -11,7 +11,7 @@ Engine.initObject("Player", "Human", function() {
 	    constructor: function(field, playerData) {
 		    var startPosition = Point2D.create(playerData.startPosition.x, playerData.startPosition.y);
 		    this.turn(Collider.RIGHT);
-		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, ["M9", "Mac10", "SPAS"], Player.CAN_THROW_GRENADES);
+		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.AVAILABLE_WEAPONS, Player.CAN_THROW_GRENADES);
 
 		    this.add(KeyboardInputComponent.create("input"));
 	    },
@@ -144,7 +144,9 @@ Engine.initObject("Player", "Human", function() {
         HEALTH_RELOAD_DELAY: 5000,
         HEALTH_RELOAD: "health_reload",
 
-		MOVE_EVENT: "playerMove"
+		MOVE_EVENT: "playerMove",
+
+        AVAILABLE_WEAPONS: ["M9", "Mac10", "SPAS"],
 	});
 
 	return Player;

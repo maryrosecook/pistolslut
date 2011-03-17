@@ -151,11 +151,9 @@ Engine.initObject("Human", "Mover", function() {
             if(this.grenadeLauncher.isShooting() && weapon.id != this.grenadeLauncher.id)
                 return true;
             else
-            {
                 for(var i in this.weapons)
                     if(this.weapons[i].isShooting() && this.weapons[i].id != weapon.id)
                         return true;
-            }
 
             return false;
         },
@@ -256,7 +254,7 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		bloodSpread: 50,
-		bloodParticleCount: 10,
+		bloodParticleCount: 20,
 		bloodParticleTTL: 300,
 		bloodSpurt: function(projectile) {
 			var positionData = this.field.collider.pointOfImpact(projectile, this);
@@ -271,7 +269,7 @@ Engine.initObject("Human", "Mover", function() {
 				var sideHit = positionData[1];
 				var reversedAngle = this.field.physics.reverseAngle(projectile, sideHit);
 				for(var x = 0; x < this.bloodParticleCount; x++)
-					particles[x] = BloodParticle.create(position, reversedAngle, this.bloodSpread, this.bloodParticleTTL);
+                    particles[x] = ColoredParticle.create("#600", Point2D.create(position), this.bloodParticleTTL, reversedAngle, this.bloodSpread, Math.random() * 5)
 
 				this.field.pEngine.addParticles(particles);
 			}
