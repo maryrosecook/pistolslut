@@ -25,8 +25,7 @@ Engine.initObject("Parallax", "Mover", function() {
 			this.setSprite("main");
 
 			this.setPosition(Point2D.create(x,y));
-            if(this.scrollAttenuation == 0)
-                this.setRectBecauseStatic();
+            this.setStaticRect(); // moving parallaxes will get their rects updated when frame moves
 		},
 
 		update: function(renderContext, time) {
@@ -37,7 +36,6 @@ Engine.initObject("Parallax", "Mover", function() {
 			this.base(renderContext, time);
 			renderContext.popTransform();
 		},
-
 	}, {
 		getClassName: function() { return "Parallax"; },
 

@@ -10,7 +10,7 @@
 			color: "#fff", letterSpacing: 7,
 			items: [
 				{ text: "Pistol  Slut", x: 89, y: 310, width: 140 },
-				{ text: "Please  return  to  your  homes", x: 805, y: 44, width: 245	},
+				{ text: "Please  return  to  your  homes", x: 805, y: 44, width: 245 },
 				{ text: "Free  shop  opening  soon", x: 1188, y: 311, width: 140 },
 			]
 		},
@@ -108,10 +108,6 @@
 
 		parallaxes: [
 			{
-				name: "farthestlight", x: 584, y: 367, scrollAttenuation: 0.8,
-				sprite: { bitmapImage: "farthestlight.gif", sprites: { "main": { "f" : [0, 0, 22, 30] } } }
-			},
-			{
 				name: "fartherlight", x: 630, y: 348, scrollAttenuation: 0.75,
 				sprite: { bitmapImage: "fartherlight.gif", sprites: { "main": { "f" : [0, 0, 41, 52] } } }
 			},
@@ -141,11 +137,6 @@
 				name: "floorsign2", x: 1177, y: 297, scrollAttenuation: 0,
 				sprite: { bitmapImage: "floorsign.gif", sprites: { "main": { "f" : [0, 0, 151, 99] } } }
 			},
-			// {
-			// 	name: "bridge", x: 2300, y: 144, scrollAttenuation: 0, zIndex: 2001,
-			// 	sprite: { bitmapImage: "bridge.png", sprites: { "main": { "f" : [0, 0, 613, 286] } } }
-			// },
-
 			{
 				name: "bridgea", x: 2300, y: 144, scrollAttenuation: 0, zIndex: 2001,
 				sprite: { bitmapImage: "bridgea.png", sprites: { "main": { "f" : [0, 0, 613, 66] } } }
@@ -162,7 +153,6 @@
 				name: "bridged", x: 2300, y: 329, scrollAttenuation: 0, zIndex: 2001,
 				sprite: { bitmapImage: "bridged.png", sprites: { "main": { "f" : [0, 0, 613, 101] } } }
 			},
-
 			{
 				name: "scaffolding", x: 2960, y: 222, scrollAttenuation: 0, zIndex: 2001,
 				sprite: { bitmapImage: "scaffolding.gif", sprites: { "main": { "f" : [0, 0, 280, 51] } } }

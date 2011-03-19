@@ -282,9 +282,16 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.renderContext.destroy();
 		},
 
+        objectsInView: {},
         viewBoxCheapRect: null,
 		inView: function(obj) {
-			return this.viewBoxCheapRect.isIntersecting(CheapRect.gen(obj));
+            if(obj.staticRect && this.objectsInView[obj.id] !== undefined) // only cache results for static or near static objects
+                return this.objectsInView[obj.id];
+            else
+            {
+			    this.objectsInView[obj.id] = this.viewBoxCheapRect.isIntersecting(CheapRect.gen(obj));
+                return this.objectsInView[obj.id];
+            }
 		},
 
 		// updates the position of the view frame
@@ -310,15 +317,19 @@ Engine.initObject("PistolSlut", "Game", function() {
 			{
 				this.renderContext.setHorizontalScroll(potentialNewHorizontalScroll);
 
-                // update viewbox
+                // update viewbox and reset array containing list of objs in view
                 this.viewBoxCheapRect = new CheapRect(null, this.renderContext.getHorizontalScroll(), 0, this.renderContext.getHorizontalScroll() + this.fieldWidth, this.fieldHeight)
+                this.objectsInView = {};
 
 				// move parallaxes
 				for(var i in this.level.parallaxesToMove)
 				{
                     var parallax = this.level.parallaxesToMove[i];
                     if(this.inView(parallax))
-					   parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
+                    {
+					    parallax.getPosition().setX(parallax.getPosition().x + (parallax.scrollAttenuation * vector.x));
+                        parallax.setStaticRect();
+                    }
 				}
 
 				// move meters

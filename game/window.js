@@ -15,7 +15,7 @@ Engine.initObject("Window", "Mover", function() {
 			this.setPosition(position);
 
 			this.setupGraphics(width, height);
-            this.setRectBecauseStatic();
+            this.setStaticRect();
 		},
 
 		setupGraphics: function(width, height) {

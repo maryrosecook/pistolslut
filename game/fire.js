@@ -6,7 +6,7 @@ Engine.initObject("Fire", "Base", function() {
         staticRect: null,
 
 		constructor: function(name, field, x, y, width) {
-            this.staticRect = new CheapRect(null, x, y, x + width, y + 1);
+            this.setStaticRect(x, y, width);
 			var maxTTL = Fire.FIRE_PARTICLE_TTL;
 
 			this.fireTimer = Interval.create(this.name, this.sparkInterval,
@@ -24,6 +24,15 @@ Engine.initObject("Fire", "Base", function() {
 					}
 			});
 		},
+
+        setStaticRect: function(x, y, width) {
+            this.staticRect = new CheapRect(null, x, y, x + width, y + 1);
+        },
+
+        release: function() {
+            this.base();
+            this.staticRect = null;
+        },
 	}, {
 		getClassName: function() { return "Fire"; },
 

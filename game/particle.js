@@ -8,13 +8,12 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 		color: null,
 
 		constructor: function(pos, rot, spread, ttl, baseSpeed) {
-			this.base(ttl || 2000);
+			this.base(ttl);
 			this.pos = pos;
 
 			var a = (rot - (spread / 2)) + (Math.random() * spread);
 			this.vec = Math2D.getDirectionVector(Point2D.ZERO, Collider.UP, a);
-			var vel = baseSpeed + (Math.random() * 2);
-            this.vec.mul(vel);
+            this.vec.mul(baseSpeed + (Math.random() * 2));
 		},
 
 		release: function() {
@@ -28,12 +27,8 @@ Engine.initObject("BurnoutParticle", "Particle", function() {
 			this.pos.add(this.vec);
 			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
 
-			var newColor = ParticleColorChanger.burnout(time, this.getBirth(), this.getTTL());
-			if(this.color != newColor)
-			{
-				this.color = newColor;
-				renderContext.setFillStyle(this.color);
-			}
+			this.color = ParticleColorChanger.burnout(time, this.getBirth(), this.getTTL());
+			renderContext.setFillStyle(this.color);
 			renderContext.drawPoint(this.pos);
 		}
 
@@ -120,7 +115,6 @@ Engine.initObject("WindowShardParticle", "ColoredParticle", function() {
 
 Engine.initObject("FireworkExplosionParticle", "ColoredParticle", function() {
 	var FireworkExplosionParticle = ColoredParticle.extend({
-
 		constructor: function(position) {
 			var velocity = 0.1 + (Math.random() * 5);
 			this.base("#ff0", position, 1000, 0, 360, velocity);
@@ -130,16 +124,10 @@ Engine.initObject("FireworkExplosionParticle", "ColoredParticle", function() {
 			this.pos.add(this.vec);
 			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
 
-			var newColor = ParticleColorChanger.explosion(time, this.birth, this.life)
-			if(this.color != newColor)
-			{
-				this.color = newColor;
-				renderContext.setFillStyle(this.color);
-			}
-
+			this.color = ParticleColorChanger.explosion(time, this.birth, this.life);
+			renderContext.setFillStyle(this.color);
 			renderContext.drawPoint(this.pos);
-		}
-
+		},
 	}, {
 		getClassName: function() { return "FireworkExplosionParticle"; },
 	});
@@ -149,7 +137,6 @@ Engine.initObject("FireworkExplosionParticle", "ColoredParticle", function() {
 
 Engine.initObject("FireParticle", "Particle", function() {
 	var FireParticle = Particle.extend({
-
 		pos: null,
 		vec: null,
 		color: null,
@@ -190,13 +177,8 @@ Engine.initObject("FireParticle", "Particle", function() {
 			this.pos.add(this.vec);
 			this.pos.x = this.pos.x - renderContext.getHorizontalScroll();
 
-			var newColor = ParticleColorChanger.explosion(time, this.birth, this.life)
-			if(this.color != newColor)
-			{
-				this.color = newColor;
-				renderContext.setFillStyle(this.color);
-			}
-
+			this.color = ParticleColorChanger.explosion(time, this.birth, this.life);
+			renderContext.setFillStyle(this.color);
 			renderContext.drawPoint(this.pos);
 		}
 

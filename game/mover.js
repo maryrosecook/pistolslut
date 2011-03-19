@@ -123,7 +123,7 @@ Engine.initObject("Mover", "Object2D", function() {
 		getVelocity: function() { return this.getComponent("move").getVelocity(); },
 		setVelocity: function(vector) { return this.getComponent("move").setVelocity(vector); },
 
-		setRectBecauseStatic: function() {
+		setStaticRect: function() {
 			this.staticRect = new CheapRect(this);
 		},
 
@@ -136,6 +136,7 @@ Engine.initObject("Mover", "Object2D", function() {
 		release: function() {
 			this.base();
 			this.sprites = {};
+            this.staticRect = null;
 			this.currentSpriteKey = null;
 		},
 	}, { // Static

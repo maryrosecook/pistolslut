@@ -30,10 +30,10 @@ Engine.initObject("Sign", "Object2D", function() {
 
 			this.setupTextRenderers(text, this.defaultSignColor);
 
-            this.setSpecialStaticRect(); // not a Mover, so do custom
+            this.setStaticRect(); // not a Mover, so do custom
 		},
 
-        setSpecialStaticRect: function() {
+        setStaticRect: function() {
             this.staticRect = new CheapRect(null, this.signPosition.x, this.signPosition.y, this.signPosition.x + this.signWidth, this.signPosition.y + 30);
         },
 

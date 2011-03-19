@@ -4,7 +4,7 @@ Engine.initObject("SpriteFurniture", "Furniture", function() {
 		constructor: function(spriteName, position) {
 			this.base(spriteName, position);
 			this.setupGraphics(spriteName);
-            this.setRectBecauseStatic();
+            this.setStaticRect();
 		},
 
 		setupGraphics: function(spriteName) {

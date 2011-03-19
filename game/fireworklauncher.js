@@ -4,8 +4,7 @@ Engine.initObject("FireworkLauncher", "Base", function() {
         staticRect: null,
 
 		constructor: function(name, field, renderContext, x, y, angle, spread, interval) {
-            this.staticRect = new CheapRect(null, x, y, x + 1, y + 1);
-
+            this.setStaticRect(x, y);
 			this.launch(name, field, renderContext, x, y, angle, spread); // initial launch
 
 			// setup launch timer
@@ -22,6 +21,15 @@ Engine.initObject("FireworkLauncher", "Base", function() {
 			var firework = new Firework(name, field, x, y, launchAngle);
 			renderContext.add(firework);
 		},
+
+        setStaticRect: function(x, y) {
+            this.staticRect = new CheapRect(null, x, y, x + 1, y + 1);
+        },
+
+        release: function() {
+            this.base();
+            this.staticRect = null;
+        },
 	}, {
 
 		getClassName: function() { return "FireworkLauncher"; },

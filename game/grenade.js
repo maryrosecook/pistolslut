@@ -43,7 +43,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 		},
 
 		onCollide: function(obj) {
-			if(obj instanceof Furniture || obj instanceof Lift)
+			if(obj instanceof Furniture || obj instanceof Lift || obj instanceof Barrel)
 				return this.field.physics.handleBounce(this, obj);
 
 			return ColliderComponent.CONTINUE;
