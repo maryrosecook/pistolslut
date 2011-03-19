@@ -69,6 +69,17 @@ Engine.initObject("Physics", "Base", function() {
 				return Vector2D.create(0, 1);
 		},
 
+		getSurfaceNormalAngle: function(side) {
+			if(side == Collider.LEFT)
+				return 270;
+			else if(side == Collider.RIGHT)
+				return 90;
+			else if(side == Collider.TOP)
+				return 0;
+			else if(side == Collider.BOTTOM)
+				return 180;
+		},
+
 		adjustForSide: function(angleBetween, sideHit) {
 			if(sideHit == Collider.LEFT)
 				return angleBetween + 90;

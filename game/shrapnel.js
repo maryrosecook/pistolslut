@@ -14,7 +14,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 		safeDistance: 20,
         bounciness: 10,
 
-		constructor: function(field, shooter, epicentre, ttl, bouncer) {
+		constructor: function(field, shooter, epicentre, ttl, bouncer, inSpread, inAngle) {
 			this.base("Shrapnel");
 			this.field = field;
 			this.shooter = shooter;
@@ -29,8 +29,15 @@ Engine.initObject("Shrapnel", "Mover", function() {
 
 			this.getComponent("draw").setPoints(Shrapnel.shape);
 
-			var spread = 360;
-			var a = (0 - (360 / 2)) + (Math.random() * spread);
+            var spread = 360;
+            var angle = 0;
+            if(inSpread !== undefined && inAngle !== undefined)
+            {
+			    spread = inSpread;
+                angle = inAngle;
+            }
+
+            var a = (angle - (spread / 2)) + (Math.random() * spread);
 			var speed = 6 + (Math.random() * 17);
 
 			var mover = this.getComponent("move");

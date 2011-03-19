@@ -1,6 +1,6 @@
 Engine.initObject("MortarRound", "Ordinance", function() {
 	var MortarRound = Ordinance.extend({
-		damage: 0,
+		damage: 20, // direct hit means dead
 		safeDistance: 40,
 
 		constructor: function(weapon) {
@@ -33,7 +33,8 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 				if(obj.isAlive())
 				{
 					if(this.field.collider.objsColliding(this, obj))
-				  {
+				    {
+                        obj.shot(this);
 						this.explode(obj);
 						return ColliderComponent.STOP;
 					}
@@ -48,10 +49,14 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 			var positionData = this.field.collider.pointOfImpact(this, objHit);
 			var explosionEpicenter = null;
 			if(positionData != null)
-				var explosionEpicenter = Point2D.create(positionData[0].x, positionData[0].y)
+            {
+				var explosionEpicenter = Point2D.create(positionData[0].x, positionData[0].y);
+                var spread = 180;
+                var a = this.field.physics.getSurfaceNormalAngle(positionData[1]);
+            }
 
 			for(var x = 0; x < this.shrapnelCount; x++)
-				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, explosionEpicenter, this.shrapnelTTL, Shrapnel.NO_BOUNCE));
+				this.field.renderContext.add(Shrapnel.create(this.field, this.shooter, explosionEpicenter, this.shrapnelTTL, Shrapnel.NO_BOUNCE, spread, a));
 
 			this.destroy();
 		},
