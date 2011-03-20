@@ -5,15 +5,15 @@ Engine.initObject("Sky", "Base", function() {
 		stage: 0,
 		hue: 0,
 		currentColor: null,
-		
+
 		transformations: null,
 		hueStep: 1,
 		dayNightCycleInterval: 1000,
-		
+
 		constructor: function(startColor, transformations, renderContext) {
-			this.currentColor = startColor;
+			this.currentColor = [startColor.substring(0, 1), startColor.substring(2, 3), startColor.substring(4, 5)];
 			this.transformations = transformations;
-			
+
 			if(this.transformations != null)
 			{
 				this.hue = this.transformations[this.stage].start; // get starting hue of starting stage
@@ -25,7 +25,7 @@ Engine.initObject("Sky", "Base", function() {
 				});
 			}
 		},
-		
+
 		updateSkyColor: function() {
 			if(this.hue == this.transformations[this.stage].end) // maybe move to next stage
 			{
@@ -56,10 +56,10 @@ Engine.initObject("Sky", "Base", function() {
 		getSkyColor: function() {
 			return "#" + this.currentColor[0] + this.currentColor[1] + this.currentColor[2];
 		},
-		
+
 	}, {
 		getClassName: function() { return "Sky"; },
-		
+
 	});
 
 	return Sky;

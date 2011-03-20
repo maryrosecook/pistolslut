@@ -2,7 +2,7 @@
 	bitmapImage: "level1.gif", bitmapWidth: 6000, bitmapHeight: 430, collisionMap: [],
 
     player: {
-        startPosition: { x: 2000, y: 344 },
+        startPosition: { x: 50, y: 344 },
     },
 
 	objects: {
@@ -57,18 +57,18 @@
 		],
 
 		enemies: [
-			// { name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
-			// { name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
-			// { name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
-			// { name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
-			// { name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
+			{ name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
+			{ name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
+			{ name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
+			{ name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
+			{ name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
 			{ name: "underbridge1", clazz: Enemy, x: 2510, y: 350, type: "cannonfodder" },
-			// { name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
-			// { name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
-			// { name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
-			// { name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
-			// { name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
-			// { name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
+			{ name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
+			{ name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
+			{ name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
+			{ name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
+			{ name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
+			{ name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
 		],
 
 		speeches: {
@@ -90,7 +90,7 @@
 			{ name: "fireworklauncher1", x: 381, y: 370, angle: 0, spread: 20, interval: 10000 }
 		],
 
-		sky: { startColor: ["26", "26", "26"], transformations: null },
+		sky: { startColor: "3C3F76", transformations: null },
 
 		lifts: [
 			{ name: "longbuildinglift", startX: 2301, startY: 400, distance: 193, width: 64 },
@@ -131,7 +131,7 @@
 			},
 			{
 				name: "building1", x: 795, y: 26, scrollAttenuation: 0,
-				sprite: { bitmapImage: "building.gif", sprites: { "main": { "f" : [0, 0, 259, 370] } } }
+				sprite: { bitmapImage: "building.gif", sprites: { "main": { "f" : [0, 0, 261, 375] } } }
 			},
 			{
 				name: "floorsign2", x: 1177, y: 297, scrollAttenuation: 0,

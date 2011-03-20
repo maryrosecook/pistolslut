@@ -100,6 +100,9 @@ Engine.initObject("Shrapnel", "Mover", function() {
 	}, {
 		getClassName: function() { return "Shrapnel"; },
 		shape: [new Point2D(0, 0), new Point2D(1, 0), new Point2D(1,  1), new Point2D(0,  1)],
+
+        BOUNCE: true,
+        NO_BOUNCE: false,
 	});
 
 	return Shrapnel;
