@@ -34,11 +34,11 @@ Engine.initObject("Human", "Mover", function() {
 			this.stopWalk();
             this.getVelocity().setY(-0.5);
 
-            this.setupWeapons(weapons);
-
 			// Add components to move and draw the human
 			this.add(SpriteComponent.create("draw"));
 			this.add(ColliderComponent.create("collide", this.field.collisionModel));
+
+            this.setupWeapons(weapons);
 
             this.getComponent("move").setPosition(position);
 			this.updateSprite();
@@ -170,10 +170,6 @@ Engine.initObject("Human", "Mover", function() {
 					this.setWeapon(this.weapons[i + 1].name);
 					break;
 				}
-
-			this.field.notifier.post(Weapon.SWITCH, this.weapon);
-            this.weapon.updateMeters();
-			this.updateSprite();
 		},
 
 		setWeapon: function(weaponName) {
@@ -183,6 +179,10 @@ Engine.initObject("Human", "Mover", function() {
 					this.weapon = this.weapons[i];
 					this.weapon.setPose();
 				}
+
+			this.field.notifier.post(Weapon.SWITCH, this.weapon);
+            this.weapon.updateMeters();
+			this.updateSprite();
 		},
 
 		jumping: false,
@@ -280,8 +280,8 @@ Engine.initObject("Human", "Mover", function() {
             for(var i in weapons)
                 this.weapons.push(eval("new " + weapons[i] + "(this)"));
 
-            this.setWeapon(this.weapons[0].name);
 			this.grenadeLauncher = new GrenadeLauncher(this);
+            this.setWeapon(this.weapons[0].name);
 		},
 
 		onCollide: function(obj) {

@@ -1,7 +1,7 @@
 Engine.initObject("Bullet", "Ordinance", function() {
 	var Bullet = Ordinance.extend({
 		damage: 1,
-		safeDistance: 30,
+		safeDistance: 40,
 
 		constructor: function(weapon) {
 			this.base(weapon);

@@ -22,9 +22,12 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
         hasLineOfFire: function() { return false; },
         isSpotterCompatible: function() { return true; },
 
+        isOperational: function() {
+            return this.base() && (this.field.collider.xDistance(this.owner, this.field.playerObj) > Mortar.MIN_RANGE);
+        },
+
         canStand: function() { return false; },
         setPose: function() {
-			this.base();
 			this.owner.crouch();
 		},
 	}, {
@@ -34,6 +37,8 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
 	        "Left": { "min_range": 150, "max_range": 150 },
 			"Right": { "min_range": 150, "max_range": 385 },
 		},
+
+        MIN_RANGE: 125,
 	});
 
 	return Mortar;

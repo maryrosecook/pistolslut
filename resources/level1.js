@@ -2,7 +2,7 @@
 	bitmapImage: "level1.gif", bitmapWidth: 6000, bitmapHeight: 430, collisionMap: [],
 
     player: {
-        startPosition: { x: 50, y: 344 },
+        startPosition: { x: 2000, y: 344 },
     },
 
 	objects: {
@@ -57,29 +57,29 @@
 		],
 
 		enemies: [
-			{ name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
-			{ name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
-			{ name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
-			{ name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
-			{ name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
+			// { name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
+			// { name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
+			// { name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
+			// { name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
+			// { name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
 			{ name: "underbridge1", clazz: Enemy, x: 2510, y: 350, type: "cannonfodder" },
-			{ name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
-			{ name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
-			{ name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
-			{ name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
-			{ name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
-			{ name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
+			// { name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
+			// { name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
+			// { name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
+			// { name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
+			// { name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
+			// { name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
 		],
 
 		speeches: {
 			color: "#fff",
 			items: [
-				//{ identifier: "speechMortarGuy", text: "Oh no she's here. Opening fire.", x: 1070, b: 320, width: 100 },
+				{ identifier: "speechMortarGuy", text: "CONTACT,  LEFT.  COVER.", x: 1070, b: 320, width: 100 },
 			]
 		},
 
 		triggers: [
-			//{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true },
+			{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true },
 		],
 
 		fires: [

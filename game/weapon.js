@@ -141,13 +141,18 @@ Engine.initObject("Weapon", "Base", function() {
 
 		allowedToFire: function() {
             if(!this.owner.firingAnotherWeapon(this))
-                if(!this.isClipEmpty())
-			        if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
-				        if(this.passSemiAutomaticCheck())
-					        return true;
+                if(this.isOperational())
+                    if(!this.isClipEmpty())
+			            if(Engine.worldTime - this.lastShot > this.timeBetweenShots())
+				            if(this.passSemiAutomaticCheck())
+					            return true;
 
 			return false;
 		},
+
+        isOperational: function() {
+            return this.hasAmmoLeft();
+        },
 
 		// either not player, or automatic weapon, or player has let shoot key up since last shot
 		passSemiAutomaticCheck: function() {

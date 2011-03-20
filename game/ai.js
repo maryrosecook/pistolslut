@@ -55,8 +55,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
         canStopSpotting: function() { return this.host.isSpotter() && !this.host.shooter.spotterCompatible(); },
-        canSwitchWeapon: function() { return !this.host.weapon.hasAmmoLeft() && this.host.weapons.length > 1; },
-        canFindCover: function() { return this.host.isMobile() && !this.isInCover(); },
+        canFindCover: function() { return this.host.isMobile() && this.noUnsafeIncomingForAWhile() && !this.isInCover(); },
         canStop: function() { return this.host.walking && this.isInCover(); },
         canRunForCover: function() { return !this.isInCover(); },
 
@@ -66,6 +65,14 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 && this.host.isSpotter()
                 && this.lastCalledRange < this.host.shooter.weapon.lastShot
                 && this.host.shooter.weapon.lastShot + (this.speechShowTime * 0.7) < new Date().getTime();
+        },
+
+        canSwitchWeapon: function() {
+            if(this.host.weapons.length > 1)
+                if(!this.host.weapon.isOperational() || this.getBetterWeapon() !== null)
+                    return true;
+
+            return false;
         },
 
 		canShoot: function() {
@@ -108,13 +115,31 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         turnTowardsPlayer: function() { this.host.turn(this.directionOfPlayer()); },
         enlistSpotter: function() { this.host.setSpotter(this.getNearestAlly(Collider.AT_SIMILAR_HEIGHT)); },
         stopSpotting: function() { this.host.shooter.unsetSpotter(); },
-        switchWeapon: function() { this.host.cycleWeapon(); },
         stop: function() { this.host.stopWalk(); },
 
         runForCover: function() {
             var nearestCover = this.getNearestCover();
             if(nearestCover !== null)
                 this.host.walk(this.directionOfPlayer());
+        },
+
+        // weapons are ordered by goodness
+        switchWeapon: function() {
+            if(!this.host.weapon.isOperational()) // current weapon fucked, just get next one
+                this.host.cycleWeapon();
+            else // switch to better weapon
+                this.host.setWeapon(this.getBetterWeapon().name);
+        },
+
+        getBetterWeapon: function() {
+            var weapons = this.host.weapons;
+            for(var i in weapons)
+                if(this.host.weapon.name == weapons[i].name) // bail once get to cur weapon
+                    return null;
+                else if(weapons[i].isOperational())
+                    return weapons[i];
+
+            return null;
         },
 
         speechShowTime: 2000,
@@ -139,7 +164,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
         hasOperationalWeapon: function() {
             for(var i in this.host.weapons)
-                if(this.host.weapons[i].hasAmmoLeft())
+                if(this.host.weapons[i].isOperational())
                     return true;
 
             return false;

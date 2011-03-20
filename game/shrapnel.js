@@ -11,7 +11,7 @@ Engine.initObject("Shrapnel", "Mover", function() {
 
 		baseSpeed: 15,
 		damage: 1,
-		safeDistance: 20,
+		safeDistance: 40,
         bounciness: 10,
 
 		constructor: function(field, shooter, epicentre, ttl, bouncer, inSpread, inAngle) {
