@@ -55,9 +55,15 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 		canTurnTowardsPlayer: function() { return this.host.direction != this.directionOfPlayer(); },
         canSpot: function() { return this.host.isSpotter(); },
         canStopSpotting: function() { return this.host.isSpotter() && !this.host.shooter.spotterCompatible(); },
-        canFindCover: function() { return this.host.isMobile() && this.noUnsafeIncomingForAWhile() && !this.isInCover(); },
         canStop: function() { return this.host.walking && this.isInCover(); },
         canRunForCover: function() { return !this.isInCover(); },
+
+        canFindCover: function() {
+            return this.host.isMobile()
+                && this.noUnsafeIncomingForAWhile()
+                && !this.isInCover()
+                && this.getNearestCover() !== null;
+        },
 
         lastCalledRange: 0,
         canCallRange: function() {
@@ -128,7 +134,11 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             if(!this.host.weapon.isOperational()) // current weapon fucked, just get next one
                 this.host.cycleWeapon();
             else // switch to better weapon
-                this.host.setWeapon(this.getBetterWeapon().name);
+            {
+                var betterWeapon = this.getBetterWeapon();
+                if(betterWeapon !== null) // possible that no better weapon anymore, so check to make sure
+                    this.host.setWeapon();
+            }
         },
 
         getBetterWeapon: function() {

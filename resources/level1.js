@@ -41,19 +41,19 @@
 		],
 
 		blockFurniture: [
-			{ name: "bridgebody", shape: { x: 2364, y: 207, w: 551, h: 20 }, visible: false },
+			{ name: "bridgebody", shape: { x: 2364, y: 207, w: 551, h: 20 }, visible: false, notCover: true },
 			{ name: "bridgebollard1", shape: { x: 2400, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard2", shape: { x: 2600, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard3", shape: { x: 2800, y: 369, w: 20, h: 27 }, visible: true },
 
-			{ name: "scaffoldingafterbridge", shape: { x: 2960, y: 270, w: 280, h: 10 }, visible: false },
+			{ name: "scaffoldingafterbridge", shape: { x: 2960, y: 270, w: 280, h: 10 }, visible: false, notCover: true },
 
 			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 34 }, visible: true },
 			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 65 }, visible: true },
 			{ name: "bunkerbackblock", shape: { x: 3515, y: 364, w: 20, h: 32 }, visible: true },
 			{ name: "bunkerbackwall", shape: { x: 3515, y: 284, w: 20, h: 30 }, visible: true },
-			{ name: "bunkerceilingleft", shape: { x: 3320, y: 284, w: 35, h: 20 }, visible: true },
-			{ name: "bunkerceilingright", shape: { x: 3415, y: 284, w: 100, h: 20 }, visible: true },
+			{ name: "bunkerceilingleft", shape: { x: 3320, y: 284, w: 35, h: 20 }, visible: true, notCover: true },
+			{ name: "bunkerceilingright", shape: { x: 3415, y: 284, w: 100, h: 20 }, visible: true, notCover: true },
 		],
 
 		enemies: [
@@ -98,7 +98,7 @@
 
         barrels: [
             { name: "bridgebarrel", x: 2600, y: 180 },
-            { name: "bridgebarrel", x: 3450, y: 369 },
+            { name: "bunkerbarrel", x: 3450, y: 369 },
         ],
 
         windows: [

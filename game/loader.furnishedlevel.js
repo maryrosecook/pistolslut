@@ -147,7 +147,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			{
 				var furniturePiece = SpriteFurniture.create(data[i].spriteName, Point2D.create(data[i].x, data[i].y));
 				this.furniture.push(furniturePiece);
-                this.cover.push(furniturePiece);
+                if(data[i].notCover !== true)
+                    this.cover.push(furniturePiece);
 				renderContext.add(furniturePiece);
 			}
 		},
@@ -157,8 +158,9 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			for(var i in data)
             {
 				var createdBlocks = this.createPieceOfBlockFurniture(renderContext, data[i].name, data[i].shape, data[i].visible);
-                for(var j in createdBlocks)
-                    this.cover.push(createdBlocks[j]);
+                if(data[i].notCover !== true)
+                    for(var j in createdBlocks)
+                        this.cover.push(createdBlocks[j]);
             }
 		},
 

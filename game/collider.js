@@ -89,33 +89,34 @@ Engine.initObject("Collider", "Base", function() {
             for(var i in objects)
             {
                 var otherObj = objects[i];
-                if(object.id != otherObj.id)
-                    if(this.field.inView(otherObj))
-                        if(atSimilarHeight !== true || this.yDistance(otherObj, object) < Collider.SIMILAR_HEIGHT_THRESHOLD)
+                if(object.id != otherObj.id && this.field.inView(otherObj))
+                {
+                    if(atSimilarHeight !== true || this.yDistance(otherObj, object) < Collider.SIMILAR_HEIGHT_THRESHOLD)
+                    {
+                        var curObjDistance = this.xDistance(otherObj, object);
+                        if(smallestDistance === null || curObjDistance < smallestDistance)
                         {
-                            var curObjDistance = this.xDistance(otherObj, object);
-                            if(smallestDistance === null || curObjDistance < smallestDistance)
+                            if(direction === null)
                             {
-                                if(direction === null)
+                                nearest = otherObj;
+                                smallestDistance = curObjDistance;
+                            }
+                            else
+                            {
+                                if(direction == Collider.LEFT && this.getDirectionOf(object, otherObj) == Collider.LEFT)
                                 {
                                     nearest = otherObj;
                                     smallestDistance = curObjDistance;
                                 }
-                                else
+                                else if(direction == Collider.RIGHT && this.getDirectionOf(object, otherObj) == Collider.RIGHT)
                                 {
-                                    if(direction == Collider.LEFT && this.getDirectionOf(object, otherObj) == Collider.LEFT)
-                                    {
-                                        nearest = otherObj;
-                                        smallestDistance = curObjDistance;
-                                    }
-                                    else if(direction == Collider.RIGHT && this.getDirectionOf(object, otherObj) == Collider.RIGHT)
-                                    {
-                                        nearest = otherObj;
-                                        smallestDistance = curObjDistance;
-                                    }
+                                    nearest = otherObj;
+                                    smallestDistance = curObjDistance;
                                 }
                             }
                         }
+                    }
+                }
             }
 
             return nearest;
