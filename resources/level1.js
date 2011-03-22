@@ -54,6 +54,8 @@
 			{ name: "bunkerbackwall", shape: { x: 3515, y: 284, w: 20, h: 30 }, visible: true },
 			{ name: "bunkerceilingleft", shape: { x: 3320, y: 284, w: 35, h: 20 }, visible: true, notCover: true },
 			{ name: "bunkerceilingright", shape: { x: 3415, y: 284, w: 100, h: 20 }, visible: true, notCover: true },
+
+			{ name: "bench", shape: { x: 5000, y: 380, w: 100, h: 15 }, visible: false, notCover: true },
 		],
 
 		enemies: [
@@ -176,6 +178,10 @@
 			{
 				name: "treeb", x: 4122, y: 337, scrollAttenuation: 0,
 				sprite: { bitmapImage: "treeb.png", sprites: { "main": { "f" : [0, 0, 72, 59] } } }
+			},
+			{
+				name: "bench", x: 5000, y: 365, scrollAttenuation: 0,
+				sprite: { bitmapImage: "bench.gif", sprites: { "main": { "f" : [0, 0, 100, 31] } } }
 			},
 		]
 	}
