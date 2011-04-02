@@ -18,11 +18,13 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             this.field.notifier.subscribe(AIComponent.SOUND, this, this.notifySound);
 	    },
 
+        // notification
 		notifyShot: function(person) {
 			if(person == this.host)
 				this.reactToBeingUnderFire();
 		},
 
+        // notification
 		notifyIncoming: function(ordinance) {
 			if(ordinance.shooter != this.host)
                 if(!this.host.isCrouching())
@@ -30,6 +32,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 				        this.reactToBeingUnderFire();
 		},
 
+        // notification
         notifySound: function(soundMaker) {
             if(this.field.inView(this.host))
                 if(!this.isTurnedTowardsEnemy())
@@ -37,11 +40,13 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                         this.host.turn(this.field.collider.getDirectionOf(this.host, soundMaker));
         },
 
+        // host action
 		reactToBeingUnderFire: function() {
 			this.lastUnderFire = new Date().getTime();
 			this.host.crouch();
 		},
 
+        // host status
         isTurnedTowardsEnemy: function() { return this.host.direction == this.directionOfPlayer(); },
 
 		execute: function(renderContext, time) {
@@ -113,6 +118,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return false;
         },
 
+        // host actions
         reload: function() { this.host.weapon.reload(); },
         crouch: function() { this.host.crouch() },
         shoot: function() { this.host.shoot(); },
@@ -123,12 +129,14 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         stopSpotting: function() { this.host.shooter.unsetSpotter(); },
         stop: function() { this.host.stopWalk(); },
 
+        // host action
         runForCover: function() {
             var nearestCover = this.getNearestCover();
             if(nearestCover !== null)
                 this.host.walk(this.directionOfPlayer());
         },
 
+        // host action
         // weapons are ordered by goodness
         switchWeapon: function() {
             if(!this.host.weapon.isOperational()) // current weapon fucked, just get next one
@@ -152,6 +160,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return null;
         },
 
+        // host action
         speechShowTime: 2000,
         callRange: function() {
             var x = this.field.collider.xDistance(this.host.shooter, this.field.playerObj);
@@ -167,11 +176,13 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             this.lastCalledRange = new Date().getTime();
         },
 
+        // host action
         throwGrenade: function() {
             this.host.throwGrenade();
             this.lastThrewGrenade = new Date().getTime();
         },
 
+        // host status
         hasOperationalWeapon: function() {
             for(var i in this.host.weapons)
                 if(this.host.weapons[i].isOperational())
@@ -180,6 +191,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return false;
         },
 
+        // host status
 		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			var playerEnemies = this.field.level.liveEnemies();
@@ -193,6 +205,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			return false;
 		},
 
+        // host status
 		furnitureBlockRange: 100,
 		furnitureInLineOfFire: function() {
 			var furniture = this.field.level.cover;
@@ -223,6 +236,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             return this.alreadyFoundCover;
         },
 
+        // host status
         verticalFieldOfFireAdditions: 20,
         isInDanger: function() {
             return this.field.inView(this.host)
@@ -231,6 +245,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                     || !this.host.weapon.hasLineOfFire());
         },
 
+        // host status
         isPathBlocked: function() {
             var nearestFurnitureInDirectionFacing = this.field.collider.getNearest(this.host.direction, Collider.AT_SIMILAR_HEIGHT, this.host, this.field.level.cover);
             if(nearestFurnitureInDirectionFacing === null)
@@ -241,6 +256,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 return true;
         },
 
+        // host action
         turnTo: function(obj) {
             var dir = this.field.collider.getDirectionOf(this.host, obj);
             if(dir != this.host.direction)

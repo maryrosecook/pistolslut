@@ -68,6 +68,7 @@
 			{ name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
 			{ name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
 			{ name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
+            { name: "areabeforeparkmortarer", clazz: Enemy, x: 3900, y: 350, type: "mortarer" },
 			{ name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
 			{ name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
 			{ name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
@@ -100,7 +101,7 @@
 
         barrels: [
             { name: "bridgebarrel", x: 2600, y: 180 },
-            { name: "bunkerbarrel", x: 3450, y: 369 },
+            { name: "bunkerbarrel", x: 3420, y: 369 },
         ],
 
         windows: [
