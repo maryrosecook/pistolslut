@@ -23,7 +23,7 @@ var Enemy = Human.extend({
 
 	getLogic: function() { return this.getComponent("logic" + this.name); },
 
-    getAllies: function() { return this.field.level.liveEnemies(); },
+    getAllies: function() { return this.field.level.liveEnemies; },
 
     spotterCompatible: function() {
         if(this.weapon.isSpotterCompatible())

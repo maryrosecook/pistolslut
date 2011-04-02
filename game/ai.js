@@ -194,28 +194,15 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         // host status
 		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
-			var playerEnemies = this.field.level.liveEnemies();
-			if(this.host.weapon.hasLineOfFire() == true)
-				for(var i in playerEnemies)
-					if(this.host != playerEnemies[i])
-                        if(this.field.inView(playerEnemies[i]))
-						    if(this.field.collider.inLineOfFire(this.host, playerEnemies[i], this.lineOfFireSafetyMargin))
-							    return true;
-
-			return false;
+			return this.host.weapon.hasLineOfFire() == true
+                && this.field.collider.isAnObjectInLineOfFire(this.host, this.field.level.liveEnemies, this.lineOfFireSafetyMargin, undefined);
 		},
 
         // host status
 		furnitureBlockRange: 100,
 		furnitureInLineOfFire: function() {
-			var furniture = this.field.level.cover;
-			if(this.host.weapon.hasLineOfFire() == true)
-				for(var i in furniture)
-					if(!this.field.collider.objectAtLeastDistanceAway(this.host, furniture[i], this.furnitureBlockRange))
-						if(this.field.collider.inLineOfFire(this.host, furniture[i]))
-							return true;
-
-			return false;
+			return this.host.weapon.hasLineOfFire() == true
+                && this.field.collider.isAnObjectInLineOfFire(this.host, this.field.level.cover, undefined, this.furnitureBlockRange);
 		},
 
         getNearestAlly: function(atSimilarHeight) { return this.field.collider.getNearest(null, atSimilarHeight, this.host, this.host.getAllies()); },

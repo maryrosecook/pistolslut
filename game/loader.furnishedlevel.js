@@ -78,6 +78,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
         cover: [],
 		furniture: [],
 		enemies: [],
+        liveEnemies: [],
 		fires: [],
 		fireworkLaunchers: [],
 		parallaxes: [],
@@ -105,15 +106,6 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			this.wind = FurnishedLevel.BASE_WIND + (FurnishedLevel.RANDOMISED_WIND * Math.random());
 
 			return level;
-		},
-
-		liveEnemies: function() {
-			var liveEnemies = [];
-			for(var i in this.enemies)
-				if(this.enemies[i].isAlive())
-					liveEnemies.push(this.enemies[i]);
-
-			return liveEnemies;
 		},
 
 		addObjects: function(renderContext) {
@@ -212,10 +204,15 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 													   enemyTypes[data[i].type],
                                                        data[i].direction);
 
-				this.enemies[i] = enemy;
+				this.enemies.push(enemy);
+                this.liveEnemies.push(enemy);
 				renderContext.add(enemy);
 			}
 		},
+
+        enemyDied: function(enemy) {
+			EngineSupport.arrayRemove(this.liveEnemies, enemy);
+        },
 
 		// load signs from the current level
 		addSigns: function(renderContext) {

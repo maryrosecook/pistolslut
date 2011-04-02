@@ -100,6 +100,8 @@ Engine.initObject("Human", "Mover", function() {
 			this.stateOfBeing = Human.DYING;
             this.stopWalk();
 			this.setSprite(this.direction + Human.DYING + this.weapon.name);
+            if(this instanceof Enemy)
+                this.field.level.enemyDied(this);
 		},
 
 		shoot: function() {

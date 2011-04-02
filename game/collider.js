@@ -30,6 +30,17 @@ Engine.initObject("Collider", "Base", function() {
 			return inLine;
 		},
 
+        isAnObjectInLineOfFire: function(shooter, targets, lineOfFireSafetyMargin, distanceSafetyMargin) {
+		    for(var i in targets)
+				if(shooter !== targets[i])
+                    if(this.field.inView(targets[i]))
+					    if(distanceSafetyMargin === undefined || this.xDistance(shooter, targets[i]) < distanceSafetyMargin)
+						    if(this.inLineOfFire(shooter, targets[i], lineOfFireSafetyMargin))
+							    return true;
+
+            return false;
+        },
+
 		aFallingThroughB: function(a, b) {
 			var aRect = CheapRect.gen(a);
 			var bRect = CheapRect.gen(b);
@@ -77,10 +88,7 @@ Engine.initObject("Collider", "Base", function() {
 		},
 
 		objectAtLeastDistanceAway: function(obj1, obj2, distance) {
-			if(obj1.getPosition().dist(obj2.getPosition()) > distance)
-				return true;
-			else
-				return false;
+			return obj1.getPosition().dist(obj2.getPosition()) > distance;
 		},
 
         getNearest: function(direction, atSimilarHeight, object, objects) {
