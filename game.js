@@ -53,12 +53,9 @@ Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
 Game.load("/game/window.js");
 Game.load("/game/machine.js");
+Game.load("/game/genetics.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
-
-	/**
-	 * @class The game.
-	 */
 	var PistolSlut = Game.extend({
         constructor: null,
 
@@ -75,6 +72,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		collider: null,
 		physics: null,
 		notifier: null,
+        genetics: null,
 
 		groundY: 395,
 		alwaysVisibleZIndex: 2005,
@@ -119,19 +117,24 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 			// Create the 2D context
 			this.playerCenterX = this.fieldWidth / 4;
+            this.prepareResources();
+		},
 
+        prepareResources: function() {
 		    this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
 			this.levelLoader = FurnishedLevelLoader.create("FurnishedLevelLoader", this.spriteLoader);
             this.remoteFileLoader = RemoteFileLoader.create();
 
-			this.imageLoader.load("grenadeon", this.getFilePath("resources/grenadeon.gif"), 7, 13);
-			this.imageLoader.load("grenadeoff", this.getFilePath("resources/grenadeoff.gif"), 7, 13);
-
+            this.remoteFileLoader.exists(this.getFilePath("resources/enemygenome.js"), "json");
+            this.remoteFileLoader.load("enemygenome", this.getFilePath("resources/enemygenome.js"), "json", true);
             this.remoteFileLoader.exists(this.getFilePath("resources/enemyai.js"), "json");
             this.remoteFileLoader.load("enemyai", this.getFilePath("resources/enemyai.js"), "json", true);
             this.remoteFileLoader.exists(this.getFilePath("resources/enemytypes.js"), "json");
             this.remoteFileLoader.load(this.enemyTypesDataIdentifier, this.getFilePath("resources/enemytypes.js"), "json", true);
+
+			this.imageLoader.load("grenadeon", this.getFilePath("resources/grenadeon.gif"), 7, 13);
+			this.imageLoader.load("grenadeoff", this.getFilePath("resources/grenadeoff.gif"), 7, 13);
 
 			this.spriteLoader.load("human", this.getFilePath("resources/human.js")); // load sprite resources
 			this.levelLoader.load("level1", this.getFilePath("resources/level1.js")); // load level resources
@@ -139,7 +142,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			// Don't start until all of the resources are loaded
 			PistolSlut.loadTimeout = Timeout.create("wait", 250, this.waitForResources);
 			this.waitForResources();
-		},
+        },
 
 		onKeyPress: function(event) {
 			if(PistolSlut.isStartScreen == true)
@@ -204,6 +207,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
+            this.loadGenetics();
 
 			// inter object event notifier
 			this.notifier = NotifierComponent.create("notifier");
@@ -213,6 +217,19 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.pEngine.setMaximum(120);
 			this.renderContext.add(this.pEngine);
 		},
+
+        startingPopulation: 20,
+        loadGenetics: function() {
+            var genome = this.remoteFileLoader.getData("enemygenome");
+            var existingPhenotypes = undefined;
+            this.genetics = new Population(genome, existingPhenotypes);
+            if(existingPhenotypes === undefined)
+                this.genetics.generateStartingPopulation(this.startingPopulation);
+
+            console.log(this.genetics.toString());
+            this.genetics.newGeneration();
+            console.log(this.genetics.toString());
+        },
 
 		destroyStartScreen: function() {
 			this.isStartScreen = false;
@@ -334,10 +351,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 				// move meters
 				for(var i in this.meters)
-				{
-					var meter = this.meters[i];
-					meter.updatePosition(vector.x);
-				}
+					this.meters[i].updatePosition(vector.x);
 
 				// move lanterns (they are like little parallaxes)
 				for(var i in this.level.lanterns)
