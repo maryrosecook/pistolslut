@@ -9,11 +9,10 @@ var fu = exports;
 var NOT_FOUND = "Not Found\n";
 
 function notFound(req, res) {
-  res.sendHeader(404, [ ["Content-Type", "text/plain"]
-                      , ["Content-Length", NOT_FOUND.length]
-                      ]);
-  res.write(NOT_FOUND);
-  res.close();
+  res.writeHead(404, { "Content-Type": "text/plain"
+                     , "Content-Length": NOT_FOUND.length
+                     });
+  res.end(NOT_FOUND);
 }
 
 var getMap = {};
@@ -26,20 +25,18 @@ var server = createServer(function (req, res) {
     var handler = getMap[url.parse(req.url).pathname] || notFound;
 
     res.simpleText = function (code, body) {
-      res.sendHeader(code, [ ["Content-Type", "text/plain"]
-                           , ["Content-Length", body.length]
-                           ]);
-      res.write(body);
-      res.close();
+      res.writeHead(code, { "Content-Type": "text/plain"
+                          , "Content-Length": body.length
+                          });
+      res.end(body);
     };
 
     res.simpleJSON = function (code, obj) {
-      var body = JSON.stringify(obj);
-      res.sendHeader(code, [ ["Content-Type", "text/json"]
-                           , ["Content-Length", body.length]
-                           ]);
-      res.write(body);
-      res.close();
+      var body = new Buffer(JSON.stringify(obj));
+      res.writeHead(code, { "Content-Type": "text/json"
+                          , "Content-Length": body.length
+                          });
+      res.end(body);
     };
 
     handler(req, res);
@@ -61,7 +58,6 @@ function extname (path) {
 fu.staticHandler = function (filename) {
   var body, headers;
   var content_type = fu.mime.lookupExtension(extname(filename));
-  var encoding = (content_type.slice(0,4) === "text" ? "utf8" : "binary");
 
   function loadResponseData(callback) {
     if (body && headers && !DEBUG) {
@@ -70,17 +66,15 @@ fu.staticHandler = function (filename) {
     }
 
     sys.puts("loading " + filename + "...");
-    readFile(filename, encoding, function (err, data) {
+    readFile(filename, function (err, data) {
       if (err) {
         sys.puts("Error loading " + filename);
       } else {
         body = data;
-        headers = [ [ "Content-Type"   , content_type ]
-                  , [ "Content-Length" , body.length ]
-                  ];
-        if (!DEBUG)
-          headers.push(["Cache-Control", "public"]);
-
+        headers = { "Content-Type": content_type
+                  , "Content-Length": body.length
+                  };
+        if (!DEBUG) headers["Cache-Control"] = "public";
         sys.puts("static file " + filename + " loaded");
         callback();
       }
@@ -89,9 +83,8 @@ fu.staticHandler = function (filename) {
 
   return function (req, res) {
     loadResponseData(function () {
-      res.sendHeader(200, headers);
-      res.write(body, encoding);
-      res.close();
+      res.writeHead(200, headers);
+      res.end(req.method === "HEAD" ? "" : body);
     });
   }
 };
