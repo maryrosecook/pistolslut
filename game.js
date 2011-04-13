@@ -53,7 +53,7 @@ Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
 Game.load("/game/window.js");
 Game.load("/game/machine.js");
-Game.load("/game/genetics.js");
+Game.load("/game/phenotype.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 	var PistolSlut = Game.extend({
@@ -72,7 +72,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		collider: null,
 		physics: null,
 		notifier: null,
-        genetics: null,
 
 		groundY: 395,
 		alwaysVisibleZIndex: 2005,
@@ -207,7 +206,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
-            this.loadGenetics();
 
 			// inter object event notifier
 			this.notifier = NotifierComponent.create("notifier");
@@ -217,19 +215,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.pEngine.setMaximum(120);
 			this.renderContext.add(this.pEngine);
 		},
-
-        startingPopulation: 20,
-        loadGenetics: function() {
-            var genome = this.remoteFileLoader.getData("enemygenome");
-            var existingPhenotypes = undefined;
-            this.genetics = new Population(genome, existingPhenotypes);
-            if(existingPhenotypes === undefined)
-                this.genetics.generateStartingPopulation(this.startingPopulation);
-
-            console.log(this.genetics.toString());
-            this.genetics.newGeneration();
-            console.log(this.genetics.toString());
-        },
 
 		destroyStartScreen: function() {
 			this.isStartScreen = false;
