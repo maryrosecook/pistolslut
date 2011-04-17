@@ -49,30 +49,18 @@ genetics.Population.prototype = {
     },
 
     newGeneration: function() {
-        var phenotypeCount = this.phenotypes.length;
-
-        // get first parents.length / 2 fittest phenotypes
         var parents = [];
-        var phenotypesByFitness = this.phenotypes.sort(this.fitnessSort);
-        for(var i in phenotypesByFitness)
-        {
-            parents.push(this.phenotypesByFitness[i]);
-            if(i == Math.ceil(phenotypeCount / 2) - 1)
-                break;
-        }
+        for(var i in this.phenotypes)
+            parents.push(this.phenotypes[i]);
 
         this.phenotypes = []; // remove all parents
-        while(this.phenotypes.length < phenotypeCount)
+        for(var i = 0; i < Math.ceil(parents.length / 2); i++)
         {
             this.phenotypes.push(util.randomElement(parents).fuck(util.randomElement(parents)));
             this.phenotypes.push(util.randomElement(parents).fuck(util.randomElement(parents)));
         }
 
         this.writeToFile();
-    },
-
-    fitnessSort: function(a, b) {
-        return b.deaths - a.deaths;
     },
 
     toJSON: function() {
@@ -122,8 +110,6 @@ genetics.Population.prototype = {
 
 
 genetics.Phenotype = function(population, sequence) {
-    this.id = util.guid();
-    this.deaths = 0;
     this.population = population;
     if(sequence !== undefined) // convert passed json to hash of genes and their values
         this.sequence = sequence;
@@ -136,11 +122,19 @@ genetics.Phenotype = function(population, sequence) {
 },
 
 genetics.Phenotype.prototype = {
+    // write phenotype to db
+    // writeToDB: function() {
+    //     var phenotypeJSON = this.asJSON();
+    //     var redisClient = new redis.createClient();
+	//     redisClient.stream.addListener("connect", function () {
+	//         redisClient.rpush('phenotypes', phenotypeJSON, function (err, value) {
+	//             redisClient.close();
+	//         });
+	//     });
+    // },
+
     asJSON: function() {
-        var data = {};
-        data.id = this.id;
-        data.sequence = this.sequence;
-        return JSON.stringify(data);
+        return JSON.stringify(this.sequence);
     },
 
     // makes child with sequence made gene values either taken from from random, or mutated
@@ -156,11 +150,6 @@ genetics.Phenotype.prototype = {
         }
 
         return new genetics.Phenotype(this.population, childSequence);
-    },
-
-    // does not actually kill, just increments death counter (measure of fitness)
-    die: function() {
-        this.deaths += 1;
     },
 
     toString: function() {
