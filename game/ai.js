@@ -4,7 +4,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 	var AIComponent = LogicComponent.extend({
 		field: null,
         state: null,
-        phenotype: null,
 
 		// I know it's insane to pass the host in the constructer, but it doesn't seem to be available at this point
 		constructor: function(name, priority, field, host, behaviourTreeName) {
@@ -12,23 +11,12 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			this.field = field;
 
             this.state = new Machine(this.field.remoteFileLoader.getData(behaviourTreeName)).generateTree(this);
-            this.phenotype = this.getPhenotype();
 
 			// subscribe to events the enemy cares about
 			this.field.notifier.subscribe(Human.INCOMING, this, this.notifyIncoming);
 			this.field.notifier.subscribe(Human.SHOT, this, this.notifyShot);
             this.field.notifier.subscribe(AIComponent.SOUND, this, this.notifySound);
 	    },
-
-        // gets a suitable phenotype from the server
-        getPhenotype: function() {
-
-        },
-
-        // handles telling server that the phenotype died
-        die: function() {
-
-        },
 
         // notification
 		notifyShot: function(person) {
@@ -41,12 +29,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 			if(ordinance.shooter != this.host)
                 if(!this.host.isCrouching())
 			        if(!this.field.collider.objectAtLeastDistanceAway(this.host, ordinance, ordinance.safeDistance))
-                        if(!this.isExpressedUnique("crouch", ordinance))
-                        {
-                            this.recordExpressionUnique("crouch", ordinance);
-                            if(this.expressed("crouch")) // now do the actual dice roll to see if we respond
-				                this.reactToBeingUnderFire();
-                        }
+				        this.reactToBeingUnderFire();
 		},
 
         // notification
@@ -55,42 +38,6 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 if(!this.isTurnedTowardsEnemy())
                     if(this.field.inView(soundMaker))
                         this.host.turn(this.field.collider.getDirectionOf(this.host, soundMaker));
-        },
-
-        // returns true if gene behaviour has not been expressed with passed object
-        // and. thus, should now be expressed
-        expressedObjectIds: {},
-        isExpressedUnique: function(gene, obj) {
-            var in = false;
-            if(this.expressedObjectIds[gene] !== undefined)
-                for(var i in this.recentlyExpressedObjectIds)
-                    if(this.recentlyExpressedObjectIds[i] === obj.id)
-                    {
-                        in = true;
-                        break;
-                    }
-
-            return in;
-        },
-
-        recordExpressionUnique: function(gene, obj) {
-            if(this.expressedObjectIds[gene] === undefined)
-                this.expressedObjectIds[gene] = [];
-
-            this.expressedObjectIds[gene].push(obj.id);
-        },
-
-        lastExpressed: {}
-        isExpressedTimeout: function(gene, timeout) {
-            if(this.lastExpressed[gene] !== undefined)
-                if(Engine.worldTime > this.lastExpressed[gene] + timeout)
-                    return true;
-
-            return false;
-        },
-
-        recordExpressedTimeout: function(gene) {
-            this.lastExpressed[gene] = Engine.worldTime;
         },
 
         // host action
