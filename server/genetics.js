@@ -1,93 +1,115 @@
 var sys = require("sys");
 var url = require("url");
+var fs = require("fs");
 var redis = require("./redisclient");
-var util = require("./util");
+
+var mutationProbability = 0.05;
+var genome = ["shoot", "grenade", "crouch", "stand", "cover", "reload" ];
 
 var genetics = exports;
 
-genetics.Population = function(initialPopulationSize, mutationProbability, genome, dataFilepath) {
-    this.dataFilepath = dataFilepath;
-    this.phenotypes = null;
-    this.mutationProbability = null;
-    this.genome = null;
+function writeFile(filepath, string) {
+    fs.writeFile(filepath, string, function(err) {
+        if(err)
+            sys.puts("Could not save " + filepath + " " + err);
+        else
+            sys.puts("Saved " + filepath);
+    });
+}
+
+function randomElement(elements) {
+    if(elements.length > 0)
+        return elements[Math.floor(elements.length * Math.random())];
+    else
+        return null;
+}
+
+
+
+genetics.Population = function(populationSize) {
+    this.mutationProbability = mutationProbability;
+    this.genome = genome;
 
     var population = this;
 	var redisClient = new redis.createClient();
-    this.readFromFile(function (populationData) {
-        if(populationData == null) // need to create initial population
-            population.initialiseFromScratch(initialPopulationSize, mutationProbability, genome);
-        else // existing data on disk
-        {
-            population.initialiseFromData(populationData);
-            console.log(population.toString())
-            population.newGeneration();
-            console.log(population.toString())
-        }
-    });
+	redisClient.stream.addListener("connect", function () {
+	    redisClient.llen('phenotypes', function (err, value) {
+            redisClient.close();
+            if(value == 0) // need to create initial population
+                for(var i = 0; i < populationSize; i++)
+                    new genetics.Phenotype(population).writeToDB();
+            else
+                population.newGeneration();
+
+            population.writeToFile();
+		});
+	});
 }
 
 // takes current population and makes a new generation
 genetics.Population.prototype = {
-    initialiseFromScratch: function(initialPopulationSize, mutationProbability, genome) {
-        this.mutationProbability = mutationProbability;
-        this.genome = genome;
+    asJSON: function(callback) {
+        var population = this;
+        this.getPhenotypes(function(phenotypes) {
+            var data = {};
+            data.mutationProbability = population.mutationProbability;
+            data.genome = population.genome;
+            data.phenotypes = [];
+            for(var i in phenotypes)
+                data.phenotypes.push(phenotypes[i].sequence);
 
-        this.phenotypes = [];
-        for(var i = 0; i < initialPopulationSize; i++)
-            this.phenotypes.push(new genetics.Phenotype(this));
-
-        this.writeToFile();
-    },
-
-    initialiseFromData: function(data)  {
-        this.mutationProbability = data.mutationProbability;
-        this.genome = data.genome;
-
-        this.phenotypes = [];
-        for(var i in data.phenotypes)
-            this.phenotypes.push(new genetics.Phenotype(this, data.phenotypes[i]));
-    },
-
-    newGeneration: function() {
-        var parents = [];
-        for(var i in this.phenotypes)
-            parents.push(this.phenotypes[i]);
-
-        this.phenotypes = []; // remove all parents
-        for(var i = 0; i < Math.ceil(parents.length / 2); i++)
-        {
-            this.phenotypes.push(util.randomElement(parents).fuck(util.randomElement(parents)));
-            this.phenotypes.push(util.randomElement(parents).fuck(util.randomElement(parents)));
-        }
-
-        this.writeToFile();
-    },
-
-    toJSON: function() {
-        var data = {};
-        data.mutationProbability = this.mutationProbability;
-        data.genome = this.genome;
-        data.phenotypes = [];
-        for(var i in this.phenotypes)
-            data.phenotypes.push(this.phenotypes[i].sequence);
-
-        return(JSON.stringify(data));
+            callback(JSON.stringify(data));
+        });
     },
 
     writeToFile: function() {
-        if(this.dataFilepath)
-            util.writeFile(this.dataFilepath, this.toJSON());
+        this.asJSON(function(json) {
+            writeFile("../resources/phenotypes.js", json);
+        });
     },
 
-    readFromFile: function(callback) {
-        if(this.dataFilepath)
-        {
-            util.readFile(this.dataFilepath, function(data) {
-                callback(JSON.parse(data));
-            });
-        }
-        else
-            callback(null);
+    newGeneration: function() {
+        console.log("new")
+        this.getPhenotypes(function(phenotypes) {
+            var parents = [];
+            for(var i in phenotypes)
+                parents.push(phenotypes[i]);
+
+            // remove all phenotypes (parents) from db and then add children
+	        var redisClient = new redis.createClient();
+	        redisClient.stream.addListener("connect", function () {
+		        redisClient.del('phenotypes', function (err, value) {
+			        redisClient.close();
+                    for(var i = 0; i < Math.ceil(parents.length / 2); i++)
+                        randomElement(parents).fuck(randomElement(parents));
+		        });
+	        });
+        });
+    },
+
+    // returns a random phenotype
+    getPhenotypes: function(callback) {
+        var population = this;
+	    var redisClient = new redis.createClient();
+	    redisClient.stream.addListener("connect", function () {
+		    redisClient.llen('phenotypes', function (err, len) {
+                if(len > 0)
+                {
+		            redisClient.lrange('phenotypes', 0, len - 1, function (err, phenotypeData) {
+                        var phenotypes = JSON.parse(phenotypeData);
+                        //console.log(phenotypes)
+                        var phenotypeObjs = [];
+                        for(var i in phenotypeData)
+                            phenotypeObjs.push(new genetics.Phenotype(population, phenotypeData[i]))
+
+                        callback(phenotypeObjs);
+			            redisClient.close();
+                    });
+                }
+                else
+                    return [];
+		    });
+	    });
     },
 
     toString: function() {
@@ -101,7 +123,7 @@ genetics.Population.prototype = {
 
         str += "phenotypes:\n";
         for(var i in this.phenotypes)
-            str += this.phenotypes[i].toString() + "\n";
+            str += this.phenotypes[i] + "\n";
 
         return str;
     },
@@ -109,10 +131,10 @@ genetics.Population.prototype = {
 
 
 
-genetics.Phenotype = function(population, sequence) {
+genetics.Phenotype = function(population, sequenceJSON) {
     this.population = population;
-    if(sequence !== undefined) // convert passed json to hash of genes and their values
-        this.sequence = sequence;
+    if(sequenceJSON !== undefined) // convert passed json to hash of genes and their values
+        this.sequence = JSON.parse(sequenceJSON);
     else // generate random sequence
     {
         this.sequence = {};
@@ -123,15 +145,15 @@ genetics.Phenotype = function(population, sequence) {
 
 genetics.Phenotype.prototype = {
     // write phenotype to db
-    // writeToDB: function() {
-    //     var phenotypeJSON = this.asJSON();
-    //     var redisClient = new redis.createClient();
-	//     redisClient.stream.addListener("connect", function () {
-	//         redisClient.rpush('phenotypes', phenotypeJSON, function (err, value) {
-	//             redisClient.close();
-	//         });
-	//     });
-    // },
+    writeToDB: function() {
+        var phenotypeJSON = this.asJSON();
+        var redisClient = new redis.createClient();
+	    redisClient.stream.addListener("connect", function () {
+	        redisClient.rpush('phenotypes', phenotypeJSON, function (err, value) {
+	            redisClient.close();
+	        });
+	    });
+    },
 
     asJSON: function() {
         return JSON.stringify(this.sequence);
@@ -155,7 +177,7 @@ genetics.Phenotype.prototype = {
     toString: function() {
         var str = "";
         for(var gene in this.sequence)
-            str += gene + " " + this.sequence[gene].toString().substr(0, 4) + ", ";
+            str += gene + " " + this.sequence[gene].toString().substr(0, 3) + ", ";
 
         return str;
     },
