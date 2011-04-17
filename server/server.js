@@ -17,11 +17,12 @@ var population = new genetics.Population(POPULATION_SIZE);
 //console.log(population.toString());
 
 // return random phenotype
-fu.get("/get_phenotype.json", function (req, res) {
+fu.get("/get_phenotype", function (req, res) {
     //var count = qs.parse(url.parse(req.url).query).count;
     population.getPhenotype(function (phenotype) {
-        console.log(phenotype)
-        res.simpleJSON(200, phenotype.sequence);
+        console.log("hi")
+        console.log(phenotype.asJSON().toString())
+        res.simpleJSON(200, { message: phenotype.asJSON().toString(), timestamp: new Date().getTime() });
     });
 });
 

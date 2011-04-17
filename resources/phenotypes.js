@@ -1,1 +1,0 @@
-{"mutationProbability":0.05,"genome":["shoot","grenade","crouch","stand","cover","reload"],"phenotypes":[]}

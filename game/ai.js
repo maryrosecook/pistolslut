@@ -22,10 +22,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
         // gets a suitable phenotype from the server
         getPhenotype: function() {
-		    $.get("http://localhost:3000//get_phenotypes.json", function(data) {
-				var sequence = EngineSupport.evalJSON(data);
-                console.log(sequence)
-			});
+
         },
 
         // handles telling server that the phenotype died
@@ -64,16 +61,16 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         // and. thus, should now be expressed
         expressedObjectIds: {},
         isExpressedUnique: function(gene, obj) {
-            var isIn = false;
+            var in = false;
             if(this.expressedObjectIds[gene] !== undefined)
                 for(var i in this.recentlyExpressedObjectIds)
                     if(this.recentlyExpressedObjectIds[i] === obj.id)
                     {
-                        isIn = true;
+                        in = true;
                         break;
                     }
 
-            return isIn;
+            return in;
         },
 
         recordExpressionUnique: function(gene, obj) {
@@ -83,7 +80,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
             this.expressedObjectIds[gene].push(obj.id);
         },
 
-        lastExpressed: {},
+        lastExpressed: {}
         isExpressedTimeout: function(gene, timeout) {
             if(this.lastExpressed[gene] !== undefined)
                 if(Engine.worldTime > this.lastExpressed[gene] + timeout)
