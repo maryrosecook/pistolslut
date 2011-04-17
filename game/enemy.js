@@ -9,13 +9,11 @@ Engine.initObject("Enemy", "Human", function() {
 
 var Enemy = Human.extend({
     accuracy: 1.0,
-    phenotype: null,
 
 	constructor: function(name, field, position, typeData, direction) {
 		this.turn(Collider.LEFT);
 		this.base(name, field, position, typeData.health, typeData.weapons, typeData.grenadeThrower);
         this.accuracy = typeData.accuracy;
-        this.phenotype = this.field.genetics.getPhenotype();
 
         if(direction !== undefined)
             this.turn(direction);
@@ -40,7 +38,6 @@ var Enemy = Human.extend({
 		this.getLogic().removeFromHost();
 		this.field.notifier.unsubscribe(Human.INCOMING, this.getLogic());
 		this.field.notifier.unsubscribe(Human.RELOADED, this.getLogic());
-        this.phenotype.die();
 	},
 
     who: function() { return Human.ENEMY },
