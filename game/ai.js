@@ -192,7 +192,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
         },
 
         // host status
-		lineOfFireSafetyMargin: 15, // added to top and bottom of potential target to be on safer side
+		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
 		friendliesInLineOfFire: function() {
 			return this.host.weapon.hasLineOfFire() == true
                 && this.field.collider.isAnObjectInLineOfFire(this.host, this.field.level.liveEnemies, this.lineOfFireSafetyMargin, undefined);

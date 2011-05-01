@@ -30,27 +30,16 @@ Engine.initObject("Collider", "Base", function() {
 			return inLine;
 		},
 
-        isObjectInLineOfFire: function(shooter, targets, lineOfFireSafetyMargin, distanceSafetyMargin) {
-            var obj = this.getObjectInLineOfFire();
-            if(obj !== false)
-                return this.xDistance(shooter, obj) < distanceSafetyMargin;
-            else
-                return false;
-        },
-
-        // returns closest object
-        getObjectInLineOfFire: function(shooter, targets, lineOfFireSafetyMargin) {
+        isAnObjectInLineOfFire: function(shooter, targets, lineOfFireSafetyMargin, distanceSafetyMargin) {
 		    for(var i in targets)
 				if(shooter !== targets[i])
                     if(this.field.inView(targets[i]))
 					    if(distanceSafetyMargin === undefined || this.xDistance(shooter, targets[i]) < distanceSafetyMargin)
 						    if(this.inLineOfFire(shooter, targets[i], lineOfFireSafetyMargin))
-							    return targets[i];
+							    return true;
 
             return false;
         },
-
-        is
 
 		aFallingThroughB: function(a, b) {
 			var aRect = CheapRect.gen(a);

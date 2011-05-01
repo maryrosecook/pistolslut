@@ -756,22 +756,11 @@ var Rectangle2D = MathObject.extend(/** @scope Rectangle2D.prototype */{
     */
    isIntersecting: function(rect) {
       var r1 = this.get();
-       var r2 = rect.get();
-       //framechange
-       if(r1.r < r2.x)
-           return false;
-       else if(r1.x > r2.r)
-           return false;
-       else if(r1.y > r2.b)
-           return false;
-       else if(r1.b < r2.y)
-           return false
-       else
-           return true;
-      // return !(r1.r < r2.x ||
-      //          r1.x > r2.r ||
-      //          r1.y > r2.b ||
-      //          r1.b < r2.y);
+      var r2 = rect.get();
+      return !(r1.r < r2.x ||
+               r1.x > r2.r ||
+               r1.y > r2.b ||
+               r1.b < r2.y);
    },
 
    /**
