@@ -56,7 +56,7 @@ Engine.initObject("Grenade", "Ordinance", function() {
 			return objCentre;
 		},
 
-		shrapnelCount: 15,
+		shrapnelCount: 25,
 		shrapnelTTL: 700,
 		explode: function() {
             var bouncer = this.shooter instanceof Player;

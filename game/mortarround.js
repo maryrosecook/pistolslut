@@ -43,7 +43,7 @@ Engine.initObject("MortarRound", "Ordinance", function() {
 			return ColliderComponent.CONTINUE;
 		},
 
-		shrapnelCount: 25,
+		shrapnelCount: 20,
 		shrapnelTTL: 500,
 		explode: function(objHit) {
 			var positionData = this.field.collider.pointOfImpact(this, objHit);

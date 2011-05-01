@@ -82,7 +82,7 @@
 		},
 
 		triggers: [
-			{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true },
+			//{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true },
 		],
 
 		fires: [
