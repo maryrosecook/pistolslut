@@ -28,6 +28,7 @@ Game.load("/game/enemy.js");
 Game.load("/game/human.js");
 Game.load("/game/cheaprect.js");
 Game.load("/game/ai.js");
+Game.load("/game/status.js");
 Game.load("/game/weapon.js");
 Game.load("/game/indirectweapon.js");
 Game.load("/game/m9.js");

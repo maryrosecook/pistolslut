@@ -32,7 +32,6 @@ Engine.initObject("CheapRect", "Base", function() {
 	}, {
 		getClassName: function() { return "CheapRect"; },
 
-
         gen: function(obj) {
             if(obj.staticRect)
                 return obj.staticRect;
