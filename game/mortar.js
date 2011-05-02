@@ -38,7 +38,7 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
 			"Right": { "min_range": 150, "max_range": 385 },
 		},
 
-        MIN_RANGE: 125,
+        MIN_RANGE: 150,
 	});
 
 	return Mortar;

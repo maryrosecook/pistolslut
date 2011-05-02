@@ -42,7 +42,7 @@
 
 		blockFurniture: [
 			{ name: "bridgebody", shape: { x: 2364, y: 207, w: 551, h: 20 }, visible: false, notCover: true },
-			{ name: "bridgebollard1", shape: { x: 2400, y: 369, w: 20, h: 27 }, visible: true },
+			{ name: "bridgebollard1", shape: { x: 2430, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard2", shape: { x: 2600, y: 369, w: 20, h: 27 }, visible: true },
 			{ name: "bridgebollard3", shape: { x: 2800, y: 369, w: 20, h: 27 }, visible: true },
 
