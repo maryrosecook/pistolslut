@@ -9,6 +9,7 @@
       <!-- Supporting Libraries -->
       <script type="text/javascript" src="libs/base.js"></script>
       <script type="text/javascript" src="libs/jquery-1.2.6.js"></script>
+      <script src="http://127.0.0.1:1337/socket.io/socket.io.js"></script>
       <script type="text/javascript" src="libs/jquery.ext.engine.js"></script>
       <script type="text/javascript" src="libs/sylvester.js"></script>
 
@@ -18,6 +19,67 @@
    <body>
 
       <script type="text/javascript">
+        // Set up socket.io connection to controller server
+        var socket;
+        if( io && io.Socket ) {
+          socket = new io.Socket( '127.0.0.1', { port: 1337 } );
+          socket.connect();
+
+          socket.on( 'connect', function() {
+            console.log( 'succesfully connected' );
+          });
+
+          function keyEvent( type, keyCode ) {
+            var evt = document.createEvent( 'KeyboardEvent' );
+            evt.initKeyEvent( type, true, false, null, 0, false, 0, false, keyCode, 0 );
+            document.dispatchEvent(evt);
+          }
+
+          function doKeySomething( e, code ) {
+            if( e.method === 'buttondown' ) {
+              keyEvent( 'keypress', code );
+              keyEvent( 'keydown', code );
+            }
+            else {
+              keyEvent( 'keyup', code );
+            }
+          }
+
+          socket.on( 'message', function( e ) {
+            var button = e.data,
+
+            buttons = {
+              '1024': function() {
+                doKeySomething( e, 39 );
+              },
+              '256': function() {
+                doKeySomething( e, 40 );
+              }
+            , '2048': function() {
+                doKeySomething( e, 37 );
+              }
+            , '512': function() {
+                doKeySomething( e, 38 );
+              }
+            , '8': function() {
+                doKeySomething( e, 88 );
+              }
+            , '2': function() {
+                doKeySomething( e, 67 );
+              }
+            , '4': function() {
+                doKeySomething( e, 90 );
+              }
+            };
+
+            button in buttons && buttons[button]();
+          });
+
+          socket.on( 'disconnect', function() {
+
+          });
+        }
+        
          // Load the game script
          Engine.loadGame('game.js','PistolSlut');
       </script>
