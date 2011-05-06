@@ -10,33 +10,37 @@ Engine.initObject("Collider", "Base", function() {
 			this.field = field;
 		},
 
-		inLineOfFire: function(shooter, target, inSafetyMargin) {
+        // the spreads are added to either side of the object to generate the danger zone
+		inLineOfFire: function(shooter, target, inXSpread, inYSpread) {
 			var inLine = false;
-
-			var safetyMargin = 0;
-			if(inSafetyMargin !== undefined)
-				safetyMargin = inSafetyMargin;
-
 			var muzzlePosition = shooter.weapon.getGunTip();
 			var targetRect = CheapRect.gen(target);
-			if(muzzlePosition.y <= targetRect.b + safetyMargin && muzzlePosition.y >= targetRect.y - safetyMargin) // intersecting on y-axis
+
+			var xSpread = muzzlePosition.x;
+			if(inXSpread !== undefined)
+				xSpread = inXSpread;
+
+			var ySpread = 0;
+			if(inYSpread !== undefined)
+				ySpread = inYSpread;
+
+			if(muzzlePosition.y <= targetRect.b + ySpread && muzzlePosition.y >= targetRect.y - ySpread) // intersecting on y-axis
 			{
 				if(shooter.direction == Collider.LEFT)
-					inLine = targetRect.x < muzzlePosition.x;
+					inLine = targetRect.x > muzzlePosition.x - xSpread;
 				else if(shooter.direction == Collider.RIGHT)
-					inLine = muzzlePosition.x < targetRect.r;
+					inLine = muzzlePosition.r > targetRect.r + xSpread;
 			}
 
 			return inLine;
 		},
 
-        isAnObjectInLineOfFire: function(shooter, targets, lineOfFireSafetyMargin, distanceSafetyMargin) {
+        isAnObjectInLineOfFire: function(shooter, targets, xSpread, ySpread) {
 		    for(var i in targets)
 				if(shooter !== targets[i])
                     if(this.field.inView(targets[i]))
-					    if(distanceSafetyMargin === undefined || this.xDistance(shooter, targets[i]) < distanceSafetyMargin)
-						    if(this.inLineOfFire(shooter, targets[i], lineOfFireSafetyMargin))
-							    return true;
+						if(this.inLineOfFire(shooter, targets[i], xSpread, ySpread))
+							return true;
 
             return false;
         },

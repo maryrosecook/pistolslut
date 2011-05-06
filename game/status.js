@@ -17,7 +17,7 @@ Engine.initObject("Status", "Base", function() {
         isInDanger: function() {
             return this.field.inView(this.ai.host)
                 && this.field.isPlayerAlive()
-                && (this.field.collider.inLineOfFire(this.ai.host, this.field.playerObj, this.verticalFieldOfFireAdditions)
+                && (this.field.collider.inLineOfFire(this.ai.host, this.field.playerObj, undefined, this.verticalFieldOfFireAdditions)
                     || !this.ai.host.weapon.hasLineOfFire());
         },
 
@@ -42,16 +42,16 @@ Engine.initObject("Status", "Base", function() {
             return false;
         },
 
-		lineOfFireSafetyMargin: 10, // added to top and bottom of potential target to be on safer side
+		yLineOfFireSpread: 10, // added to top and bottom of potential target to be on safer side
 		isFriendliesInLineOfFire: function() {
 			return this.ai.host.weapon.hasLineOfFire() == true
-                && this.field.collider.isAnObjectInLineOfFire(this.ai.host, this.field.level.liveEnemies, this.lineOfFireSafetyMargin, undefined);
+                && this.field.collider.isAnObjectInLineOfFire(this.ai.host, this.field.level.liveEnemies, undefined, this.yLineOfFireSpread);
 		},
 
 		furnitureBlockRange: 100,
 		isFurnitureInLineOfFire: function() {
 			return this.ai.host.weapon.hasLineOfFire() == true
-                && this.field.collider.isAnObjectInLineOfFire(this.ai.host, this.field.level.cover, undefined, this.furnitureBlockRange);
+                && this.field.collider.isAnObjectInLineOfFire(this.ai.host, this.field.level.cover, this.furnitureBlockRange, undefined);
 		},
 
         isFreeAgent: function() { return !this.ai.host.isSpotter(); },
