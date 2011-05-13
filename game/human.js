@@ -256,8 +256,8 @@ Engine.initObject("Human", "Mover", function() {
 		},
 
 		bloodSpread: 50,
-		bloodParticleCount: 20,
-		bloodParticleTTL: 300,
+		bloodParticleCount: 30,
+		bloodParticleTTL: 400,
 		bloodSpurt: function(projectile) {
 			var positionData = this.field.collider.pointOfImpact(projectile, this);
 			var position = null;

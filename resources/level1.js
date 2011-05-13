@@ -10,8 +10,9 @@
 			color: "#fff", letterSpacing: 7,
 			items: [
 				{ text: "Pistol  Slut", x: 89, y: 310, width: 140 },
-				{ text: "Please  return  to  your  homes", x: 805, y: 44, width: 245 },
-				{ text: "Free  shop  opening  soon", x: 1188, y: 311, width: 140 },
+				{ text: "MADAME  CLAUDE", x: 805, y: 44, width: 245 },
+				{ text: "vor wien", x: 1188, y: 311, width: 140 },
+				//{ text: "liebig 14", x: 1188, y: 311, width: 140 },
 			]
 		},
 
