@@ -6,7 +6,7 @@ Engine.initObject("Trigger", "Base", function() {
 		xStart: null,
 		xEnd: null,
 		oneTime: null,
-		
+
 		constructor: function(level, triggerFunctionName, obj, xStart, width, oneTime) {
 			this.level = level;
 			this.triggerFunctionName = triggerFunctionName;
@@ -22,6 +22,7 @@ Engine.initObject("Trigger", "Base", function() {
 		},
 
 		trigger: function() {
+            console.log(this.triggerFunctionName)
 			this.obj[this.triggerFunctionName].call(this.obj); // call specified trigger function on this trigger's obj
 			if(this.oneTime == true)
 				this.level.removeTrigger(this);
@@ -29,7 +30,7 @@ Engine.initObject("Trigger", "Base", function() {
 
 	}, {
 		getClassName: function() { return "Trigger"; },
-		
+
 	});
 
 	return Trigger;

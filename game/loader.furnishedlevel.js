@@ -234,7 +234,7 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		addFireworkLaunchers: function(renderContext) {
 			var data = this.levelResource.info.objects.fireworkLaunchers;
 			for(var i in data)
-				this.fireworkLaunchers[i] = new FireworkLauncher(data[i].name, this.field, renderContext, data[i].x, data[i].y, data[i].angle, data[i].spread, data[i].interval);
+				this.fireworkLaunchers[i] = new FireworkLauncher(data[i].name, this.field, renderContext, data[i].x, data[i].y);
 		},
 
 		numberOfLanterns: 10,
@@ -251,8 +251,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 			var speeches = data.items;
 			for(var i in speeches)
 			{
-				this.speeches[i] = new Speech(this.field, null, speeches[i].text, speeches[i].x, speeches[i].b, speeches[i].width, Speech.DEFAULT_HIDE_DELAY);
-				this.addToTriggerableObjects(this.speeches[i], speeches[i]);
+				this.speeches[i] = Speech.create(this.field, null, speeches[i].text, speeches[i].x, speeches[i].b, speeches[i].width, Speech.DEFAULT_HIDE_DELAY);
+				this.addToTriggerableObjects(this.speeches[i], speeches[i].identifier);
 				renderContext.add(this.speeches[i]);
 			}
 		},
@@ -291,12 +291,12 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 											   data[i].triggerFunctionName,
 											   this.triggerableObjects[data[i].identifier],
 											   data[i].xStart,
-											   Human.WALK_SPEED,
+											   Human.WALK_SPEED + 5,
 											   data[i].oneTime));
 		},
 
-		addToTriggerableObjects: function(obj, objData) {
-			this.triggerableObjects[objData.identifier] = obj;
+		addToTriggerableObjects: function(obj, identifier) {
+			this.triggerableObjects[identifier] = obj;
 		},
 
 		// player has moved so run an appropriate trigger if one exists

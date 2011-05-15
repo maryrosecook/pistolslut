@@ -1,42 +1,20 @@
-Engine.initObject("Fire", "Base", function() {
-	var Fire = Base.extend({
-		fireTimer: null,
-		fireExtinguishTimer: null,
-		sparkInterval: 10,
-        staticRect: null,
+Engine.initObject("Fire", "Launcher", function() {
+	var Fire = Launcher.extend({
+        width: null,
 
 		constructor: function(name, field, x, y, width) {
-            this.setStaticRect(x, y, width);
-			var maxTTL = Fire.FIRE_PARTICLE_TTL;
-
-			this.fireTimer = Interval.create(this.name, this.sparkInterval,
-				function() {
-					field.pEngine.addParticle(FireParticle.create(x, y, width, maxTTL));
-			});
-
-			var fire = this;
-			this.fireExtinguishTimer = Interval.create(this.name + "Extinguish", 2000,
-				function() {
-					if(!field.inView(fire))
-					{
-						fire.fireTimer.cancel();
-						fire.fireExtinguishTimer.cancel();
-					}
-			});
-		},
-
-        setStaticRect: function(x, y, width) {
-            this.staticRect = new CheapRect(null, x, y, x + width, y + 1);
+            this.base(name, field, Fire.INTERVAL, x, y, width);
+            this.width = width;
         },
 
-        release: function() {
-            this.base();
-            this.staticRect = null;
+        launch: function() {
+            this.field.pEngine.addParticle(FireParticle.create(this.staticRect.x, this.staticRect.y, this.width, Fire.FIRE_PARTICLE_TTL));
         },
 	}, {
 		getClassName: function() { return "Fire"; },
 
         FIRE_PARTICLE_TTL: 250,
+        INTERVAL: 10,
 	});
 
 	return Fire;

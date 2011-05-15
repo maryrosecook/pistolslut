@@ -10,9 +10,8 @@
 			color: "#fff", letterSpacing: 7,
 			items: [
 				{ text: "Pistol  Slut", x: 89, y: 310, width: 140 },
-				{ text: "MADAME  CLAUDE", x: 805, y: 44, width: 245 },
-				{ text: "vor wien", x: 1188, y: 311, width: 140 },
-				//{ text: "liebig 14", x: 1188, y: 311, width: 140 },
+				{ text: "TEMPEST  ANARCHIST  LIBRARY", x: 805, y: 44, width: 245 },
+				{ text: "FREE  SHOP", x: 1188, y: 311, width: 140 },
 			]
 		},
 
@@ -34,6 +33,7 @@
 			{ x: 370, y: 369, spriteName: "bin.gif" },
 			{ x: 775, y: 370, spriteName: "sandbags.gif" },
 			{ x: 1100, y: 369, spriteName: "bin.gif" },
+			{ x: 1697, y: 369, spriteName: "bin.gif" },
 			{ x: 2000, y: 370, spriteName: "sandbags.gif" },
 			{ x: 3050, y: 369, spriteName: "bin.gif" },
             { x: 3930, y: 369, spriteName: "drystonewall1.gif" },
@@ -49,8 +49,8 @@
 
 			{ name: "scaffoldingafterbridge", shape: { x: 2960, y: 270, w: 280, h: 10 }, visible: false, notCover: true },
 
-			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 34 }, visible: true },
-			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 65 }, visible: true },
+			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 32 }, visible: true },
+			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 30 }, visible: true },
 			{ name: "bunkerbackblock", shape: { x: 3515, y: 364, w: 20, h: 32 }, visible: true },
 			{ name: "bunkerbackwall", shape: { x: 3515, y: 284, w: 20, h: 30 }, visible: true },
 			{ name: "bunkerceilingleft", shape: { x: 3320, y: 284, w: 35, h: 20 }, visible: true, notCover: true },
@@ -60,38 +60,41 @@
 		],
 
 		enemies: [
-			{ name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
-			{ name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
-			{ name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
-			{ name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
-			{ name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
-			{ name: "underbridge1", clazz: Enemy, x: 2510, y: 350, type: "cannonfodder" },
-			{ name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
-			{ name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
-			{ name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
-            { name: "areabeforeparkmortarer", clazz: Enemy, x: 3900, y: 350, type: "mortarer" },
-			{ name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
-			{ name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
-			{ name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
+			// { name: "firstenemy", clazz: Enemy, x: 810, y: 350, type: "cannonfodder", direction: "Right" },
+			// { name: "easyspotter", clazz: Enemy, x: 1120, y: 350, type: "grenadier" },
+			// { name: "easymortarer", clazz: Enemy, x: 1190, y: 350, type: "mortarer" },
+			// { name: "bridgespotter", clazz: Enemy, x: 2400, y: 130, type: "cannonfodder" },
+			// { name: "bridgemortarer", clazz: Enemy, x: 2500, y: 130, type: "mortarer" },
+			// { name: "underbridge1", clazz: Enemy, x: 2510, y: 350, type: "cannonfodder" },
+			// { name: "underbridge2", clazz: Enemy, x: 2625, y: 350, type: "grunt" },
+			// { name: "underbridge3", clazz: Enemy, x: 2900, y: 350, type: "captain" },
+			// { name: "bunker1", clazz: Enemy, x: 3325, y: 350, type: "captain" },
+            // { name: "areabeforeparkmortarer", clazz: Enemy, x: 3900, y: 350, type: "mortarer" },
+			// { name: "parkguard", clazz: Enemy, x: 3950, y: 350, type: "cannonfodder" },
+			// { name: "parkmortarer", clazz: Enemy, x: 4170, y: 350, type: "mortarer" },
+			// { name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
 		],
 
 		speeches: {
 			color: "#fff",
 			items: [
-				{ identifier: "speechMortarGuy", text: "CONTACT,  LEFT.  COVER.", x: 1070, b: 320, width: 100 },
+				{ identifier: "speechMortarGuy", text: "CONTACT  LEFT.  COVER.", x: 1070, b: 320, width: 100 },
+				{ identifier: "speechBunkerMortarGuy", text: "OH  NO  SHE'S  HERE", x: 3450, b: 320, width: 100 },
 			]
 		},
 
 		triggers: [
 			{ identifier: "speechMortarGuy", xStart: 636, triggerFunctionName: "show", oneTime: true },
+			{ identifier: "speechBunkerMortarGuy", xStart: 3450, triggerFunctionName: "show", oneTime: true },
 		],
 
 		fires: [
-			{ name: "fire1", x: 374, y: 368, width: 14 }
+			{ name: "startFire", x: 374, y: 368, width: 14 },
+			{ name: "streetLampFire", x: 1700, y: 368, width: 14 },
 		],
 
 		fireworkLaunchers: [
-			{ name: "fireworklauncher1", x: 381, y: 370, angle: 0, spread: 20, interval: 10000 }
+			{ name: "fireworklauncher1", x: 381, y: 370 },
 		],
 
 		sky: { startColor: "3C3F76", transformations: null },

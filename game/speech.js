@@ -12,7 +12,7 @@ Engine.initObject("Speech", "Object2D", function() {
 		speechPosition: null,
 
 		constructor: function(field, speaker, text, x, b, width, hideDelay) {
-			this.base("Speech");
+			this.base(text);
 			this.field = field;
             this.speaker = speaker;
             this.hideDelay = hideDelay;
@@ -47,6 +47,7 @@ Engine.initObject("Speech", "Object2D", function() {
 			this.base();
 			this.textRenderers = [];
 			this.speechPosition = null;
+            this.speaker = null;
 		},
 
 		show: function() {

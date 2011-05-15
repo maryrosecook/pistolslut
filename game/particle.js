@@ -141,7 +141,7 @@ Engine.initObject("FireParticle", "Particle", function() {
 		vec: null,
 		color: null,
 
-		constructor: function(x, y, width, maxTTL, startVec) {
+		constructor: function(x, y, width, maxTTL) {
 			this.base(this.getFireParticleTTL(width, maxTTL));
 
 			this.pos = Point2D.create(x + Math.floor(Math.random() * width), y);

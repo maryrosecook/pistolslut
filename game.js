@@ -39,6 +39,7 @@ Game.load("/game/ordinance.js");
 Game.load("/game/bullet.js");
 Game.load("/game/mortarround.js");
 Game.load("/game/shrapnel.js");
+Game.load("/game/launcher.js");
 Game.load("/game/fire.js");
 Game.load("/game/firework.js");
 Game.load("/game/fireworklauncher.js");
