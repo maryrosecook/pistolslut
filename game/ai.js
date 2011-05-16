@@ -117,8 +117,8 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
                 && (!this.host.weapon.isOperational()
                     || this.getBetterWeapon() !== null);
         },
-        // weapons are ordered by goodness
         switchWeapon: function() {
+            // weapons are ordered by goodness
             if(!this.host.weapon.isOperational()) // current weapon fucked, just get next one
                 this.host.cycleWeapon();
             else // switch to better weapon

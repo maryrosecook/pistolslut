@@ -8,7 +8,7 @@ Engine.initObject("Speech", "Object2D", function() {
 	var Speech = Object2D.extend({
 		field: null,
         speaker: null,
-		textRenderers: [],
+		textRenderers: null,
 		speechPosition: null,
 
 		constructor: function(field, speaker, text, x, b, width, hideDelay) {
@@ -20,6 +20,7 @@ Engine.initObject("Speech", "Object2D", function() {
 		},
 
 		setup: function(text, lineSpacing, x, b, width, color) {
+            this.textRenderers = [];
 			var lines = this.splitTextIntoLines(text, width);
 			this.speechPosition = this.calculateSpeechPosition(lines.length, lineSpacing, x, b);
 

@@ -387,7 +387,7 @@ Engine.initObject("Human", "Mover", function() {
 	}, {
 		getClassName: function() { return "Human"; },
 
-		WALK_SPEED: 20,
+		WALK_SPEED: 3,
 		JUMP_SPEED: -6,
 
 		// states of being
