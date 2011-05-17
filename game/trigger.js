@@ -22,7 +22,6 @@ Engine.initObject("Trigger", "Base", function() {
 		},
 
 		trigger: function() {
-            console.log(this.triggerFunctionName)
 			this.obj[this.triggerFunctionName].call(this.obj); // call specified trigger function on this trigger's obj
 			if(this.oneTime == true)
 				this.level.removeTrigger(this);

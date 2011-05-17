@@ -1,5 +1,5 @@
 {
-	bitmapImage: "level1.gif", bitmapWidth: 6000, bitmapHeight: 430, collisionMap: [],
+	bitmapImage: "level1.gif", bitmapWidth: 5300, bitmapHeight: 430, collisionMap: [],
 
     player: {
         startPosition: { x: 50, y: 344 },
@@ -38,7 +38,7 @@
 			{ x: 3050, y: 369, spriteName: "bin.gif" },
             { x: 3930, y: 369, spriteName: "drystonewall1.gif" },
             { x: 4330, y: 369, spriteName: "drystonewall2.gif" },
-			{ x: 5989, y: 328, spriteName: "fenceright.gif" },
+			{ x: 5289, y: 328, spriteName: "fenceright.gif" },
 		],
 
 		blockFurniture: [
@@ -79,7 +79,7 @@
 			color: "#fff",
 			items: [
 				{ identifier: "speechMortarGuy", text: "CONTACT  LEFT.  COVER.", x: 1070, b: 320, width: 100 },
-				{ identifier: "speechBunkerMortarGuy", text: "OH  NO  SHE'S  HERE", x: 3900, b: 320, width: 70 },
+				{ identifier: "speechBunkerMortarGuy", text: "OH  NO  SHE'S  HERE", x: 3880, b: 320, width: 70 },
 			]
 		},
 
