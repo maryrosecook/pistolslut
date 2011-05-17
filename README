@@ -7,3 +7,26 @@ http://maryrosecook.com
 maryrosecook@maryrosecook.com
 
 The code has been open sourced under the MIT license. Pistol Slut uses The Render Engine by Brett Fattori.
+
+============
+
+To run with wiimote support, you need Linux/OS X and bluetooth headers that are close to, or exactly bluez headers.
+
+$ git clone git@github.com:tbranyen/nodewii.git
+$ cd nodewii
+$ make update
+
+<MAC_ADDR> is in format 00:AA:BB:CC:DD:EE
+$ node wiimote-server.js <MAC_ADDR>
+
+Example:
+$ node wiimote-server.js 00:12:3A:F3:99:CC
+
+Press buttons 1 & 2 to sync with the server.
+
+Then run the game and use the buttons as follows:
+
+Directionals are the same,
+B is trigger
+A is change weapon
+1 is bomb
