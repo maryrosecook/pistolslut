@@ -75,6 +75,7 @@
 			{ name: "parkmachinegunner", clazz: Enemy, x: 4350, y: 350, type: "captain" },
 		],
 
+
 		speeches: {
 			color: "#fff",
 			items: [
