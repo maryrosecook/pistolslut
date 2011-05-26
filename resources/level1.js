@@ -49,7 +49,7 @@
 
 			{ name: "scaffoldingafterbridge", shape: { x: 2960, y: 270, w: 280, h: 10 }, visible: false, notCover: true },
 
-			{ name: "bunkerfrontblock", shape: { x: 3300, y: 362, w: 20, h: 32 }, visible: true },
+			{ name: "bunkerfrontblock", shape: { x: 3300, y: 364, w: 20, h: 32 }, visible: true },
 			{ name: "bunkerfrontwall", shape: { x: 3300, y: 284, w: 20, h: 30 }, visible: true },
 			{ name: "bunkerbackblock", shape: { x: 3515, y: 364, w: 20, h: 32 }, visible: true },
 			{ name: "bunkerbackwall", shape: { x: 3515, y: 284, w: 20, h: 30 }, visible: true },

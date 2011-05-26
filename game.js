@@ -54,7 +54,6 @@ Game.load("/game/grenadelauncher.js");
 Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
 Game.load("/game/window.js");
-Game.load("/game/machine.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -77,6 +76,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		collider: null,
 		physics: null,
 		notifier: null,
+        machine: null,
 
 		groundY: 395,
 		alwaysVisibleZIndex: 2005,
@@ -206,6 +206,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.collisionModel = SpatialGrid.create(this.level.getWidth(), this.level.getHeight(), 7);
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
+            this.machine = new Machine();
 
 			// inter object event notifier
 			this.notifier = NotifierComponent.create("notifier");

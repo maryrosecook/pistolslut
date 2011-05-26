@@ -16,7 +16,7 @@ Engine.initObject("Collider", "Base", function() {
 			var muzzlePosition = shooter.weapon.getGunTip();
 			var targetRect = CheapRect.gen(target);
 
-			var xSpread = muzzlePosition.x;
+			var xSpread = this.field.level.getWidth(); // default to furthest possible distance still within view
 			if(inXSpread !== undefined)
 				xSpread = inXSpread;
 
@@ -27,9 +27,9 @@ Engine.initObject("Collider", "Base", function() {
 			if(muzzlePosition.y <= targetRect.b + ySpread && muzzlePosition.y >= targetRect.y - ySpread) // intersecting on y-axis
 			{
 				if(shooter.direction == Collider.LEFT)
-					inLine = targetRect.x > muzzlePosition.x - xSpread;
+					inLine = targetRect.r < muzzlePosition.x && targetRect.r > muzzlePosition.x - xSpread;
 				else if(shooter.direction == Collider.RIGHT)
-					inLine = muzzlePosition.r > targetRect.r + xSpread;
+					inLine = targetRect.x > muzzlePosition.x && targetRect.r < muzzlePosition.x + xSpread;
 			}
 
 			return inLine;

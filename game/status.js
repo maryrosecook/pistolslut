@@ -21,7 +21,7 @@ Engine.initObject("Status", "Base", function() {
                     || !this.ai.host.weapon.hasLineOfFire());
         },
 
-        coverDistance: 5,
+        coverDistance: 10,
         alreadyFoundCover: false,
         isInCover: function() {
             if(this.alreadyFoundCover === true)

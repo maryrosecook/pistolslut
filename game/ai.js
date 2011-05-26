@@ -11,7 +11,7 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 	  	    this.base(name, priority || 1.0);
 			this.field = field;
 
-            this.state = new Machine(this.field.remoteFileLoader.getData(behaviourTreeName)).generateTree(this);
+            this.state = this.field.machine.generateTree(this.field.remoteFileLoader.getData(behaviourTreeName), this);
             this.status = new Status(field, this);
 
 			// subscribe to events the enemy cares about
