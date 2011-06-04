@@ -78,7 +78,7 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 			var dir = this.owner.direction;
 
             var x = null;
-            if(this.owner.who() == Human.ENEMY) // enemies set x by hand
+            if(this.owner instanceof Enemy) // enemies set x by hand
             {
                 var perfectShotX = this.owner.getPosition().x - this.field.collider.getNearestPlayer(false, this.owner).getPosition().x;
                 var lastMissedBy = Math.abs(perfectShotX - this.lastX);

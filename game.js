@@ -88,7 +88,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		fieldWidth: 700,
 		fieldHeight: 430,
-        numberOfPlayers:1,
 		level: null,
 
 		meters: [],
@@ -146,7 +145,13 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		onKeyPress: function(event) {
 			if(PistolSlut.isStartScreen == true)
-    		    PistolSlut.play();
+            {
+                var numberOfPlayers = 1;
+                if(event.keyCode == 50) // 2 - start in two player mode
+                    numberOfPlayers = 2;
+
+    		    PistolSlut.play(numberOfPlayers);
+            }
 		},
 
 		addStartText: function(text, x, y) {
@@ -158,7 +163,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		// an initial pause screen
 		startScreen: function() {
-    	    this.isStartScreen = true;
+    	    PistolSlut.isStartScreen = true;
 			this.loadLevelBasics(); // just enough for a cogent start screen
 
             EventEngine.setHandler(document, "keypress", this.onKeyPress);
@@ -220,7 +225,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		},
 
 		destroyStartScreen: function() {
-			this.isStartScreen = false;
+			PistolSlut.isStartScreen = false;
 			this.startTextsTimer.destroy();
 			for(var i in this.startTexts)
 			{
@@ -231,13 +236,14 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.startTexts = null;
 		},
 
-		play: function() {
+		play: function(numberOfPlayers) {
 			this.destroyStartScreen();
 
-			Player.addPlayers(this, this.numberOfPlayers, this.level.playerData);
-            if(this.players.length == 1)
-                this.addMeters();
+            this.players = [];
+            for(var i = 0; i < numberOfPlayers; i++)
+			    Player.addPlayer(this, this.level.playerData);
 
+            this.addMeters();
             this.updateFramePosition(null, Player.getMainPlayer(this));
 		},
 

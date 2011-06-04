@@ -223,7 +223,7 @@ Engine.initObject("Weapon", "Base", function() {
 		},
 
         updateMeters: function() {
-            if(this.owner instanceof Player)
+            if(this.owner instanceof Player && this.owner.isMainPlayer())
             {
                 this.setAmmoMeterReading();
                 this.setSpareClipsMeterReading();

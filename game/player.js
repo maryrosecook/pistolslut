@@ -8,13 +8,15 @@ Engine.include("/components/component.sprite.js");
 Engine.initObject("Player", "Human", function() {
     var Player = Human.extend({
         identifier: null,
+        keyMap: null, // the key bindings for this player
 
 	    constructor: function(field, playerData, existingPlayers) {
             this.identifier = "player" + existingPlayers.length;
-		    var startPosition = Point2D.create(playerData.startPosition.x, playerData.startPosition.y);
 		    this.turn(Collider.RIGHT);
+            var startPosition = Point2D.create(playerData.startPosition.x + 20 * existingPlayers.length, playerData.startPosition.y);
 		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.AVAILABLE_WEAPONS, Player.CAN_THROW_GRENADES);
 
+            this.keyMap = Player.KEY_MAPS[existingPlayers.length];
 		    this.add(KeyboardInputComponent.create("input"));
 	    },
 
@@ -24,7 +26,8 @@ Engine.initObject("Player", "Human", function() {
 
 	    update: function(renderContext, time) {
 		    this.base(renderContext, time);
-		    this.field.updateFramePosition(this.getVelocity(), this); // move the render frame in response to player movement
+            if(this.isMainPlayer())
+		        this.field.updateFramePosition(this.getVelocity(), this); // move the render frame in response to player movement
 
 		    if(this.getVelocity().x != 0)
 			    this.field.notifier.post(Player.MOVE_EVENT, this);
@@ -36,16 +39,21 @@ Engine.initObject("Player", "Human", function() {
             if(this.isAlive() && this.health != this.maxHealth)
                 if(this.lastShot + Player.HEALTH_RELOAD_DELAY < new Date().getTime())
                 {
-                    if(this.field.healthMeter !== null)
+                    if(this.isMainPlayer() && this.field.healthMeter !== null)
                         this.field.healthMeter.reset();
+
                     this.health = this.maxHealth;
                 }
+        },
+
+        isMainPlayer: function() {
+            return this == Player.getMainPlayer(this.field);
         },
 
         lastShot: 0,
         shot: function(ordinance) {
             if(this.isAlive())
-                if(this.field.healthMeter !== null)
+                if(this.isMainPlayer() && this.field.healthMeter !== null)
                     this.field.healthMeter.decrement();
 
             this.base(ordinance);
@@ -77,30 +85,30 @@ Engine.initObject("Player", "Human", function() {
 			    return;
 
 		    switch (keyCode) {
-			    case EventEngine.KEYCODE_LEFT_ARROW:
+			    case this.keyMap["left"]:
 				    this.walk(Collider.LEFT);
 				    break;
-			    case EventEngine.KEYCODE_RIGHT_ARROW:
+			    case this.keyMap["right"]:
 				    this.walk(Collider.RIGHT);
 				    break;
-			    case EventEngine.KEYCODE_UP_ARROW:
+			    case this.keyMap["jump"]:
 				    this.jump();
 				    break;
-			    case EventEngine.KEYCODE_DOWN_ARROW:
+			    case this.keyMap["crouch"]:
 				    this.handlePausedWalk();
 				    this.crouch();
 				    break;
-			    case 90: // z
+			    case this.keyMap["shoot"]:
 				    // deal with an initial shot on semi-automatic
 				    if(!this.weapon.isShooting()) // got to block delayed keyboard auto-repeat
 					    this.shoot();
 
 				    this.weapon.shootKeyDown();
 				    break;
-			    case 67: // c
+			    case this.keyMap["grenade"]:
 				    this.grenadeLauncher.startAim();
 				    break;
-			    case 88: // x
+			    case this.keyMap["cycle_weapon"]:
 				    this.cycleWeapon();
 				    break;
 		    }
@@ -113,40 +121,35 @@ Engine.initObject("Player", "Human", function() {
 			    return;
 
 		    switch (keyCode) {
-			    case EventEngine.KEYCODE_LEFT_ARROW:
-			    case EventEngine.KEYCODE_RIGHT_ARROW:
+			    case this.keyMap["left"]:
+			    case this.keyMap["right"]:
 				    this.stopWalk();
 				    this.walkPaused = false; // stopped walking so walk no longer paused
 				    break;
-			    case EventEngine.KEYCODE_DOWN_ARROW:
+			    case this.keyMap["shoot"]:
+				    this.weapon.shootKeyUp();
+				    break;
+			    case this.keyMap["crouch"]:
 				    this.stand();
 				    // allowed to start walking now, but must
 				    // work around lack of keyboard repeat support in engine for this case
 				    this.resumeWalk();
 				    break;
-			    case 67: // c
+			    case this.keyMap["grenade"]:
 				    if(this.grenadeLauncher.isAiming())
 					    this.throwGrenade();
-				    break;
-			    case 90: // z
-				    this.weapon.shootKeyUp();
 				    break;
 		    }
 
 		    return false;
 	    },
-
-        who: function() { return Human.PLAYER; },
 	}, {
 		getClassName: function() { return "Player"; },
 
-        addPlayers: function(field, numberOfPlayers, playerData) {
-            field.players = [];
-            for(var i=0; i < numberOfPlayers; i++)
-            {
-                field.players.push(Player.create(field, playerData, field.players));
-                field.renderContext.add(field.players[i]);
-            }
+        addPlayer: function(field, playerData) {
+            var player = Player.create(field, playerData, field.players);
+            field.players.push(player);
+            field.renderContext.add(player);
         },
 
         getPlayer: function(field, identifier) {
@@ -181,6 +184,27 @@ Engine.initObject("Player", "Human", function() {
 		MOVE_EVENT: "playerMove",
 
         AVAILABLE_WEAPONS: ["M9", "Mac10", "SPAS"],
+
+        KEY_MAPS: [
+            {
+                "left": 37, // left
+                "right": 39, // right
+                "jump": 38, // up
+                "crouch": 40, // down
+                "shoot": 56, // 8
+                "cycle_weapon": 57, // 9
+                "grenade": 48, // 0
+            },
+            {
+                "left": 70, // f
+                "right": 72, // h
+                "jump": 84, // t
+                "crouch": 71, // g
+                "shoot": 90, // z
+                "cycle_weapon": 88, // x
+                "grenade": 67, // c
+            }
+        ],
 	});
 
 	return Player;
