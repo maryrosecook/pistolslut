@@ -300,8 +300,8 @@ Engine.initObject("FurnishedLevel", "Level", function() {
 		},
 
 		// player has moved so run an appropriate trigger if one exists
-		checkTrigger: function(playerObj) {
-			var playerX = playerObj.getPosition().x;
+		checkTrigger: function(player) {
+			var playerX = player.getPosition().x;
 			for(var i in this.triggers)
 				this.triggers[i].check(playerX);
 		},

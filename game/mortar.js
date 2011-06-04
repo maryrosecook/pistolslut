@@ -23,7 +23,14 @@ Engine.initObject("Mortar", "IndirectWeapon", function() {
         isSpotterCompatible: function() { return true; },
 
         isOperational: function() {
-            return this.base() && (this.field.collider.xDistance(this.owner, this.field.playerObj) > Mortar.MIN_RANGE);
+            if(this.base() == false)
+                return false;
+
+            for(var i in this.field.players)
+                if(this.field.collider.xDistance(this.owner, this.field.players[i]) > Mortar.MIN_RANGE)
+                    return true;
+
+            return false;
         },
 
         canStand: function() { return false; },

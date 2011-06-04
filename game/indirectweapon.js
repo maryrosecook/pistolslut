@@ -39,7 +39,8 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
         },
 
 		discharge: function() {
-            this.handleZeroingIn();
+            if(this.owner instanceof Enemy)
+                this.handleZeroingIn();
 			this.base();
 
 			this.stopShooting();
@@ -49,7 +50,8 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
 
         // keeps count of number of shots since target last moved. Used for accuracy of indirect weapons.
         handleZeroingIn: function() {
-            var currentPlayerPosition = this.field.playerObj.getPosition();
+            var currentPlayerPosition = this.field.collider.getNearestPlayer(false,
+                                                                             this.owner).getPosition();
             if(this.lastTargetPositionX == currentPlayerPosition.x)
                 this.shotsSinceTargetMoved += 1;
             else
@@ -78,7 +80,7 @@ Engine.initObject("IndirectWeapon", "Weapon", function() {
             var x = null;
             if(this.owner.who() == Human.ENEMY) // enemies set x by hand
             {
-                var perfectShotX = this.owner.getPosition().x - this.field.playerObj.getPosition().x;
+                var perfectShotX = this.owner.getPosition().x - this.field.collider.getNearestPlayer(false, this.owner).getPosition().x;
                 var lastMissedBy = Math.abs(perfectShotX - this.lastX);
 
                 var steadiness = this.owner.accuracy;

@@ -7,8 +7,10 @@ Engine.include("/components/component.sprite.js");
 
 Engine.initObject("Player", "Human", function() {
     var Player = Human.extend({
+        identifier: null,
 
-	    constructor: function(field, playerData) {
+	    constructor: function(field, playerData, existingPlayers) {
+            this.identifier = "player" + existingPlayers.length;
 		    var startPosition = Point2D.create(playerData.startPosition.x, playerData.startPosition.y);
 		    this.turn(Collider.RIGHT);
 		    this.base("Player", field, startPosition, Player.STARTING_HEALTH, Player.AVAILABLE_WEAPONS, Player.CAN_THROW_GRENADES);
@@ -137,6 +139,38 @@ Engine.initObject("Player", "Human", function() {
         who: function() { return Human.PLAYER; },
 	}, {
 		getClassName: function() { return "Player"; },
+
+        addPlayers: function(field, numberOfPlayers, playerData) {
+            field.players = [];
+            for(var i=0; i < numberOfPlayers; i++)
+            {
+                field.players.push(Player.create(field, playerData, field.players));
+                field.renderContext.add(field.players[i]);
+            }
+        },
+
+        getPlayer: function(field, identifier) {
+            for(var i in field.players)
+                if(field.players[i].identifier == identifier)
+                    return field.players[i];
+
+            return null;
+        },
+
+        getMainPlayer: function(field) {
+            return field.players[0];
+        },
+
+        isPlayerAlive: function(field) {
+            if(field.players.length == 0)
+                return false;
+
+            for(var i in field.players)
+                if(field.players[i].isAlive() === true)
+                    return true;
+
+            return false;
+        },
 
 		STARTING_HEALTH: 5,
 		CAN_THROW_GRENADES: true,

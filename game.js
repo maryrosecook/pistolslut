@@ -54,6 +54,7 @@ Game.load("/game/grenadelauncher.js");
 Game.load("/game/lift.js");
 Game.load("/game/barrel.js");
 Game.load("/game/window.js");
+Game.load("/game/pusher.js");
 
 Engine.initObject("PistolSlut", "Game", function() {
 
@@ -66,7 +67,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		renderContext: null,
 
 		fieldBox: null,
-		playerCenterPoint: null,
 		areaScale: $.browser.Wii ? 0.7 : 0.93,
 
 		engineFPS: 30,
@@ -77,6 +77,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 		physics: null,
 		notifier: null,
         machine: null,
+        pusher: null,
 
 		groundY: 395,
 		alwaysVisibleZIndex: 2005,
@@ -87,6 +88,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 
 		fieldWidth: 700,
 		fieldHeight: 430,
+        numberOfPlayers:1,
 		level: null,
 
 		meters: [],
@@ -94,7 +96,7 @@ Engine.initObject("PistolSlut", "Game", function() {
         spareClipsMeter: null,
 
 		debug: true,
-		playerObj: null,
+		players: null,
 
 		showStartTexts: false,
 
@@ -119,8 +121,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			// Set the FPS of the game
 			Engine.setFPS(this.engineFPS);
 
-			// Create the 2D context
-			this.playerCenterX = this.fieldWidth / 4;
+			this.playerCenterX = this.fieldWidth / 4; // pivot point, either side of which screen follows player
 
 		    this.imageLoader = ImageLoader.create();
 			this.spriteLoader = SpriteLoader.create();
@@ -171,13 +172,13 @@ Engine.initObject("PistolSlut", "Game", function() {
 				{
 					PistolSlut.showStartTexts = true;
 					for(var i in PistolSlut.startTexts)
-				  	PistolSlut.startTexts[i].setDrawMode(TextRenderer.DRAW_TEXT);
+				  	    PistolSlut.startTexts[i].setDrawMode(TextRenderer.DRAW_TEXT);
 				}
 				else
 				{
 					PistolSlut.showStartTexts = false;
 					for(var i in PistolSlut.startTexts)
-				  	PistolSlut.startTexts[i].setDrawMode(TextRenderer.NO_DRAW);
+				  	    PistolSlut.startTexts[i].setDrawMode(TextRenderer.NO_DRAW);
 				}
 
 				PistolSlut.startTextsTimer.restart();
@@ -207,6 +208,7 @@ Engine.initObject("PistolSlut", "Game", function() {
 			this.collider = new Collider(this);
 			this.physics = new Physics(this);
             this.machine = new Machine();
+            this.pusher = new Pusher();
 
 			// inter object event notifier
 			this.notifier = NotifierComponent.create("notifier");
@@ -232,10 +234,11 @@ Engine.initObject("PistolSlut", "Game", function() {
 		play: function() {
 			this.destroyStartScreen();
 
-			this.playerObj = Player.create(this, this.level.playerData);
-			this.renderContext.add(this.playerObj);
-            this.addMeters();
-            this.updateFramePosition(null, this.playerObj);
+			Player.addPlayers(this, this.numberOfPlayers, this.level.playerData);
+            if(this.players.length == 1)
+                this.addMeters();
+
+            this.updateFramePosition(null, Player.getMainPlayer(this));
 		},
 
         ammoMeter: null,
@@ -243,13 +246,34 @@ Engine.initObject("PistolSlut", "Game", function() {
         healthMeter: null,
         grenadeMeter: null,
         addMeters: function() {
-			this.ammoMeter = new VectorCaretMeter(this, this.renderContext, this.playerObj.weapon.clipCapacity, Point2D.create(85, 5), VectorCaret.WIDTH * 2, 30, "white", "black");
+			this.ammoMeter = new VectorCaretMeter(this,
+                                                  this.renderContext,
+                                                  Player.getMainPlayer(this).weapon.clipCapacity,
+                                                  Point2D.create(85, 5),
+                                                  VectorCaret.WIDTH * 2,
+                                                  30,
+                                                  "white",
+                                                  "black");
 			this.meters.push(this.ammoMeter);
 
-			this.spareClipsMeter = new VectorCaretMeter(this, this.renderContext, Weapon.MAX_SPARE_CLIPS, Point2D.create(50, 5), VectorCaret.WIDTH * 2, Weapon.MAX_SPARE_CLIPS, "white", "black");
+			this.spareClipsMeter = new VectorCaretMeter(this,
+                                                        this.renderContext,
+                                                        Weapon.MAX_SPARE_CLIPS,
+                                                        Point2D.create(50, 5),
+                                                        VectorCaret.WIDTH * 2,
+                                                        Weapon.MAX_SPARE_CLIPS,
+                                                        "white",
+                                                        "black");
 			this.meters.push(this.spareClipsMeter);
 
-			this.healthMeter = new VectorCaretMeter(this, this.renderContext, this.playerObj.health, Point2D.create(5, 5), VectorCaret.WIDTH * 2, this.playerObj.health, "red", "black");
+			this.healthMeter = new VectorCaretMeter(this,
+                                                    this.renderContext,
+                                                    Player.getMainPlayer(this).health,
+                                                    Point2D.create(5, 5),
+                                                    VectorCaret.WIDTH * 2,
+                                                    Player.getMainPlayer(this).health,
+                                                    "red",
+                                                    "black");
 			this.meters.push(this.healthMeter);
 
 			this.grenadeMeter = new ImageCaretMeter(this,
@@ -278,8 +302,6 @@ Engine.initObject("PistolSlut", "Game", function() {
 		    else
 		  	    PistolSlut.loadTimeout.restart();
 	    },
-
-        isPlayerAlive: function() { return this.playerObj && this.playerObj.isAlive(); },
 
 		teardown: function() {
 			this.renderContext.destroy();

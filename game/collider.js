@@ -134,6 +134,10 @@ Engine.initObject("Collider", "Base", function() {
             return nearest;
         },
 
+        getNearestPlayer: function(atSimilarHeight, object) {
+            return this.getNearest(null, atSimilarHeight, object, this.field.players);
+        },
+
         getDirectionOf: function(fromObj, toObj) {
 			if(fromObj.getPosition().x < toObj.getPosition().x)
 				return Collider.RIGHT;

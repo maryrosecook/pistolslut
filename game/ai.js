@@ -92,14 +92,16 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
         lastCalledRange: 0,
         canCallRange: function() {
-            return this.field.isPlayerAlive()
+            return Player.isPlayerAlive(this.field)
                 && this.host.isSpotter()
                 && this.lastCalledRange < this.host.shooter.weapon.lastShot
                 && this.host.shooter.weapon.lastShot + (this.speechShowTime * 0.7) < new Date().getTime();
         },
         speechShowTime: 2000,
         callRange: function() {
-            var x = this.field.collider.xDistance(this.host.shooter, this.field.playerObj);
+            // TODO: try and target other players if closest player out of range
+            var x = this.field.collider.xDistance(this.host.shooter,
+                                                  this.field.collider.getNearestPlayer(false, this.host));
             var text = "Range " + x + " feet";
             new Speech(this.field,
                        this.host,
@@ -181,7 +183,10 @@ Engine.initObject("AIComponent", "LogicComponent", function() {
 
         getNearestAlly: function(atSimilarHeight) { return this.field.collider.getNearest(null, atSimilarHeight, this.host, this.host.getAllies()); },
         getNearestCover: function() { return this.field.collider.getNearest(this.directionOfPlayer(), Collider.AT_SIMILAR_HEIGHT, this.host, this.field.level.cover); },
-        directionOfPlayer: function() { return this.field.collider.getDirectionOf(this.host, this.field.playerObj); },
+        directionOfPlayer: function() {
+            return this.field.collider.getDirectionOf(this.host,
+                                                      this.field.collider.getNearestPlayer(false, this.host));
+        },
 
 		reactToBeingUnderFire: function() {
 			this.status.lastUnderFire = new Date().getTime();

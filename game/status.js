@@ -1,5 +1,6 @@
 Engine.initObject("Status", "Base", function() {
 	var Status = Base.extend({
+        field: null,
         ai: null,
 
 		constructor: function(field, ai) {
@@ -16,9 +17,20 @@ Engine.initObject("Status", "Base", function() {
         verticalFieldOfFireAdditions: 20,
         isInDanger: function() {
             return this.field.inView(this.ai.host)
-                && this.field.isPlayerAlive()
-                && (this.field.collider.inLineOfFire(this.ai.host, this.field.playerObj, undefined, this.verticalFieldOfFireAdditions)
-                    || !this.ai.host.weapon.hasLineOfFire());
+                && Player.isPlayerAlive(this.field)
+                && (!this.ai.host.weapon.hasLineOfFire()
+                    || this.playerInLineOfFire());
+        },
+
+        playerInLineOfFire: function() {
+            for(var i in this.field.players)
+                if(this.field.collider.inLineOfFire(this.ai.host,
+                                                    this.field.players[i],
+                                                    undefined,
+                                                    this.verticalFieldOfFireAdditions))
+                    return true;
+
+            return false;
         },
 
         coverDistance: 10,
