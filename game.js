@@ -147,8 +147,8 @@ Engine.initObject("PistolSlut", "Game", function() {
 			if(PistolSlut.isStartScreen == true)
             {
                 var numberOfPlayers = 1;
-                if(event.keyCode == 50) // 2 - start in two player mode
-                    numberOfPlayers = 2;
+                // if(event.keyCode == 50) // 2 - start in two player mode
+                //     numberOfPlayers = 2;
 
     		    PistolSlut.play(numberOfPlayers);
             }
