@@ -30,15 +30,28 @@
 		</div>
 		<div class="title">
 		  <h1>Pistol Slut</h1><br/>
-		  by <a href='http://maryrosecook.com'>mary rose cook</a><br/>
+		  by <a href='http://maryrosecook.com'>Mary Rose Cook</a><br/>
 		  2D platform shooter in JavaScript
 		</div>
 
 		<p class="keys"><img src='/resources/keys.gif' /></p>
 
-		Use Google <a href='http://google.com/chrome'>Chrome</a>. Clear your cache and do a hard refresh.<br/><br/>
+		Use Google <a href='http://google.com/chrome'>Chrome</a>.<br/><br/>
 
-		<a href='http://twitter.com/pistolslut'>Follow Pistol Slut</a> on Twitter.
+		<a href='http://twitter.com/pistolslut'>Follow Pistol Slut</a> on Twitter.<br/><br/>
+
+        <a href='#' class="tip_open">Some tips on playing</a>.
+
+        <div class="tips" style="display:none;">
+          <br/>
+          You have limited ammo: six clips per weapon.
+          You can suppress enemies by shooting at them, thus allowing you to advance.
+          Your health will regenerate if you stop taking damage for a few seconds.
+          The longer you hold down fire, the less accurate the revolver and machine pistol become.
+          The mortar guys zero in on you, so keep moving when you are being shelled.
+          The enemies have limited ammo.
+          </ul>
+        </div>
 
 		<hr>
 		  The <a href='http://github.com/maryrosecook/pistolslut'>code</a> is open source,
@@ -59,5 +72,14 @@
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	 </script>
+
+	 <script type="text/javascript">
+       $(document).ready(function() {
+         // put all your jQuery goodness in here.
+         $('.tip_open').click(function() {
+           $('.tips').show();
+         });
+       });
+     </script>
    </body>
  </html>
