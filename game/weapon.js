@@ -4,7 +4,7 @@ Engine.initObject("Weapon", "Base", function() {
 		owner: null,
 		field: null,
 		shotsInClip: 0,
-        spareClips: 3,
+        spareClips: 5,
 		lastShot: 0,
 		timeLastHadDeadAim: 0,
 
@@ -252,7 +252,7 @@ Engine.initObject("Weapon", "Base", function() {
 
 		tip: new Point2D(0, -1),
 
-        MAX_SPARE_CLIPS: 3,
+        MAX_SPARE_CLIPS: 5,
 
 		SEMI_AUTOMATIC: "semi_automatic",
 		AUTOMATIC: "automatic",
