@@ -169,7 +169,7 @@ Engine.initObject("PistolSlut", "Game", function() {
             EventEngine.setHandler(document, "keypress", this.onKeyPress);
 
 			this.startTexts = []
-			this.addStartText("PRESS Z", 285, 168);
+			this.addStartText("PRESS 1", 285, 168);
 			this.addStartText("TO START", 412, 168);
 
             var flashText = function() {
