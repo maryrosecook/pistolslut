@@ -191,9 +191,9 @@ Engine.initObject("Player", "Human", function() {
                 "right": 39, // right
                 "jump": 38, // up
                 "crouch": 40, // down
-                "shoot": 90, // z
-                "cycle_weapon": 88, // x
-                "grenade": 67, // c
+                "shoot": 49, // 1
+                "cycle_weapon": 50, // 2
+                "grenade": 51, // 3
             },
         ],
 	});
